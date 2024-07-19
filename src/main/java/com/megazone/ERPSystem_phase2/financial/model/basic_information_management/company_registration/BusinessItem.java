@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 /**
  * 회사 및 거래처 등록의 업체종목
  */
-
 @Entity
 @Data
 @NoArgsConstructor

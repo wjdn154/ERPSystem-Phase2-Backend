@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 /**
  * 세무서 테이블
  * 회사와 연결될 세무서 정보 데이터 테이블
- * 
  */
 @Entity
 @Data
