@@ -10,7 +10,6 @@ import java.util.List;
 public interface CompanyRegistrationService {
     /**
      * 이름으로 대표자 검색 메서드
-     *
      * @param name 대표자의 이름
      * @return 해당 이름을 가진 Representative 리스트
      */
@@ -18,7 +17,6 @@ public interface CompanyRegistrationService {
 
     /**
      * 대표자 저장 메서드
-     *
      * @param representative 저장할 대표자 객체
      * @return 저장된 Representative 객체
      */
@@ -26,7 +24,6 @@ public interface CompanyRegistrationService {
 
     /**
      * ID로 대표자 검색 메서드
-     *
      * @param id 대표자의 ID
      * @return 해당 ID를 가진 Representative 객체
      */
