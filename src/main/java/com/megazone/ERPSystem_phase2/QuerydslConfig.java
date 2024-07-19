@@ -6,14 +6,23 @@ import jakarta.persistence.PersistenceContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * QuerydslConfig 클래스
+ * QueryDSL을 사용하기 위한 설정 클래스임
+ */
 @Configuration
 public class QuerydslConfig {
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private EntityManager entityManager; // EntityManager를 통한 데이터베이스 연동
 
+    /**
+     * JPAQueryFactory 빈 생성 메서드
+     *
+     * @return JPAQueryFactory 객체
+     */
     @Bean
     public JPAQueryFactory jpaQueryFactory() {
-        return new JPAQueryFactory(entityManager);
+        return new JPAQueryFactory(entityManager); // JPAQueryFactory 객체를 생성하여 반환함
     }
 }

@@ -4,27 +4,30 @@ package com.megazone.ERPSystem_phase2.financial.repository.basic_information_man
 import com.megazone.ERPSystem_phase2.financial.model.basic_information_management.company_registration.QRepresentative;
 import com.megazone.ERPSystem_phase2.financial.model.basic_information_management.company_registration.Representative;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
-public class RepresentativeRepositoryImpl implements RepresentativeRepositoryCustom {
+import static com.megazone.ERPSystem_phase2.financial.model.basic_information_management.company_registration.QRepresentative.*;
 
+@Repository
+@RequiredArgsConstructor
+public class RepresentativeRepositoryImpl implements RepresentativeRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-    @Autowired
-    public RepresentativeRepositoryImpl(JPAQueryFactory queryFactory) {
-        this.queryFactory = queryFactory;
-    }
-
+    /**
+     * 이름으로 대표자 검색 메서드
+     *
+     * @param name 대표자의 이름
+     * @return 해당 이름을 가진 Representative 리스트
+     */
     @Override
     public List<Representative> findByName(String name) {
-        QRepresentative representative = QRepresentative.representative;
-        return queryFactory.selectFrom(representative)
-                .where(representative.name.eq(name))
-                .fetch();
+        return queryFactory
+                .selectFrom(representative)
+                .where(representative.name.eq(name)) // 이름이 일치하는 조건
+                .fetch(); // 결과를 리스트로 반환
     }
 }
