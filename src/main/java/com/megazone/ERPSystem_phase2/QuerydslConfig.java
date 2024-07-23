@@ -7,8 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * QuerydslConfig 클래스
- * QueryDSL을 사용하기 위한 설정 클래스임
+ * QueryDSL을 사용하기 위한 설정 클래스
  */
 @Configuration
 public class QuerydslConfig {

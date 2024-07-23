@@ -73,5 +73,5 @@ tasks.named("clean", Delete::class.java) {
 
 // 테스트 설정: JUnit 플랫폼 사용
 tasks.withType<Test> {
-	useJUnitPlatform() // JUnit 플랫폼 사용
+	useJUnitPlatform(); // JUnit 플랫폼 사용
 }
