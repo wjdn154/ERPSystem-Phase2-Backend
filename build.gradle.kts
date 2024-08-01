@@ -37,6 +37,7 @@ dependencies {
 	implementation("com.querydsl:querydsl-apt:5.0.0") // Querydsl APT
 	implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta") // Querydsl JPA Jakarta
 	implementation("com.querydsl:querydsl-core:5.0.0") // Querydsl Core
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	// 어노테이션 프로세서로 Querydsl, Jakarta API 사용
 	annotationProcessor("com.querydsl:querydsl-apt:5.0.0:jakarta") // Querydsl APT 어노테이션 프로세서
 	annotationProcessor("jakarta.annotation:jakarta.annotation-api") // Jakarta 어노테이션 API
