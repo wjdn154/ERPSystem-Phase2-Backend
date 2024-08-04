@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: ERPSystem-phase2-Backend
+  datasource:
+    url: jdbc:mysql://localhost:3306/erp_test?useSSL=false&serverTimezone=UTC
+    username: root
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+  web:
+    resources:
+      static-locations:
+        - 'classpath:/static/'
+        - 'classpath:/public/'
+        - 'classpath:/resources/'
+        - 'classpath:/META-INF/resources/'
+        - 'file:src/main/frontend/dist/'
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
