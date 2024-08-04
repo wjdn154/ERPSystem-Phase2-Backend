@@ -38,7 +38,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
      */
     @Override
     public AccountSubject saveAccount(AccountSubject accountSubject) {
-        AccountSubjectStructure accountSubjectStructure = accountSubject.getAccountSubjectStandardFinancialStatement().getAccountSubjectStructure();
+        AccountSubjectStructure accountSubjectStructure = accountSubject.getStandardFinancialStatement().getAccountSubjectStructure();
         int accountCode = Integer.parseInt(accountSubject.getCode());
         if (accountCode < accountSubjectStructure.getMin() || accountCode > accountSubjectStructure.getMax()) {
             throw new IllegalArgumentException("계정 코드가 계정 체계 범위를 벗어났습니다.");
@@ -69,11 +69,11 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
         existingAccount.setIsBusinessCar(accountSubject.getIsBusinessCar());
 
         // 3.필요한 경우 연관 테이블 업데이트.
-        if (accountSubject.getAccountSubjectStructure() != null) existingAccount.setAccountSubjectStructure(accountSubject.getAccountSubjectStructure());
-        if (accountSubject.getAccountSubjectStandardFinancialStatement() != null) existingAccount.setAccountSubjectStandardFinancialStatement(accountSubject.getAccountSubjectStandardFinancialStatement());
-        if (accountSubject.getAccountSubjectCashMemo() != null && !accountSubject.getAccountSubjectCashMemo().isEmpty()) existingAccount.setAccountSubjectCashMemo(accountSubject.getAccountSubjectCashMemo());
-        if (accountSubject.getAccountSubjectTransferMemo() != null && !accountSubject.getAccountSubjectTransferMemo().isEmpty()) existingAccount.setAccountSubjectTransferMemo(accountSubject.getAccountSubjectTransferMemo());
-        if (accountSubject.getAccountSubjectFixedMemos() != null && !accountSubject.getAccountSubjectFixedMemos().isEmpty()) existingAccount.setAccountSubjectFixedMemos(accountSubject.getAccountSubjectFixedMemos());
+        if (accountSubject.getStructure() != null) existingAccount.setStructure(accountSubject.getStructure());
+        if (accountSubject.getStandardFinancialStatement() != null) existingAccount.setStandardFinancialStatement(accountSubject.getStandardFinancialStatement());
+        if (accountSubject.getCashMemo() != null && !accountSubject.getCashMemo().isEmpty()) existingAccount.setCashMemo(accountSubject.getCashMemo());
+        if (accountSubject.getTransferMemo() != null && !accountSubject.getTransferMemo().isEmpty()) existingAccount.setTransferMemo(accountSubject.getTransferMemo());
+        if (accountSubject.getFixedMemos() != null && !accountSubject.getFixedMemos().isEmpty()) existingAccount.setFixedMemos(accountSubject.getFixedMemos());
 
         // 4. 업데이트된 계정과목 저장.
         return accountSubjectRepository.save(existingAccount);

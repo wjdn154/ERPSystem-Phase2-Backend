@@ -108,3 +108,5 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+
+src/main/generated/

@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.basic_information_management.account_subject;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubject;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubjectNature;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubjectStandardFinancialStatement;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubjectStructure;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubject.AccountSubjectRepository;
@@ -68,6 +69,11 @@ class AccountSubjectServiceImplTest {
         structure.setMax(200);
         accountSubjectStructureRepository.save(structure);
 
+        AccountSubjectNature nature = new AccountSubjectNature();
+        nature.setCode("1");
+        nature.setName("예금");
+        accountSubjectNatureRepository.save(nature);
+
         AccountSubjectStandardFinancialStatement statement = new AccountSubjectStandardFinancialStatement();
         statement.setAccountSubjectStructure(structure);
         statement.setCode("03");
@@ -82,8 +88,9 @@ class AccountSubjectServiceImplTest {
         accountSubject.setModificationType(true);
         accountSubject.setIsForeignCurrency(false);
         accountSubject.setIsBusinessCar(false);
-        accountSubject.setAccountSubjectStructure(structure);
-        accountSubject.setAccountSubjectStandardFinancialStatement(statement);
+        accountSubject.setStructure(structure);
+        accountSubject.setStandardFinancialStatement(statement);
+        accountSubject.setNature(nature);
         accountSubjectRepository.save(accountSubject);
     }
 

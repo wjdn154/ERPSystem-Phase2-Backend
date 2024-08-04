@@ -33,19 +33,27 @@ public class AccountSubject {
     private Boolean isBusinessCar; // 업무용 차량 여부
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "accounting_structure_id")
-    private AccountSubjectStructure accountSubjectStructure; // 계정체계 참조
-
-    @OneToMany(mappedBy = "accountSubject", fetch = FetchType.LAZY)
-    private List<AccountSubjectCashMemo> accountSubjectCashMemo; // 관련 현금적요 목록
-
-    @OneToMany(mappedBy = "accountSubject", fetch = FetchType.LAZY)
-    private List<AccountSubjectTransferMemo> accountSubjectTransferMemo; // 관련 대체적요 목록
-
-    @OneToMany(mappedBy = "accountSubject", fetch = FetchType.LAZY)
-    private List<AccountSubjectFixedMemo> accountSubjectFixedMemos; // 관련 고정적요 목록
+    @JoinColumn(name = "accounting_subject_structure_id")
+    private AccountSubjectStructure structure; // 계정체계 참조
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "standard_financial_statement_id")
-    private AccountSubjectStandardFinancialStatement accountSubjectStandardFinancialStatement; // 표준 재무제표 참조
+    @JoinColumn(name = "accounting_subject_standard_financial_statement_id")
+    private AccountSubjectStandardFinancialStatement standardFinancialStatement; // 표준 재무제표 참조
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "accounting_subject_nature_id", nullable = false)
+    private AccountSubjectNature nature; // 계정과목 성격 참조
+
+    @OneToMany(mappedBy = "accountSubject", fetch = FetchType.LAZY)
+    private List<AccountSubjectRelationship> relationships; // 계정과목 관계 목록
+
+    @OneToMany(mappedBy = "accountSubject", fetch = FetchType.LAZY)
+    private List<AccountSubjectCashMemo> cashMemo; // 관련 현금적요 목록
+
+    @OneToMany(mappedBy = "accountSubject", fetch = FetchType.LAZY)
+    private List<AccountSubjectTransferMemo> transferMemo; // 관련 대체적요 목록
+
+    @OneToMany(mappedBy = "accountSubject", fetch = FetchType.LAZY)
+    private List<AccountSubjectFixedMemo> fixedMemos; // 관련 고정적요 목록
+
 }
