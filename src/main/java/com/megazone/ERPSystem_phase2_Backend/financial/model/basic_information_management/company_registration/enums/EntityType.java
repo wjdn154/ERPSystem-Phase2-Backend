@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.financial.model.enums;
+package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company_registration.enums;
 
 /**
  * EntityType enum 클래스
