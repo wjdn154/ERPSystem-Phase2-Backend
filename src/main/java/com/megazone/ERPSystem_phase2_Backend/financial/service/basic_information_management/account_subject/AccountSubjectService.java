@@ -6,7 +6,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import java.util.List;
 
 public interface AccountSubjectService {
-    AccountSubject saveAccount(AccountSubject account);
+    AccountSubject saveAccountSubject(AccountSubject account);
 
     AccountSubject updateAccount(AccountSubject accountSubject);
 

@@ -1,9 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.enums.EntryType;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.enums.IncreaseDecreaseType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,20 +21,6 @@ public class AccountSubject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 계정과목 ID
 
-    @Column(unique = true, nullable = false)
-    private String code; // 계정과목 코드
-    @Column(nullable = false)
-    private String name; // 계정과목명
-    private String englishName; // 영문명
-    @Column(nullable = false)
-    private Boolean isActive; // 계정 사용 여부
-    @Column(nullable = false)
-    private Boolean modificationType; // 계정과목 수정가능 여부
-    @Column(nullable = false)
-    private Boolean isForeignCurrency; // 외화 사용 여부
-    @Column(nullable = false)
-    private Boolean isBusinessCar; // 업무용 차량 여부
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "accounting_subject_structure_id")
     private AccountSubjectStructure structure; // 계정체계 참조
@@ -45,9 +34,6 @@ public class AccountSubject {
     private AccountSubjectNature nature; // 계정과목 성격 참조
 
     @OneToMany(mappedBy = "accountSubject", fetch = FetchType.LAZY)
-    private List<AccountSubjectRelationship> relationships; // 계정과목 관계 목록
-
-    @OneToMany(mappedBy = "accountSubject", fetch = FetchType.LAZY)
     private List<AccountSubjectCashMemo> cashMemo; // 관련 현금적요 목록
 
     @OneToMany(mappedBy = "accountSubject", fetch = FetchType.LAZY)
@@ -55,5 +41,28 @@ public class AccountSubject {
 
     @OneToMany(mappedBy = "accountSubject", fetch = FetchType.LAZY)
     private List<AccountSubjectFixedMemo> fixedMemos; // 관련 고정적요 목록
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EntryType entryType;  // 차대구분
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private IncreaseDecreaseType increaseDecreaseType;  // 증감구분
+
+    @Column(unique = true, nullable = false)
+    private String code; // 계정과목 코드
+    @Column(nullable = false)
+    private String name; // 계정과목명
+    private String englishName; // 영문명
+    @Column(nullable = false)
+    private Boolean isActive; // 계정 사용 여부
+    @Column(nullable = false)
+    private Boolean modificationType; // 계정과목 수정가능 여부
+    @Column(nullable = false)
+    private Boolean isForeignCurrency; // 외화 사용 여부
+    @Column(nullable = false)
+    private Boolean isBusinessCar; // 업무용 차량 여부
+    private String relationshipCode;  // 관계 계정과목 코드
 
 }
