@@ -4,7 +4,6 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubjectStructure;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubject.AccountSubjectRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectNature.AccountSubjectNatureRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectRelationship.AccountSubjectRelationshipRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectStructure.AccountSubjectStructureRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectCashMemo.AccountSubjectCashMemoRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectFixedMemo.AccountSubjectFixedMemoRepository;
@@ -23,7 +22,6 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     private final AccountSubjectCashMemoRepository accountSubjectCashMemoRepository;
     private final AccountSubjectFixedMemoRepository accountSubjectFixedMemoRepository;
     private final AccountSubjectNatureRepository accountSubjectNatureRepository;
-    private final AccountSubjectRelationshipRepository accountSubjectRelationshipRepository;
     private final AccountSubjectStandardFinancialStatementRepository accountSubjectStandardFinancialStatementRepository;
     private final AccountSubjectStructureRepository accountSubjectStructureRepository;
     private final AccountSubjectTransferMemoRepository accountSubjectTransferMemoRepository;
@@ -37,7 +35,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
      * @throws IllegalArgumentException 계정 코드가 계정 체계 범위를 벗어날 경우 발생
      */
     @Override
-    public AccountSubject saveAccount(AccountSubject accountSubject) {
+    public AccountSubject saveAccountSubject(AccountSubject accountSubject) {
         AccountSubjectStructure accountSubjectStructure = accountSubject.getStandardFinancialStatement().getAccountSubjectStructure();
         int accountCode = Integer.parseInt(accountSubject.getCode());
         if (accountCode < accountSubjectStructure.getMin() || accountCode > accountSubjectStructure.getMax()) {

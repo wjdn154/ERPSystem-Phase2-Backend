@@ -4,9 +4,10 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubjectNature;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubjectStandardFinancialStatement;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubjectStructure;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.enums.EntryType;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.enums.IncreaseDecreaseType;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubject.AccountSubjectRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectNature.AccountSubjectNatureRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectRelationship.AccountSubjectRelationshipRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectStructure.AccountSubjectStructureRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectCashMemo.AccountSubjectCashMemoRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectFixedMemo.AccountSubjectFixedMemoRepository;
@@ -43,7 +44,6 @@ class AccountSubjectServiceImplTest {
     @Autowired private AccountSubjectCashMemoRepository accountSubjectCashMemoRepository;
     @Autowired private AccountSubjectFixedMemoRepository accountSubjectFixedMemoRepository;
     @Autowired private AccountSubjectNatureRepository accountSubjectNatureRepository;
-    @Autowired private AccountSubjectRelationshipRepository accountSubjectRelationshipRepository;
     @Autowired private AccountSubjectStandardFinancialStatementRepository accountSubjectStandardFinancialStatementRepository;
     @Autowired private AccountSubjectStructureRepository accountSubjectStructureRepository;
     @Autowired private AccountSubjectTransferMemoRepository accountSubjectTransferMemoRepository;
@@ -57,7 +57,6 @@ class AccountSubjectServiceImplTest {
         accountSubjectCashMemoRepository.deleteAll();
         accountSubjectFixedMemoRepository.deleteAll();
         accountSubjectNatureRepository.deleteAll();
-        accountSubjectRelationshipRepository.deleteAll();
         accountSubjectStandardFinancialStatementRepository.deleteAll();
         accountSubjectStructureRepository.deleteAll();
         accountSubjectTransferMemoRepository.deleteAll();
@@ -91,7 +90,9 @@ class AccountSubjectServiceImplTest {
         accountSubject.setStructure(structure);
         accountSubject.setStandardFinancialStatement(statement);
         accountSubject.setNature(nature);
-        accountSubjectRepository.save(accountSubject);
+        accountSubject.setEntryType(EntryType.DEBIT);
+        accountSubject.setIncreaseDecreaseType(IncreaseDecreaseType.INCREASE);
+        accountSubjectService.saveAccountSubject(accountSubject);
     }
 
     @Test
