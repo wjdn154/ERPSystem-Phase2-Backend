@@ -1,0 +1,14 @@
+package com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry;
+
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.resolvedVoucher.ResolvedVoucherRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.unresolvedVoucher.UnresolvedVoucherRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class GeneralVoucherEntryServiceImp implements GeneralVoucherEntryService {
+
+    private final ResolvedVoucherRepository resolvedVoucherRepository;
+    private final UnresolvedVoucherRepository unresolvedVoucherRepository;
+}
