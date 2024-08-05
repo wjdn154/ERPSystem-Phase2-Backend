@@ -16,6 +16,10 @@ public class AccountSubjectNature {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "accounting_subject_structure_id", nullable = false)
+    private AccountSubjectStructure structure; // 계정과목 체계 참조
+
     @Column(unique = true, nullable = false)
     private String code; // 성격 코드
 
