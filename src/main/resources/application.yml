@@ -2,12 +2,12 @@ spring:
   application:
     name: ERPSystem-phase2-Backend
   datasource:
-    url: jdbc:mysql://localhost:3306/erp_test?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/erp?useSSL=false&serverTimezone=UTC
     username: root
     password: 1234
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
   web:
     resources:
