@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubject;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
 import jakarta.persistence.*;
@@ -11,6 +12,12 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+/**
+ * 미결전표 관리 테이블
+ * 일반전표 등록 시 승인되지 않은 미결전표로 등록된다.
+ *
+ */
 
 @Entity
 @Data
@@ -24,17 +31,19 @@ public class UnresolvedVoucher {
     @Column(nullable = false)
     private Long id;
 
-
     @Column(nullable = false)
     private Long userCompanyId; // 유저 회사 ID
 
-    @Column(nullable = false)
-    private Long accountSubjectId; // 계정과목 참조
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", nullable = false)
+    private AccountSubject accountSubjectId; // 계정과목 참조
 
-    @Column(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vendor_id", nullable = false)
     private Long vendorId; // 거래처 참조
 
-    @Column(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vendor_id", nullable = false)
     private Long approvalManagerId; // 담당자 참조
 
     @Column(nullable = false)
@@ -64,6 +73,6 @@ public class UnresolvedVoucher {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ApprovalStatus approvalStatus; // 승인상태 ( 미승인, 승인, 반려 )
+    private ApprovalStatus approvalStatus; // 승인상태 ( 승인대기 승인, 반려 )
 
 }
