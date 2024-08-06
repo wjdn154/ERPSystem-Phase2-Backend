@@ -22,6 +22,6 @@ public class AccountSubjectStandardFinancialStatement {
     private String name; // 한글명
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accounting_structure_id")
-    private AccountSubjectStructure accountSubjectStructure; // 계정체계 참조
+    @JoinColumn(name = "accounting_subject_structure_id")
+    private AccountSubjectStructure structure; // 계정과목 체계 참조
 }

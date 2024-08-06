@@ -36,7 +36,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
      */
     @Override
     public AccountSubject saveAccountSubject(AccountSubject accountSubject) {
-        AccountSubjectStructure accountSubjectStructure = accountSubject.getStandardFinancialStatement().getAccountSubjectStructure();
+        AccountSubjectStructure accountSubjectStructure = accountSubject.getStandardFinancialStatement().getStructure();
         int accountCode = Integer.parseInt(accountSubject.getCode());
         if (accountCode < accountSubjectStructure.getMin() || accountCode > accountSubjectStructure.getMax()) {
             throw new IllegalArgumentException("계정 코드가 계정 체계 범위를 벗어났습니다.");
@@ -71,7 +71,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
         if (accountSubject.getStandardFinancialStatement() != null) existingAccount.setStandardFinancialStatement(accountSubject.getStandardFinancialStatement());
         if (accountSubject.getCashMemo() != null && !accountSubject.getCashMemo().isEmpty()) existingAccount.setCashMemo(accountSubject.getCashMemo());
         if (accountSubject.getTransferMemo() != null && !accountSubject.getTransferMemo().isEmpty()) existingAccount.setTransferMemo(accountSubject.getTransferMemo());
-        if (accountSubject.getFixedMemos() != null && !accountSubject.getFixedMemos().isEmpty()) existingAccount.setFixedMemos(accountSubject.getFixedMemos());
+        if (accountSubject.getFixedMemo() != null && !accountSubject.getFixedMemo().isEmpty()) existingAccount.setFixedMemo(accountSubject.getFixedMemo());
 
         // 4. 업데이트된 계정과목 저장.
         return accountSubjectRepository.save(existingAccount);

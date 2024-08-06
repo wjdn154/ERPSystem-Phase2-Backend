@@ -40,7 +40,7 @@ public class AccountSubject {
     private List<AccountSubjectTransferMemo> transferMemo; // 관련 대체적요 목록
 
     @OneToMany(mappedBy = "accountSubject", fetch = FetchType.LAZY)
-    private List<AccountSubjectFixedMemo> fixedMemos; // 관련 고정적요 목록
+    private List<AccountSubjectFixedMemo> fixedMemo; // 관련 고정적요 목록
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

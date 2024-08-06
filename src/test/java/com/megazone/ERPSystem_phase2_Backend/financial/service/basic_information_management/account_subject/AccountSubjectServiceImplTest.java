@@ -71,10 +71,11 @@ class AccountSubjectServiceImplTest {
         AccountSubjectNature nature = new AccountSubjectNature();
         nature.setCode("1");
         nature.setName("예금");
+        nature.setStructure(structure);
         accountSubjectNatureRepository.save(nature);
 
         AccountSubjectStandardFinancialStatement statement = new AccountSubjectStandardFinancialStatement();
-        statement.setAccountSubjectStructure(structure);
+        statement.setStructure(structure);
         statement.setCode("03");
         statement.setName("1.현금 및 현금성자산");
         accountSubjectStandardFinancialStatementRepository.save(statement);
