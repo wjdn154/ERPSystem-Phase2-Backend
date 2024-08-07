@@ -1,14 +1,17 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.bom_and_routing;
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_information.ProcessDetails;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
- * Routing 정보 관리 테이블 : 각 생산품목에 대해 공정 경로를 정의하고 관리하여
- * 생산 공정의 효율성을 극대화하기 위해 사용
- * 제품을 만들기 위해 어떤 작업을 어떤 순서로 해야 하는지 기록하고 관리
+ * Routing 정보 관리 테이블 : 생산 과정에서 공정 간의 흐름을 정의
+ * 제조 과정에서 어떤 공정을 어떤 순서로 거칠지 명시
+ * "재료 준비 -> 절단 -> 용접 -> 검사 -> 포장"과 같은 일련의 공정 순서
  */
 
 @Entity
@@ -39,4 +42,8 @@ public class Routing {
 
     @Column(nullable = false)
     private boolean isActive; // 사용 여부
+
+    @ManyToMany(mappedBy = "process", fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private List<ProcessDetails> process; // 공정
 }

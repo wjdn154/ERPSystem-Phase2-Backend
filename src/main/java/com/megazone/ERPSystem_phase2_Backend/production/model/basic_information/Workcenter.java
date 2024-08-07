@@ -1,9 +1,13 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.basic_information;
 
+import com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management.Employee;
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.MaterialData;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * 작업장 정보 테이블
@@ -35,20 +39,30 @@ public class Workcenter {
     private Long inputPersonnel; // 투입인원수
 
     @Column(nullable = false)
-    private boolean active;
+    private boolean active; // 사용 여부
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name="factory", nullable = false)
+//    private Factory factory;     // 공장 엔티티 from 물류 창고관리의 공장
 
-/*
-    @Column(nullable = false)
-    // 공장 엔티티 from 물류의 공장
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name="workcenter_process",
+            joinColumns = @JoinColumn(name="workcenter_id"),
+            inverseJoinColumns = @JoinColumn(name="process_id")
+    )
+    private List<ProcessDetails> processes; // 연관 공정 목록
 
-    @Column(nullable = false)
-    // 생산공정 엔티티 from 생산의 공정
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name="workcenter_material",
+            joinColumns = @JoinColumn(name="workcneter_id"),
+            inverseJoinColumns = @JoinColumn(name="material_id")
+    )
+    private List<MaterialData> materialDataList; // 연관 자재 목록
 
-    @Column(nullable = false)
-    // 작업자원(자재) 엔티티 from 생산의 자재
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="responsible", nullable = true)
+    private Employee responsible; // 연관 책임자 (HR)
 
-    @Column(nullable = false)
-    // 책임자(담당자) 엔티티 from 인사의 직원
-*/
 }
