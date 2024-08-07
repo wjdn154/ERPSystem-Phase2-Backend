@@ -1,52 +1,60 @@
-package com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management;
+package com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+// 사원 기본 정보 저장
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Employee {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @JoinColumn(nullable = false)
-//    private PositionId positionId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_Id", nullable = false)
+    private Department department;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "position_Id", nullable = false)
+    private Position position;
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "salary_Id", nullable = false)
+//    private Salary salary;
 //
-//    @JoinColumn(nullable = false)
-//    private SalaryId salaryId;
-//
-//    @JoinColumn(nullable = false)
-//    private AllowanceId allowanceId;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "allowance_Id", nullable = false)
+//    private Allowance allowance;
 
     @Column(nullable = false)
-    private String firstName;
+    private String firstName; // 성
 
     @Column(nullable = false)
-    private String lastName;
+    private String lastName; // 이름
 
     @Column(nullable = false)
-    private Date dateOfBirth;
+    private Date dateOfBirth; // 생년월일
 
     @Column(nullable = false)
-    private String phoneNumber;
+    private String phoneNumber; // 휴대폰 번호
 
     @Column(nullable = false)
-    private String email;
+    private String email; // �이메일
 
     @Column(nullable = false)
-    private String address;
+    private String address; // 주소
 
     @Column(nullable = false)
-    private LocalDate hireDate;
-
-//    @Column(nullable = false)
-//    private EmployeementType employeementType;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private Department departmentId;
-
+    private LocalDate hireDate; // 고용일
 }

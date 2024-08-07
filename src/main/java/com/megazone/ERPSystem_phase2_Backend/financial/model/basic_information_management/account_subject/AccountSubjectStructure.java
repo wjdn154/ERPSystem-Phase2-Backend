@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 계정체계 테이블
+ * 계정과목 체계 테이블
  */
 @Entity
 @Table(name = "account_subject_structure")
@@ -14,12 +14,12 @@ import lombok.Setter;
 public class AccountSubjectStructure {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 계정체계 ID
+    private Long id; // 계정과목 체계 ID
 
     @Column(unique = true, nullable = false)
-    private String code; // 계정체계 코드
+    private String code; // 계정과목 체계 코드
     @Column(nullable = false)
-    private String name; // 계정체계명
+    private String name; // 계정과목 체계명
     @Column(nullable = false)
     private Integer min; // 최소값
     @Column(nullable = false)
