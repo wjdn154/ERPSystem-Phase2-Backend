@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// ½Ã½ºÅÛ »ç¿ëÀÚÀÇ ¿ªÇÒ ¹× ±ÇÇÑ Á¤º¸ ÀúÀå
+// ì‹œìŠ¤í…œ ì‚¬ìš©ìì˜ ì—­í•  ë° ê¶Œí•œ ì •ë³´ ì €ì¥
 
 @Data
 @Entity

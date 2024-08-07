@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// Á÷À§ Á¤º¸ ÀúÀå Å×ÀÌºí
+// ì§ìœ„ ì •ë³´ ì €ì¥
 
 @Data
 @Entity
@@ -17,9 +17,11 @@ public class Position {
     private Long id;
 
     @Column(nullable = false)
-    private String positionName; // Á÷À§ ÀÌ¸§
+    private String positionName; // ì§ìœ„ ì´ë¦„
 
     @Column
-    private String description; // Á÷À§ ¼³¸í
+    private String description; // ì§ìœ„ ì„¤ëª…
+
+    //@Column
 
 }

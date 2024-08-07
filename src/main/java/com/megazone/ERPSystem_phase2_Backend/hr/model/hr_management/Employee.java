@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-// »ç¿ø ±âº» Á¤º¸ ÀúÀå Å×ÀÌºí
+// ì‚¬ì› ê¸°ë³¸ ì •ë³´ ì €ì¥
 
 @Data
 @Entity
@@ -38,23 +38,23 @@ public class Employee {
 //    private Allowance allowance;
 
     @Column(nullable = false)
-    private String firstName; // ¼º
+    private String firstName; // ì„±
 
     @Column(nullable = false)
-    private String lastName; // ÀÌ¸§
+    private String lastName; // ì´ë¦„
 
     @Column(nullable = false)
-    private Date dateOfBirth; // »ı³â¿ùÀÏ
+    private Date dateOfBirth; // ìƒë…„ì›”ì¼
 
     @Column(nullable = false)
-    private String phoneNumber; // ÈŞ´ëÆù ¹øÈ£
+    private String phoneNumber; // íœ´ëŒ€í° ë²ˆí˜¸
 
     @Column(nullable = false)
-    private String email; // ÀÌ¸ŞÀÏ
+    private String email; // ï¿½ì´ë©”ì¼
 
     @Column(nullable = false)
-    private String address; // ÁÖ¼Ò
+    private String address; // ì£¼ì†Œ
 
     @Column(nullable = false)
-    private LocalDate hireDate; // °í¿ëÀÏ
+    private LocalDate hireDate; // ê³ ìš©ì¼
 }
