@@ -43,7 +43,7 @@ public class Routing {
     @Column(nullable = false)
     private boolean isActive; // 사용 여부
 
-    @ManyToMany(mappedBy = "process", fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
-    private List<ProcessDetails> process; // 공정
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name="routing_process", joinColumns = @JoinColumn(name="routing_id"), inverseJoinColumns = @JoinColumn(name="process_id"))
+    private List<ProcessDetails> process; // 연관 공정 목록 ( 서비스에서 정렬 )
 }
