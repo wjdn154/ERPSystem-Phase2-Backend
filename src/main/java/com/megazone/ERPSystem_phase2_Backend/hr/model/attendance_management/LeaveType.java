@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// ÈÞ°¡ À¯Çü Á¤º¸ ÀúÀå Å×ÀÌºí
+// íœ´ê°€ ìœ í˜• ì •ë³´ë¥¼ ì €ìž¥
 
 @Data
 @Entity

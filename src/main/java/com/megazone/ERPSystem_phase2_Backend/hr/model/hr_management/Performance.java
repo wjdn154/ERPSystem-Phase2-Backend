@@ -1,6 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management;
 
-// Á÷¿øÀÇ ¼º°ú Æò°¡ Á¤º¸ Å×ÀÌºí
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-// Á÷¿øÀÇ ¼º°ú Æò°¡ Á¤º¸ Å×ÀÌºí
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½
 
 @Data
 @Entity
@@ -21,11 +21,11 @@ public class Performance {
     private Long id;
 
     @Column(nullable = false)
-    private Date evaluationDate; // Æò°¡ ³¯Â¥
+    private Date evaluationDate; // í‰ê°€ì¼
 
     @Column(nullable = false)
-    private String score; // ¼º°ú Á¡¼ö
+    private String score; // í‰ê°€ ì ìˆ˜
 
     @Column(nullable = false)
-    private String comments; // Æò°¡ ÄÚ¸àÆ®
+    private String comments; // í‰ê°€ ë‚´ìš©
 }

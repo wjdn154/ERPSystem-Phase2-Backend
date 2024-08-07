@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-// ¹ß·É ±â·Ï ÀúÀå Å×ÀÌºí
+// ë°œë ¹ ê¸°ë¡ ì €ì¥
 
 @Data
 @Entity
@@ -19,11 +19,11 @@ public class Transfer {
     private Long id;
 
     @Column(nullable = false)
-    private Date transferDate; // ¹ß·É ³¯Â¥
+    private Date transferDate; // ë°œë ¹ ë‚ ì§œ
 
     @Column(nullable = false)
-    private String transferType; // ¹ß·É À¯Çü ( promotion : ½ÂÁø, demotion, lateral )
+    private String transferType; // ë°œë ¹ ìœ í˜• ( promotion :, demotion, lateral )
 
     @Column(nullable = false)
-    private String reason; // ¹ß·É »çÀ¯
+    private String reason; // ë°œë ¹ ì´ìœ 
 }

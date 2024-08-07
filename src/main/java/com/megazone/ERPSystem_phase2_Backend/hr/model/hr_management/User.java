@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
-// ERP ½Ã½ºÅÛ »ç¿ëÀÚ Á¤º¸ ÀúÀå Å×ÀÌºí
+// ERP ì‹œìŠ¤í…œ ì‚¬ìš©ìì˜ ì—­í•  ë° ê¶Œí•œ ì •ë³´ ì €ì¥
 
 @Data
 @Entity

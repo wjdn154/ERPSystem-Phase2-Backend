@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-// ºÎ¼­ Á¤º¸ ÀúÀå Å×ÀÌºí
+// ë¶€ì„œ ì •ë³´ ì €ì¥
 
 @Data
 @Entity
