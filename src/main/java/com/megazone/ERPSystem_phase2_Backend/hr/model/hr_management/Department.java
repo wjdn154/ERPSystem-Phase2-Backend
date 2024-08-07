@@ -1,17 +1,21 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+// 부서 정보 저장
+
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Department {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -19,7 +23,4 @@ public class Department {
 
     @Column(nullable = false)
     private String managerId;
-
-    @OneToMany
-    private List<Employee> employees;
 }
