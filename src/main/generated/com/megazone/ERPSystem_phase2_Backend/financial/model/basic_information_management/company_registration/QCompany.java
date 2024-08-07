@@ -42,7 +42,7 @@ public class QCompany extends EntityPathBase<Company> {
 
     public final QCorporateType corporateType;
 
-    public final EnumPath<com.megazone.ERPSystem_phase2_Backend.financial.model.enums.EntityType> entityType = createEnum("entityType", com.megazone.ERPSystem_phase2_Backend.financial.model.enums.EntityType.class);
+    public final EnumPath<com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company_registration.enums.EntityType> entityType = createEnum("entityType", com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company_registration.enums.EntityType.class);
 
     public final DatePath<java.time.LocalDate> establishmentDate = createDate("establishmentDate", java.time.LocalDate.class);
 
