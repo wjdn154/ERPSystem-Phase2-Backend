@@ -17,7 +17,7 @@ public class Warehouse {
     private Long id;
 
     @Column(name = "warehouse_code", nullable = false) // 창고코드
-    private Long warehouseCode;
+    private String warehouseCode;
 
     @ManyToOne
     @JoinColumn(name = "address_id", nullable = false) // 주소정보

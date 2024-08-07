@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management;
+package com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

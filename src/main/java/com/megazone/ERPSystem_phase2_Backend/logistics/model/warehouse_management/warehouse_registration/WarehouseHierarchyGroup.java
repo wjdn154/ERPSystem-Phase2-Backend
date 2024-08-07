@@ -10,12 +10,12 @@ public class WarehouseHierarchyGroup {
 //    private Long id;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hierarchyGroup_id")
     private HierarchyGroup hierarchyGroup;
 }

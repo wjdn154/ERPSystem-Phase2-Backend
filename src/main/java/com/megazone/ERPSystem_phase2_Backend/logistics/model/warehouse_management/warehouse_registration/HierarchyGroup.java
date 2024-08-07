@@ -17,7 +17,7 @@ public class HierarchyGroup {
     private Long id;
 
     @Column(name = "hierarchy_group_code", nullable = false)
-    private Long hierarchyGroupCode;
+    private String hierarchyGroupCode;
 
     @Column(name = "hierarchy_group_code", nullable = false)
     private String hierarchyGroupName;
