@@ -22,12 +22,18 @@ public class Employee {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_Id", nullable = false)
+    @JoinColumn(name = "department_Id", nullable = false) // 부서 참조
     private Department department;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "position_Id", nullable = false)
+    @JoinColumn(name = "position_Id", nullable = false) // 직위 참조
     private Position position;
+
+    @OneToMany(mappedBy = "performance_Id", fetch = FetchType.LAZY) // 성과 평가 참조
+    private List<Performance> performance;
+
+    @OneToMany(mappedBy = "transfer_Id", fetch = FetchType.LAZY) // 발령 참조
+    private List<Transfer> transfer;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "salary_Id", nullable = false)
@@ -50,7 +56,7 @@ public class Employee {
     private String phoneNumber; // 휴대폰 번호
 
     @Column(nullable = false)
-    private String email; // �이메일
+    private String email; // 이메일
 
     @Column(nullable = false)
     private String address; // 주소
