@@ -6,10 +6,10 @@ import lombok.Getter;
 /**
  * 현금적요 테이블
  */
-@Entity
+@Entity(name = "account_subject_cash_memo")
 @Table(name = "account_subject_cash_memo")
 @Getter
-public class AccountSubjectCashMemo {
+public class CashMemo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 적요 ID

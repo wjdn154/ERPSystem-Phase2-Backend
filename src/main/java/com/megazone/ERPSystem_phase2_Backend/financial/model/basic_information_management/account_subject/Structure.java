@@ -7,11 +7,11 @@ import lombok.Setter;
 /**
  * 계정과목 체계 테이블
  */
-@Entity
+@Entity(name = "account_subject_structure")
 @Table(name = "account_subject_structure")
 @Getter
 @Setter
-public class AccountSubjectStructure {
+public class Structure {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 계정과목 체계 ID
