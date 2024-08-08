@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -180,5 +181,26 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
         autoCreateDto.setAccountSubjectId(Long.parseLong(cashAccountCode));
 
         return autoCreateDto;
+    }
+
+    /**
+     * 날짜조건에 해당하는 모든 전표조회
+     * @param date
+     * @return
+     */
+    @Override
+    public List<UnresolvedVoucher> unresolvedVoucherAllByDate(LocalDate date) {
+        List<UnresolvedVoucher> unresolvedVoucherList = new ArrayList<UnresolvedVoucher>();
+        try {
+            unresolvedVoucherList = unresolvedVoucherRepository.findByVoucherDateOrderByVoucherNumberAsc(date);
+            System.out.println(unresolvedVoucherList.toString());
+            if(unresolvedVoucherList.isEmpty()) {
+                throw new NoSuchElementException("해당 날짜에 등록된 전표가 없습니다.");
+            }
+        }
+        catch (NoSuchElementException e) {
+            e.getStackTrace();
+        }
+        return unresolvedVoucherList;
     }
 }

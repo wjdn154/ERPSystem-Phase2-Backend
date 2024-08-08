@@ -12,4 +12,6 @@ public interface UnresolvedVoucherEntryService {
     boolean depositAndWithdrawalUnresolvedVoucherTypeCheck(GeneralVoucherEntryDto dto);
     String CreateUnresolvedVoucherNumber(LocalDate voucherDate);
     GeneralVoucherEntryDto autoCreateUnresolvedVoucherDto(GeneralVoucherEntryDto dto) throws CloneNotSupportedException;
+
+    List<UnresolvedVoucher> unresolvedVoucherAllByDate(LocalDate date);
 }
