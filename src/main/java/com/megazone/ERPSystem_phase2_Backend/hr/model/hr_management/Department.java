@@ -21,10 +21,10 @@ public class Department {
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     private List<Employee> employees;
 
-    @OneToMany(mappedBy = "from_Department") // 출발 부서
+    @OneToMany(mappedBy = "fromDepartment") // 출발 부서
     private List<Transfer> transferFrom;
 
-    @OneToMany(mappedBy = "to_Department") // 도착 부서
+    @OneToMany(mappedBy = "toDepartment") // 도착 부서
     private List<Transfer> transfersTo;
 
     @Column(nullable = false)
