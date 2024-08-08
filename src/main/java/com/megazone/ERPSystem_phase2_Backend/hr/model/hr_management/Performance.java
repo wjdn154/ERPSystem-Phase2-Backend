@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-// ������ ���� �� ���� ���̺�
+// 직원의 성과 평가 정보
 
 @Data
 @Entity
@@ -19,6 +19,10 @@ public class Performance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_Id", nullable = false)
+    private Employee employee;
 
     @Column(nullable = false)
     private Date evaluationDate; // 평가일

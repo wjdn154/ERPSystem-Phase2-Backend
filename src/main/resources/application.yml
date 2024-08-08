@@ -1,23 +1,30 @@
 spring:
   application:
-    name: ERPSystem-phase2-Backend
+    name: ERPSystem-phase2-Backend # 애플리케이션 이름 설정
   datasource:
-    url: jdbc:mysql://localhost:3306/erp?useSSL=false&serverTimezone=UTC
-    username: root
-    password: 1234
+    url: jdbc:mysql://localhost:3306/erp?useSSL=false&serverTimezone=UTC # 데이터베이스 URL 설정 (MySQL 데이터베이스 연결)
+    username: root # 데이터베이스 사용자 이름
+    password: 1234 # 데이터베이스 사용자 비밀번호
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: create # 애플리케이션 시작 시 Hibernate가 데이터베이스 스키마를 생성하도록 설정
+    show-sql: true # SQL 쿼리를 콘솔에 출력하도록 설정
+    defer-datasource-initialization: true # 데이터베이스 초기화를 지연시켜, 스키마 생성 후 데이터 초기화가 이루어지도록 설정
   web:
     resources:
       static-locations:
-        - 'classpath:/static/'
-        - 'classpath:/public/'
-        - 'classpath:/resources/'
-        - 'classpath:/META-INF/resources/'
-        - 'file:src/main/frontend/dist/'
+        - 'classpath:/static/' # 정적 리소스 위치 지정 (클래스패스 기준)
+        - 'classpath:/public/' # 정적 리소스 위치 지정 (클래스패스 기준)
+        - 'classpath:/resources/' # 정적 리소스 위치 지정 (클래스패스 기준)
+        - 'classpath:/META-INF/resources/' # 정적 리소스 위치 지정 (클래스패스 기준)
+        - 'file:src/main/frontend/dist/' # 정적 리소스 위치 지정 (파일 시스템 기준)
+  sql:
+    init:
+      mode: always # 항상 SQL 초기화 모드를 사용하도록 설정
+      data-locations:
+        - classpath:initial-database/financial/account_subject_structure.sql # 초기 데이터를 삽입할 SQL 파일 위치 지정
+        - classpath:initial-database/financial/account_subject_nature.sql
 logging:
   level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE # Hibernate SQL 바인딩 로그 레벨 설정 (TRACE)
