@@ -2,7 +2,7 @@
 //
 ////외주 실적 관리
 //
-////import com.megazone.ERPSystem_phase2_Backend.production.model.basic_information.Process;
+//import com.megazone.ERPSystem_phase2_Backend.production.model.basic_information.ProcessDetails;
 //import com.megazone.ERPSystem_phase2_Backend.production.model.basic_information.Workcenter;
 //import jakarta.persistence.*;
 //import lombok.AllArgsConstructor;
@@ -28,7 +28,7 @@
 //
 //    @JoinColumn(name = "process_id")
 //    @Column
-//    private Process process;             //공정
+//    private ProcessDetails process;             //공정
 //
 //    @JoinColumn(name = "workcenter_id")
 //    @Column
