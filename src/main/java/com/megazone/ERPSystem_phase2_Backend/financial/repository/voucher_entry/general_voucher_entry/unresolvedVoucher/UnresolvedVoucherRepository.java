@@ -10,5 +10,5 @@ import java.util.Optional;
 
 public interface UnresolvedVoucherRepository extends JpaRepository<UnresolvedVoucher, Long>, UnresolvedVoucherRepositoryCustom {
     Optional<UnresolvedVoucher> findFirstByVoucherDateOrderByIdDesc(LocalDate date);
-    Optional<UnresolvedVoucher> findByAllVoucherDateOrderByVoucherNumberDec(LocalDate date);
+    List<UnresolvedVoucher> findByVoucherDateOrderByVoucherNumberAsc(LocalDate date);
 }

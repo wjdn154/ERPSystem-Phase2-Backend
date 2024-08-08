@@ -192,7 +192,8 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
     public List<UnresolvedVoucher> unresolvedVoucherAllByDate(LocalDate date) {
         List<UnresolvedVoucher> unresolvedVoucherList = new ArrayList<UnresolvedVoucher>();
         try {
-            unresolvedVoucherList = unresolvedVoucherRepository.findByAllVoucherDateOrderByVoucherNumberDec(date).stream().toList();
+            unresolvedVoucherList = unresolvedVoucherRepository.findByVoucherDateOrderByVoucherNumberAsc(date);
+            System.out.println(unresolvedVoucherList.toString());
             if(unresolvedVoucherList.isEmpty()) {
                 throw new NoSuchElementException("해당 날짜에 등록된 전표가 없습니다.");
             }

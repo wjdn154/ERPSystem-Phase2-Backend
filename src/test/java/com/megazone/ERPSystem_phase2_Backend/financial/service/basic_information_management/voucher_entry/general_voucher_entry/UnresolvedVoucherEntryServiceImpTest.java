@@ -224,7 +224,7 @@ public class UnresolvedVoucherEntryServiceImpTest {
 
     @Test
     public void diffVoucherSaveTest() {
-        List<GeneralVoucherEntryDto> generalVoucherEntryDtoList = new ArrayList<GeneralVoucherEntryDto>();
+        List<GeneralVoucherEntryDto> generalVoucherEntryDtoList1 = new ArrayList<GeneralVoucherEntryDto>();
         LocalDateTime nowTime = LocalDateTime.now();
 
         GeneralVoucherEntryDto dto1 = new GeneralVoucherEntryDto();
@@ -239,7 +239,7 @@ public class UnresolvedVoucherEntryServiceImpTest {
         dto1.setCreditAmount(BigDecimal.ZERO);
         dto1.setVoucherDate(LocalDate.parse("2024-05-05"));
         dto1.setVoucherRegistrationTime(nowTime);
-        generalVoucherEntryDtoList.add(dto1);
+        generalVoucherEntryDtoList1.add(dto1);
 
 
         GeneralVoucherEntryDto dto2 = new GeneralVoucherEntryDto();
@@ -254,9 +254,13 @@ public class UnresolvedVoucherEntryServiceImpTest {
         dto2.setCreditAmount(BigDecimal.valueOf(5000000));
         dto2.setVoucherDate(LocalDate.parse("2024-05-05"));
         dto2.setVoucherRegistrationTime(nowTime);
-        generalVoucherEntryDtoList.add(dto2);
+        generalVoucherEntryDtoList1.add(dto2);
 
-        List<UnresolvedVoucher> debitAndCreditunresolvedVoucherList = unresolvedVoucherEntryService.unresolvedVoucherEntry(generalVoucherEntryDtoList);
+
+        List<UnresolvedVoucher> debitAndCreditunresolvedVoucherList = unresolvedVoucherEntryService.unresolvedVoucherEntry(generalVoucherEntryDtoList1);
+
+        List<GeneralVoucherEntryDto> generalVoucherEntryDtoList2 = new ArrayList<GeneralVoucherEntryDto>();
+        LocalDateTime nowTime2 = LocalDateTime.now();
 
         GeneralVoucherEntryDto dto3 = new GeneralVoucherEntryDto();
         dto3.setUserCompanyId(1L);
@@ -269,22 +273,22 @@ public class UnresolvedVoucherEntryServiceImpTest {
         dto3.setDebitAmount(BigDecimal.ZERO);
         dto3.setCreditAmount(BigDecimal.valueOf(5000000));
         dto3.setVoucherDate(LocalDate.parse("2024-05-07"));
-        dto3.setVoucherRegistrationTime(nowTime);
-        generalVoucherEntryDtoList.add(dto3);
+        dto3.setVoucherRegistrationTime(nowTime2);
+        generalVoucherEntryDtoList2.add(dto3);
 
-        List<UnresolvedVoucher> withdrawalunresolvedVoucherList = unresolvedVoucherEntryService.unresolvedVoucherEntry(generalVoucherEntryDtoList);
+        List<UnresolvedVoucher> withdrawalunresolvedVoucherList = unresolvedVoucherEntryService.unresolvedVoucherEntry(generalVoucherEntryDtoList2);
 
         assertNotNull("등록된 전표가 없습니다.",debitAndCreditunresolvedVoucherList);
         assertNotNull("등록된 전표가 없습니다.",withdrawalunresolvedVoucherList);
 
         assertEquals("2024-05-07일에 등록된 출금전표 불일치",withdrawalunresolvedVoucherList.get(0),
-                unresolvedVoucherEntryService.unresolvedVoucherAllByDate(LocalDate.parse("2024-05-07")).stream().toList());
+                unresolvedVoucherEntryService.unresolvedVoucherAllByDate(LocalDate.parse("2024-05-07")).get(0));
 
         assertEquals("2024-05-05일에 등록된 차변전표 불일치",debitAndCreditunresolvedVoucherList.get(0),
-                unresolvedVoucherEntryService.unresolvedVoucherAllByDate(LocalDate.parse("2024-05-05")).stream().toList().get(0));
+                unresolvedVoucherEntryService.unresolvedVoucherAllByDate(LocalDate.parse("2024-05-05")).get(0));
 
         assertEquals("2024-05-05일에 등록된 대변전표 불일치",debitAndCreditunresolvedVoucherList.get(1),
-                unresolvedVoucherRepository.findByAllVoucherDateOrderByVoucherNumberDec(LocalDate.parse("2024-05-05")).stream().toList().get(0));
+                unresolvedVoucherRepository.findByVoucherDateOrderByVoucherNumberAsc(LocalDate.parse("2024-05-05")).get(1));
         System.out.println(debitAndCreditunresolvedVoucherList.toString());
         System.out.println(withdrawalunresolvedVoucherList.toString());
 
