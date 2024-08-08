@@ -14,7 +14,7 @@ import java.util.Date;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Leave {
+public class Leaves {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,8 +24,8 @@ public class Leave {
     private Employee employee; // 사원 참조
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="leavetype_Id", nullable = false)
-    private LeaveType leaveType;
+    @JoinColumn(name="leavestype_Id", nullable = false)
+    private LeavesType leavesType;
 
     @Column(nullable = false)
     private Date startDate; // 휴가 시작일

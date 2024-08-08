@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class LeaveType {
+public class LeavesType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
