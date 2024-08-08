@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 // 시스템 사용자의 역할 및 권한 정보 저장
-
+// 역할 ( 시스템 관리자, 인사 담당자, 물류 담당자, 재무/회계 담당자, 생산 담당자 )
 @Data
 @Entity
 @NoArgsConstructor

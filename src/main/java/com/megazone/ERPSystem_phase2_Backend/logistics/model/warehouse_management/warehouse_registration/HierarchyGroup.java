@@ -19,6 +19,6 @@ public class HierarchyGroup {
     @Column(name = "hierarchy_group_code", nullable = false)
     private String hierarchyGroupCode;
 
-    @Column(name = "hierarchy_group_code", nullable = false)
+    @Column(name = "hierarchy_group_name", nullable = false)
     private String hierarchyGroupName;
 }
