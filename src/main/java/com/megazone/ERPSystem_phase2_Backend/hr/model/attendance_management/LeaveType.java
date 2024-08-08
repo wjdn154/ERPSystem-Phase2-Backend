@@ -1,10 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,4 +16,7 @@ public class LeaveType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private String typeName; // 휴가 유형명( 예 : 병가, 연차, 개인 휴가 등)
 }

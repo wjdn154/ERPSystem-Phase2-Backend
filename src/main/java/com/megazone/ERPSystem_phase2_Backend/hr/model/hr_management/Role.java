@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 // 시스템 사용자의 역할 및 권한 정보 저장
 // 역할 ( 시스템 관리자, 인사 담당자, 물류 담당자, 재무/회계 담당자, 생산 담당자 )
 @Data
@@ -16,9 +18,12 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToMany(mappedBy = "role") // 사용자 참조
+    private List<Users> users;
+
     @Column(nullable = false)
-    private String roleName;
+    private String roleName; // 역할 이름
 
     @Column
-    private String permissions;
+    private String permissions; // 권한
 }

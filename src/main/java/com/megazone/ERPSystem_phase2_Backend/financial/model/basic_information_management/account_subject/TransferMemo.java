@@ -4,18 +4,16 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 /**
- * 고정적요 테이블
+ * 대체적요 테이블
  */
-@Entity
-@Table(name = "account_subject_fixed_memo")
+@Entity(name = "account_subject_transfer_memo")
+@Table(name = "account_subject_transfer_memo")
 @Getter
-public class AccountSubjectFixedMemo {
+public class TransferMemo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 적요 ID
 
-    @Column(nullable = false)
-    private String category; // 적요구분
     @Column(nullable = false)
     private String content; // 적요 내용
 
