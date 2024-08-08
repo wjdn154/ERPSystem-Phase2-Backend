@@ -29,10 +29,10 @@ public class Employee {
     @JoinColumn(name = "position_Id", nullable = false) // 직위 참조
     private Position position;
 
-    @OneToMany(mappedBy = "performance_Id", fetch = FetchType.LAZY) // 성과 평가 참조
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY) // 성과 평가 참조
     private List<Performance> performance;
 
-    @OneToMany(mappedBy = "transfer_Id", fetch = FetchType.LAZY) // 발령 참조
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY) // 발령 참조
     private List<Transfer> transfer;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
