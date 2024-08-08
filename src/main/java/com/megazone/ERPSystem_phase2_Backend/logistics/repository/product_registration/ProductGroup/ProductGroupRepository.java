@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface ProductGroupRepository extends JpaRepository<ProductGroup, Long>, ProductGroupCustom {
-    Optional<Product> findByName(String name);
-    Optional<Product> findByCode(String code);
+    Optional<ProductGroup> findByName(String name);
+    Optional<ProductGroup> findByCode(String code);
 }

@@ -10,9 +10,9 @@ import lombok.*;
 
 @Entity
 @Getter
-@Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductGroup {
 
     // 고유 식별자
@@ -20,8 +20,8 @@ public class ProductGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 품목 코드
-    @Column(nullable = false)
+    // 품목 그룹 코드
+    @Column(nullable = false, unique = true)
     private String code;
 
     // 품목 그룹 명

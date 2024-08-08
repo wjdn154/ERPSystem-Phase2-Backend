@@ -4,9 +4,9 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registratio
 
 public interface ProductGroupService {
 
-    ProductGroup saveProductGroup(ProductGroup group);
+    ProductGroup saveProductGroup(ProductGroup productGroup);
 
-    ProductGroup updateProductGroup(ProductGroup group);
+    ProductGroup updateProductGroup(ProductGroup productGroup);
 
     void deleteProductGroup(Long productGroupId);
 }
