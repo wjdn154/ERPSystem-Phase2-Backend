@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.basic_information_management.account_subject;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubject;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubjectStructure;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.Structure;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubject.AccountSubjectRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectNature.AccountSubjectNatureRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectStructure.AccountSubjectStructureRepository;
@@ -36,9 +36,9 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
      */
     @Override
     public AccountSubject saveAccountSubject(AccountSubject accountSubject) {
-        AccountSubjectStructure accountSubjectStructure = accountSubject.getStandardFinancialStatement().getStructure();
+        Structure structure = accountSubject.getStandardFinancialStatement().getStructure();
         int accountCode = Integer.parseInt(accountSubject.getCode());
-        if (accountCode < accountSubjectStructure.getMin() || accountCode > accountSubjectStructure.getMax()) {
+        if (accountCode < structure.getMin() || accountCode > structure.getMax()) {
             throw new IllegalArgumentException("계정 코드가 계정 체계 범위를 벗어났습니다.");
         }
         return accountSubjectRepository.save(accountSubject);

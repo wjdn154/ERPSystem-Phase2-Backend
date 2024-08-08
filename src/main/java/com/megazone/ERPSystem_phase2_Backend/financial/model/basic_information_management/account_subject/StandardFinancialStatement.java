@@ -7,11 +7,11 @@ import lombok.Setter;
 /**
  * 계정과목 표준재무제표 테이블
  */
-@Entity
+@Entity(name = "account_subject_standard_financial_statement")
 @Table(name = "account_subject_standard_financial_statement")
 @Getter
 @Setter
-public class AccountSubjectStandardFinancialStatement {
+public class StandardFinancialStatement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 표준재무제표 ID
@@ -23,5 +23,5 @@ public class AccountSubjectStandardFinancialStatement {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accounting_subject_structure_id")
-    private AccountSubjectStructure structure; // 계정과목 체계 참조
+    private Structure structure; // 계정과목 체계 참조
 }

@@ -6,13 +6,12 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 계정과목 테이블
  */
-@Entity
+@Entity(name = "account_subject")
 @Table(name = "account_subject")
 @Getter
 @Setter
@@ -23,24 +22,24 @@ public class AccountSubject {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "accounting_subject_structure_id")
-    private AccountSubjectStructure structure; // 계정체계 참조
+    private Structure structure; // 계정체계 참조
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "accounting_subject_standard_financial_statement_id")
-    private AccountSubjectStandardFinancialStatement standardFinancialStatement; // 표준 재무제표 참조
+    private StandardFinancialStatement standardFinancialStatement; // 표준 재무제표 참조
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "accounting_subject_nature_id", nullable = false)
-    private AccountSubjectNature nature; // 계정과목 성격 참조
+    private Nature nature; // 계정과목 성격 참조
 
     @OneToMany(mappedBy = "accountSubject", fetch = FetchType.LAZY)
-    private List<AccountSubjectCashMemo> cashMemo; // 관련 현금적요 목록
+    private List<CashMemo> cashMemo; // 관련 현금적요 목록
 
     @OneToMany(mappedBy = "accountSubject", fetch = FetchType.LAZY)
-    private List<AccountSubjectTransferMemo> transferMemo; // 관련 대체적요 목록
+    private List<TransferMemo> transferMemo; // 관련 대체적요 목록
 
     @OneToMany(mappedBy = "accountSubject", fetch = FetchType.LAZY)
-    private List<AccountSubjectFixedMemo> fixedMemo; // 관련 고정적요 목록
+    private List<FixedMemo> fixedMemo; // 관련 고정적요 목록
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
