@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management;
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Attendance;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Leave;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Leaves;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -41,7 +41,7 @@ public class Employee {
     private Users users;
 
     @OneToMany(mappedBy = "employee",fetch = FetchType.LAZY) // 휴가 참조
-    private List<Leave> leave;
+    private List<Leaves> leaves;
 
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY) // 근태 참조
     private List<Attendance> attendance;
