@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.sql.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -185,22 +186,47 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
 
     /**
      * 날짜조건에 해당하는 모든 전표조회
-     * @param date
-     * @return
+     * @param date 사용자가 작성한 날짜 조건 
+     * @return 해당 날짜의 모든 전표 반환
      */
     @Override
-    public List<UnresolvedVoucher> unresolvedVoucherAllByDate(LocalDate date) {
+    public List<UnresolvedVoucher> unresolvedVoucherAllSearch(LocalDate date) {
         List<UnresolvedVoucher> unresolvedVoucherList = new ArrayList<UnresolvedVoucher>();
         try {
             unresolvedVoucherList = unresolvedVoucherRepository.findByVoucherDateOrderByVoucherNumberAsc(date);
             System.out.println(unresolvedVoucherList.toString());
             if(unresolvedVoucherList.isEmpty()) {
-                throw new NoSuchElementException("해당 날짜에 등록된 전표가 없습니다.");
+                throw new NoSuchElementException("해당 날짜에 등록된 미결전표가 없습니다.");
             }
         }
         catch (NoSuchElementException e) {
             e.getStackTrace();
         }
         return unresolvedVoucherList;
+    }
+
+    /**
+     * 날짜조건에 해당하는 검색조건 전표번호 모두 삭제
+     * @param date 사용자가 지정한 검색 날짜 조건
+     * @param voucherNumberList 사용자가 선택한 삭제할 전표 번호 리스트
+     * @return 삭제된 모든 미결전표 반환
+     */
+    @Override
+    public List<UnresolvedVoucher> deleteUnresolvedVoucher(LocalDate date, List<String> voucherNumberList) {
+        List<UnresolvedVoucher> deleteVouchers = new ArrayList<>();
+
+        try {
+            for(String voucherNum : voucherNumberList) {
+                deleteVouchers.addAll(unresolvedVoucherRepository.deleteAllByVoucherDateAndVoucherNumber(date,voucherNum));
+            }
+
+            if(deleteVouchers.isEmpty()) {
+                throw new NoSuchElementException("검색조건에 해당하는 미결전표가 없습니다.");
+            }
+        }
+        catch (Exception e) {
+            e.getStackTrace();
+        }
+        return deleteVouchers;
     }
 }

@@ -11,4 +11,8 @@ import java.util.Optional;
 public interface UnresolvedVoucherRepository extends JpaRepository<UnresolvedVoucher, Long>, UnresolvedVoucherRepositoryCustom {
     Optional<UnresolvedVoucher> findFirstByVoucherDateOrderByIdDesc(LocalDate date);
     List<UnresolvedVoucher> findByVoucherDateOrderByVoucherNumberAsc(LocalDate date);
+    Optional<UnresolvedVoucher> deleteByVoucherDateAndId(LocalDate date, Long id);
+
+
+    List<UnresolvedVoucher> deleteAllByVoucherDateAndVoucherNumber(LocalDate date, String voucherNumber); // <<< 모든거 삭제 테스트
 }

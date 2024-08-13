@@ -7,11 +7,18 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface UnresolvedVoucherEntryService {
+
     List<UnresolvedVoucher> unresolvedVoucherEntry(List<GeneralVoucherEntryDto> dtoList);
+
     UnresolvedVoucher createUnresolvedVoucher(GeneralVoucherEntryDto dto, String voucherNum);
+
     boolean depositAndWithdrawalUnresolvedVoucherTypeCheck(GeneralVoucherEntryDto dto);
+
     String CreateUnresolvedVoucherNumber(LocalDate voucherDate);
+
     GeneralVoucherEntryDto autoCreateUnresolvedVoucherDto(GeneralVoucherEntryDto dto) throws CloneNotSupportedException;
 
-    List<UnresolvedVoucher> unresolvedVoucherAllByDate(LocalDate date);
+    List<UnresolvedVoucher> unresolvedVoucherAllSearch(LocalDate date);
+
+    List<UnresolvedVoucher> deleteUnresolvedVoucher(LocalDate date, List<String> voucherNumberList);
 }

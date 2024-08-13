@@ -282,10 +282,10 @@ public class UnresolvedVoucherEntryServiceImpTest {
         assertNotNull("등록된 전표가 없습니다.",withdrawalunresolvedVoucherList);
 
         assertEquals("2024-05-07일에 등록된 출금전표 불일치",withdrawalunresolvedVoucherList.get(0),
-                unresolvedVoucherEntryService.unresolvedVoucherAllByDate(LocalDate.parse("2024-05-07")).get(0));
+                unresolvedVoucherEntryService.unresolvedVoucherAllSearch(LocalDate.parse("2024-05-07")).get(0));
 
         assertEquals("2024-05-05일에 등록된 차변전표 불일치",debitAndCreditunresolvedVoucherList.get(0),
-                unresolvedVoucherEntryService.unresolvedVoucherAllByDate(LocalDate.parse("2024-05-05")).get(0));
+                unresolvedVoucherEntryService.unresolvedVoucherAllSearch(LocalDate.parse("2024-05-05")).get(0));
 
         assertEquals("2024-05-05일에 등록된 대변전표 불일치",debitAndCreditunresolvedVoucherList.get(1),
                 unresolvedVoucherRepository.findByVoucherDateOrderByVoucherNumberAsc(LocalDate.parse("2024-05-05")).get(1));
@@ -320,5 +320,84 @@ public class UnresolvedVoucherEntryServiceImpTest {
         dto4.setUserCompanyId(500L);
         System.out.println(dto3.toString());
         System.out.println(dto4.toString());
+    }
+
+    @Test
+    public void unresolvedVoucherAllDeleteByDate() {
+
+        // Given
+        List<GeneralVoucherEntryDto> generalVoucherEntryDtoList = new ArrayList<GeneralVoucherEntryDto>();
+
+        LocalDateTime nowTime = LocalDateTime.now();
+
+        GeneralVoucherEntryDto dto1 = new GeneralVoucherEntryDto();
+        dto1.setUserCompanyId(1L);
+        dto1.setAccountSubjectId(1L);
+        dto1.setVendorId(1L);
+        dto1.setApprovalManagerId(1L);
+        dto1.setDescriptionId(1L);
+        dto1.setTransactionDescription("테스트 적요설명 1");
+        dto1.setVoucherType(VoucherType.DEBIT);
+        dto1.setDebitAmount(BigDecimal.valueOf(5000000));
+        dto1.setCreditAmount(BigDecimal.ZERO);
+        dto1.setVoucherDate(LocalDate.parse("2024-05-05"));
+        dto1.setVoucherRegistrationTime(nowTime);
+        generalVoucherEntryDtoList.add(dto1);
+
+
+        GeneralVoucherEntryDto dto2 = new GeneralVoucherEntryDto();
+        dto2.setUserCompanyId(1L);
+        dto2.setAccountSubjectId(1L);
+        dto2.setVendorId(1L);
+        dto2.setApprovalManagerId(1L);
+        dto2.setDescriptionId(1L);
+        dto2.setTransactionDescription("테스트 적요설명 2");
+        dto2.setVoucherType(VoucherType.CREDIT);
+        dto2.setDebitAmount(BigDecimal.ZERO);
+        dto2.setCreditAmount(BigDecimal.valueOf(5000000));
+        dto2.setVoucherDate(LocalDate.parse("2024-05-05"));
+        dto2.setVoucherRegistrationTime(nowTime);
+        generalVoucherEntryDtoList.add(dto2);
+
+
+        GeneralVoucherEntryDto dto3 = new GeneralVoucherEntryDto();
+        dto3.setUserCompanyId(1L);
+        dto3.setAccountSubjectId(1L);
+        dto3.setVendorId(1L);
+        dto3.setApprovalManagerId(1L);
+        dto3.setDescriptionId(1L);
+        dto3.setTransactionDescription("테스트 적요설명 2");
+        dto3.setVoucherType(VoucherType.CREDIT);
+        dto3.setDebitAmount(BigDecimal.ZERO);
+        dto3.setCreditAmount(BigDecimal.valueOf(5000000));
+        dto3.setVoucherDate(LocalDate.parse("2024-05-05"));
+        dto3.setVoucherRegistrationTime(nowTime);
+        generalVoucherEntryDtoList.add(dto3);
+
+
+        GeneralVoucherEntryDto dto4 = new GeneralVoucherEntryDto();
+        dto4.setUserCompanyId(1L);
+        dto4.setAccountSubjectId(1L);
+        dto4.setVendorId(1L);
+        dto4.setApprovalManagerId(1L);
+        dto4.setDescriptionId(1L);
+        dto4.setTransactionDescription("테스트 적요설명 2");
+        dto4.setVoucherType(VoucherType.CREDIT);
+        dto4.setDebitAmount(BigDecimal.valueOf(5000000));
+        dto4.setCreditAmount(BigDecimal.ZERO);
+        dto4.setVoucherDate(LocalDate.parse("2024-05-05"));
+        dto4.setVoucherRegistrationTime(nowTime);
+        generalVoucherEntryDtoList.add(dto4);
+
+
+        // When
+        List<UnresolvedVoucher> debitAndCreditunresolvedVoucherList = unresolvedVoucherEntryService.unresolvedVoucherEntry(generalVoucherEntryDtoList);
+        List<String> voucherNumberList = new ArrayList<String>();
+        voucherNumberList.add("1");
+        voucherNumberList.add("2");
+        List<UnresolvedVoucher> deleteVoucher = unresolvedVoucherEntryService.deleteUnresolvedVoucher(LocalDate.parse("2024-05-05"),voucherNumberList);
+
+        // then
+        assertEquals("등록된 전표와 삭제된 전표가 다릅니다",debitAndCreditunresolvedVoucherList,deleteVoucher);
     }
 }
