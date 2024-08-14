@@ -22,14 +22,10 @@ public class AccountSubject {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "structure_code")
-    private Structure structureCode; // 계정체계 참조
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "nature_id")
-    private Nature nature; // 계정과목 성격 참조
+    private Structure structure; // 계정체계 참조
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
+    @JoinColumn(name = "parent_code", referencedColumnName = "code")
     private AccountSubject parent;  // 부모 계정과목 참조
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
@@ -44,6 +40,8 @@ public class AccountSubject {
     @OneToMany(mappedBy = "accountSubject", cascade = CascadeType.ALL)
     private List<FixedMemo> fixedMemo; // 관련 고정적요 목록
 
+    private String natureCode; // 계정과목 성격 코드
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private EntryType entryType;  // 차대구분
@@ -52,7 +50,7 @@ public class AccountSubject {
     @Column(nullable = false)
     private IncreaseDecreaseType increaseDecreaseType;  // 증감구분
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String code; // 계정과목 코드
     @Column(nullable = false)
     private String name; // 계정과목명

@@ -1,7 +1,7 @@
 -- 계정과목 테이블
-INSERT INTO account_subject (structure_id, nature_id, entry_type, increase_decrease_type,
+INSERT INTO account_subject (structure_code, nature_code, entry_type, increase_decrease_type,
                              code, name, english_name, is_active, modification_type,
-                             is_foreign_currency, is_business_car, parent_id) VALUES
+                             is_foreign_currency, is_business_car, parent_code) VALUES
 (1,3,'DEBIT','INCREASE','101','현금','Cash',1,0,0,0,null),
 (1,1,'DEBIT','INCREASE','102','당좌예금','Current deposits',1,0,0,0,null),
 (1,1,'DEBIT','INCREASE','103','보통예금','Bank deposits',1,0,0,0,null),
