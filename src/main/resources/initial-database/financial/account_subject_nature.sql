@@ -1,5 +1,5 @@
 -- 계정과목 성격 테이블
-INSERT INTO account_subject_nature (code, name, accounting_subject_structure_id) VALUES
+INSERT INTO account_subject_nature (code, name, structure_id) VALUES
 ('1', '예금', 1),
 ('2', '적금', 1),
 ('3', '일반', 1),

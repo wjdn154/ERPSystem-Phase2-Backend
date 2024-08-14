@@ -36,7 +36,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
      */
     @Override
     public AccountSubject saveAccountSubject(AccountSubject accountSubject) {
-        Structure structure = accountSubject.getStandardFinancialStatement().getStructure();
+        Structure structure = accountSubject.getStructure();
         int accountCode = Integer.parseInt(accountSubject.getCode());
         if (accountCode < structure.getMin() || accountCode > structure.getMax()) {
             throw new IllegalArgumentException("계정 코드가 계정 체계 범위를 벗어났습니다.");
@@ -68,7 +68,6 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
 
         // 3.필요한 경우 연관 테이블 업데이트.
         if (accountSubject.getStructure() != null) existingAccount.setStructure(accountSubject.getStructure());
-        if (accountSubject.getStandardFinancialStatement() != null) existingAccount.setStandardFinancialStatement(accountSubject.getStandardFinancialStatement());
         if (accountSubject.getCashMemo() != null && !accountSubject.getCashMemo().isEmpty()) existingAccount.setCashMemo(accountSubject.getCashMemo());
         if (accountSubject.getTransferMemo() != null && !accountSubject.getTransferMemo().isEmpty()) existingAccount.setTransferMemo(accountSubject.getTransferMemo());
         if (accountSubject.getFixedMemo() != null && !accountSubject.getFixedMemo().isEmpty()) existingAccount.setFixedMemo(accountSubject.getFixedMemo());

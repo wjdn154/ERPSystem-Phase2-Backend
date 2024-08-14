@@ -17,7 +17,7 @@ public class Nature {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "accounting_subject_structure_id", nullable = false)
+    @JoinColumn(name = "structure_id", nullable = false)
     private Structure structure; // 계정과목 체계 참조
 
     @Column(nullable = false)
