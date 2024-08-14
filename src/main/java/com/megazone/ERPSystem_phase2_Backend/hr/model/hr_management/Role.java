@@ -18,7 +18,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "role") // 사용자 참조
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)// 사용자 참조
     private List<Users> users;
 
     @Column(nullable = false)
