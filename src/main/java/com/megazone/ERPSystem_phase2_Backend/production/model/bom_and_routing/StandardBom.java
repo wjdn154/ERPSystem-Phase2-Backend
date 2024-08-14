@@ -25,8 +25,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class StandardBom {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id; // PK
 

@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 public class ProcessDetails {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id; // PK
 
     @Column(nullable = false)

@@ -1,6 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.bom_and_routing;
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_information.ProcessDetails;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,8 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Routing {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id; // PK
 

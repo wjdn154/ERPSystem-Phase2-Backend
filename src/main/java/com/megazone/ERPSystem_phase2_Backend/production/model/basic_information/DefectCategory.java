@@ -18,6 +18,7 @@ import java.util.List;
 public class DefectCategory {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id; // PK
 
     @Column(nullable = false)
