@@ -19,7 +19,7 @@ public class LeavesType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "leaves_id", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "leavesType", fetch = FetchType.LAZY)
     private List<Leaves> leaves;
 
     @Column(nullable = false)
