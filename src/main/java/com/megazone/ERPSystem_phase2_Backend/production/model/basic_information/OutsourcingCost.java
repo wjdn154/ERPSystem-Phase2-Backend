@@ -19,6 +19,7 @@ import java.time.LocalDate;
 public class OutsourcingCost {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id; // PK
 
     @Column(nullable = false)

@@ -25,34 +25,24 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class StandardBom {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id; // PK
 
     @Column(nullable = false)
     private String code; // BOM 지정코드
 
-//    @Column(nullable = false)
-//    private final String childProductId; // 자식 품목 엔티티 from 물류 Item
-
-//    @Column(nullable = false)
-//    private final String materialId; // 자재 엔티티 (eager?)
-
-    @Column(nullable = false)
-    private BigDecimal quantity; // 품목별 자재 수량
-
     @Column(nullable = true)
     private String description; // 설명
 
     @Column(nullable = false)
-    private double lossRate; // LOSS(%): 손실율
-
-//     @Column(nullable = false)
-    // private subcontractingType; 사급구분 엔티티
+    private Double lossRate; // LOSS(%): 손실율
 
     @Column(nullable = true)
-    private boolean outsourcingType; // 외주구분: 무상(0) 또는 유상(1)
+    private Boolean isSubcontracting; // 하청여부
+
+    @Column(nullable = true)
+    private Boolean outsourcingType; // 외주구분
 
     @Column(nullable = false)
     private LocalDate startDate; // Bom 유효시작일
@@ -61,8 +51,18 @@ public class StandardBom {
     private LocalDate expiredDate; // Bom 유효종료일
 
     @Column(nullable = false)
-    private boolean isActive; // 사용 여부
+    private Boolean isActive; // 사용 여부
 
     @Column(nullable = true)
     private String remarks; // 비고
+
+
+    @Column(nullable = false)
+    private BigDecimal quantity; // 품목별 자재 수량
+
+//    @Column(nullable = false)
+//    private final String childProductId; // 자식 품목 엔티티 from 물류 Item
+
+//    @Column(nullable = false)
+//    private final String materialId; // 자재 엔티티 (eager?)
 }

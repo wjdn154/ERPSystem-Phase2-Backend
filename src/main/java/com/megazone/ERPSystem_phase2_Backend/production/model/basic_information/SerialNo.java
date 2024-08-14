@@ -19,6 +19,7 @@ import java.time.LocalDate;
 public class SerialNo {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id; // 고유 ID
 
     @Column(nullable = false, unique = true)
