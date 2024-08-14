@@ -7,20 +7,20 @@ import lombok.Setter;
 /**
  * 계정과목 성격 테이블
  */
-@Entity
+@Entity(name = "account_subject_nature")
 @Table(name = "account_subject_nature")
 @Getter
 @Setter
-public class AccountSubjectNature {
+public class Nature {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "accounting_subject_structure_id", nullable = false)
-    private AccountSubjectStructure structure; // 계정과목 체계 참조
+    @JoinColumn(name = "structure_id", nullable = false)
+    private Structure structure; // 계정과목 체계 참조
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String code; // 성격 코드
 
     @Column(nullable = false)

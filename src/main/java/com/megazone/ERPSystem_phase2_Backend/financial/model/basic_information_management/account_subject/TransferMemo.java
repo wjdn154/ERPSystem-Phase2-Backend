@@ -4,12 +4,12 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 /**
- * 현금적요 테이블
+ * 대체적요 테이블
  */
-@Entity
-@Table(name = "account_subject_cash_memo")
+@Entity(name = "account_subject_transfer_memo")
+@Table(name = "account_subject_transfer_memo")
 @Getter
-public class AccountSubjectCashMemo {
+public class TransferMemo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 적요 ID
@@ -18,6 +18,6 @@ public class AccountSubjectCashMemo {
     private String content; // 적요 내용
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "account_subject_id")
     private AccountSubject accountSubject; // 참조하는 계정과목
 }

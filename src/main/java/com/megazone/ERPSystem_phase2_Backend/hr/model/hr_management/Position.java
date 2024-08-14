@@ -17,14 +17,14 @@ public class Position {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_Id",nullable = false)
+    @JoinColumn(name = "employee_Id",nullable = false) // 사원 참조
     private Employee employee;
 
     @Column(nullable = false)
-    private String positionName; // 직위 이름
+    private String positionName; // 직위 이름 ( 예 부장, 과장 )
 
     @Column
-    private String description; // 직위 설명
+    private String description; // 직위 설명 ( 예 : 직무에 대한 설명 )
 
     //@Column
 
