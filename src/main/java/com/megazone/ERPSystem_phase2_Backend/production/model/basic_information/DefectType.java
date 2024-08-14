@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class DefectType {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id;     // Long Id
 
     @Column(nullable = false)

@@ -1,31 +1,28 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// 직위 정보 저장
+// 계좌번호 테이블
 
 @Data
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
-public class Position {
+@NoArgsConstructor
+public class BankAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_Id",nullable = false) // 사원 참조
+    @OneToOne(mappedBy = "bankAccount",fetch = FetchType.LAZY) // 사원과 1대1 참조
     private Employee employee;
 
     @Column(nullable = false)
-    private String positionName; // 직위 이름 ( 예 부장, 과장 )
+    private String bankName; // 은행 이름
 
-    @Column
-    private String description; // 직위 설명 ( 예 : 직무에 대한 설명 )
-
-    //@Column
-
+    @Column(nullable = false)
+    private String accountNumber; // 계좌번호
 }

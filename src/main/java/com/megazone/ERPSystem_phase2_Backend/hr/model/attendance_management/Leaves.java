@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management;
 
+import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.enums.LeaveStatus;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ public class Leaves {
     private Employee employee; // 사원 참조
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="leavestype_Id", nullable = false)
+    @JoinColumn(name="leavestype_Id", nullable = false) // 휴가 유형 참조
     private LeavesType leavesType;
 
     @Column(nullable = false)
@@ -35,4 +36,8 @@ public class Leaves {
 
     @Column(nullable = false)
     private String reason; // 휴가 사유
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private LeaveStatus status;
 }
