@@ -76,8 +76,6 @@ class ProductGroupServiceImplTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(value = false)
     void saveProductGroup_성공(){
         // given
         String code = "12";
