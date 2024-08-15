@@ -27,36 +27,32 @@ public class Company {
     private CorporateType corporateType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "corporate_kinds_id", nullable = false) // 법인종류
+    @JoinColumn(name = "corporate_kinds_id", nullable = false) // 법인종류별 구분
     private CorporateKind corporateKinds;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "representative_id", nullable = false) // 대표자 정보
     private Representative representative;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", nullable = false) // 주소 정보
     private Address address;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contact_id", nullable = false) // 연락처 정보
     private Contact contact;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "business_tax_office_id", nullable = false) // 사업장 관할 세무서
+    @JoinColumn(name = "main_business_code", referencedColumnName = "code", nullable = false) // 주업종 코드
+    private MainBusiness mainBusinessCode;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "business_tax_office_code", referencedColumnName = "code", nullable = false) // 사업장 관할 세무서
     private TaxOffice businessTaxOffice;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "headquarters_tax_office_id", nullable = false) // 본점 관할 세무서
-    private TaxOffice headquartersTaxOffice;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "business_type_id", nullable = false) // 업종 형태
-    private BusinessType businessType;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "business_item_id", nullable = false) // 업체 종목
-    private BusinessItem businessItem;
+    @JoinColumn(name = "headquarter_tax_office_code", referencedColumnName = "code", nullable = false) // 본점 관할 세무서
+    private TaxOffice headquarterTaxOffice;
 
     @Column(nullable = false) // 지방소득세납세지
     private String localIncomeTaxOffice;
@@ -70,8 +66,20 @@ public class Company {
     @Column(nullable = false) // 법인등록번호
     private String corporateRegistrationNumber;
 
+    @Column(nullable = false) // 업태
+    private String businessType;
+
+    @Column(nullable = false) // 종목
+    private String businessItem;
+
     @Column(nullable = false) // 설립연월일
     private LocalDate establishmentDate;
+
+    @Column(nullable = false) // 개업연월일
+    private LocalDate openingDate;
+
+    @Column(nullable = false) // 폐업연월일
+    private LocalDate closingDate;
 
     @Column(nullable = false) // 회사명
     private String name;

@@ -20,6 +20,9 @@ public class CorporateKind {
     private Long id; // 고유 식별자
 
     @Column(nullable = false)
+    private String code; // 법인종류 코드
+
+    @Column(nullable = false)
     private String kind; // 법인종류
 
     private String description; // 법인종류 설명
