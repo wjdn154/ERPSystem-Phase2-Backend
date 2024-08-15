@@ -19,21 +19,35 @@ public class Address {
     @Column(nullable = false)
     private Long id; // 고유 식별자
 
-    @Column(nullable = false) // 사업장 주소
-    private String businessAddress;
-
     @Column(nullable = false) // 사업장 우편번호
     private String businessPostalCode;
 
-    @Column(nullable = false) // 사업장 동 (예: 대연동)
-    private String businessPlace;
+    @Column(nullable = false) // 사업장 주소
+    private String businesseAddress;
 
-    @Column(nullable = false) // 본점 주소
-    private String headquarterAddress;
+    @Column(nullable = false) // 사업장 상세 주소
+    private String businesseAddressDetail;
+
+    @Column(nullable = false) // 사업장 신주소 여부
+    private Boolean isBusinesseNewAddress;
+
+    @Column(nullable = false) // 사업장 동 (예: 대연동)
+    private String businessePlace;
 
     @Column(nullable = false) // 본점 우편 번호
     private String headquarterPostalCode;
 
+    @Column(nullable = false) // 본점 주소
+    private String headquarterAddress;
+
+    @Column(nullable = false) // 본점 상세 주소
+    private String headquarterAddressDetail;
+
+    @Column(nullable = false) // 본점 신주소 여부
+    private Boolean isHeadquarterNewAddress;
+
     @Column(nullable = false) // 본점 동
     private String headquarterPlace;
+
+
 }

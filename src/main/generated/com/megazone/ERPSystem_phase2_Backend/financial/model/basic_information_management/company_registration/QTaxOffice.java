@@ -19,9 +19,9 @@ public class QTaxOffice extends EntityPathBase<TaxOffice> {
 
     public static final QTaxOffice taxOffice = new QTaxOffice("taxOffice");
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    public final StringPath code = createString("code");
 
-    public final StringPath name = createString("name");
+    public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath region = createString("region");
 

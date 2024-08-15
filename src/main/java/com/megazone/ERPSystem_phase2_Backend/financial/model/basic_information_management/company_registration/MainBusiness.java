@@ -5,18 +5,23 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * 회사 및 거래처 등록의 업종형태
- */
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BusinessType {
+public class MainBusiness {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id; // 고유 식별자
 
-    @Column(nullable = false)
-    private String name; // 회사의 업종형태
+    @Column(nullable = false, unique = true) // 업종코드
+    private String code;
+
+    @Column(nullable = false) // 업태
+    private String businessType;
+
+    @Column(nullable = false) // 종목
+    private String item;
 }

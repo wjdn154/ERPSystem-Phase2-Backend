@@ -19,19 +19,27 @@ public class QAddress extends EntityPathBase<Address> {
 
     public static final QAddress address = new QAddress("address");
 
-    public final StringPath businessAddress = createString("businessAddress");
+    public final StringPath businesseAddress = createString("businesseAddress");
 
-    public final StringPath businessPlace = createString("businessPlace");
+    public final StringPath businesseAddressDetail = createString("businesseAddressDetail");
+
+    public final StringPath businessePlace = createString("businessePlace");
 
     public final StringPath businessPostalCode = createString("businessPostalCode");
 
     public final StringPath headquarterAddress = createString("headquarterAddress");
+
+    public final StringPath headquarterAddressDetail = createString("headquarterAddressDetail");
 
     public final StringPath headquarterPlace = createString("headquarterPlace");
 
     public final StringPath headquarterPostalCode = createString("headquarterPostalCode");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final BooleanPath isBusinesseNewAddress = createBoolean("isBusinesseNewAddress");
+
+    public final BooleanPath isHeadquarterNewAddress = createBoolean("isHeadquarterNewAddress");
 
     public QAddress(String variable) {
         super(Address.class, forVariable(variable));

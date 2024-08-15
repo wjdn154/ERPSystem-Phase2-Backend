@@ -41,9 +41,9 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
      * @return 모든 계정과목과 적요 정보를 담은 AccountSubjectsAndMemosDTO 객체를 반환함.
      */
     @Override
-    public Optional<AccountSubjectsAndMemosDTO> getAllAccountSubjectDetails() {
+    public Optional<AccountSubjectsAndMemosDTO> findAllAccountSubjectDetails() {
 
-        // 모든 계정 구조를 조회하고, DTO로 변환하여 리스트로 만듦
+        // 모든 계정과목 체계를 조회하고, DTO로 변환하여 리스트로 만듦
         List<StructureDTO> structures = accountSubjectStructureRepository.findAll().stream()
                 .map(structure -> new StructureDTO(
                         structure.getCode(),
@@ -63,7 +63,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
                 ? accountSubjectRepository.findAccountSubjectDetailByCode(firstAccountCode).orElse(null)
                 : null;
 
-        // 계정 구조, 계정과목, 첫 번째 계정과목의 상세 정보를 담은 DTO를 반환
+        // 계정과목 체계, 계정과목, 첫 번째 계정과목의 상세 정보를 담은 DTO를 반환
         return Optional.of(new AccountSubjectsAndMemosDTO(structures, accountSubjects, accountSubjectDetail));
     }
 
@@ -103,26 +103,43 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     }
 
 
+    /**
+     * 새로운 계정과목을 저장함.
+     * @param dto 저장할 계정과목의 정보가 담긴 DTO
+     * @return 저장된 계정과목 정보를 담은 DTO를 Optional로 반환함.
+     * @throws RuntimeException 동일한 코드가 이미 존재하거나 계정과목 체계, 부모 코드가 유효하지 않은 경우 발생함.
+     */
     @Override
     public Optional<AccountSubjectDTO> saveAccountSubject(AccountSubjectDTO dto) {
         // DTO를 엔티티로 변환
         AccountSubject accountSubject = new AccountSubject();
 
+        // 동일한 코드가 이미 존재하는지 확인
         accountSubjectRepository.findByCode(dto.getCode())
                 .ifPresent(account -> {
                     throw new RuntimeException("이미 존재하는 코드입니다: " + dto.getCode());
                 });
 
+        // 계정과목 체계 코드로 조회
         Structure structure = accountSubjectStructureRepository.findByCode(dto.getStructureCode())
                 .orElseThrow(() -> new RuntimeException("코드로 계정과목 체계를 찾을 수 없습니다: " + dto.getStructureCode()));
         accountSubject.setStructure(structure);
 
+        // 계정과목 코드가 계정과목 체계의 범위 내에 있는지 검증
+        int accountCode = Integer.parseInt(dto.getCode());
+        if (accountCode < structure.getMin() || accountCode > structure.getMax()) {
+            throw new IllegalArgumentException("계정 코드가 계정 체계의 범위를 벗어났습니다. " +
+                    "코드는 " + structure.getMin() + " 이상 " + structure.getMax() + " 이하이어야 합니다.");
+        }
+
+        // 부모 계정과목 설정
         if (dto.getParentCode() != null) {
             AccountSubject parent = accountSubjectRepository.findByCode(dto.getParentCode())
                     .orElseThrow(() -> new RuntimeException("부모 코드로 계정을 찾을 수 없습니다: " + dto.getParentCode()));
             accountSubject.setParent(parent);
         }
 
+        // 계정과목의 필드 설정
         accountSubject.setCode(dto.getCode());
         accountSubject.setName(dto.getName());
         accountSubject.setEnglishName(dto.getEnglishName());
@@ -158,39 +175,68 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     }
 
     /**
-     * 계정과목 정보를 업데이트함.
-     * 주어진 계정과목 ID에 해당하는 기존 계정과목을 찾아 정보를 업데이트함.
-     *
-     * @param accountSubject 업데이트할 계정과목 정보
-     * @return 업데이트된 계정과목을 Optional로 반환함.
-     * @throws RuntimeException 계정과목을 찾을 수 없을 경우 발생
+     * 기존 계정과목을 업데이트함.
+     * @param code 업데이트할 계정과목의 ID
+     * @param dto 업데이트할 계정과목의 정보가 담긴 DTO
+     * @return 업데이트된 계정과목 정보를 담은 DTO를 Optional로 반환함.
+     * @throws RuntimeException 계정과목 ID가 유효하지 않거나 부모 코드가 유효하지 않은 경우 발생함.
      */
     @Override
-    public Optional<AccountSubject> updateAccount(AccountSubject accountSubject) {
-        // 1. 계정과목 조회.
-        AccountSubject existingAccount = accountSubjectRepository.findById(accountSubject.getId())
-                .orElseThrow(() -> new RuntimeException("아이디로 계정을 찾을 수 없습니다: " + accountSubject.getId()));
+    public Optional<AccountSubjectDTO> updateAccountSubject(String code, AccountSubjectDTO dto) {
+        // 기존 계정과목을 ID로 조회함
+        AccountSubject accountSubject = accountSubjectRepository.findByCode(code)
+                .orElseThrow(() -> new RuntimeException("해당 ID로 계정과목을 찾을 수 없습니다: " + code));
 
-        // 2. 계정과목 필드 업데이트.
-        existingAccount.setCode(accountSubject.getCode());
-        existingAccount.setName(accountSubject.getName());
-        existingAccount.setEnglishName(accountSubject.getEnglishName());
-        existingAccount.setIsActive(accountSubject.getIsActive());
-        existingAccount.setModificationType(accountSubject.getModificationType());
-        existingAccount.setIsForeignCurrency(accountSubject.getIsForeignCurrency());
-        existingAccount.setIsBusinessCar(accountSubject.getIsBusinessCar());
+        if (!dto.getModificationType()) {
+            throw new RuntimeException("수정할 수 없는 계정과목입니다. 코드번호 : " + code);
+        }
 
-        // 3. 필요한 경우 연관 테이블 업데이트.
-        if (accountSubject.getStructure() != null) existingAccount.setStructure(accountSubject.getStructure());
-        if (accountSubject.getCashMemo() != null && !accountSubject.getCashMemo().isEmpty())
-            existingAccount.setCashMemo(accountSubject.getCashMemo());
-        if (accountSubject.getTransferMemo() != null && !accountSubject.getTransferMemo().isEmpty())
-            existingAccount.setTransferMemo(accountSubject.getTransferMemo());
-        if (accountSubject.getFixedMemo() != null && !accountSubject.getFixedMemo().isEmpty())
-            existingAccount.setFixedMemo(accountSubject.getFixedMemo());
+        // 계정과목 체계가 변경된 경우, 새로운 체계로 업데이트
+        if (dto.getStructureCode() != null && !dto.getStructureCode().equals(accountSubject.getStructure().getCode())) {
+            Structure structure = accountSubjectStructureRepository.findByCode(dto.getStructureCode())
+                    .orElseThrow(() -> new RuntimeException("코드로 계정과목 체계를 찾을 수 없습니다: " + dto.getStructureCode()));
+            accountSubject.setStructure(structure);
+        }
 
-        // 4. 업데이트된 계정과목을 저장하고 Optional로 반환.
-        return Optional.of(accountSubjectRepository.save(existingAccount));
+        // 부모 계정과목이 변경된 경우, 새로운 부모로 업데이트
+        if (dto.getParentCode() != null && (accountSubject.getParent() == null || !dto.getParentCode().equals(accountSubject.getParent().getCode()))) {
+            AccountSubject parent = accountSubjectRepository.findByCode(dto.getParentCode())
+                    .orElseThrow(() -> new RuntimeException("부모 코드로 계정을 찾을 수 없습니다: " + dto.getParentCode()));
+            accountSubject.setParent(parent);
+        }
+
+        // 계정과목의 필드 업데이트
+        accountSubject.setName(dto.getName());
+        accountSubject.setEnglishName(dto.getEnglishName());
+        accountSubject.setNatureCode(dto.getNatureCode());
+        accountSubject.setEntryType(dto.getEntryType());
+        accountSubject.setIncreaseDecreaseType(dto.getIncreaseDecreaseType());
+        accountSubject.setIsActive(dto.getIsActive());
+        accountSubject.setModificationType(dto.getModificationType());
+        accountSubject.setIsForeignCurrency(dto.getIsForeignCurrency());
+        accountSubject.setIsBusinessCar(dto.getIsBusinessCar());
+
+        // 엔티티 저장
+        AccountSubject updatedAccountSubject = accountSubjectRepository.save(accountSubject);
+
+        // 엔티티를 DTO로 변환하여 반환
+        AccountSubjectDTO accountSubjectDTO = new AccountSubjectDTO(
+                updatedAccountSubject.getId(),
+                updatedAccountSubject.getStructure().getCode(),
+                updatedAccountSubject.getParent() != null ? updatedAccountSubject.getParent().getCode() : null,
+                updatedAccountSubject.getCode(),
+                updatedAccountSubject.getName(),
+                updatedAccountSubject.getEnglishName(),
+                updatedAccountSubject.getNatureCode(),
+                updatedAccountSubject.getEntryType(),
+                updatedAccountSubject.getIncreaseDecreaseType(),
+                updatedAccountSubject.getIsActive(),
+                updatedAccountSubject.getModificationType(),
+                updatedAccountSubject.getIsForeignCurrency(),
+                updatedAccountSubject.getIsBusinessCar()
+        );
+
+        return Optional.of(accountSubjectDTO);
     }
 
     /**
@@ -203,6 +249,10 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
         // 삭제할 계정과목을 조회함
         AccountSubject accountSubject = accountSubjectRepository.findByCode(code)
                 .orElseThrow(() -> new RuntimeException("해당 코드로 계정과목을 찾을 수 없습니다: " + code));
+
+        if(!accountSubject.getModificationType()) {
+            throw new RuntimeException("삭제할 수 없는 계정과목입니다. 코드번호 : " + code);
+        }
 
         // 계정과목을 삭제함
         accountSubjectRepository.delete(accountSubject);

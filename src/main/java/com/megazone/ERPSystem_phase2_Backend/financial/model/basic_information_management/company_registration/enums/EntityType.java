@@ -5,6 +5,6 @@ package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_
  * 법인과 개인을 구분
  */
 public enum EntityType {
-    INCORPORATED, // 법인임
-    INDIVIDUAL    // 개인임
+    INCORPORATED, // 법인
+    INDIVIDUAL    // 개인
 }

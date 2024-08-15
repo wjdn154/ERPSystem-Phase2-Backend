@@ -20,6 +20,9 @@ public class CorporateType {
     private Long id; // 고유 식별자
 
     @Column(nullable = false)
+    private String code; // 법인구분 코드
+
+    @Column(nullable = false)
     private String type; // 법인구분
 
     private String description; // 법인구분 설명

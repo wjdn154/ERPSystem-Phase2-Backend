@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AccountSubjectService {
-    Optional<AccountSubjectsAndMemosDTO> getAllAccountSubjectDetails();
+    Optional<AccountSubjectsAndMemosDTO> findAllAccountSubjectDetails();
 
     void addMemoToAccountSubject (String code, String MemoType, String content);
 
-    Optional<AccountSubjectDTO> saveAccountSubject(AccountSubjectDTO dto);
+    Optional<AccountSubjectDTO> updateAccountSubject(String code, AccountSubjectDTO dto);
 
-    Optional<AccountSubject> updateAccount(AccountSubject accountSubject);
+    Optional<AccountSubjectDTO> saveAccountSubject(AccountSubjectDTO dto);
 
     void deleteAccount(String code);
 

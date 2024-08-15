@@ -29,22 +29,29 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
 
     /**
      * 모든 계정과목을 조회함.
-     *
      * @return 계정과목 목록을 반환함.
      */
     @Override
     public List<AccountSubjectDTO> findAllAccountSubject() {
         return queryFactory
                 .select(Projections.fields(AccountSubjectDTO.class,
-                        accountSubject.structure.code.as("structureCode"), // 구조 코드
+                        accountSubject.id.as("id"), // ID 필드 추가
+                        accountSubject.structure.code.as("structureCode"), // 계정과목 체계 코드
+                        accountSubject.parent.code.as("parentCode"), // 부모 계정 코드
                         accountSubject.code.as("code"), // 계정과목 코드
                         accountSubject.name.as("name"), // 계정과목 이름
+                        accountSubject.englishName.as("englishName"), // 영문명
                         accountSubject.natureCode.as("natureCode"), // 성격 코드
-                        nature.name.as("natureName"), // 성격 이름
-                        accountSubject.parent.code.as("parentCode") // 부모 계정과목 코드
+                        accountSubject.entryType.as("entryType"), // 차대구분 (enum)
+                        accountSubject.increaseDecreaseType.as("increaseDecreaseType"), // 증감구분 (enum)
+                        accountSubject.isActive.as("isActive"), // 활성화 여부
+                        accountSubject.modificationType.as("modificationType"), // 수정 가능 여부
+                        accountSubject.isForeignCurrency.as("isForeignCurrency"), // 외화 사용 여부
+                        accountSubject.isBusinessCar.as("isBusinessCar") // 업무용 차량 여부
                 ))
                 .from(accountSubject)
-                .leftJoin(nature).on(accountSubject.natureCode.eq(nature.code)) // nature와 조인
+                .orderBy(Expressions.stringTemplate("LENGTH({0})", accountSubject.code).asc(),
+                        accountSubject.code.asc()) // 코드로 정렬
                 .fetch(); // 결과를 리스트로 반환
     }
 
@@ -114,13 +121,13 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
                         accountSubject.englishName.as("englishName"), // 영문명
                         accountSubject.isActive.as("isActive"), // 활성화 여부
                         accountSubject.modificationType.as("modificationType"), // 수정 가능 여부
-                        accountSubject.structure.code.as("structureCode"), // 구조 코드
+                        accountSubject.structure.code.as("structureCode"), // 계정과목 체계 코드
                         accountSubject.isForeignCurrency.as("isForeignCurrency"), // 외화 사용 여부
                         accountSubject.isBusinessCar.as("isBusinessCar") // 업무용 차량 여부
                 ))
                 .from(accountSubject)
                 .leftJoin(accountSubject.parent, parentAlias) // 부모 계정과목에 대한 조인
-                .leftJoin(accountSubject.structure, structure) // 계정 구조에 대한 조인
+                .leftJoin(accountSubject.structure, structure) // 계정과목 체계에 대한 조인
                 .where(accountSubject.code.eq(code)) // 계정과목 코드로 필터링
                 .fetchOne();
 
