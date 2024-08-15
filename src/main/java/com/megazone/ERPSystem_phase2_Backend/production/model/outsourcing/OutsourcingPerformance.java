@@ -44,7 +44,6 @@ public class OutsourcingPerformance {
     private OutsourcingOrders outsourcingOrders;      //발주 식별자(발주 fk)
 
     @OneToMany(mappedBy = "outsourcingPerformance", fetch = FetchType.LAZY)
-
     private List<OutsourcingInspections> outsourcingInspections;      //외주 실적 검사    하나의 남품 실적이 여러번의 검사 결과를 가질 수 있음 (재검사)
 
 //    자재 사용 유무
