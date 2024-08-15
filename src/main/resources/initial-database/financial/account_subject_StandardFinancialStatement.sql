@@ -1,5 +1,5 @@
 -- 계정과목 표준재무제표(표준손익계산서, 표준원가명세서) 테이블
-INSERT INTO account_subject_standard_financial_statement (code, name, increase_decrease_type, structure_id) VALUES
+INSERT INTO account_subject_standard_financial_statement (code, name, increase_decrease_type, structure_code) VALUES
 ('1','1.현금 및 현금성자산','INCREASE',1),
 ('2','2.단기예금','INCREASE',1),
 ('3','3.유가증권','INCREASE',1),

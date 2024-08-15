@@ -27,6 +27,6 @@ public class StandardFinancialStatement {
     private IncreaseDecreaseType increaseDecreaseType;  // 증감구분
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "structure_id")
+    @JoinColumn(name = "structure_code", referencedColumnName = "code")
     private Structure structure; // 계정과목 체계 참조
 }
