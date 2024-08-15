@@ -2,13 +2,19 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data;
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.material_requirements_planning.bom.StandardBomMaterial;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-//재료
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class MaterialData {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
