@@ -1,23 +1,18 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.material_requirements_planning.bom;
 
-/*
-    제품과 부품 간의 관계를 관리하며, 각 부품의 수량, 손실율, 유효기간 등을 포함한
-    BOM(Bill of Materials) 정보를 저장하는 테이블.
-
-    BOM 정전개(Forward Explosion)와 역전개(Backward Explosion) 모두 수행 (별도 테이블X)
-    - BOM 정전개 (Forward Explosion)
-      특정 품목을 기준으로 그 하위 품목들(부품들)을 조회하는 방법
-    - BOM 역전개 (Backward Explosion)
-      특정 부품이 어느 상위 품목들(제품들)에 포함되는지를 조회하는 방법
+/**
+ * Green BOM은 제품의 전체 수명 주기 동안 환경 영향을 최소화하고, 재활용 및 재사용 가능성을 높이며, 유해 물질을 관리하는 데 중점을 둡니다.
+ * Standard Bom을 참조하여 기존 필드를 모두 포함하되, 친환경 관련 필드들을 추가함.
  */
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.HazardousMaterialType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -25,44 +20,31 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class GreenBom {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id; // PK
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "standard_bom_id", nullable = false)
+    private StandardBom standardBom; // GreenBom이 참조하는 StandardBom
+
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    private List<HazardousMaterialType> hazardousMaterials; // 유해 물질 정보
+
     @Column(nullable = false)
-    private String code; // BOM 지정코드
+    private Boolean recyclable = false; // 재활용 가능 여부, 기본값 false
+
+    @Column(nullable = false)
+    private Boolean reusable = false; // 재사용 가능 여부, 기본값 false
 
     @Column(nullable = true)
-    private String description; // 설명
-
-    @Column(nullable = false)
-    private Double lossRate; // LOSS(%): 손실율
+    private BigDecimal energyConsumption; // 에너지 소비량
 
     @Column(nullable = true)
-    private Boolean isSubcontracting; // 하청여부
+    private BigDecimal carbonFootprint; // 탄소 발자국
 
     @Column(nullable = true)
-    private Boolean outsourcingType; // 외주구분
-
-    @Column(nullable = false)
-    private LocalDate startDate; // Bom 유효시작일
-
-    @Column(nullable = false)
-    private LocalDate expiredDate; // Bom 유효종료일
-
-    @Column(nullable = false)
-    private Boolean isActive; // 사용 여부
-
-    @Column(nullable = true)
-    private String remarks; // 비고
-
-
-    @Column(nullable = false)
-    private BigDecimal quantity; // 품목별 자재 수량
-
-//    @Column(nullable = false)
-//    private final String childProductId; // 자식 품목 엔티티 from 물류 Item
-
-//    @Column(nullable = false)
-//    private final String materialId; // 자재 엔티티 (eager?)
+    private String ecoCertification; // 친환경 인증 정보
 }
