@@ -9,8 +9,10 @@ import lombok.*;
  */
 
 @Entity
+@Table(name = "product_group")
 @Getter
-@Setter
+@Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductGroup {
@@ -27,4 +29,6 @@ public class ProductGroup {
     // 품목 그룹 명
     @Column(nullable = false)
     private String name;
+
+
 }
