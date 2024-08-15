@@ -19,6 +19,8 @@ public class QCorporateType extends EntityPathBase<CorporateType> {
 
     public static final QCorporateType corporateType = new QCorporateType("corporateType");
 
+    public final StringPath code = createString("code");
+
     public final StringPath description = createString("description");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);

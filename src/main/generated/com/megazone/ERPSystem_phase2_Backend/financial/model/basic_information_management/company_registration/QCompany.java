@@ -26,13 +26,15 @@ public class QCompany extends EntityPathBase<Company> {
 
     public final QAddress address;
 
-    public final QBusinessItem businessItem;
+    public final StringPath businessItem = createString("businessItem");
 
     public final StringPath businessRegistrationNumber = createString("businessRegistrationNumber");
 
     public final QTaxOffice businessTaxOffice;
 
-    public final QBusinessType businessType;
+    public final StringPath businessType = createString("businessType");
+
+    public final DatePath<java.time.LocalDate> closingDate = createDate("closingDate", java.time.LocalDate.class);
 
     public final QContact contact;
 
@@ -52,7 +54,7 @@ public class QCompany extends EntityPathBase<Company> {
 
     public final DatePath<java.time.LocalDate> fiscalYearStart = createDate("fiscalYearStart", java.time.LocalDate.class);
 
-    public final QTaxOffice headquartersTaxOffice;
+    public final QTaxOffice headquarterTaxOffice;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -60,7 +62,11 @@ public class QCompany extends EntityPathBase<Company> {
 
     public final StringPath localIncomeTaxOffice = createString("localIncomeTaxOffice");
 
+    public final QMainBusiness mainBusinessCode;
+
     public final StringPath name = createString("name");
+
+    public final DatePath<java.time.LocalDate> openingDate = createDate("openingDate", java.time.LocalDate.class);
 
     public final QRepresentative representative;
 
@@ -83,13 +89,12 @@ public class QCompany extends EntityPathBase<Company> {
     public QCompany(Class<? extends Company> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.address = inits.isInitialized("address") ? new QAddress(forProperty("address")) : null;
-        this.businessItem = inits.isInitialized("businessItem") ? new QBusinessItem(forProperty("businessItem")) : null;
         this.businessTaxOffice = inits.isInitialized("businessTaxOffice") ? new QTaxOffice(forProperty("businessTaxOffice")) : null;
-        this.businessType = inits.isInitialized("businessType") ? new QBusinessType(forProperty("businessType")) : null;
         this.contact = inits.isInitialized("contact") ? new QContact(forProperty("contact")) : null;
         this.corporateKinds = inits.isInitialized("corporateKinds") ? new QCorporateKind(forProperty("corporateKinds")) : null;
         this.corporateType = inits.isInitialized("corporateType") ? new QCorporateType(forProperty("corporateType")) : null;
-        this.headquartersTaxOffice = inits.isInitialized("headquartersTaxOffice") ? new QTaxOffice(forProperty("headquartersTaxOffice")) : null;
+        this.headquarterTaxOffice = inits.isInitialized("headquarterTaxOffice") ? new QTaxOffice(forProperty("headquarterTaxOffice")) : null;
+        this.mainBusinessCode = inits.isInitialized("mainBusinessCode") ? new QMainBusiness(forProperty("mainBusinessCode")) : null;
         this.representative = inits.isInitialized("representative") ? new QRepresentative(forProperty("representative")) : null;
     }
 
