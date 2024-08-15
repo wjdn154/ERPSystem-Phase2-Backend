@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,8 +16,9 @@ import java.util.List;
 @Data
 public class MaterialData {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;                 //pk
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;               //pk
 
     @Column(nullable = false)
     private String materialName;     //자재 이름
