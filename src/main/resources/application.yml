@@ -26,6 +26,9 @@ spring:
         - classpath:initial-database/financial/account_subject_nature.sql
         - classpath:initial-database/financial/account_subject_StandardFinancialStatement.sql
         - classpath:initial-database/financial/account_subject.sql
+        - classpath:initial-database/financial/account_subject_cash_memo.sql
+        - classpath:initial-database/financial/account_subject_fixed_memo.sql
+        - classpath:initial-database/financial/account_subject_transfer_memo.sql
 logging:
   level:
     org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)

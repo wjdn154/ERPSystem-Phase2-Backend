@@ -1,137 +1,137 @@
-package com.megazone.ERPSystem_phase2_Backend.hr.model.hr_payment;
-
-
-import com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management.Employee;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management.Users;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
-
-@Data
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
-
-public class Salary {
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    // ±âº» ±Þ¿©
-    @Column(name = "base_salary")
-    private BigDecimal baseSalary;
-
-    // ½Ã±Þ
-    @Column(name = "hour_salary")
-    private BigDecimal hourSalary;
-
-    // ÀÏ±Þ
-    @Column(name = "day_salary")
-    private BigDecimal daySalary;
-
-    /***** ¹ýÁ¤¼ö´ç *****/
-    // ¿¬Àå¼ö´ç
-    @Column(name = "overtime_allowance")
-    private BigDecimal overtimeAllowance;
-
-    // ¾ß°£¼ö´ç
-    @Column(name = "nighttime_allowance")
-    private BigDecimal NighttimeAllowance;
-
-    // ÈÞÀÏ±Ù·Î¼ö´ç
-    @Column(name = "holiday_allowance")
-    private BigDecimal HolidayAllowance;
-
-    // ¿¬Â÷¼ö´ç
-    @Column(name = "annual_allowance")
-    private BigDecimal AnnualAllowance;
-
-    /***** ºñ¹ýÁ¤¼ö´ç *****/
-    // ¸¸±Ù¼ö´ç
-    @Column(name = "full_attendance_allowance")
-    private BigDecimal FullAttendanceAllowance;
-
-    // Àå·Á¼ö´ç
-    @Column(name = "incentive_allowance")
-    private BigDecimal IncentiveAllowance;
-
-    // º¸Á¶±Ý ?
-    @Column(name = "subsidy")
-    private BigDecimal subsidy;
-
-    @Column(name = "bouns")
-    private BigDecimal bouns;
-
-    /***** ÇÕ»ê *****/
-    // ÃÑ±Þ¿©
-    @Column(name = "gross_salary")
-    private BigDecimal grossSalary;
-
-    // ¼ø±Þ¿©
-    @Column(name = "net_salary")
-    private BigDecimal netsalary;
-
-    @Column(name = "month")
-    private String month;
-
-/********** °øÁ¦ **********/
-
-    // ±¹¹Î¿¬±Ý
-    @Column(name = "national_pension")
-    private BigDecimal NationalPension;
-
-    // °Ç°­º¸Çè
-    @Column(name = "nationl_health_insurance")
-    private BigDecimal NationalHealthInsurance;
-
-    // °í¿ëº¸Çè
-    @Column(name = "employment_insurance")
-    private BigDecimal EmploymentInsurance;
-
-    // Àå±â¿ä¾ç º¸Çè·á
-    @Column(name = "long_term_care_insurance")
-    private BigDecimal LongTermCareInsurance;
-
-    // »ê¾÷ÀçÇØ º¸»ó º¸Çè
-    @Column(name = "industrial_accident_compensation_insurance")
-    private BigDecimal IndustrialAccidentCompensationInsurance;
-
-    // ¼Òµæ¼¼
-    @Column(name = "income_tax")
-    private BigDecimal IncomeTax;
-
-    // ¿¬¸»Á¤»ê ¼Òµæ¼¼
-
-    // ¿¬¸»Á¤»êÁö¹æ ¼Òµæ¼¼
-
-
-    // ¿¬¸»Á¤»ê ³óÆ¯¼¼
-
-    // »óÁ¶È¸ºñ
-    /***** ±âÅ¸ °øÁ¦ *****/
-    // °á±Ù °øÁ¦
-    @Column(name = "absenteeism_deduct")
-    private BigDecimal AbsenteeismDeduct;
-
-    // Á¶Åð °øÁ¦
-    @Column(name = "leave_early_deduct")
-    private BigDecimal LeaveEarlyDeduct;
-
-    // Áö°¢ °øÁ¦
-    @Column(name = "late_deduct")
-    private BigDecimal LateDeduct;
-
-    // ¹«±ÞÈÞ°¡? °øÁ¦
-    @Column(name = "leave_deduct")
-    private BigDecimal LeaveDeduct;
-
-
-    @OneToOne
-    @JoinColumn(name = "empId", nullable = false, updatable = false, insertable = false)
-    private Users employee;
-    private int empId;
-
-}
+//package com.megazone.ERPSystem_phase2_Backend.hr.model.hr_payment;
+//
+//
+//import com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management.Employee;
+//import com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management.Users;
+//import jakarta.persistence.*;
+//import lombok.AllArgsConstructor;
+//import lombok.Data;
+//import lombok.NoArgsConstructor;
+//
+//import java.math.BigDecimal;
+//
+//@Data
+//@Entity
+//@NoArgsConstructor
+//@AllArgsConstructor
+//
+//public class Salary {
+//    @Id
+//    @GeneratedValue
+//    private Long id;
+//
+//    // ï¿½âº» ï¿½Þ¿ï¿½
+//    @Column(name = "base_salary")
+//    private BigDecimal baseSalary;
+//
+//    // ï¿½Ã±ï¿½
+//    @Column(name = "hour_salary")
+//    private BigDecimal hourSalary;
+//
+//    // ï¿½Ï±ï¿½
+//    @Column(name = "day_salary")
+//    private BigDecimal daySalary;
+//
+//    /***** ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ *****/
+//    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//    @Column(name = "overtime_allowance")
+//    private BigDecimal overtimeAllowance;
+//
+//    // ï¿½ß°ï¿½ï¿½ï¿½ï¿½ï¿½
+//    @Column(name = "nighttime_allowance")
+//    private BigDecimal NighttimeAllowance;
+//
+//    // ï¿½ï¿½ï¿½Ï±Ù·Î¼ï¿½ï¿½ï¿½
+//    @Column(name = "holiday_allowance")
+//    private BigDecimal HolidayAllowance;
+//
+//    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//    @Column(name = "annual_allowance")
+//    private BigDecimal AnnualAllowance;
+//
+//    /***** ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ *****/
+//    // ï¿½ï¿½ï¿½Ù¼ï¿½ï¿½ï¿½
+//    @Column(name = "full_attendance_allowance")
+//    private BigDecimal FullAttendanceAllowance;
+//
+//    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//    @Column(name = "incentive_allowance")
+//    private BigDecimal IncentiveAllowance;
+//
+//    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ?
+//    @Column(name = "subsidy")
+//    private BigDecimal subsidy;
+//
+//    @Column(name = "bouns")
+//    private BigDecimal bouns;
+//
+//    /***** ï¿½Õ»ï¿½ *****/
+//    // ï¿½Ñ±Þ¿ï¿½
+//    @Column(name = "gross_salary")
+//    private BigDecimal grossSalary;
+//
+//    // ï¿½ï¿½ï¿½Þ¿ï¿½
+//    @Column(name = "net_salary")
+//    private BigDecimal netsalary;
+//
+//    @Column(name = "month")
+//    private String month;
+//
+///********** ï¿½ï¿½ï¿½ï¿½ **********/
+//
+//    // ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½
+//    @Column(name = "national_pension")
+//    private BigDecimal NationalPension;
+//
+//    // ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½
+//    @Column(name = "nationl_health_insurance")
+//    private BigDecimal NationalHealthInsurance;
+//
+//    // ï¿½ï¿½ëº¸ï¿½ï¿½
+//    @Column(name = "employment_insurance")
+//    private BigDecimal EmploymentInsurance;
+//
+//    // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
+//    @Column(name = "long_term_care_insurance")
+//    private BigDecimal LongTermCareInsurance;
+//
+//    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+//    @Column(name = "industrial_accident_compensation_insurance")
+//    private BigDecimal IndustrialAccidentCompensationInsurance;
+//
+//    // ï¿½Òµæ¼¼
+//    @Column(name = "income_tax")
+//    private BigDecimal IncomeTax;
+//
+//    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Òµæ¼¼
+//
+//    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Òµæ¼¼
+//
+//
+//    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¯ï¿½ï¿½
+//
+//    // ï¿½ï¿½ï¿½ï¿½È¸ï¿½ï¿½
+//    /***** ï¿½ï¿½Å¸ ï¿½ï¿½ï¿½ï¿½ *****/
+//    // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+//    @Column(name = "absenteeism_deduct")
+//    private BigDecimal AbsenteeismDeduct;
+//
+//    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+//    @Column(name = "leave_early_deduct")
+//    private BigDecimal LeaveEarlyDeduct;
+//
+//    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+//    @Column(name = "late_deduct")
+//    private BigDecimal LateDeduct;
+//
+//    // ï¿½ï¿½ï¿½ï¿½ï¿½Þ°ï¿½? ï¿½ï¿½ï¿½ï¿½
+//    @Column(name = "leave_deduct")
+//    private BigDecimal LeaveDeduct;
+//
+//
+//    @OneToOne
+//    @JoinColumn(name = "empId", nullable = false, updatable = false, insertable = false)
+//    private Users employee;
+//    private int empId;
+//
+//}
