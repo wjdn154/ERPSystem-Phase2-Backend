@@ -1,7 +1,7 @@
-package com.megazone.ERPSystem_phase2_Backend.production.service.basic_information;
+package com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.workcenter;
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
-import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_information.Workcenter.WorkcenterRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

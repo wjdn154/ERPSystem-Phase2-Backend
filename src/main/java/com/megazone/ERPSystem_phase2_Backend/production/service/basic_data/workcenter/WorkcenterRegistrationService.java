@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.production.service.basic_information;
+package com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.workcenter;
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 
