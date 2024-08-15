@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.sql.Array;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -37,16 +38,16 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
 
 
     /**
-     * 일반전표 등록 메소드
-     * 일반 전표입력에서 전표 정보 입력시 일반전표를 생성하지않고 승인되지않은 전표 생성
-     * @param dtoList 사용자가 일반전표 입력시 작성한 정보를 담은 전송객체 List
-     * @return 생성된 미결전표 반환
-     *
-     * 유저 회사 Entity 필요
-     * 거래처 Entity 필요
-     * 전표 담당자 Entity 필요
-     * 적요 Entity 필요
-     */
+//     * 일반전표 등록 메소드
+//     * 일반 전표입력에서 전표 정보 입력시 일반전표를 생성하지않고 승인되지않은 전표 생성
+//     * @param dtoList 사용자가 일반전표 입력시 작성한 정보를 담은 전송객체 List
+//     * @return 생성된 미결전표 반환
+//     *
+//     * 유저 회사 Entity 필요
+//     * 거래처 Entity 필요
+//     * 전표 담당자 Entity 필요
+//     * 적요 Entity 필요
+//     */
 
     @Override
     public List<UnresolvedVoucher> unresolvedVoucherEntry(List<GeneralVoucherEntryDto> dtoList) {
@@ -108,18 +109,19 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
     @Override
     public UnresolvedVoucher createUnresolvedVoucher(GeneralVoucherEntryDto dto, String voucherNum) {
         UnresolvedVoucher unresolvedVoucher = UnresolvedVoucher.builder()
-                .userCompanyId(dto.getUserCompanyId())
-                .accountSubject(dto.getAccountSubjectId())
-                .vendor(dto.getVendorId())
-                .approvalManager(dto.getApprovalManagerId())
-                .description(dto.getDescriptionId())
+                .userCompanyId(dto.getUserCompany())
+                .accountSubject(dto.getAccountSubject())
+                .vendor(dto.getVendor())
+                .approvalManager(dto.getApprovalManager())
+                .voucherManager(dto.getVoucherManager())
+                .description(dto.getDescription())
                 .transactionDescription(dto.getTransactionDescription())
                 .voucherNumber(voucherNum)
                 .voucherType(dto.getVoucherType())
                 .debitAmount(dto.getDebitAmount())
                 .creditAmount(dto.getCreditAmount())
                 .voucherDate(dto.getVoucherDate())
-                .voucherRegistrationTime(dto.getVoucherRegistrationTime())
+                .voucherRegistrationTime(LocalDateTime.now())
                 .approvalStatus(ApprovalStatus.PENDING)
                 .build();
         return unresolvedVoucher;
@@ -154,7 +156,6 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
         }
         else {
             int voucherNum = Integer.parseInt(lastUnresolvedVoucher.getVoucherNumber()) + 1;
-            System.out.println("생성된 전표 번호 : " + voucherNum);
             return String.valueOf(voucherNum);
         }
     }
@@ -179,7 +180,7 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
         else {
             autoCreateDto.setDebitAmount(dto.getCreditAmount());
         }
-        autoCreateDto.setAccountSubjectId(Long.parseLong(cashAccountCode));
+        autoCreateDto.setAccountSubject(Long.parseLong(cashAccountCode));
 
         return autoCreateDto;
     }
@@ -228,5 +229,38 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
             e.getStackTrace();
         }
         return deleteVouchers;
+    }
+
+    /**
+     * 미결전표 수정 메소드
+     * 사용자가 선택한 전표 수정 후 대차차액을 비교하여 차액이 0이면 수정완료
+     * 차액이 0이아니라면 취소
+     * @param dto 사용자가 수정한 미결전표 전송 객체
+     * @return
+     */
+    /**
+     * 미결전표 수정 메소드
+     * 사용자가 선택한 전표 수정 후 대차차액을 비교하여 차액이 0이면 수정완료
+     * 차액이 0이아니라면 취소
+     * @param unVoucherId 사용자가 수정한 미결전표 ID
+     * @param dto 사용자가 수정한 미결전표 정보
+     * @return
+     */
+
+    public List<UnresolvedVoucher> updateUnresolvedVoucher(Long unVoucherId, GeneralVoucherEntryDto dto) {
+        // 하나를 수정하는데 수정후에 대차차액 안맞으면 수정불가
+        // 대차차액 맞으면 수정가능
+
+        try {
+            UnresolvedVoucher unresolvedVoucher = unresolvedVoucherRepository.findById(unVoucherId).orElseThrow
+                    (() -> new IllegalArgumentException("해당하는 미결전표가 없습니다."));
+
+
+
+        }
+        catch (Exception e) {
+
+        }
+        return null;
     }
 }

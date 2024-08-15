@@ -6,12 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Entity(name = "resolved_voucher")
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "S_RESOLVED_VOUCHER")
+@Table(name = "resolved_voucher")
 public class ResolvedVoucher {
 
     @Id

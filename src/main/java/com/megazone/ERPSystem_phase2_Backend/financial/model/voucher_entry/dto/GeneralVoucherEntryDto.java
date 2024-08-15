@@ -17,15 +17,17 @@ import java.util.Date;
 @AllArgsConstructor
 public class GeneralVoucherEntryDto implements Cloneable {
 
-    private Long userCompanyId; // 유저 회사 ID
+    private Long userCompany; // 유저 회사 ID
 
-    private Long accountSubjectId; // 계정과목 참조
+    private Long accountSubject; // 계정과목 참조
 
-    private Long vendorId; // 거래처 참조
+    private Long vendor; // 거래처 참조
 
-    private Long approvalManagerId; // 담당자 참조
+    private Long approvalManager; // 승인관리자 참조
 
-    private Long descriptionId; // 적요 참조
+    private Long voucherManager; // 담당자 참조
+
+    private Long description; // 적요 참조
 
     private String transactionDescription; // 거래 설명
 
@@ -36,9 +38,6 @@ public class GeneralVoucherEntryDto implements Cloneable {
     private BigDecimal creditAmount; // 대변 금액
 
     private LocalDate voucherDate; // 전표 날짜 (거래발생일)
-
-    private LocalDateTime voucherRegistrationTime; // 전표 등록 시간 (현재 날짜 및 시간)
-
     // 객체 데이터 깊은 복사 메소드
     @Override
     public GeneralVoucherEntryDto clone() throws CloneNotSupportedException {

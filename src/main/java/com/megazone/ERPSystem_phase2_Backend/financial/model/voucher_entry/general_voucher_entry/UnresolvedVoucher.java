@@ -21,9 +21,9 @@ import java.util.Date;
  *
  */
 
-@Entity
+@Entity(name = "unresolved_voucher")
 @Data
-@Table(name = "S_UNRESOLVED_VOUCHER")
+@Table(name = "unresolved_voucher")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -46,7 +46,11 @@ public class UnresolvedVoucher {
 
 //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
 //    @JoinColumn(name = "approvalManager_id", nullable = false)
-    private Long approvalManager; // 담당자 참조
+    private Long approvalManager; // 승인관리자 참조
+
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "voucherManager_id", nullable = false)
+    private Long voucherManager;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "description_id")
@@ -70,7 +74,7 @@ public class UnresolvedVoucher {
     @Column(nullable = false)
     private LocalDate voucherDate; // 전표 날짜 (거래발생일)
 
-    @Column(nullable = false)
+    @Column
     private LocalDateTime voucherRegistrationTime; // 전표 등록 시간 (현재 날짜 및 시간)
 
     @Enumerated(EnumType.STRING)
