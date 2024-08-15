@@ -1,9 +1,10 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.hr_payment;
 
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management.Employee;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management.Users;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,118 +21,121 @@ public class Salary {
     @GeneratedValue
     private Long id;
 
-    // ±âº» ±Þ¿©
+    // ê¸°ë³¸ ê¸‰ì—¬
     @Column(name = "base_salary")
     private BigDecimal baseSalary;
 
-    // ½Ã±Þ
+    // ì‹œê¸‰
     @Column(name = "hour_salary")
     private BigDecimal hourSalary;
 
-    // ÀÏ±Þ
+    // ì¼ê¸‰
     @Column(name = "day_salary")
     private BigDecimal daySalary;
 
-    /***** ¹ýÁ¤¼ö´ç *****/
-    // ¿¬Àå¼ö´ç
+    /**** ë²•ì •ìˆ˜ë‹¹ ****/
+
+    // ì—°ìž¥ìˆ˜ë‹¹
     @Column(name = "overtime_allowance")
     private BigDecimal overtimeAllowance;
 
-    // ¾ß°£¼ö´ç
+    // ì•¼ê°„ìˆ˜ë‹¹
     @Column(name = "nighttime_allowance")
     private BigDecimal NighttimeAllowance;
 
-    // ÈÞÀÏ±Ù·Î¼ö´ç
+    // íœ´ì¼ê·¼ë¡œìˆ˜ë‹¹
     @Column(name = "holiday_allowance")
     private BigDecimal HolidayAllowance;
 
-    // ¿¬Â÷¼ö´ç
+    // ì—°ì°¨ìˆ˜ë‹¹
     @Column(name = "annual_allowance")
     private BigDecimal AnnualAllowance;
 
-    /***** ºñ¹ýÁ¤¼ö´ç *****/
-    // ¸¸±Ù¼ö´ç
+    /**** ë¹„ë²•ì •ìˆ˜ë‹¹ ****/
+
+    // ë§Œê·¼ìˆ˜ë‹¹
     @Column(name = "full_attendance_allowance")
     private BigDecimal FullAttendanceAllowance;
 
-    // Àå·Á¼ö´ç
+    // ìž¥ë ¤ìˆ˜ë‹¹
     @Column(name = "incentive_allowance")
     private BigDecimal IncentiveAllowance;
 
-    // º¸Á¶±Ý ?
+    // ë³´ì¡°ê¸ˆ ?
     @Column(name = "subsidy")
     private BigDecimal subsidy;
 
     @Column(name = "bouns")
     private BigDecimal bouns;
 
-    /***** ÇÕ»ê *****/
-    // ÃÑ±Þ¿©
+    /**** í•©ì‚° ****/
+
+    // ì´ê¸‰ì—¬
     @Column(name = "gross_salary")
     private BigDecimal grossSalary;
 
-    // ¼ø±Þ¿©
+    // ìˆœê¸‰ì—¬
     @Column(name = "net_salary")
     private BigDecimal netsalary;
 
     @Column(name = "month")
     private String month;
 
-/********** °øÁ¦ **********/
+    /********* ê³µì œ *********/
 
-    // ±¹¹Î¿¬±Ý
+
+    // êµ­ë¯¼ì—°ê¸ˆ
     @Column(name = "national_pension")
     private BigDecimal NationalPension;
 
-    // °Ç°­º¸Çè
+    // ê±´ê°•ë³´í—˜
     @Column(name = "nationl_health_insurance")
     private BigDecimal NationalHealthInsurance;
 
-    // °í¿ëº¸Çè
+    // ê³ ìš©ë³´í—˜
     @Column(name = "employment_insurance")
     private BigDecimal EmploymentInsurance;
 
-    // Àå±â¿ä¾ç º¸Çè·á
+    // ìž¥ê¸°ìš”ì–‘ ë³´í—˜ë£Œ
     @Column(name = "long_term_care_insurance")
     private BigDecimal LongTermCareInsurance;
 
-    // »ê¾÷ÀçÇØ º¸»ó º¸Çè
+    // ì‚°ì—…ìž¬í•´ ë³´ìƒ ë³´í—˜
     @Column(name = "industrial_accident_compensation_insurance")
     private BigDecimal IndustrialAccidentCompensationInsurance;
 
-    // ¼Òµæ¼¼
+    // ì†Œë“ì„¸
     @Column(name = "income_tax")
     private BigDecimal IncomeTax;
 
-    // ¿¬¸»Á¤»ê ¼Òµæ¼¼
+    // ìƒì¡°íšŒë¹„
+    @Column(name = "fee_of_mutual_aid_society")
+    private BigDecimal FeeOfMutualAidSociety;
 
-    // ¿¬¸»Á¤»êÁö¹æ ¼Òµæ¼¼
+    // ì—°ë§ì •ì‚° ì†Œë“ì„¸
+
+    // ì—°ë§ì •ì‚°ì§€ë°© ì†Œë“ì„¸
+
+    // ì—°ë§ì •ì‚° ë†íŠ¹ì„¸
 
 
-    // ¿¬¸»Á¤»ê ³óÆ¯¼¼
+    /**** ê¸°íƒ€ ê³µì œ ****/
 
-    // »óÁ¶È¸ºñ
-    /***** ±âÅ¸ °øÁ¦ *****/
-    // °á±Ù °øÁ¦
+    // ê²°ê·¼ ê³µì œ
     @Column(name = "absenteeism_deduct")
     private BigDecimal AbsenteeismDeduct;
 
-    // Á¶Åð °øÁ¦
+    // ì¡°í‡´ ê³µì œ
     @Column(name = "leave_early_deduct")
     private BigDecimal LeaveEarlyDeduct;
 
-    // Áö°¢ °øÁ¦
+    // ì§€ê° ê³µì œ
     @Column(name = "late_deduct")
     private BigDecimal LateDeduct;
 
-    // ¹«±ÞÈÞ°¡? °øÁ¦
+    // ë¬´ê¸‰íœ´ê°€? ê³µì œ
     @Column(name = "leave_deduct")
     private BigDecimal LeaveDeduct;
 
-
-    @OneToOne
-    @JoinColumn(name = "empId", nullable = false, updatable = false, insertable = false)
-    private Users employee;
-    private int empId;
-
+    // Employee -> Salary ì—°ê´€ê´€ê³„ ë§¤í•‘ í•„ìš”í•¨
 }
