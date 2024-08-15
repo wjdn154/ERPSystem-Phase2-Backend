@@ -20,6 +20,6 @@ public class FixedMemo {
     private String content; // 적요 내용
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "account_subject_code", referencedColumnName = "code")
     private AccountSubject accountSubject; // 참조하는 계정과목
 }
