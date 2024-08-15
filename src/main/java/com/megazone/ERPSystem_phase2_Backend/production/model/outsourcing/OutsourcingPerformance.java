@@ -6,7 +6,6 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.outsourcing;
     외주 발주와 연결하여 발주된 수량과 실적 수량을 비교
     남품된 제품이 모두 제대로 도착했는지 확인.
 */
-//import com.megazone.ERPSystem_phase2_Backend.production.model.basic_information.ProcessDetails;
 //import com.megazone.ERPSystem_phase2_Backend.production.model.basic_information.Workcenter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
