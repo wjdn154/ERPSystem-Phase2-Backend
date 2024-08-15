@@ -1,11 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import com.megazone.ERPSystem_phase2_Backend.production.model.material_requirements_planning.bom.StandardBomMaterial;
+import jakarta.persistence.*;
 import org.springframework.data.annotation.Id;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 //재료
 public class MaterialData {
@@ -27,6 +28,9 @@ public class MaterialData {
 
     @Column(nullable = false)
     private Date releaseDate;        //출고날짜
+
+    @OneToMany(mappedBy = "material", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<StandardBomMaterial> bomMaterials = new ArrayList<>();
 
 
 //    @ManyToOne(fetch = FetchType.LAZY)
