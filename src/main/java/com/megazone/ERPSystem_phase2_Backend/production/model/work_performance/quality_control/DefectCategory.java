@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.basic_information;
+package com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

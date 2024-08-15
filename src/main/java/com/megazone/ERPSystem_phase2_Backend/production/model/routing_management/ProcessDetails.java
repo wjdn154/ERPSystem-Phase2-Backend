@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.basic_information;
+package com.megazone.ERPSystem_phase2_Backend.production.model.routing_management;
 
 /**
  * 생산 과정에서 제품이나 부품이 거치는 개별 작업 단계 엔티티

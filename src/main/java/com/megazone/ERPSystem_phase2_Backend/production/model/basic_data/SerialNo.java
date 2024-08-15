@@ -1,5 +1,5 @@
 
-package com.megazone.ERPSystem_phase2_Backend.production.model.basic_information;
+package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,11 +1,9 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.bom_and_routing;
+package com.megazone.ERPSystem_phase2_Backend.production.model.routing_management;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 /**
  * Routing 정보 관리 테이블 : 생산 과정에서 공정 간의 흐름을 정의

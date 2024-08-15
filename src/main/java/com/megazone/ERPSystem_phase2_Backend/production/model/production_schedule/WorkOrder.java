@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.work_order;
+package com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule;
 
 
 import jakarta.persistence.*;
@@ -14,9 +14,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkOrderInstruction {
+public class WorkOrder {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id; // 고유 ID
 

@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.work_performance;
+package com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkInspections {
+public class QualityInspection {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

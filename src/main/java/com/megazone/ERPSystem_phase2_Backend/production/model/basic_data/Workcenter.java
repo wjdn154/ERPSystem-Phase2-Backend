@@ -1,13 +1,10 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.basic_information;
+package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data;
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management.Employee;
 //import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.MaterialData;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 /**
  * 작업장 정보 테이블

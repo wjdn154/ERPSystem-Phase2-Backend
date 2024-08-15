@@ -1,6 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.outsourcing;
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_information.OutsourcingCost;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

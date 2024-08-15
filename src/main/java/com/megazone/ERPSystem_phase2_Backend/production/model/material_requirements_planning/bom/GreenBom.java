@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.bom_and_routing;
+package com.megazone.ERPSystem_phase2_Backend.production.model.material_requirements_planning.bom;
 
 /*
     제품과 부품 간의 관계를 관리하며, 각 부품의 수량, 손실율, 유효기간 등을 포함한
@@ -23,7 +23,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class StandardBom {
+public class GreenBom {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)

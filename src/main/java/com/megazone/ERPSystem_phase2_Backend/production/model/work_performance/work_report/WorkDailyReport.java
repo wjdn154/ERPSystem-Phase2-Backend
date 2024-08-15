@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.work_performance;
+package com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
