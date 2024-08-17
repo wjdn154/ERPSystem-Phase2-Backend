@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UnresolvedVoucherDeleteDto {
+public class UnresolvedVoucherDeleteDTO {
     private LocalDate searchDate;
     private List<String> searchVoucherNumList;
     private Long ManagerId; // 담당자 ID

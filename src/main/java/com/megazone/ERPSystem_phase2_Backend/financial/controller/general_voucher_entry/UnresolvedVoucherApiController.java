@@ -1,9 +1,9 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.controller.general_voucher_entry;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherEntryDto;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherDeleteDto;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherShowAllDto;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherShowDto;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherEntryDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherDeleteDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherShowAllDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.unresolvedVoucher.UnresolvedVoucherRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry.UnresolvedVoucherEntryService;
@@ -41,16 +41,16 @@ public class UnresolvedVoucherApiController {
      * @return 정상적으로 등록되었으면, 저장된 객체 dto로 변환해 반환, 저장되지 않았으면 BAD_REQUEST 반환
      */
     @PostMapping("/api/financial/general-voucher-entry/unresolvedVoucherEntry")
-    public ResponseEntity<List<UnresolvedVoucherEntryDto>> unresolvedVoucherEntry(@RequestBody List<UnresolvedVoucherEntryDto> dto) {
+    public ResponseEntity<List<UnresolvedVoucherEntryDTO>> unresolvedVoucherEntry(@RequestBody List<UnresolvedVoucherEntryDTO> dto) {
 
         List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.unresolvedVoucherEntry(dto);
 
-        List<UnresolvedVoucherEntryDto> entryDtoList = new ArrayList<UnresolvedVoucherEntryDto>();
+        List<UnresolvedVoucherEntryDTO> entryDtoList = new ArrayList<UnresolvedVoucherEntryDTO>();
 
         if(!unresolvedVoucherList.isEmpty()) {
             entryDtoList = unresolvedVoucherList.stream().map(
                             (voucher) -> {
-                                return UnresolvedVoucherEntryDto.create(voucher);
+                                return UnresolvedVoucherEntryDTO.create(voucher);
                             })
                     .toList();
         }
@@ -66,15 +66,15 @@ public class UnresolvedVoucherApiController {
      * @return 해당 날짜조건에 만족하는 DTO 생성후 반환 ( 차변,대변 합계 / 미결전표List / 조건날짜 )
      */
     @PostMapping("api/financial/general-voucher-entry/showUnresolvedVoucher")
-    public ResponseEntity<UnresolvedVoucherShowAllDto> showUnresolvedVoucher(@RequestBody Map<String,LocalDate> requestData) {
+    public ResponseEntity<UnresolvedVoucherShowAllDTO> showUnresolvedVoucher(@RequestBody Map<String,LocalDate> requestData) {
         LocalDate date = requestData.get("searchDate");
 
         List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.unresolvedVoucherAllSearch(date);
 
-        List<UnresolvedVoucherShowDto> showDtos = unresolvedVoucherList.stream().map(
-                (voucher) -> { return UnresolvedVoucherShowDto.create(voucher); }).toList();
+        List<UnresolvedVoucherShowDTO> showDtos = unresolvedVoucherList.stream().map(
+                (voucher) -> { return UnresolvedVoucherShowDTO.create(voucher); }).toList();
 
-        UnresolvedVoucherShowAllDto showAllDto = UnresolvedVoucherShowAllDto.create(
+        UnresolvedVoucherShowAllDTO showAllDto = UnresolvedVoucherShowAllDTO.create(
                 date,
                 showDtos,
                 BigDecimal.ZERO,  // 현재잔액 기능 구현필요 <<<<
@@ -95,7 +95,7 @@ public class UnresolvedVoucherApiController {
      * @return 삭제 완료, 미완료 정보 출력
      */
     @PostMapping("api/financial/general-voucher-entry/deleteUnresolvedVoucher")
-    public ResponseEntity<String> deleteUnresolvedVoucher(@RequestBody UnresolvedVoucherDeleteDto dto) {
+    public ResponseEntity<String> deleteUnresolvedVoucher(@RequestBody UnresolvedVoucherDeleteDTO dto) {
 
         List<Long> unresolvedVoucherList = unresolvedVoucherEntryService.deleteUnresolvedVoucher(dto);
 

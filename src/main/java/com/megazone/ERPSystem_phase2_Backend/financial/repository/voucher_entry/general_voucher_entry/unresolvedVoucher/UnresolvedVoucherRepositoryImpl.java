@@ -1,14 +1,11 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.unresolvedVoucher;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherDeleteDto;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.QUnresolvedVoucher;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.IllformedLocaleException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +17,7 @@ public class UnresolvedVoucherRepositoryImpl implements UnresolvedVoucherReposit
 
 
     @Override
-    public List<Long> deleteVoucherByManager(UnresolvedVoucherDeleteDto dto) {
+    public List<Long> deleteVoucherByManager(UnresolvedVoucherDeleteDTO dto) {
         QUnresolvedVoucher qUnresolvedVoucher = QUnresolvedVoucher.unresolvedVoucher;
 
         List<Long> deletedVoucher = dto.getSearchVoucherNumList().stream()

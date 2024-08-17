@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherEntryDto;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherDeleteDto;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherEntryDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
@@ -51,7 +51,7 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
 //     */
 
     @Override
-    public List<UnresolvedVoucher> unresolvedVoucherEntry(List<UnresolvedVoucherEntryDto> dtoList) {
+    public List<UnresolvedVoucher> unresolvedVoucherEntry(List<UnresolvedVoucherEntryDTO> dtoList) {
 
         List<UnresolvedVoucher> unresolvedVoucherList = new ArrayList<UnresolvedVoucher>();
         List<UnresolvedVoucher> savedVoucherList = new ArrayList<UnresolvedVoucher>();
@@ -63,7 +63,7 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
             LocalDateTime nowTime = LocalDateTime.now();
 
             if(depositAndWithdrawalUnresolvedVoucherTypeCheck(dtoList.get(0))) {
-                UnresolvedVoucherEntryDto unresolvedVoucherDto = dtoList.get(0);
+                UnresolvedVoucherEntryDTO unresolvedVoucherDto = dtoList.get(0);
                 UnresolvedVoucher savedVoucher = createUnresolvedVoucher(unresolvedVoucherDto,newVoucherNum,nowTime);
                 unresolvedVoucherList.add(savedVoucher);
                 // 입금,출금 전표인 경우 현금 계정과목 자동분개 처리
@@ -76,7 +76,7 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
                 BigDecimal totalCredit = BigDecimal.ZERO;
 
                 // 전체 대차차액 검증
-                for (UnresolvedVoucherEntryDto dto : dtoList) {
+                for (UnresolvedVoucherEntryDTO dto : dtoList) {
                     totalDebit = totalDebit.add(dto.getDebitAmount());
                     totalCredit = totalCredit.add(dto.getCreditAmount());
                 }
@@ -86,7 +86,7 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
                 }
 
                 // 한 거래에 같은 전표 번호 부여.
-                for (UnresolvedVoucherEntryDto dto : dtoList) {
+                for (UnresolvedVoucherEntryDTO dto : dtoList) {
                     UnresolvedVoucher savedVoucher = createUnresolvedVoucher(dto,newVoucherNum,nowTime);
                     unresolvedVoucherList.add(savedVoucher);
                 }
@@ -110,7 +110,7 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
      * @return 생성된 미결전표
      */
     @Override
-    public UnresolvedVoucher createUnresolvedVoucher(UnresolvedVoucherEntryDto dto, String voucherNum, LocalDateTime nowTime) {
+    public UnresolvedVoucher createUnresolvedVoucher(UnresolvedVoucherEntryDTO dto, String voucherNum, LocalDateTime nowTime) {
         UnresolvedVoucher unresolvedVoucher = UnresolvedVoucher.builder()
 //                .userCompanyId(dto.getUserCompany())
                 .accountSubject(accountSubjectRepository.findByCode(dto.getAccountSubjectCode()).orElseThrow(
@@ -136,7 +136,7 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
      * @return
      */
     @Override
-    public boolean depositAndWithdrawalUnresolvedVoucherTypeCheck(UnresolvedVoucherEntryDto dto) {
+    public boolean depositAndWithdrawalUnresolvedVoucherTypeCheck(UnresolvedVoucherEntryDTO dto) {
         VoucherType voucherType = dto.getVoucherType();
         if(voucherType.equals(VoucherType.DEPOSIT) || voucherType.equals(VoucherType.WITHDRAWAL)) {
             return true;
@@ -171,8 +171,8 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
      */
 
     @Override
-    public UnresolvedVoucherEntryDto autoCreateUnresolvedVoucherDto(UnresolvedVoucherEntryDto dto) throws CloneNotSupportedException {
-        UnresolvedVoucherEntryDto autoCreateDto;
+    public UnresolvedVoucherEntryDTO autoCreateUnresolvedVoucherDto(UnresolvedVoucherEntryDTO dto) throws CloneNotSupportedException {
+        UnresolvedVoucherEntryDTO autoCreateDto;
         autoCreateDto = dto.clone();
         autoCreateDto.setDebitAmount(BigDecimal.ZERO);
         autoCreateDto.setCreditAmount(BigDecimal.ZERO);
@@ -214,7 +214,7 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
      * @dto 삭제할 전표의 날짜, 전표번호List, 당당자 정보 객체
      */
     @Override
-    public List<Long> deleteUnresolvedVoucher(UnresolvedVoucherDeleteDto dto) {
+    public List<Long> deleteUnresolvedVoucher(UnresolvedVoucherDeleteDTO dto) {
 
         // 전표에 담당자 이거나, 승인권자면 삭제가능 << 기능구현 필요
 

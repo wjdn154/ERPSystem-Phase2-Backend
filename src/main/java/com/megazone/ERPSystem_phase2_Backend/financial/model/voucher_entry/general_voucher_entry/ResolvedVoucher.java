@@ -63,5 +63,5 @@ public class ResolvedVoucher {
     private LocalDate voucherDate; // 전표 날짜 (거래발생일)
 
     @Column
-    private LocalDateTime voucherRegistrationTime; // 전표 등록 시간 (현재 날짜 및 시간)
+    private LocalDateTime voucherApprovalTime; // 전표 승인 시간 (현재 날짜 및 시간)
 }

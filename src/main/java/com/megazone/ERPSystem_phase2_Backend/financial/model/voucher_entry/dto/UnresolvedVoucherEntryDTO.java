@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UnresolvedVoucherEntryDto implements Cloneable {
+public class UnresolvedVoucherEntryDTO implements Cloneable {
 //
 //    private Long companyId; // 유저 회사 ID
 
@@ -35,13 +35,13 @@ public class UnresolvedVoucherEntryDto implements Cloneable {
     private LocalDate voucherDate; // 전표 날짜 (거래발생일)
     // 객체 데이터 깊은 복사 메소드
     @Override
-    public UnresolvedVoucherEntryDto clone() throws CloneNotSupportedException {
-        return (UnresolvedVoucherEntryDto)super.clone();
+    public UnresolvedVoucherEntryDTO clone() throws CloneNotSupportedException {
+        return (UnresolvedVoucherEntryDTO)super.clone();
     }
 
 
-    public static UnresolvedVoucherEntryDto create(UnresolvedVoucher unresolvedVoucher) {
-        return new UnresolvedVoucherEntryDto(
+    public static UnresolvedVoucherEntryDTO create(UnresolvedVoucher unresolvedVoucher) {
+        return new UnresolvedVoucherEntryDTO(
 //                unresolvedVoucher.getCompanyId()
                 unresolvedVoucher.getAccountSubject().getCode(),
 //                unresolvedVoucher.getVendor().getCode(),

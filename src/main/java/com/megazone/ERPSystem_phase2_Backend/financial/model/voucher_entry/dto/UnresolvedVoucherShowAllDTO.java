@@ -11,17 +11,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UnresolvedVoucherShowAllDto {
+public class UnresolvedVoucherShowAllDTO {
     private LocalDate searchDate;
-    private List<UnresolvedVoucherShowDto> voucherDtoList;
+    private List<UnresolvedVoucherShowDTO> voucherDtoList;
     private BigDecimal cashAmount;
     private BigDecimal totalDebit;
     private BigDecimal totalCredit;
     private BigDecimal diffCashAmount;
 
-    public static UnresolvedVoucherShowAllDto create(LocalDate searchDate, List<UnresolvedVoucherShowDto> voucherDtoList, BigDecimal cashAmount,
-                                       BigDecimal totalDebit, BigDecimal totalCredit) {
-        return new UnresolvedVoucherShowAllDto(
+    public static UnresolvedVoucherShowAllDTO create(LocalDate searchDate, List<UnresolvedVoucherShowDTO> voucherDtoList, BigDecimal cashAmount,
+                                                     BigDecimal totalDebit, BigDecimal totalCredit) {
+        return new UnresolvedVoucherShowAllDTO(
                 searchDate,
                 voucherDtoList,
                 cashAmount,
