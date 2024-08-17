@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.controller.basic_information_management.account_subject;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.*;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubject.AccountSubjectRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.basic_information_management.account_subject.AccountSubjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -55,10 +55,7 @@ public class AccountSubjectController {
      * @return 성공 시 HTTP 200, 실패 시 에러 메시지를 포함한 HTTP 상태 반환.
      */
     @PostMapping("/api/financial/accountSubjects/saveMemo/{code}")
-    public ResponseEntity<String> addMemoToAccountSubject(
-            @PathVariable("code") String code,
-            @RequestBody MemoRequestDTO memoRequestDTO) {
-
+    public ResponseEntity<String> addMemoToAccountSubject(@PathVariable("code") String code,@RequestBody MemoRequestDTO memoRequestDTO) {
         try {
             accountSubjectService.addMemoToAccountSubject(code, memoRequestDTO.getMemoType(), memoRequestDTO.getContent());
             return ResponseEntity.ok("적요를 등록하였습니다.");

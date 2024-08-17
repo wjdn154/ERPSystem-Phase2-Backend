@@ -1,7 +1,6 @@
-package com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubject;
+package com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubject;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.AccountSubjectDetailDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
