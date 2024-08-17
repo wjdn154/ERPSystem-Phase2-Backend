@@ -6,8 +6,11 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.Work
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface WorkcenterRepositoryCustom {
+
+    Optional<Workcenter> findByCode(String code);
 
     /**
      * 이름의 일부 또는 정확한 이름으로 작업장 목록 조회 (부분 일치)
@@ -64,7 +67,6 @@ public interface WorkcenterRepositoryCustom {
      * @return 선택한 작업장 유형에 해당하는 Workcenter 리스트
      */
     List<Workcenter> findByTypeIn(List<WorkcenterType> types);
-
 
     /**
      * 설비 이름으로 작업장 목록 조회 (부분 일치)
