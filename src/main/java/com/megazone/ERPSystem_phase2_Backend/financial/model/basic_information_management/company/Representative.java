@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company_registration;
+package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,4 +27,10 @@ public class Representative {
 
     @Column(nullable = false)
     private Boolean isForeign ; // 대표자 외국인여부
+
+    public Representative(String name, String idNumber, Boolean isForeign) {
+        this.name = name;
+        this.idNumber = idNumber;
+        this.isForeign = isForeign;
+    }
 }

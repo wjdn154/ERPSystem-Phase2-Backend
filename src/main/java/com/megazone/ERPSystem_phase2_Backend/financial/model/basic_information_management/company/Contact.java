@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company_registration;
+package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,4 +23,9 @@ public class Contact {
     private String businessPhone; // 사업장 전화번호
 
     private String fax; // 팩스번호
+
+    public Contact(String businessPhone, String fax) {
+        this.businessPhone = businessPhone;
+        this.fax = fax;
+    }
 }

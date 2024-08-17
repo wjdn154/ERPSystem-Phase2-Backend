@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company_registration;
+package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,4 +26,10 @@ public class CorporateType {
     private String type; // 법인구분
 
     private String description; // 법인구분 설명
+
+    public CorporateType(String code, String type, String description) {
+        this.code = code;
+        this.type = type;
+        this.description = description;
+    }
 }

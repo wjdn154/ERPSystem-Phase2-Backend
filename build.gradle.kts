@@ -12,7 +12,7 @@ version = "0.0.1-SNAPSHOT" // 프로젝트 버전 설정
 // Java 컴파일러 설정: 사용할 Java 버전 지정
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(17) // Java 17 버전 사용
+		languageVersion = JavaLanguageVersion.of(18) // Java 17 버전 사용
 	}
 }
 

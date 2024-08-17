@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company_registration;
+package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -49,5 +49,16 @@ public class Address {
     @Column(nullable = false) // 본점 동
     private String headquarterPlace;
 
-
+    public Address(String businessPostalCode, String businesseAddress, String businesseAddressDetail, Boolean isBusinesseNewAddress, String businessePlace, String headquarterPostalCode, String headquarterAddress, String headquarterAddressDetail, Boolean isHeadquarterNewAddress, String headquarterPlace) {
+        this.businessPostalCode = businessPostalCode;
+        this.businesseAddress = businesseAddress;
+        this.businesseAddressDetail = businesseAddressDetail;
+        this.isBusinesseNewAddress = isBusinesseNewAddress;
+        this.businessePlace = businessePlace;
+        this.headquarterPostalCode = headquarterPostalCode;
+        this.headquarterAddress = headquarterAddress;
+        this.headquarterAddressDetail = headquarterAddressDetail;
+        this.isHeadquarterNewAddress = isHeadquarterNewAddress;
+        this.headquarterPlace = headquarterPlace;
+    }
 }

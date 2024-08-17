@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company_registration;
+package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,4 +24,9 @@ public class TaxOffice {
 
     @Column(nullable = false)
     private String region; // 세무서 지역
+
+    public TaxOffice(String code, String region) {
+        this.code = code;
+        this.region = region;
+    }
 }

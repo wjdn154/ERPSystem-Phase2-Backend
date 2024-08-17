@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company_registration;
+package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,4 +24,10 @@ public class MainBusiness {
 
     @Column(nullable = false) // 종목
     private String item;
+
+    public MainBusiness(String code, String businessType, String item) {
+        this.code = code;
+        this.businessType = businessType;
+        this.item = item;
+    }
 }
