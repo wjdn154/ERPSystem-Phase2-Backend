@@ -59,7 +59,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
         String firstAccountCode = accountSubjects.isEmpty() ? null : accountSubjects.get(0).getCode();
 
         // 첫 번째 계정과목의 상세 정보를 조회하거나, 리스트가 비어 있으면 null 반환
-        AccountSubjectDetailDTO accountSubjectDetail = firstAccountCode != null
+         AccountSubjectDetailDTO accountSubjectDetail = firstAccountCode != null
                 ? accountSubjectRepository.findAccountSubjectDetailByCode(firstAccountCode).orElse(null)
                 : null;
 

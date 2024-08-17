@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class AccountSubjectServiceImplTest {
+class CompanyServiceImplTest {
 
     @Autowired
     private EntityManager entityManager;

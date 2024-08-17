@@ -1,10 +1,9 @@
-package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company_registration;
+package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company_registration.enums.EntityType;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.dto.CompanyDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.enums.EntityType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -12,15 +11,15 @@ import java.time.LocalDate;
  * 회사 기본 정보 테이블
  * 회사 기본 정보 등록시 사용하는 테이블
  */
-@Entity
-@Data
+@Entity(name = "company")
+@Table(name = "company")
 @NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false) // 고유식별자
-    private Long id;
+    private Long id; // 고유식별자
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "corporate_type_id", nullable = false) // 법인구분
@@ -28,7 +27,7 @@ public class Company {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "corporate_kinds_id", nullable = false) // 법인종류별 구분
-    private CorporateKind corporateKinds;
+    private CorporateKind corporateKind;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "representative_id", nullable = false) // 대표자 정보
@@ -88,9 +87,6 @@ public class Company {
     @Column(nullable = false) // 구분 (법인, 개인)
     private EntityType entityType;
 
-    @Column(nullable = false) // 사용여부(사용, 미사용)
-    private Boolean active;
-
     @Column(nullable = false) // 회계연도 시작일
     private LocalDate fiscalYearStart;
 
@@ -98,5 +94,30 @@ public class Company {
     private LocalDate fiscalYearEnd;
 
     @Column(nullable = false) // 회계연도 기수
-    private Integer fiscalCardinalNumber;
+    private Long fiscalCardinalNumber;
+
+    public Company(CorporateType corporateType, CorporateKind corporateKind, Representative representative, Address address, Contact contact, MainBusiness mainBusinessCode, TaxOffice businessTaxOffice, TaxOffice headquarterTaxOffice, String localIncomeTaxOffice, Boolean isSme, String businessRegistrationNumber, String corporateRegistrationNumber, String businessType, String businessItem, LocalDate establishmentDate, LocalDate openingDate, LocalDate closingDate, String name, EntityType entityType, LocalDate fiscalYearStart, LocalDate fiscalYearEnd, Long fiscalCardinalNumber) {
+        this.corporateType = corporateType;
+        this.corporateKind = corporateKind;
+        this.representative = representative;
+        this.address = address;
+        this.contact = contact;
+        this.mainBusinessCode = mainBusinessCode;
+        this.businessTaxOffice = businessTaxOffice;
+        this.headquarterTaxOffice = headquarterTaxOffice;
+        this.localIncomeTaxOffice = localIncomeTaxOffice;
+        this.isSme = isSme;
+        this.businessRegistrationNumber = businessRegistrationNumber;
+        this.corporateRegistrationNumber = corporateRegistrationNumber;
+        this.businessType = businessType;
+        this.businessItem = businessItem;
+        this.establishmentDate = establishmentDate;
+        this.openingDate = openingDate;
+        this.closingDate = closingDate;
+        this.name = name;
+        this.entityType = entityType;
+        this.fiscalYearStart = fiscalYearStart;
+        this.fiscalYearEnd = fiscalYearEnd;
+        this.fiscalCardinalNumber = fiscalCardinalNumber;
+    }
 }
