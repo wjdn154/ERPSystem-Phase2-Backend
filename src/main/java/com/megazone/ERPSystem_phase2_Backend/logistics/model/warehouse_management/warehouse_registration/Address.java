@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
  * 회사등록 시 필요한 주소 데이터 테이블
  */
 @Entity(name = "warehouse_address")
+@Table(name = "warehouse_address")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,6 +31,5 @@ public class Address {
 
     @Column(nullable = false) // 창고 동 (예: 대연동)
     private String warehousePlace;
-
 
 }
