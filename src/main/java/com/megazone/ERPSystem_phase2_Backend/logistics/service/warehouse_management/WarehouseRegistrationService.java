@@ -5,7 +5,7 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_managemen
 public interface WarehouseRegistrationService {
     Warehouse saveWarehouse(Warehouse warehouse);
 
-    Warehouse updateAccount(Warehouse warehouse);
+    Warehouse updateWarehouse(Warehouse warehouse);
 
     void deleteWarehouse(Long warehouseId);
 
