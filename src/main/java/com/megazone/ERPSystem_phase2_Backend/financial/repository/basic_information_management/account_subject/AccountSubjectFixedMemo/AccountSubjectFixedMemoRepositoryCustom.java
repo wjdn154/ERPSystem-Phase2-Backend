@@ -1,4 +1,0 @@
-package com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectFixedMemo;
-
-public interface AccountSubjectFixedMemoRepositoryCustom {
-}

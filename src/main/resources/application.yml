@@ -29,6 +29,7 @@ spring:
         - classpath:initial-database/financial/account_subject_cash_memo.sql
         - classpath:initial-database/financial/account_subject_fixed_memo.sql
         - classpath:initial-database/financial/account_subject_transfer_memo.sql
+        - classpath:initial-database/logistics/warehouse.sql
         - classpath:initial-database/financial/unresolved_voucher.sql
 logging:
   level:

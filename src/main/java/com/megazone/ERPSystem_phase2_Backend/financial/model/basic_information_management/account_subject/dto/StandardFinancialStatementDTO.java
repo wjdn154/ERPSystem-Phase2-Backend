@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class StandardFinancialStatementDTO {
-    String code; // 표준 재무제표 코드
-    String name; // 표준 재무제표 이름
+    private String code; // 표준 재무제표 코드
+    private String name; // 표준 재무제표 이름
 }

@@ -8,13 +8,13 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.AccountSubjectDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.AccountSubjectsAndMemosDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.StructureDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubject.AccountSubjectRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectNature.AccountSubjectNatureRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectStructure.AccountSubjectStructureRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectCashMemo.AccountSubjectCashMemoRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectFixedMemo.AccountSubjectFixedMemoRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectStandardFinancialStatement.AccountSubjectStandardFinancialStatementRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectTransferMemo.AccountSubjectTransferMemoRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.NatureRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.StructureRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.CashMemoRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.FixedMemoRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.StandardFinancialStatementRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.TransferMemoRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,12 +28,12 @@ import java.util.Optional;
 public class AccountSubjectServiceImpl implements AccountSubjectService {
 
     private final AccountSubjectRepository accountSubjectRepository;
-    private final AccountSubjectCashMemoRepository accountSubjectCashMemoRepository;
-    private final AccountSubjectFixedMemoRepository accountSubjectFixedMemoRepository;
-    private final AccountSubjectNatureRepository accountSubjectNatureRepository;
-    private final AccountSubjectStandardFinancialStatementRepository accountSubjectStandardFinancialStatementRepository;
-    private final AccountSubjectStructureRepository accountSubjectStructureRepository;
-    private final AccountSubjectTransferMemoRepository accountSubjectTransferMemoRepository;
+    private final CashMemoRepository cashMemoRepository;
+    private final FixedMemoRepository fixedMemoRepository;
+    private final NatureRepository natureRepository;
+    private final StandardFinancialStatementRepository standardFinancialStatementRepository;
+    private final StructureRepository structureRepository;
+    private final TransferMemoRepository transferMemoRepository;
 
     /**
      * 모든 계정과목과 관련된 적요 정보를 가져옴.
@@ -44,7 +44,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     public Optional<AccountSubjectsAndMemosDTO> findAllAccountSubjectDetails() {
 
         // 모든 계정과목 체계를 조회하고, DTO로 변환하여 리스트로 만듦
-        List<StructureDTO> structures = accountSubjectStructureRepository.findAll().stream()
+        List<StructureDTO> structures = structureRepository.findAll().stream()
                 .map(structure -> new StructureDTO(
                         structure.getCode(),
                         structure.getName(),
@@ -59,7 +59,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
         String firstAccountCode = accountSubjects.isEmpty() ? null : accountSubjects.get(0).getCode();
 
         // 첫 번째 계정과목의 상세 정보를 조회하거나, 리스트가 비어 있으면 null 반환
-        AccountSubjectDetailDTO accountSubjectDetail = firstAccountCode != null
+         AccountSubjectDetailDTO accountSubjectDetail = firstAccountCode != null
                 ? accountSubjectRepository.findAccountSubjectDetailByCode(firstAccountCode).orElse(null)
                 : null;
 
@@ -88,13 +88,13 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
                 CashMemo cashMemo = new CashMemo();
                 cashMemo.setAccountSubject(accountSubject);
                 cashMemo.setContent(content);
-                accountSubjectCashMemoRepository.save(cashMemo);
+                cashMemoRepository.save(cashMemo);
                 break;
             case "TRANSFER":
                 TransferMemo transferMemo = new TransferMemo();
                 transferMemo.setAccountSubject(accountSubject);
                 transferMemo.setContent(content);
-                accountSubjectTransferMemoRepository.save(transferMemo);
+                transferMemoRepository.save(transferMemo);
                 break;
             default:
                 // 잘못된 메모 타입이 입력된 경우 예외를 던짐
@@ -121,7 +121,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
                 });
 
         // 계정과목 체계 코드로 조회
-        Structure structure = accountSubjectStructureRepository.findByCode(dto.getStructureCode())
+        Structure structure = structureRepository.findByCode(dto.getStructureCode())
                 .orElseThrow(() -> new RuntimeException("코드로 계정과목 체계를 찾을 수 없습니다: " + dto.getStructureCode()));
         accountSubject.setStructure(structure);
 
@@ -193,7 +193,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
 
         // 계정과목 체계가 변경된 경우, 새로운 체계로 업데이트
         if (dto.getStructureCode() != null && !dto.getStructureCode().equals(accountSubject.getStructure().getCode())) {
-            Structure structure = accountSubjectStructureRepository.findByCode(dto.getStructureCode())
+            Structure structure = structureRepository.findByCode(dto.getStructureCode())
                     .orElseThrow(() -> new RuntimeException("코드로 계정과목 체계를 찾을 수 없습니다: " + dto.getStructureCode()));
             accountSubject.setStructure(structure);
         }
