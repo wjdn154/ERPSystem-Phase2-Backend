@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.financial.service.basic_information_management.account_subject;
+package com.megazone.ERPSystem_phase2_Backend.financial.service.basic_information_management.company;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubject;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.CashMemo;
@@ -8,13 +8,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.AccountSubjectDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.AccountSubjectsAndMemosDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.StructureDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.NatureRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.StructureRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.CashMemoRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.FixedMemoRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.StandardFinancialStatementRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.TransferMemoRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

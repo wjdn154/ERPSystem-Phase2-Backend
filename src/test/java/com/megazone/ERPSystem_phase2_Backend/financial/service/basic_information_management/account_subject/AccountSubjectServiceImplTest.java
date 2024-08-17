@@ -5,33 +5,23 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.AccountSubjectsAndMemosDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.enums.EntryType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.enums.IncreaseDecreaseType;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubject.AccountSubjectRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectNature.AccountSubjectNatureRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectStructure.AccountSubjectStructureRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectCashMemo.AccountSubjectCashMemoRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectFixedMemo.AccountSubjectFixedMemoRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectStandardFinancialStatement.AccountSubjectStandardFinancialStatementRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectTransferMemo.AccountSubjectTransferMemoRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.NatureRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.StructureRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.CashMemoRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.FixedMemoRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.StandardFinancialStatementRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.TransferMemoRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ActiveProfiles;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.util.AssertionErrors.assertNotNull;
 
 @SpringBootTest
 @Transactional
@@ -41,12 +31,12 @@ class AccountSubjectServiceImplTest {
     private EntityManager entityManager;
 
     @Autowired private AccountSubjectRepository accountSubjectRepository;
-    @Autowired private AccountSubjectCashMemoRepository accountSubjectCashMemoRepository;
-    @Autowired private AccountSubjectFixedMemoRepository accountSubjectFixedMemoRepository;
-    @Autowired private AccountSubjectNatureRepository accountSubjectNatureRepository;
-    @Autowired private AccountSubjectStandardFinancialStatementRepository accountSubjectStandardFinancialStatementRepository;
-    @Autowired private AccountSubjectStructureRepository accountSubjectStructureRepository;
-    @Autowired private AccountSubjectTransferMemoRepository accountSubjectTransferMemoRepository;
+    @Autowired private CashMemoRepository cashMemoRepository;
+    @Autowired private FixedMemoRepository fixedMemoRepository;
+    @Autowired private NatureRepository natureRepository;
+    @Autowired private StandardFinancialStatementRepository standardFinancialStatementRepository;
+    @Autowired private StructureRepository structureRepository;
+    @Autowired private TransferMemoRepository transferMemoRepository;
 
 
     @Autowired private AccountSubjectService accountSubjectService;
