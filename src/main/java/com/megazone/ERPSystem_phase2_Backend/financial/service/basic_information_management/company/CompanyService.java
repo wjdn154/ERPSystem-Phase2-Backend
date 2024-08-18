@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface CompanyService {
 
     Optional<CompanyDTO> saveCompany(CompanyDTO companyDTO);
+
+    Optional<CompanyDTO> updateCompany(Long id, CompanyDTO companyDTO);
 }

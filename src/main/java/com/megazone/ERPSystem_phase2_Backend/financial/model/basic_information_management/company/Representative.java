@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
  * 회사 대표자 정보 테이블
  * 회사 등록시 필요한 대표자 데이터 테이블
  */
-@Entity
+@Entity(name = "company_representative")
+@Table(name = "company_representative")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +20,7 @@ public class Representative {
     @Column(nullable = false)
     private Long id; // 고유식별자
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name; // 대표자명
 
     @Column(nullable = false, unique = true)

@@ -43,7 +43,7 @@ public class Company {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "main_business_code", referencedColumnName = "code", nullable = false) // 주업종 코드
-    private MainBusiness mainBusinessCode;
+    private MainBusiness mainBusiness;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "business_tax_office_code", referencedColumnName = "code", nullable = false) // 사업장 관할 세무서
@@ -59,10 +59,10 @@ public class Company {
     @Column(nullable = false) // 중소기업여부
     private Boolean isSme;
 
-    @Column(nullable = false) // 사업자등록번호
+    @Column(nullable = false, unique = true) // 사업자등록번호
     private String businessRegistrationNumber;
 
-    @Column(nullable = false) // 법인등록번호
+    @Column(nullable = false, unique = true) // 법인등록번호
     private String corporateRegistrationNumber;
 
     @Column(nullable = false) // 업태
@@ -96,13 +96,13 @@ public class Company {
     @Column(nullable = false) // 회계연도 기수
     private Long fiscalCardinalNumber;
 
-    public Company(CorporateType corporateType, CorporateKind corporateKind, Representative representative, Address address, Contact contact, MainBusiness mainBusinessCode, TaxOffice businessTaxOffice, TaxOffice headquarterTaxOffice, String localIncomeTaxOffice, Boolean isSme, String businessRegistrationNumber, String corporateRegistrationNumber, String businessType, String businessItem, LocalDate establishmentDate, LocalDate openingDate, LocalDate closingDate, String name, EntityType entityType, LocalDate fiscalYearStart, LocalDate fiscalYearEnd, Long fiscalCardinalNumber) {
+    public Company(CorporateType corporateType, CorporateKind corporateKind, Representative representative, Address address, Contact contact, MainBusiness mainBusiness, TaxOffice businessTaxOffice, TaxOffice headquarterTaxOffice, String localIncomeTaxOffice, Boolean isSme, String businessRegistrationNumber, String corporateRegistrationNumber, String businessType, String businessItem, LocalDate establishmentDate, LocalDate openingDate, LocalDate closingDate, String name, EntityType entityType, LocalDate fiscalYearStart, LocalDate fiscalYearEnd, Long fiscalCardinalNumber) {
         this.corporateType = corporateType;
         this.corporateKind = corporateKind;
         this.representative = representative;
         this.address = address;
         this.contact = contact;
-        this.mainBusinessCode = mainBusinessCode;
+        this.mainBusiness = mainBusiness;
         this.businessTaxOffice = businessTaxOffice;
         this.headquarterTaxOffice = headquarterTaxOffice;
         this.localIncomeTaxOffice = localIncomeTaxOffice;

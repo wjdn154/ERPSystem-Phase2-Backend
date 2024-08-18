@@ -11,13 +11,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CompanyDTO {
-   private Long id;
    private CorporateTypeDTO corporateType; // 법인구분
    private CorporateKindDTO corporateKind; // 법인종류
    private RepresentativeDTO representative; // 대표자
    private AddressDTO address; // 주소
    private ContactDTO contact; // 연락처
-   private MainBusinessDTO mainBusinessCode; // 주요업종코드
+   private MainBusinessDTO mainBusiness; // 주요업종코드
    private TaxOfficeDTO businessTaxOffice; // 사업자세무서
    private TaxOfficeDTO headquarterTaxOffice; // 본점세무서
    private String localIncomeTaxOffice; // 지방소득세무서

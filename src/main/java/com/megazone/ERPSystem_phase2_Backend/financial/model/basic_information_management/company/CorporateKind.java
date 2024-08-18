@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
  * 법인종류별 구분 테이블
  * 법인종류별 구분 데이터 테이블
  */
-@Entity
+@Entity(name = "company_corporate_kind")
+@Table(name = "company_corporate_kind")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
