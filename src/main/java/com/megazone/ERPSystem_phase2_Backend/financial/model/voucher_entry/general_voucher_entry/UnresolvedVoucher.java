@@ -21,36 +21,36 @@ import java.util.Date;
  *
  */
 
-@Entity
+@Entity(name = "unresolved_voucher")
 @Data
-@Table(name = "S_UNRESOLVED_VOUCHER")
+@Table(name = "unresolved_voucher")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UnresolvedVoucher {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @Column(name = "userCompany_id", nullable = false)
-    private Long userCompanyId; // 유저 회사 ID
+//    @Column(name = "company_id", nullable = false)
+//    private Long companyId; // 유저 회사 ID
 
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "account_id", nullable = false)
-    private Long accountSubject; // 계정과목 참조
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "account_code",referencedColumnName = "code", nullable = false)
+    private AccountSubject accountSubject; // 계정과목 참조
 
 //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
 //    @JoinColumn(name = "vendor_id", nullable = false)
-    private Long vendor; // 거래처 참조
-
+//    private String vendor; // 거래처 참조
+//
 //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "approvalManager_id", nullable = false)
-    private Long approvalManager; // 담당자 참조
-
+//    @JoinColumn(name = "voucherManager_id", nullable = false)
+//    private String voucherManager; // 전표 담당자
+//
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "description_id")
-    private Long description; // 적요
+//    private String description; // 적요
 
     private String transactionDescription; // 거래 설명
 
@@ -70,7 +70,7 @@ public class UnresolvedVoucher {
     @Column(nullable = false)
     private LocalDate voucherDate; // 전표 날짜 (거래발생일)
 
-    @Column(nullable = false)
+    @Column
     private LocalDateTime voucherRegistrationTime; // 전표 등록 시간 (현재 날짜 및 시간)
 
     @Enumerated(EnumType.STRING)
