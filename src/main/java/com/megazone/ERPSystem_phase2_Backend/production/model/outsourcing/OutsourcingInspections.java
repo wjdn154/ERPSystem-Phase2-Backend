@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -25,13 +27,13 @@ public class OutsourcingInspections {
     private Long id;                          //pk
     
     @Column(nullable = false)
-    private Date inspectionDate;             //검사 날짜
+    private LocalDate inspectionDate;             //검사 날짜
 
     @Column(nullable = false)
-    private String inspectionResult;         //검사 결과(합격/불합격)   boolean?true?false?
+    private Boolean inspectionResult;         //검사 결과(합격/불합격)   boolean?true?false?
 
     @Column(nullable = false)
-    private Long defectiveQuantity;        //불량수량 (검사결과 후 불합격된 제품 수량)
+    private BigDecimal defectiveQuantity;        //불량수량 (검사결과 후 불합격된 제품 수량)
 
     @Column(nullable = false)
     private String inspector;                //검사 수행자

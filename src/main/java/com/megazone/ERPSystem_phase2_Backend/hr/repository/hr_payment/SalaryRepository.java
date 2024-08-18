@@ -5,4 +5,3 @@
 //public interface SalaryRepository extends JpaRepository {
 //
 //}
-//
