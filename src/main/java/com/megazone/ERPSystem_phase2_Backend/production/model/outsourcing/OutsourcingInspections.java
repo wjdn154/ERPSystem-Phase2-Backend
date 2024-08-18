@@ -38,6 +38,10 @@ public class OutsourcingInspections {
     @Column(nullable = false)
     private String inspector;                //검사 수행자
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Progress progress;                 //진행 상황 (진행전, 진행중, 완료)
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "outsourcingPerformance_id")
     private OutsourcingPerformance outsourcingPerformance;     //실적관리 fk .
