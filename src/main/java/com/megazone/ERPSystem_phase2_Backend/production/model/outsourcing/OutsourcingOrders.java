@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -22,38 +24,38 @@ public class OutsourcingOrders {
     private Long id;                    //pk
 
     @Column(nullable = false)
-    private Date billingDate;            //청구일. 발주 날짜
+    private LocalDate billingDate;            //청구일. 발주 날짜
 
     @Column
-    private Date completionDate;         //완료날짜 (외주 발주 청구가 완료된 날짜)
+    private LocalDate completionDate;         //완료날짜 (외주 발주 청구가 완료된 날짜)
 
     @Column(nullable = false)
-    private Date dueDate;                 //납품 예정일
+    private LocalDate dueDate;                 //납품 예정일
 
     @Column
-    private Long RefinedQuantity;         //정미수량
+    private BigDecimal RefinedQuantity;         //정미수량
     
     @Column
-    private Long loss;                    //Loss(%);
+    private Double loss;                    //Loss(%);
     
     @Column(nullable = false)
-    private Long fixedQuantity;           //발주 수량
+    private BigDecimal fixedQuantity;           //발주 수량
 
     @Column(nullable = false)
-    private String sortation;             //유상/무상 구분
+    private Boolean sortation;             //유상/무상 구분
     
     @Column(nullable = false)
-    private String status;                 //발주 상태 (발주 등록/완료/취소)
+    private String status;                 //발주 상태 (발주 등록/완료/취소)  enum
 
     @Column
-    private String note;                  //비고
+    private String remarks;                  //비고
 
     @OneToMany(mappedBy = "outsourcingOrders", fetch = FetchType.LAZY )
     private List<OutsourcingPerformance> outsourcingPerformance;     //외주 실적 관리 (fk)   하나의 발주가 여러번의 납품 실적을 가질 수 있음.
 
-//    @ManyToOne(fetch = FetchType.LAZY, optional=false)
-//    @JoinColumn(name = "outsourcingCost_id")
-//    private OutsourcingCost outsourcingCost;     //외주 단가
+    @ManyToOne(fetch = FetchType.LAZY, optional=false)
+    @JoinColumn(name = "outsourcingCost_id")
+    private OutsourcingCost outsourcingCost;     //외주 단가
 
 
 //    @ManyToOne(fetch = FetchType.LAZY)
