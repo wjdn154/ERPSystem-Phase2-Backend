@@ -26,15 +26,15 @@ public class Employee {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_Id", nullable = false) // 부서 참조
+    @JoinColumn(name = "department_id", nullable = false) // 부서 참조
     private Department department;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "position_Id", nullable = false) // 직위 참조
+    @JoinColumn(name = "position_id", nullable = false) // 직위 참조
     private Position position;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "jobTitle_Id", nullable = false) // 직책 참조
+    @JoinColumn(name = "jobTitle_id", nullable = false) // 직책 참조
     private JobTitle jobTitle;
 
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY) // 성과 평가 참조
@@ -47,7 +47,7 @@ public class Employee {
     private Users users;
 
     @OneToOne(cascade = CascadeType.ALL) // 계좌번호랑 1대 1참조
-    @JoinColumn(name = "bankaccount_Id")
+    @JoinColumn(name = "bankaccount_id")
     private BankAccount bankAccount;
 
     @OneToMany(mappedBy = "employee",fetch = FetchType.LAZY) // 휴가 참조

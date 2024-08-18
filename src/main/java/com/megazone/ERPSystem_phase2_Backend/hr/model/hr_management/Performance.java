@@ -21,8 +21,12 @@ public class Performance {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_Id", nullable = false)
-    private Employee employee;
+    @JoinColumn(name = "employee_id", nullable = false)
+    private Employee employee; // 평가받는 사원
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "evaluator_id", nullable = false)
+    private Employee evaluator; // 평가자
 
     @Column(nullable = false)
     private Date evaluationDate; // 평가일

@@ -20,7 +20,7 @@ public class Attendance {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="employee_Id", nullable=false)
+    @JoinColumn(name="employee_id", nullable=false)
     private Employee employee; // 사원 참조
 
     @Column(nullable = false)
