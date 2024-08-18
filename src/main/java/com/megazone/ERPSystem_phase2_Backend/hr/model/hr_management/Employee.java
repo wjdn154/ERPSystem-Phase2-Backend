@@ -95,4 +95,7 @@ public class Employee {
 
     @Column(nullable = false)
     private boolean isHouseholdHead; // 세대주 여부
+    
+    @Column
+    private String profilePicture; // 프로필 사진
 }
