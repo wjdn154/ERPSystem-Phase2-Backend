@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherApprovalDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherEntryDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
@@ -25,7 +26,7 @@ import java.util.function.Function;
 @Transactional
 public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryService {
 
-    private final ResolvedVoucherRepository resolvedVoucherRepository;
+    private final ResolvedVoucherService resolvedVoucherService;
     private final UnresolvedVoucherRepository unresolvedVoucherRepository;
     private final AccountSubjectRepository accountSubjectRepository;
     
@@ -256,6 +257,28 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
     @Override
     public BigDecimal totalCredit(LocalDate date) {
         return calculateTotalAmount(date, UnresolvedVoucher::getCreditAmount);
+    }
+
+    @Override
+    public List<UnresolvedVoucher> voucherApprovalProcessing(UnresolvedVoucherApprovalDTO dto) {
+        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherRepository.findApprovalTypeVoucher(dto);
+
+        try {
+            if(!unresolvedVoucherList.isEmpty())
+            {
+                unresolvedVoucherList.stream().forEach(
+                        unresolvedVoucher -> {unresolvedVoucher.setApprovalStatus(dto.getApprovalStatus());
+                        });
+                resolvedVoucherService.resolvedVoucherEntry(unresolvedVoucherList);
+            }
+            else {
+                throw new IllegalArgumentException("권한 또는 해당하는 전표가 없습니다.");
+            }
+        }
+        catch (Exception e) {
+            e.getStackTrace();
+        }
+        return unresolvedVoucherList;
     }
 
 }

@@ -1,4 +1,3 @@
-/*
 -- 계정과목 성격 테이블
 INSERT INTO account_subject_nature (code, name, structure_id) VALUES
 ('1', '예금', 1),
@@ -208,4 +207,3 @@ INSERT INTO account_subject_nature (code, name, structure_id) VALUES
 ('7', '', 23),
 ('8', '', 23),
 ('9', '', 23);
-*/

@@ -1,9 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.controller.general_voucher_entry;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherEntryDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherDeleteDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherShowAllDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.unresolvedVoucher.UnresolvedVoucherRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry.UnresolvedVoucherEntryService;
@@ -54,7 +51,6 @@ public class UnresolvedVoucherApiController {
                             })
                     .toList();
         }
-
         return (!entryDtoList.isEmpty()) ?
                 ResponseEntity.status(HttpStatus.OK).body(entryDtoList) :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -104,4 +100,18 @@ public class UnresolvedVoucherApiController {
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body("삭제가능한 전표가 없습니다.");
     }
 
+    /**
+     * 미결전표 승인 기능
+     * @param dto
+     * @return
+     */
+    @PostMapping("api/financial/general-voucher-entry/approvalUnresolvedVoucher")
+    public ResponseEntity<String> voucherApprovalProcessing(@RequestBody UnresolvedVoucherApprovalDTO dto) {
+
+        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.voucherApprovalProcessing(dto);
+
+        return (!unresolvedVoucherList.isEmpty()) ?
+                ResponseEntity.status(HttpStatus.OK).body("선택한 미결전표가 승인되었습니다.") :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body("승인 실패");
+    }
 }
