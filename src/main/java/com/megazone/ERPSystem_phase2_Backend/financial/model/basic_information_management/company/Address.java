@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
  * 주소 정보 테이블
  * 회사등록 시 필요한 주소 데이터 테이블
  */
-@Entity(name = "CompanyAddress")
+@Entity(name = "company_address")
+@Table(name = "company_address")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

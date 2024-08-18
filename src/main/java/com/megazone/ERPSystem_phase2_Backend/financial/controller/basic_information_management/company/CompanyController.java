@@ -30,7 +30,7 @@ public class CompanyController {
      * 회사 등록
      * @return 등록한 회사 정보를 담은 CompanyDTO 객체를 반환함.
      */
-    @PostMapping("/api/company/savaCompany")
+    @PostMapping("/api/financial/company/save")
     public ResponseEntity<CompanyDTO> saveCompany(@RequestBody CompanyDTO companyDTO) {
         Optional<CompanyDTO> savedCompany = companyService.saveCompany(companyDTO);
         return savedCompany
@@ -38,6 +38,18 @@ public class CompanyController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
-    // 회사 수정 기능
+    /**
+     * 회사 수정
+     * @param id 수정할 회사의 ID
+     * @param companyDTO 수정할 회사 정보가 담긴 DTO
+     * @return 수정된 회사 정보를 담은 CompanyDTO 객체를 반환함.
+     */
+    @PutMapping("/api/financial/company/update/{id}")
+    public ResponseEntity<CompanyDTO> updateCompany(@PathVariable("id") Long id, @RequestBody CompanyDTO companyDTO) {
+        Optional<CompanyDTO> updatedCompany = companyService.updateCompany(id, companyDTO);
+        return updatedCompany
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
 
 }
