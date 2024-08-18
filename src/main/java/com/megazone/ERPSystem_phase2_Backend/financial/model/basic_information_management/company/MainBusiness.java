@@ -5,7 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Entity(name = "company_main_business")
+@Table(name = "company_main_business", indexes = {
+        @Index(name = "idx_company_main_business_code", columnList = "code")
+})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,7 +19,7 @@ public class MainBusiness {
     @Column(nullable = false)
     private Long id; // 고유 식별자
 
-    @Column(nullable = false, unique = true) // 업종코드
+    @Column(nullable = false) // 업종코드
     private String code;
 
     @Column(nullable = false) // 업태

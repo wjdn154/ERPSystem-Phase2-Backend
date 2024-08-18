@@ -9,7 +9,11 @@ import lombok.NoArgsConstructor;
  * 세무서 테이블
  * 회사와 연결될 세무서 정보 데이터 테이블
  */
-@Entity
+@Entity(name = "company_tax_office")
+@Table(name = "company_tax_office", indexes = {
+        @Index(name = "idx_company_tax_office_code", columnList = "code")
+})
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +23,7 @@ public class TaxOffice {
     @Column(nullable = false)
     private Long id; // 고유식별자
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String code; // 세무서 코드
 
     @Column(nullable = false)
