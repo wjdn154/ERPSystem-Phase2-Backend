@@ -6,8 +6,8 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.gener
 import java.util.Arrays;
 
 public enum ElectronicTaxInvoiceStatus {
-    PUBLISHED("Published"),
-    UNPUBLISHED("Unpublished");
+    PUBLISHED("Published"), // 발행
+    UNPUBLISHED("Unpublished"); // 미발행
 
 
     private final String name;
