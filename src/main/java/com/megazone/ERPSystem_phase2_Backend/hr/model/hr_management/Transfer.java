@@ -19,15 +19,15 @@ public class Transfer {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_Id", nullable = false) // 사원 참조
+    @JoinColumn(name = "employee_id", nullable = false) // 사원 참조
     private Employee employee;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "from_Department_Id", nullable = false) // 출발 부서 참조
+    @JoinColumn(name = "from_Department_id", nullable = false) // 출발 부서 참조
     private Department fromDepartment;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "to_Department_Id", nullable = false) // 도착 부서 참조
+    @JoinColumn(name = "to_Department_id", nullable = false) // 도착 부서 참조
     private Department toDepartment;
 
     @Column(nullable = false)

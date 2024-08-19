@@ -16,6 +16,7 @@ java {
 	}
 }
 
+
 // 컴파일 설정: 주석 처리 도구를 포함시키는 컴파일 전용 설정 확장
 configurations {
 	compileOnly {
