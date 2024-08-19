@@ -21,7 +21,7 @@ spring:
   sql:
     init:
       mode: always # 항상 SQL 초기화 모드를 사용하도록 설정
-      data-locations: # 초기 데이터를 삽입할 SQL 파일 위치 지정
+      data-locations:
         - classpath:initial-database/financial/account_subject/account_subject_structure.sql
         - classpath:initial-database/financial/account_subject/account_subject_nature.sql
         - classpath:initial-database/financial/account_subject/account_subject_Standard_financial_statement.sql
