@@ -1,15 +1,15 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.workcenter;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse_registration.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.WorkcenterDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProcessDetails;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,17 +34,27 @@ public class WorkcenterRegistrationServiceImpl implements WorkcenterRegistration
 
     /**
      * 삭제 시 사용 중인 작업장 확인
-     * @param id 삭제할 Workcenter ID
+     * @param ids 삭제할 Workcenter ID
      */
     @Override
-    public void deleteById(Long id) {
-        Workcenter workcenter = workcenterRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("작업장 ID: " + id + "를 찾을 수 없습니다."));
-        if (workcenter.getIsActive()) {
-            throw new RuntimeException("사용 중인 작업장은 삭제할 수 없습니다. ID: " + id);
+    public List<Workcenter> deleteByIds(List<Long> ids) {
+        // 삭제 전 작업장들을 미리 조회하여 리스트에 저장
+        List<Workcenter> workcentersToDelete = workcenterRepository.findAllById(ids);
+
+        // 사용 중인 작업장이 있는지 확인
+        for (Workcenter workcenter : workcentersToDelete) {
+            if (workcenter.getIsActive()) {
+                throw new RuntimeException("사용 중인 작업장은 삭제할 수 없습니다. ID: " + workcenter.getId());
+            }
         }
-        workcenterRepository.deleteById(id);
+
+        // 삭제
+        workcenterRepository.deleteAllById(ids);
+
+        // 삭제된 작업장 리스트 반환
+        return workcentersToDelete;
     }
+
 
     @Override
     public Workcenter updateWorkcenter(String code, WorkcenterDTO workcenterDTO) {
@@ -66,18 +76,12 @@ public class WorkcenterRegistrationServiceImpl implements WorkcenterRegistration
         existingWorkcenter.setDescription(workcenterDTO.getDescription());
         existingWorkcenter.setIsActive(workcenterDTO.getIsActive());
 
-        // 4. 공장과 공정 코드가 변경되었을 경우 처리
-        if (workcenterDTO.getFactoryCode() != null) {
-            Warehouse factory = new Warehouse();
-            factory.setCode(workcenterDTO.getFactoryCode());
-            existingWorkcenter.setFactory(factory);
-        }
-
-        if (workcenterDTO.getProcessCode() != null) {
-            ProcessDetails processDetails = new ProcessDetails();
-            processDetails.setCode(workcenterDTO.getProcessCode());
-            existingWorkcenter.setProcessDetails(processDetails);
-        }
+//        // 4. 공장과 공정 코드가 변경되었을 경우 처리
+//        if (workcenterDTO.getFactoryCode() != null) {
+//            Warehouse factory = new Warehouse();
+//            factory.setCode(workcenterDTO.getFactoryCode());
+//            existingWorkcenter.setFactory(factory);
+//        }
 
 //        // 4. 공장과 공정 코드가 변경되었을 경우 처리
 //        if (workcenterDTO.getFactoryCode() != null) {
@@ -86,11 +90,20 @@ public class WorkcenterRegistrationServiceImpl implements WorkcenterRegistration
 //            existingWorkcenter.setFactory(factory);
 //        }
 //
-//        if (workcenterDTO.getProcessCode() != null) {
-//            ProcessDetails processDetails = workcenterRepository.findProcessByCode(workcenterDTO.getProcessCode())
-//                    .orElseThrow(() -> new RuntimeException("생산 공정 코드: " + workcenterDTO.getProcessCode() + "를 찾을 수 없습니다."));
-//            existingWorkcenter.setProcessDetails(processDetails);
-//        }
+        if (workcenterDTO.getProcessCode() != null) {
+            // 코드가 포함된 작업장 리스트를 조회
+            List<Workcenter> workcenters = workcenterRepository.findByCodeContaining(workcenterDTO.getProcessCode());
+
+            // 작업장이 없을 경우 예외를 던짐
+            if (workcenters.isEmpty()) {
+                throw new RuntimeException("생산 공정 코드: " + workcenterDTO.getProcessCode() + "에 해당하는 작업장을 찾을 수 없습니다.");
+            }
+
+            // 각 작업장에 대해 처리 (하나의 작업장만 설정)
+            for (Workcenter workcenter : workcenters) {
+                existingWorkcenter.setProcessDetails(workcenter.getProcessDetails());
+            }
+        }
 
         // 5. 작업장 업데이트 후 저장
         return workcenterRepository.save(existingWorkcenter);

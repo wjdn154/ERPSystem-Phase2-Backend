@@ -40,12 +40,11 @@ public class Workcenter {
     private String description; // 작업장 설명
 
     @Column(nullable = false)
-
     private Boolean isActive; // 사용 여부
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "factory_code", referencedColumnName = "warehouse_code")
-    private Warehouse factory;     // 공장 엔티티 from 물류 창고관리의 공장
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "warehouse_id")
+//    private Warehouse factory;     // 공장 엔티티 from 물류 창고관리의 공장
 
     @OneToMany(mappedBy = "location")
     private List<EquipmentData> equipmentList; // 설비 목록
@@ -54,7 +53,10 @@ public class Workcenter {
     private List<WorkerAssignment> workerAssignments; // 작업자 배치 이력
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "workcenter_process_code", referencedColumnName = "process_code")
+    @JoinColumn(name = "process_id")
     private ProcessDetails processDetails; // 작업장에서 이뤄지는 생산공정
+
+    // 작업지시 onetomany (mappedby = "workorders")
+    // 작업자배치이력에서 연결되면 없어도됨
 
 }

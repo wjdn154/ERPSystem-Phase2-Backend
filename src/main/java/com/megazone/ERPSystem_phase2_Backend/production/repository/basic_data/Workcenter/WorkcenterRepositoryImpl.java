@@ -1,9 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter;
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse_registration.QWarehouse;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.QWorkcenter;
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.WorkcenterDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.enums.WorkcenterType;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.QWorkerAssignment;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.WorkerAssignment;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.QEquipmentData;
@@ -13,67 +12,31 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+
+import static com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.QWorkcenter.workcenter;
 
 @Repository
 @RequiredArgsConstructor
 public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
 
-    @Override
-    public Optional<Workcenter> findByCode(String code) {
-        // fetchOne()을 사용하여 단일 결과 반환, null일 경우 Optional로 감싸서 반환
-        Workcenter result = queryFactory
-                .selectFrom(workcenter)
-                .where(workcenter.code.eq(code))
-                .fetchOne();
-
-        // Optional로 감싸서 반환
-        return Optional.ofNullable(result);
-    }
-
     private final JPAQueryFactory queryFactory;
-    QWorkcenter workcenter = QWorkcenter.workcenter;
 
-
-    @Override
-    public List<Workcenter> findByNameContaining(String name) {
-        return queryFactory
-                .selectFrom(workcenter)
-                .where(workcenter.name.containsIgnoreCase(name))
-                .fetch();
-    }
-
-    @Override
-    public List<Workcenter> findByCodeContaining(String code) {
-        return queryFactory
-                .selectFrom(workcenter)
-                .where(workcenter.code.containsIgnoreCase(code))
-                .fetch();
-    }
-
-    @Override
-    public List<Workcenter> findByActive(boolean isActive) {
-        return queryFactory
-                .selectFrom(workcenter)
-                .where(workcenter.isActive.eq(isActive))
-                .fetch();
-    }
-
-    @Override
-    public List<Workcenter> findByFactoryNameContaining(String factoryName) {
-        return queryFactory
-                .selectFrom(workcenter)
-                .where(workcenter.factory.name.containsIgnoreCase(factoryName))
-                .fetch();
-    }
-
-    @Override
-    public List<Workcenter> findByFactoryCodeContaining(String factoryCode) {
-        return queryFactory
-                .selectFrom(workcenter)
-                .where(workcenter.factory.code.containsIgnoreCase(factoryCode))
-                .fetch();
-    }
+//    @Override
+//    public List<Workcenter> findByFactoryNameContaining(String factoryName) {
+//        QWarehouse warehouse = QWarehouse.warehouse;
+//        return queryFactory
+//                .selectFrom(workcenter)
+//                .join(workcenter.factory, warehouse) // 직접적으로 조인
+//                .where(warehouse.name.containsIgnoreCase(factoryName))
+//                .fetch();
+//
+//    @Override
+//    public List<Workcenter> findByFactoryCodeContaining(String factoryCode) {
+//        return queryFactory
+//                .selectFrom(workcenter)
+//                .where(workcenter.factory.code.containsIgnoreCase(factoryCode))
+//                .fetch();
+//    }
 
     @Override
     public List<Workcenter> findByProcessNameContaining(String processName) {
@@ -88,14 +51,6 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
         return queryFactory
                 .selectFrom(workcenter)
                 .where(workcenter.processDetails.code.containsIgnoreCase(processCode))
-                .fetch();
-    }
-
-    @Override
-    public List<Workcenter> findByTypeIn(List<WorkcenterType> types) {
-        return queryFactory
-                .selectFrom(workcenter)
-                .where(workcenter.workcenterType.in(types))
                 .fetch();
     }
 
@@ -120,14 +75,6 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
     }
 
     @Override
-    public Workcenter findWorkcenterDetailsById(Long id) {
-        return queryFactory
-                .selectFrom(workcenter)
-                .where(workcenter.id.eq(id))
-                .fetchOne();
-    }
-
-    @Override
     public List<WorkerAssignment> findTodayWorkerAssignmentsByWorkcenterId(Long workcenterId, LocalDate today) {
         QWorkerAssignment workerAssignment = QWorkerAssignment.workerAssignment;
         return queryFactory
@@ -146,4 +93,6 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
                 .orderBy(workerAssignment.assignmentDate.desc())
                 .fetch();
     }
+
+
 }
