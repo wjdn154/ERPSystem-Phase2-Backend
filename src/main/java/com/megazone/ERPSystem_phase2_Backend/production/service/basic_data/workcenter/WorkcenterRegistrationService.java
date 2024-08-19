@@ -1,6 +1,9 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.workcenter;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse_registration.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.enums.WorkcenterType;
+import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProcessDetails;
 
 import java.util.List;
 
@@ -11,21 +14,21 @@ public interface WorkcenterRegistrationService {
      * @param name 작업장명
      * @return 해당 이름을 가진 Workcenter 리스트
      */
-    List<Workcenter> findByName(String name);
+    List<Workcenter> findByNameContaining(String name);
 
     /**
      * 지정 code로 작업장 검색 메서드
      * @param code 작업장 ID
      * @return 해당 ID를 가진 Workcenter 객체
      */
-    List<Workcenter> findByCode(String code);
+    List<Workcenter> findByCodeContaining(String code);
 
     /**
      * 사용 여부로 작업장 검색 메서드
-     * @param active 작업장 사용 여부
+     * @param isActive 작업장 사용 여부
      * @return 사용 여부에 따른 Workcenter 리스트
      */
-    List<Workcenter> findByActive(Boolean active);
+    List<Workcenter> findByActive(boolean isActive);
 
     /**
      * 작업장 저장 메서드
@@ -46,4 +49,38 @@ public interface WorkcenterRegistrationService {
      * @param id 삭제할 Workcenter ID
      */
     void deleteById(Long id);
+
+    /**
+     * 공장 엔티티로 작업장 검색 메서드
+     * @param factory 공장 엔티티
+     * @return 해당 공장과 연관된 Workcenter 리스트
+     */
+    List<Workcenter> findByFactory(Warehouse factory);
+
+    /**
+     * 공장명으로 작업장 검색 메서드
+     * @param factoryName 공장명
+     * @return 해당 공장명을 가진 Workcenter 리스트
+     */
+    List<Workcenter> findByFactoryNameContaining(String factoryName);
+
+    /**
+     * 공장코드로 작업장 검색 메서드
+     * @param factoryCode 공장코드
+     * @return 해당 공장코드를 가진 Workcenter 리스트
+     */
+    List<Workcenter> findByFactoryCodeContaining(String factoryCode);
+
+    /**
+     * 공정 엔티티로 작업장 검색 메서드
+     * @param processDetails 공정 엔티티
+     * @return 해당 공정과 연관된 Workcenter 리스트
+     */
+    List<Workcenter> findByProcess(ProcessDetails processDetails);
+
+    List<Workcenter> findByProcessNameContaining(String processName);
+
+    List<Workcenter> findByProcessCodeContaining(String processCode);
+
+    List<Workcenter> findByTypeIn(List<WorkcenterType> types);
 }

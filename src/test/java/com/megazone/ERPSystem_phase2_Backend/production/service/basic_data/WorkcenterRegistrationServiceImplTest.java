@@ -1,7 +1,12 @@
-//package com.megazone.ERPSystem_phase2_Backend.production.service.basic_information;
+//package com.megazone.ERPSystem_phase2_Backend.production.service.basic_data;
 //
-//import com.megazone.ERPSystem_phase2_Backend.production.model.basic_information.Workcenter;
-//import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_information.Workcenter.WorkcenterRepository;
+//import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
+//import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.WorkcenterDTO;
+//import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.enums.WorkcenterType;
+//import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProcessDetails;
+//import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse_registration.Warehouse;
+//import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
+//import com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.workcenter.WorkcenterRegistrationServiceImpl;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 //import org.mockito.InjectMocks;
@@ -15,110 +20,141 @@
 //import static org.junit.jupiter.api.Assertions.*;
 //import static org.mockito.Mockito.*;
 //
-//class WorkcenterRegistrationServiceImplTest {
+//class WorkcenterServiceImplTest {
 //
 //    @Mock
-//    private WorkcenterRepository workcenterRepository; // Mock 객체로 대체된 WorkcenterRepository
+//    private WorkcenterRepository workcenterRepository;
 //
 //    @InjectMocks
-//    private WorkcenterRegistrationServiceImpl workcenterRegistrationService; // 테스트할 대상 클래스
+//    private WorkcenterRegistrationServiceImpl workcenterRegistrationService;
+//
+//    private Workcenter workcenter;
+//    private Warehouse warehouse;
+//    private ProcessDetails processDetails;
 //
 //    @BeforeEach
 //    void setUp() {
-//        MockitoAnnotations.openMocks(this); // Mock 객체 초기화
+//        MockitoAnnotations.openMocks(this);
+//
+//        // Warehouse와 ProcessDetails를 포함한 모든 필드를 초기화
+//        warehouse = new Warehouse();
+//        warehouse.setId(1L);
+//        warehouse.setCode("WH001");
+//        warehouse.setName("Main Warehouse");
+//        warehouse.setProductionProcess("Assembly Process");
+//        warehouse.setIsActive(true);
+//
+//        processDetails = new ProcessDetails();
+//        processDetails.setId(1L);
+//        // ProcessDetails 필드 초기화 (예시로만 간단히 작성)
+//
+//        workcenter = new Workcenter(
+//                1L,                    // id
+//                "WC123",               // code
+//                WorkcenterType.ASSEMBLY, // workcenterType
+//                "Assembly Line",       // name
+//                "Assembly Line Description", // description
+//                true,                  // isActive
+//                warehouse,             // factory
+//                processDetails         // processDetails
+//        );
 //    }
 //
-//    /**
-//     * findByName 테스트 메서드
-//     * 특정 이름을 가진 Workcenter를 조회하는 기능을 테스트함
-//     */
 //    @Test
-//    void findByName() {
-//        Workcenter workcenter = new Workcenter(1L, "W123", "작업장1", "설명", 10L, true);
-//        when(workcenterRepository.findByName("작업장1")).thenReturn(Arrays.asList(workcenter)); // Mock 동작 정의
+//    void testSaveWorkcenter() {
+//        // Given
+//        when(workcenterRepository.save(any(Workcenter.class))).thenReturn(workcenter);
 //
-//        List<Workcenter> result = workcenterRegistrationService.findByName("작업장1"); // 테스트 실행
+//        // When
+//        Workcenter savedWorkcenter = workcenterRegistrationService.save(workcenter);
 //
+//        // Then
+//        assertNotNull(savedWorkcenter);
+//        assertEquals(workcenter.getCode(), savedWorkcenter.getCode());
+//        assertEquals(workcenter.getName(), savedWorkcenter.getName());
+//        assertEquals(workcenter.getWorkcenterType(), savedWorkcenter.getWorkcenterType());
+//        assertEquals(workcenter.getDescription(), savedWorkcenter.getDescription());
+//        assertEquals(workcenter.getIsActive(), savedWorkcenter.getIsActive());
+//        assertEquals(workcenter.getFactory(), savedWorkcenter.getFactory());
+//        assertEquals(workcenter.getProcessDetails(), savedWorkcenter.getProcessDetails());
+//    }
+//
+//    @Test
+//    void testFindByName() {
+//        // Given
+//        when(workcenterRepository.findByName("Assembly Line")).thenReturn(Arrays.asList(workcenter));
+//
+//        // When
+//        List<Workcenter> result = workcenterRegistrationService.findByName("Assembly Line");
+//
+//        // Then
 //        assertNotNull(result);
 //        assertEquals(1, result.size());
-//        assertEquals("작업장1", result.get(0).getName());
+//        assertEquals("Assembly Line", result.get(0).getName());
+//        assertEquals(workcenter.getFactory(), result.get(0).getFactory());
+//        assertEquals(workcenter.getProcessDetails(), result.get(0).getProcessDetails());
 //    }
 //
-//    /**
-//     * findByCode 테스트 메서드
-//     * 특정 코드를 가진 Workcenter를 조회하는 기능을 테스트함
-//     */
 //    @Test
-//    void findByCode() {
-//        Workcenter workcenter = new Workcenter(1L, "W123", "작업장1", "설명", 10L, true);
-//        when(workcenterRepository.findByCode("W123")).thenReturn(Arrays.asList(workcenter)); // Mock 동작 정의
+//    void testFindByCode() {
+//        // Given
+//        when(workcenterRepository.findByCode("WC123")).thenReturn(Arrays.asList(workcenter));
 //
-//        List<Workcenter> result = workcenterRegistrationService.findByCode("W123"); // 테스트 실행
+//        // When
+//        List<Workcenter> result = workcenterRegistrationService.findByCode("WC123");
 //
+//        // Then
 //        assertNotNull(result);
 //        assertEquals(1, result.size());
-//        assertEquals("W123", result.get(0).getCode());
+//        assertEquals("WC123", result.get(0).getCode());
+//        assertEquals(workcenter.getFactory(), result.get(0).getFactory());
+//        assertEquals(workcenter.getProcessDetails(), result.get(0).getProcessDetails());
 //    }
 //
-//    /**
-//     * findByActive 테스트 메서드
-//     * 사용중인 Workcenter를 조회하는 기능을 테스트함
-//     */
 //    @Test
-//    void findByActive() {
-//        Workcenter workcenter1 = new Workcenter(1L, "W123", "작업장1", "설명", 10L, true);
-//        Workcenter workcenter2 = new Workcenter(2L, "W124", "작업장2", "설명", 5L, true);
-//        when(workcenterRepository.findByActive(true)).thenReturn(Arrays.asList(workcenter1, workcenter2)); // Mock 동작 정의
+//    void testFindByActive() {
+//        // Given
+//        Workcenter workcenter2 = new Workcenter(
+//                2L, "WC124", WorkcenterType.PAINT, "Paint Line", "Paint Line Description", true, warehouse, processDetails
+//        );
+//        when(workcenterRepository.findByActive(true)).thenReturn(Arrays.asList(workcenter, workcenter2));
 //
-//        List<Workcenter> result = workcenterRegistrationService.findByActive(true); // 테스트 실행
+//        // When
+//        List<Workcenter> result = workcenterRegistrationService.findByActive(true);
 //
+//        // Then
 //        assertNotNull(result);
 //        assertEquals(2, result.size());
-//        assertTrue(result.stream().allMatch(Workcenter::isActive)); // 모두 active 상태인지 확인
+//        assertTrue(result.stream().allMatch(Workcenter::getIsActive));
+//        assertEquals(workcenter.getFactory(), result.get(0).getFactory());
+//        assertEquals(workcenter.getProcessDetails(), result.get(0).getProcessDetails());
 //    }
 //
-//    /**
-//     * save 테스트 메서드
-//     * Workcenter 객체를 저장하는 기능을 테스트함
-//     */
 //    @Test
-//    void save() {
-//        Workcenter workcenter = new Workcenter(1L, "W123", "작업장1", "설명", 10L, true);
-//        when(workcenterRepository.save(any(Workcenter.class))).thenReturn(workcenter); // Mock 동작 정의
+//    void testFindById() {
+//        // Given
+//        when(workcenterRepository.findById(1L)).thenReturn(Optional.of(workcenter));
 //
-//        Workcenter result = workcenterRegistrationService.save(workcenter); // 테스트 실행
+//        // When
+//        Workcenter result = workcenterRegistrationService.findById(1L);
 //
+//        // Then
 //        assertNotNull(result);
-//        assertEquals("작업장1", result.getName());
-//        assertEquals("W123", result.getCode());
+//        assertEquals("Assembly Line", result.getName());
+//        assertEquals("WC123", result.getCode());
+//        assertEquals(workcenter.getFactory(), result.getFactory());
+//        assertEquals(workcenter.getProcessDetails(), result.getProcessDetails());
 //    }
 //
-//    /**
-//     * findById 테스트 메서드
-//     * ID로 Workcenter 객체를 조회하는 기능을 테스트함
-//     */
 //    @Test
-//    void findById() {
-//        Workcenter workcenter = new Workcenter(1L, "W123", "작업장1", "설명", 10L, true);
-//        when(workcenterRepository.findById(1L)).thenReturn(Optional.of(workcenter)); // Mock 동작 정의
+//    void testDeleteById() {
+//        // Given
+//        doNothing().when(workcenterRepository).deleteById(1L);
 //
-//        Workcenter result = workcenterRegistrationService.findById(1L); // 테스트 실행
+//        // When
+//        workcenterRegistrationService.deleteById(1L);
 //
-//        assertNotNull(result);
-//        assertEquals("작업장1", result.getName());
-//        assertEquals("W123", result.getCode());
-//    }
-//
-//    /**
-//     * deleteById 테스트 메서드
-//     * ID로 Workcenter 객체를 삭제하는 기능을 테스트함
-//     */
-//    @Test
-//    void deleteById() {
-//        doNothing().when(workcenterRepository).deleteById(1L); // Mock 동작 정의
-//
-//        workcenterRegistrationService.deleteById(1L); // 테스트 실행
-//
-//        verify(workcenterRepository, times(1)).deleteById(1L); // 메서드 호출 확인
+//        // Then
+//        verify(workcenterRepository, times(1)).deleteById(1L);
 //    }
 //}

@@ -20,33 +20,33 @@ import java.math.BigDecimal;
 public class ProcessDetails {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name="process_id", nullable = false)
     private Long id; // PK
 
-    @Column(nullable = false)
+    @Column(name ="process_code", nullable = false)
     private String code; // 공정코드
 
-    @Column(nullable = false)
+    @Column(name="process_name", nullable = false)
     private String name; // 공정명
 
-    @Column(nullable = false)
+    @Column(name="b_process_outsourcing", nullable = false)
     private Boolean isOutsourced; // 사내생산/외주 구분 (true:외주, false:자체생산)
 
     // 필요시, enum 공정 소속 카테고리 processGroup 추가
 
-    @Column(nullable = false)
+    @Column(name="process_duration", nullable = false)
     private Double duration; // 표준소요시간
 
-    @Column(nullable = false)
+    @Column(name="process_cost", nullable = false)
     private BigDecimal cost; // 공정수행비용
 
-    @Column(nullable = true)
+    @Column(name="process_defect_rate", nullable = true)
     private Double defectRate; // 평균 불량률
 
-    @Column(nullable = false)
+    @Column(name="process_description", nullable = false)
     private String description;    // 공정 설명
 
-    @Column(nullable = false)
+    @Column(name="process_is_used", nullable = false)
     private Boolean isUsed; // 사용 여부
 
 //    @ManyToMany(fetch = FetchType.LAZY)
