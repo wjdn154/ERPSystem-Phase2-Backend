@@ -23,7 +23,7 @@ public class TaxOffice {
     @Column(nullable = false)
     private Long id; // 고유식별자
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String code; // 세무서 코드
 
     @Column(nullable = false)

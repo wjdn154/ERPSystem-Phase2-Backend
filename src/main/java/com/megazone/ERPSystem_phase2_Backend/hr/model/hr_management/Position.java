@@ -17,7 +17,7 @@ public class Position {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_Id",nullable = false) // 사원 참조
+    @JoinColumn(name = "employee_id",nullable = false) // 사원 참조
     private Employee employee;
 
     @Column(nullable = false)
