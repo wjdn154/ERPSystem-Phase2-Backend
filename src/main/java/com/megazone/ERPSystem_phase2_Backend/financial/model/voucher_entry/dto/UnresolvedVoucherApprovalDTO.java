@@ -16,4 +16,20 @@ public class UnresolvedVoucherApprovalDTO {
     private List<String> searchVoucherNumList;
     private Long approvalManagerId; // 담당자 ID
     private ApprovalStatus approvalStatus;
+
+    public String approvalResult() {
+        String approvalResult = "";
+        switch (approvalStatus) {
+            case APPROVED:
+                approvalResult = "승인";
+                break;
+            case REJECTED:
+                approvalResult = "반려";
+                break;
+            case PENDING:
+                approvalResult = "승인대기";
+                break;
+        }
+        return approvalResult;
+    }
 }

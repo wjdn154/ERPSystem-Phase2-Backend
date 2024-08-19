@@ -65,6 +65,11 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
 
             if(depositAndWithdrawalUnresolvedVoucherTypeCheck(dtoList.get(0))) {
                 UnresolvedVoucherEntryDTO unresolvedVoucherDto = dtoList.get(0);
+
+                if(unresolvedVoucherDto.getAccountSubjectCode().equals(cashAccountCode)) {
+                    throw new IllegalArgumentException("입금 출금 전표는 현금계정과목을 사용할 수 없습니다.");
+                }
+
                 UnresolvedVoucher savedVoucher = createUnresolvedVoucher(unresolvedVoucherDto,newVoucherNum,nowTime);
                 unresolvedVoucherList.add(savedVoucher);
                 // 입금,출금 전표인 경우 현금 계정과목 자동분개 처리
@@ -96,11 +101,11 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
             savedVoucherList = unresolvedVoucherList.stream().map((voucher) ->
                     unresolvedVoucherRepository.save(voucher)).toList();
         }
-
         catch (IllegalArgumentException e) {
             e.getStackTrace();
+            //throw new RuntimeException(e.getMessage(), e);
         } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
         return savedVoucherList; // 생성된 미결전표 반환
     }
@@ -139,7 +144,7 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
     @Override
     public boolean depositAndWithdrawalUnresolvedVoucherTypeCheck(UnresolvedVoucherEntryDTO dto) {
         VoucherType voucherType = dto.getVoucherType();
-        if(voucherType.equals(VoucherType.DEPOSIT) || voucherType.equals(VoucherType.WITHDRAWAL)) {
+        if(voucherType == VoucherType.DEPOSIT || voucherType == VoucherType.WITHDRAWAL) {
             return true;
         }
         return false;
@@ -178,11 +183,11 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
         autoCreateDto.setDebitAmount(BigDecimal.ZERO);
         autoCreateDto.setCreditAmount(BigDecimal.ZERO);
 
-        if(dto.getVoucherType().equals(VoucherType.DEPOSIT)) {
-            autoCreateDto.setCreditAmount(dto.getDebitAmount());
+        if(dto.getVoucherType() == VoucherType.DEPOSIT) {
+            autoCreateDto.setDebitAmount(dto.getCreditAmount());
         }
         else {
-            autoCreateDto.setDebitAmount(dto.getCreditAmount());
+            autoCreateDto.setCreditAmount(dto.getDebitAmount());
         }
         autoCreateDto.setAccountSubjectCode(cashAccountCode);
 
@@ -264,6 +269,10 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
         List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherRepository.findApprovalTypeVoucher(dto);
 
         try {
+            if(dto.getApprovalStatus().equals(ApprovalStatus.PENDING)) {
+                throw new IllegalArgumentException("승인 대기 상태로는 변경할 수 없습니다.");
+            }
+
             if(!unresolvedVoucherList.isEmpty())
             {
                 unresolvedVoucherList.stream().forEach(
@@ -277,6 +286,7 @@ public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryS
         }
         catch (Exception e) {
             e.getStackTrace();
+            return null;
         }
         return unresolvedVoucherList;
     }

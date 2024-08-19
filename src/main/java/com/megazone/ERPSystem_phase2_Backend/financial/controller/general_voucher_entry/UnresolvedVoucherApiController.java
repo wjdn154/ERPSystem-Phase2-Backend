@@ -15,23 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-//@AllArgsConstructor
-//@NoArgsConstructor
-//@Data
-//class ApiTestClass {
-//    Long num;
-//    VoucherType voucherType;
-//    BigDecimal bigDecimal;
-//    LocalDate localDate;
-//}
 
 @RestController
 @RequiredArgsConstructor
 public class UnresolvedVoucherApiController {
 
     private final UnresolvedVoucherEntryService unresolvedVoucherEntryService;
-    private final UnresolvedVoucherRepository unresolvedVoucherRepository;
-
     /**
      * 미결전표 등록 기능 Api
      * @param dto 사용자가 인터페이스에서 등록한 dataList객체
@@ -45,10 +34,7 @@ public class UnresolvedVoucherApiController {
         List<UnresolvedVoucherEntryDTO> entryDtoList = new ArrayList<UnresolvedVoucherEntryDTO>();
 
         if(!unresolvedVoucherList.isEmpty()) {
-            entryDtoList = unresolvedVoucherList.stream().map(
-                            (voucher) -> {
-                                return UnresolvedVoucherEntryDTO.create(voucher);
-                            })
+            entryDtoList = unresolvedVoucherList.stream().map((voucher) -> { return UnresolvedVoucherEntryDTO.create(voucher);})
                     .toList();
         }
         return (!entryDtoList.isEmpty()) ?
@@ -110,8 +96,9 @@ public class UnresolvedVoucherApiController {
 
         List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.voucherApprovalProcessing(dto);
 
-        return (!unresolvedVoucherList.isEmpty()) ?
-                ResponseEntity.status(HttpStatus.OK).body("선택한 미결전표가 승인되었습니다.") :
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).body("승인 실패");
+
+        return (unresolvedVoucherList != null && !unresolvedVoucherList.isEmpty()) ?
+                ResponseEntity.status(HttpStatus.OK).body("선택한 미결전표가 " + dto.approvalResult() + "되었습니다.") :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dto.approvalResult() + "처리 실패");
     }
 }
