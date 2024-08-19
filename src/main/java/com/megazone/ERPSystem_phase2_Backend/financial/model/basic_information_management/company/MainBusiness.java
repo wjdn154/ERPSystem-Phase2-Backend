@@ -19,7 +19,7 @@ public class MainBusiness {
     @Column(nullable = false)
     private Long id; // 고유 식별자
 
-    @Column(nullable = false) // 업종코드
+    @Column(nullable = false, unique = true) // 업종코드
     private String code;
 
     @Column(nullable = false) // 업태
