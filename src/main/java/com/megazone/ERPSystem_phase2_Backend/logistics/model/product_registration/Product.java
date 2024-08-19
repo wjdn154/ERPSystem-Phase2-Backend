@@ -25,16 +25,17 @@ public class Product {
     private String code;
 
     // 품목 그룹 코드 참조
-    @Column(nullable = false)
-    private Long groupId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "productGroup_id")
+    private ProductGroup productGroup;
 
-    // 생성공정 코드 참조
+    // 생성공정 코드 참조 - routing 참조
     @Column(nullable = false)
     private Long productionProcessId;
 
     // 품목구분 (Enum)
     @Column(nullable = false)
-    private Long productTypeId;
+    private Long productType;
 
     // 입고 단가
     @Column(nullable = false)

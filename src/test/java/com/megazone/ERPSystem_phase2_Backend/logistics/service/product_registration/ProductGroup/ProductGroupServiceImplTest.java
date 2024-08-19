@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.ProductGroup;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.ProductGroup;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductGroupDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.ProductGroup.ProductGroupRepository;
@@ -30,18 +31,19 @@ class ProductGroupServiceImplTest {
     @Test
     @DisplayName("모든 품목 그룹 조회하기")
     void findProductGroupName() {
+        List<Product> productList = new ArrayList<>();
         // given
-        ProductGroup a = new ProductGroup(1L, "01", "가공식품");
-        ProductGroup b = new ProductGroup(2L, "02", "신선식품");
-        ProductGroup c = new ProductGroup(3L, "03", "일상용품");
-        ProductGroup d = new ProductGroup(4L, "05", "의약품/의료기기");
-        ProductGroup e = new ProductGroup(5L, "06", "교육/문화용품");
-        ProductGroup f = new ProductGroup(6L, "07", "디지털/가전");
-        ProductGroup g = new ProductGroup(7L, "08", "가구/인테리어");
-        ProductGroup h = new ProductGroup(8L, "09", "의류");
-        ProductGroup i = new ProductGroup(9L, "10", "전문스포츠/레저");
-        ProductGroup j = new ProductGroup(10L, "11", "패션잡화");
-        ProductGroup k = new ProductGroup(11L, "99", "기타");
+        ProductGroup a = new ProductGroup(1L, productList, "01", "가공식품");
+        ProductGroup b = new ProductGroup(2L, productList,"02", "신선식품");
+        ProductGroup c = new ProductGroup(3L, productList, "03", "일상용품");
+        ProductGroup d = new ProductGroup(4L, productList, "05", "의약품/의료기기");
+        ProductGroup e = new ProductGroup(5L, productList, "06", "교육/문화용품");
+        ProductGroup f = new ProductGroup(6L, productList, "07", "디지털/가전");
+        ProductGroup g = new ProductGroup(7L, productList, "08", "가구/인테리어");
+        ProductGroup h = new ProductGroup(8L, productList, "09", "의류");
+        ProductGroup i = new ProductGroup(9L, productList, "10", "전문스포츠/레저");
+        ProductGroup j = new ProductGroup(10L, productList, "11", "패션잡화");
+        ProductGroup k = new ProductGroup(11L, productList, "99", "기타");
         List<ProductGroup> expected =
                 new ArrayList<ProductGroup>(Arrays.asList(a, b, c, d, e, f, g, h, i, j, k));
         // when
@@ -55,7 +57,7 @@ class ProductGroupServiceImplTest {
     void id로_폼목_그룹_조회_성공() {
         // given
         Long id = 4L;
-        ProductGroup expected = new ProductGroup(id, "05", "의약품/의료기기");
+        ProductGroup expected = new ProductGroup(id, null, "05", "의약품/의료기기");
         // when
         ProductGroup productGroup = productGroupService.searchByIdProductGroup(id);
         // then
@@ -80,8 +82,8 @@ class ProductGroupServiceImplTest {
         // given
         String code = "12";
         String name = "전자제품";
-        ProductGroupDto dto = new ProductGroupDto(code, name);
-        ProductGroup expected = new ProductGroup(12L, code, name);
+        ProductGroupDto dto = new ProductGroupDto(null, code, name);
+        ProductGroup expected = new ProductGroup(12L, null, code, name);
         // when
         ProductGroup productGroup = productGroupService.saveProductGroup(dto);
 //        entityManager.flush();
@@ -97,7 +99,7 @@ class ProductGroupServiceImplTest {
         // given
         String code = "99";
         String name = "전자제품";
-        ProductGroupDto dto = new ProductGroupDto(code, name);
+        ProductGroupDto dto = new ProductGroupDto(null, code, name);
         // when
         Throwable exception = assertThrows(RuntimeException.class, () -> {
             productGroupService.saveProductGroup(dto);

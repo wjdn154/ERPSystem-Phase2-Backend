@@ -15,7 +15,7 @@ public class Warehouse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false) // 고유식별자
     private Long id;
-
+z
     @Column(name = "warehouse_code", nullable = false) // 창고코드
     private String warehouseCode;
 
