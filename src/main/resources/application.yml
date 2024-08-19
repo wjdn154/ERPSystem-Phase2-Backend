@@ -32,6 +32,7 @@ spring:
         - classpath:initial-database/financial/account_subject/account_subject_transfer_memo.sql
         - classpath:initial-database/financial/company/company_tax_office.sql
         - classpath:initial-database/financial/company/company_main_business.sql
+        - classpath:initial-database/financial/client/client_bank.sql
         - classpath:initial-database/logistics/warehouse.sql
         - classpath:initial-database/financial/unresolved_voucher.sql
 logging:
