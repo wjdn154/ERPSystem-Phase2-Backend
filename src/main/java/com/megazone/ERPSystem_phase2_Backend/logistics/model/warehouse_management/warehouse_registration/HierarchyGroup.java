@@ -5,7 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity(name = "HierarchyGroup")
+@Table(name = "hierarchy_group")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,4 +25,7 @@ public class HierarchyGroup {
 
     @Column(name = "hierarchy_group_name", nullable = false)
     private String hierarchyGroupName;
+
+    @OneToMany(mappedBy = "hierarchyGroup", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<WarehouseHierarchyGroup> warehouseHierarchyGroups = new ArrayList<>();
 }

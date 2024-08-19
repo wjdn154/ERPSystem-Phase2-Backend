@@ -12,9 +12,10 @@ version = "0.0.1-SNAPSHOT" // 프로젝트 버전 설정
 // Java 컴파일러 설정: 사용할 Java 버전 지정
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(17) // Java 17 버전 사용
+		languageVersion = JavaLanguageVersion.of(18) // Java 18 버전 사용
 	}
 }
+
 
 // 컴파일 설정: 주석 처리 도구를 포함시키는 컴파일 전용 설정 확장
 configurations {

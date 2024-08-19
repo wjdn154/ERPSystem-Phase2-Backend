@@ -22,14 +22,14 @@ spring:
     init:
       mode: always # 항상 SQL 초기화 모드를 사용하도록 설정
       data-locations: # 초기 데이터를 삽입할 SQL 파일 위치 지정
-        - classpath:initial-database/financial/account_subject_structure.sql
-        - classpath:initial-database/financial/account_subject_nature.sql
-        - classpath:initial-database/financial/account_subject_Standard_financial_statement.sql
-        - classpath:initial-database/financial/account_subject.sql
-        - classpath:initial-database/financial/account_subject_cash_memo.sql
-        - classpath:initial-database/financial/account_subject_fixed_memo.sql
-        - classpath:initial-database/financial/account_subject_transfer_memo.sql
-        - classpath:initial-database/logistics/product_group.sql
+        - classpath:initial-database/financial/account_subject/account_subject_structure.sql
+        - classpath:initial-database/financial/account_subject/account_subject_nature.sql
+        - classpath:initial-database/financial/account_subject/account_subject_Standard_financial_statement.sql
+        - classpath:initial-database/financial/account_subject/account_subject.sql
+        - classpath:initial-database/financial/account_subject/account_subject_cash_memo.sql
+        - classpath:initial-database/financial/account_subject/account_subject_fixed_memo.sql
+        - classpath:initial-database/financial/account_subject/account_subject_transfer_memo.sql
+        - classpath:initial-database/logistics/warehouse.sql
 logging:
   level:
     org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)
