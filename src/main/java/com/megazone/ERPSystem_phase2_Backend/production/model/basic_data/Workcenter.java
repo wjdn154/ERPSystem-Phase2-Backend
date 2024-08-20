@@ -1,6 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse_registration.Warehouse;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.enums.WorkcenterType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.WorkerAssignment;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,15 +43,15 @@ public class Workcenter {
     @Column(nullable = false)
     private Boolean isActive; // 사용 여부
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "warehouse_id")
-//    private Warehouse factory;     // 공장 엔티티 from 물류 창고관리의 공장
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse factory;  // 공장 엔티티 from 물류 창고관리의 공장
 
     @OneToMany(mappedBy = "location")
-    private List<EquipmentData> equipmentList; // 설비 목록
+    private List<EquipmentData> equipmentList = new ArrayList<>(); // 설비 목록
 
     @OneToMany(mappedBy = "workcenter")
-    private List<WorkerAssignment> workerAssignments; // 작업자 배치 이력
+    private List<WorkerAssignment> workerAssignments = new ArrayList<>(); // 작업자 배치 이력
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "process_id")
