@@ -1,6 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse_registration.QWarehouse;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.QWarehouse;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.QWorkcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.QWorkerAssignment;

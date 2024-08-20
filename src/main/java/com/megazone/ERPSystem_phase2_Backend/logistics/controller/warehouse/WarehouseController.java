@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.service.annotation.PostExchange;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +34,15 @@ public class WarehouseController {
         List<WarehouseDTO> response = warehouseRegistrationService.findAllWarehouses();
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/api/logistics/warehouse/{id}")
+    public ResponseEntity<WarehouseDetailDTO> getWarehouseDetail(@PathVariable Long id) {
+        WarehouseDetailDTO warehouseDetail = warehouseRegistrationService.getWarehouseDetail(id);
+
+        return ResponseEntity.ok(warehouseDetail);
+    }
+
+
 
 
 }
