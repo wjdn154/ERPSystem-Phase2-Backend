@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+// 권한 엔티티
+
 @Data
 @Entity
 @NoArgsConstructor

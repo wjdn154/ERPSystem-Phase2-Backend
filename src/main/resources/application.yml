@@ -38,6 +38,7 @@ spring:
         - classpath:initial-database/logistics/warehouse.sql
         - classpath:initial-database/financial/unresolved_voucher.sql
         - classpath:initial-database/hr/employee.sql
+        - classpath:initial-database/hr/users.sql
 logging:
   level:
     org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)

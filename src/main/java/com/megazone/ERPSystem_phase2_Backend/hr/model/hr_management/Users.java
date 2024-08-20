@@ -1,5 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,7 +26,7 @@ public class Users {
                         // 승인권자 : Approver => 휴가 신청, 인사 발령, 구매 요청 등의 승인 작업을 수행. 특정 모듈에 대한 승인 권한을 가짐.
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="employee_id")  // 사원이랑 1대1 참조
+    @JoinColumn(name="employee_id", nullable = true)  // 사원이랑 1대1 참조, 무조건 사원이 아닐 수도 있음
     private Employee employee;
 
     @Column(nullable = false)

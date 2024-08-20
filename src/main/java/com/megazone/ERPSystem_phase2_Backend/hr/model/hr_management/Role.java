@@ -1,5 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management.enums.RoleType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +27,10 @@ public class Role {
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<RolePermission> rolePermission;
 
+    @Enumerated(EnumType.STRING) // Enum 값을 문자열로 저장
+    @Column(nullable = false, unique = true)
+    private RoleType roleType; // 역할을 Enum으로 저장
+
     @Column(nullable = false)
-    private String roleName; // 역할 이름
+    private String roleName; // 역할 이름 (선택적, enum 대신 사용하거나 추가 정보로 남길 수 있음)
 }

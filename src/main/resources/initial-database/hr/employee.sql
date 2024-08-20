@@ -9,7 +9,7 @@ INSERT INTO employee_position( description, position_name) VALUES
 ('Leads the development team and coordinates between departments.', 'Team Lead'),
 ('Develops and maintains software applications.', 'Senior Developer');
 
-INSERT INTO bank_account(account_number,bank_name) VALUES
+INSERT INTO employee_bank_account(account_number,bank_name) VALUES
 ('1','1'),
 ('1','1'),
 ('1','1');

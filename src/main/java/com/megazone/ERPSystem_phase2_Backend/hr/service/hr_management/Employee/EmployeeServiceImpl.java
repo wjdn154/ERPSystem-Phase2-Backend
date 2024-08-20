@@ -46,7 +46,7 @@ public class EmployeeServiceImpl implements EmployeeService{
             //dto.setDepartmentName(employee.getDepartment().getName());
             //.setPositionName(employee.getPosition().getName());
             //dto.setJobTitleName(employee.getJobTitle().getName());
-            dto.setBankAccountNumber(employee.getBankAccount().getAccountNumber());
+            //dto.setBankAccountNumber(employee.getBankAccount().getAccountNumber());
 
             // 추가 정보 설정 (예: 성과, 휴가, 근태 요약 등)
             //dto.setPerformanceSummary("Performance summary here...");
@@ -58,8 +58,22 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public List<EmployeeDTO> findAllEmployees() {
-
-        return List.of();
+        return employeeRepository.findAll().stream()
+                .map(employee -> new EmployeeDTO(
+                        employee.getId(),
+                        employee.getFirstName(),
+                        employee.getLastName(),
+                        employee.getDateOfBirth(),
+                        employee.getPhoneNumber(),
+                        employee.getEmploymentStatus(),
+                        employee.getEmploymentType(),
+                        employee.getEmail(),
+                        employee.getAddress(),
+                        employee.getHireDate(),
+                        employee.isHouseholdHead(),
+                        employee.getProfilePicture()
+                        ))
+                .toList();
     }
 
     @Override
