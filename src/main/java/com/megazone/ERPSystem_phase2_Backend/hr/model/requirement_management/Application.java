@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -26,7 +25,7 @@ public class Application {
     private Applicant applicant; // 지원자
 
     @Column(nullable = false)
-    private Date applicationDate; // 지원 일자
+    private LocalDate applicationDate; // 지원 일자
 
     @Column
     private String status; // 지원서 상태 (e.g., "Under Review", "Interview Scheduled", "Rejected")

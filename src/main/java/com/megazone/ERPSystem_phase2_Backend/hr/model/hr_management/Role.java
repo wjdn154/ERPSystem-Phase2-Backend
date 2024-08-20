@@ -21,9 +21,9 @@ public class Role {
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)// 사용자 참조
     private List<Users> users;
 
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<RolePermission> rolePermission;
+
     @Column(nullable = false)
     private String roleName; // 역할 이름
-
-    @Column
-    private String permissions; // 권한
 }

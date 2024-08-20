@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
-import java.util.Date;
+import java.time.LocalDate;
 
 //  직원의 출퇴근 기록을 저장
 
@@ -26,7 +26,7 @@ public class Attendance {
     private Employee employee; // 사원 참조
 
     @Column(nullable = false)
-    private Date date; // 날짜
+    private LocalDate date; // 날짜
 
     @Column(nullable = false)
     private Time checkTime; // 출근 시간
@@ -36,6 +36,6 @@ public class Attendance {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private AttendanceStatus status;
+    private AttendanceStatus status; // 근무 상태
 
 }
