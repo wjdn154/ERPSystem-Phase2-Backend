@@ -27,10 +27,9 @@ public class WarehouseServiceImpl implements WarehouseService {
      */
     @Override
     public List<WarehouseDTO> findAllWarehouses() {
-        List<Warehouse> warehouses = warehouseRepository.findAll();
-
-        List<WarehouseDTO> warehouseDTOS = warehouses.stream()
+        return warehouseRepository.findAll().stream()
                 .map(warehouse -> new WarehouseDTO(
+                        warehouse.getId(),
                         warehouse.getCode(),
                         warehouse.getName(),
                         warehouse.getWarehouseType(),
@@ -38,8 +37,11 @@ public class WarehouseServiceImpl implements WarehouseService {
                         warehouse.getIsActive()
                 ))
                 .collect(Collectors.toList());
+    }
 
-        return warehouseDTOS;
+    @Override
+    public WarehouseDetailDTO getWarehouseDetail(Long id) {
+        return warehouseRepository.getWarehouseDetail(id);
     }
 
     @Override
