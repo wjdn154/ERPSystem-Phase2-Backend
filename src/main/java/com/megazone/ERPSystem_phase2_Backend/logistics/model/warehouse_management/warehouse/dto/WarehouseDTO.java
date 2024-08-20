@@ -1,5 +1,6 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse_registration.dto;
+package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.enums.WarehouseType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,12 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WarehouseDTO {
-    private Long id;
-    private String address;
-    private String warehouseType;
-    private String warehouseHierarchyGroup;
     private String code;
     private String name;
+    private WarehouseType warehouseType;
     private String productionProcess;
     private Boolean isActive;
 }
