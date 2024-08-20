@@ -36,7 +36,7 @@ public class Workcenter {
     private Long inputPersonnel; // 투입인원수
 
     @Column(nullable = false)
-    private Boolean active; // 사용 여부
+    private Boolean active; // 사용 여부g
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name="factory", nullable = false)

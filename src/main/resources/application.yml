@@ -19,17 +19,22 @@ spring:
         - 'classpath:/META-INF/resources/' # 정적 리소스 위치 지정 (클래스패스 기준)
         - 'file:src/main/frontend/dist/' # 정적 리소스 위치 지정 (파일 시스템 기준)
   sql:
+
     init:
       mode: always # 항상 SQL 초기화 모드를 사용하도록 설정
-      data-locations: # 초기 데이터를 삽입할 SQL 파일 위치 지정
-        - classpath:initial-database/financial/account_subject_structure.sql
-        - classpath:initial-database/financial/account_subject_nature.sql
-        - classpath:initial-database/financial/account_subject_Standard_financial_statement.sql
-        - classpath:initial-database/financial/account_subject.sql
-        - classpath:initial-database/financial/account_subject_cash_memo.sql
-        - classpath:initial-database/financial/account_subject_fixed_memo.sql
-        - classpath:initial-database/financial/account_subject_transfer_memo.sql
+      data-locations:
+        - classpath:initial-database/financial/account_subject/account_subject_structure.sql
+        - classpath:initial-database/financial/account_subject/account_subject_nature.sql
+        - classpath:initial-database/financial/account_subject/account_subject_Standard_financial_statement.sql
+        - classpath:initial-database/financial/account_subject/account_subject.sql
+        - classpath:initial-database/financial/account_subject/account_subject_cash_memo.sql
+        - classpath:initial-database/financial/account_subject/account_subject_fixed_memo.sql
+        - classpath:initial-database/financial/account_subject/account_subject_transfer_memo.sql
+        - classpath:initial-database/financial/company/company_tax_office.sql
+        - classpath:initial-database/financial/company/company_main_business.sql
+        - classpath:initial-database/financial/client/client_bank.sql
         - classpath:initial-database/logistics/warehouse.sql
+        - classpath:initial-database/financial/unresolved_voucher.sql
 logging:
   level:
     org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)

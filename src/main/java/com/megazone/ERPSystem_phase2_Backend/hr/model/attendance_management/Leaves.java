@@ -21,11 +21,11 @@ public class Leaves {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="employee_Id", nullable=false)
+    @JoinColumn(name="employee_id", nullable=false)
     private Employee employee; // 사원 참조
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="leavestype_Id", nullable = false) // 휴가 유형 참조
+    @JoinColumn(name="leavestype_id", nullable = false) // 휴가 유형 참조
     private LeavesType leavesType;
 
     @Column(nullable = false)
