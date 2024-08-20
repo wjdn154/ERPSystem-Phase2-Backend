@@ -7,6 +7,7 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equi
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProcessDetails;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

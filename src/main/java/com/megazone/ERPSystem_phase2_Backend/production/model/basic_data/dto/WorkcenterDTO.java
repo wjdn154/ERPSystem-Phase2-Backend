@@ -6,6 +6,7 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.WorkerAssignmentDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.dto.ProcessDetailsDTO;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +15,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class WorkcenterDTO {
+    private Long id;
     private String code;
     private WorkcenterType workcenterType;
     private String name;

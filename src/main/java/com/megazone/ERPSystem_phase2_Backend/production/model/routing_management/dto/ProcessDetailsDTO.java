@@ -14,13 +14,15 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class ProcessDetailsDTO {
+    private Long id;
     private String code;
     private String name;
     private Boolean isOutsourced;
-    private Double duration; // 표준소요시간
-    private BigDecimal cost; // 공정수행비용
-    private Boolean isUsed; // 사용 여부
-
-    private List<WorkcenterDTO> workcenterDTOList;
-
+    private Double duration;
+    private BigDecimal cost;
+    private Double defectRate;
+    private String description;
+    private Boolean isUsed;
+    private List<WorkcenterDTO> workcenterDTOList; // 연관 작업장 목록
+    private List<RoutingStepDTO> routingStepDTOList; // 연관 RoutingStep 목록 (필요 시)
 }

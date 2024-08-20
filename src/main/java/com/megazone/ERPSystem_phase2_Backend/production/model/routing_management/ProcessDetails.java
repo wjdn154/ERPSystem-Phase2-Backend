@@ -9,6 +9,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.routing_managemen
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -37,10 +38,10 @@ public class ProcessDetails {
     @Column(name="is_process_outsourced", nullable = false)
     private Boolean isOutsourced; // 사내생산/외주 구분 (true:외주, false:자체생산)
 
-    @Column(name="process_duration", nullable = false)
+    @Column(name="process_duration", nullable = true)
     private Double duration; // 표준소요시간
 
-    @Column(name="process_cost", nullable = false)
+    @Column(name="process_cost", nullable = true)
     private BigDecimal cost; // 공정수행비용
 
     @Column(name="process_defect_rate", nullable = true)
@@ -55,28 +56,11 @@ public class ProcessDetails {
     @OneToMany(mappedBy = "processDetails", fetch = FetchType.LAZY)
     private List<Workcenter> workcenters; // 연관 (공정수행) 작업장 목록
 
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinColumn(nullable = false)
-//    private List<Routing> routing; // 연관 라우팅
+    @OneToMany(mappedBy = "process", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RoutingStep> routingSteps; // 연관 RoutingStep 목록
 
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinColumn(nullable = false)
-//    private List<Item> item; // 연관 품목 ( 품목군: 생산, 품목 from 물류 )
-
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name="process_warehouse",
-//            joinColumns = @JoinColumn(name="process_id"),
-//            inverseJoinColumns = @JoinColumn(name = "warehouse_id")
-//    )
 //    private List<Warehouse> inputWarehouses; // 해당 공정을 위한 자재가 출고되는 창고명, 창고코드 from 물류
-//
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name="process_warehouse",
-//            joinColumns = @JoinColumn(name="process_id"),
-//            inverseJoinColumns = @JoinColumn(name = "warehouse_id")
-//    )
+
 //    private List<Warehouse> outputWarehouses; // 생산품 입고 창고 목록  창고명, 창고코드 from 물류
 
 }
