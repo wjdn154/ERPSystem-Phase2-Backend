@@ -1,17 +1,18 @@
 package com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.QWarehouse;
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.QWorkcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.QWorkerAssignment;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.WorkerAssignment;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.QEquipmentData;
+import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.QProcessDetails;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.QWorkcenter.workcenter;
 
@@ -21,25 +22,37 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-//    @Override
-//    public List<Workcenter> findByFactoryNameContaining(String factoryName) {
-//        QWarehouse warehouse = QWarehouse.warehouse;
-//        return queryFactory
-//                .selectFrom(workcenter)
-//                .join(workcenter.factory, warehouse) // 직접적으로 조인
-//                .where(warehouse.name.containsIgnoreCase(factoryName))
-//                .fetch();
-//
-//    @Override
-//    public List<Workcenter> findByFactoryCodeContaining(String factoryCode) {
-//        return queryFactory
-//                .selectFrom(workcenter)
-//                .where(workcenter.factory.code.containsIgnoreCase(factoryCode))
-//                .fetch();
-//    }
+    @Override
+    public List<Workcenter> findByFactoryNameContaining(String factoryName) {
+        QWarehouse factory = QWarehouse.warehouse;
+        return queryFactory
+                .selectFrom(workcenter)
+                .where(workcenter.factory.name.containsIgnoreCase(factoryName))
+                .fetch();
+    }
+
+    @Override
+    public List<Workcenter> findByFactoryCodeContaining(String factoryCode) {
+        QWarehouse factory = QWarehouse.warehouse;
+        return queryFactory
+                .selectFrom(workcenter)
+                .where(workcenter.factory.code.containsIgnoreCase(factoryCode))
+                .fetch();
+    }
+
+    @Override
+    public Optional<Workcenter> findOneByFactoryCode(String factoryCode) {
+        QWarehouse factory = QWarehouse.warehouse;
+        Workcenter result = queryFactory
+                .selectFrom(workcenter)
+                .where(workcenter.factory.code.eq(factoryCode))
+                .fetchOne();
+        return Optional.ofNullable(result);
+    }
 
     @Override
     public List<Workcenter> findByProcessNameContaining(String processName) {
+        QProcessDetails processDetails = QProcessDetails.processDetails;
         return queryFactory
                 .selectFrom(workcenter)
                 .where(workcenter.processDetails.name.containsIgnoreCase(processName))
@@ -48,10 +61,21 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
 
     @Override
     public List<Workcenter> findByProcessCodeContaining(String processCode) {
+        QProcessDetails processDetails = QProcessDetails.processDetails;
         return queryFactory
                 .selectFrom(workcenter)
                 .where(workcenter.processDetails.code.containsIgnoreCase(processCode))
                 .fetch();
+    }
+
+    @Override
+    public Optional<Workcenter> findOneByProcessCode(String processCode) {
+        QProcessDetails processDetails = QProcessDetails.processDetails;
+        Workcenter result = queryFactory
+                .selectFrom(workcenter)
+                .where(workcenter.processDetails.code.eq(processCode))
+                .fetchOne();
+        return Optional.ofNullable(result);
     }
 
     @Override

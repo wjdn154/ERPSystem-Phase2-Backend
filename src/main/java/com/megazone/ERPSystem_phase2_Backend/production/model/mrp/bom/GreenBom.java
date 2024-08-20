@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.material_requirements_planning.bom;
+package com.megazone.ERPSystem_phase2_Backend.production.model.mrp.bom;
 
 /**
  * Green BOM은 제품의 전체 수명 주기 동안 환경 영향을 최소화하고, 재활용 및 재사용 가능성을 높이며, 유해 물질을 관리하는 데 중점을 둡니다.
@@ -14,7 +14,8 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Entity
+@Entity(name = "green_bom")
+@Table(name = "bom_green_bom")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

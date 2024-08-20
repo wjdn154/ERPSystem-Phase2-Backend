@@ -1,17 +1,16 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.material_requirements_planning;
+package com.megazone.ERPSystem_phase2_Backend.production.model.mrp;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 /**
  * 총 소요량 = 공정별 작업계획수량 × 해당공정소요수량 + (해당공정소요수량 × 로스율)
  */
 
-@Entity
+@Entity(name = "mrp")
+@Table(name = "mrp_mrp")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

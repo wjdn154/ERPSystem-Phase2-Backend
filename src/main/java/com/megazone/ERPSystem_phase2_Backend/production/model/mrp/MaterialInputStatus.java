@@ -1,11 +1,12 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.material_requirements_planning;
+package com.megazone.ERPSystem_phase2_Backend.production.model.mrp;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Entity(name = "material_input_status")
+@Table(name = "mrp_material_input_status")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

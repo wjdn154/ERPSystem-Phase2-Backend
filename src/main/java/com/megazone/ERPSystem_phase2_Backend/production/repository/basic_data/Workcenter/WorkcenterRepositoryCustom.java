@@ -6,36 +6,41 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.Work
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface WorkcenterRepositoryCustom {
 
-//    /**
-//     * 공장명으로 소속 작업장 조회 메서드
-//     * @param factoryName 물류 창고 엔티티의 공장명
-//     * @return 입력한 공장명이 포함된 Workcenter 리스트
-//     */
-//    List<Workcenter> findByFactoryNameContaining(String factoryName);
-//
-//    /**
-//     * 공장 지정코드로 소속 작업장 조회 메서드
-//     * @param factoryCode 물류 창고 엔티티의 공장(창고) 코드
-//     * @return 입력한 공장코드가 포함된 Workcenter 리스트
-//     */
-//    List<Workcenter> findByFactoryCodeContaining(String factoryCode);
+    /**
+     * 공장명으로 소속 작업장 조회 메서드
+     * @param factoryName 물류 창고 엔티티의 공장명
+     * @return 입력한 공장명이 포함된 Workcenter 리스트
+     */
+    List<Workcenter> findByFactoryNameContaining(String factoryName);
+
+    /**
+     * 공장 지정코드로 소속 작업장 조회 메서드
+     * @param factoryCode 물류 창고 엔티티의 공장(창고) 코드
+     * @return 입력한 공장코드가 포함된 Workcenter 리스트
+     */
+    List<Workcenter> findByFactoryCodeContaining(String factoryCode);
+
+    Optional<Workcenter> findOneByFactoryCode(String factoryCode);  // 단일 결과 메서드 추가
 
     /**
      * 생산공정명이 포함된 작업장 조회 메서드
-     * @param ProcessName ProcessDetails 생산공정 엔티티의 생산공정명
+     * @param processName ProcessDetails 생산공정 엔티티의 생산공정명
      * @return 입력한 생산공정명이 포함된 Workcenter 리스트
      */
-    List<Workcenter> findByProcessNameContaining(String ProcessName);
+    List<Workcenter> findByProcessNameContaining(String processName);
 
     /**
      * 생산공정코드가 포함된 작업장 조회 메서드
-     * @param ProcessCode
+     * @param processCode
      * @return 입력한 생산공정코드가 포함된 Workcenter 리스트
      */
-    List<Workcenter> findByProcessCodeContaining(String ProcessCode);
+    List<Workcenter> findByProcessCodeContaining(String processCode);
+
+    Optional<Workcenter> findOneByProcessCode(String processCode);  // 단일 결과 메서드 추가
 
     /**
      * 설비 이름으로 작업장 목록 조회 (부분 일치)

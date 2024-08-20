@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity(name="lot")
+@Table(name="basic_data_lot")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -40,7 +42,7 @@ public class Lot {
 //    private QualityInspection qualityInspection; // 품질 검사 정보와의 연관관계
 
     @OneToMany(mappedBy = "lot")
-    private List<SerialNo> serialNoList; // 이 LOT에 속하는 Serial No. 목록
+    private List<SerialNo> serialNoList = new ArrayList<>(); // 이 LOT에 속하는 Serial No. 목록
 
 //    @OneToMany(mappedBy = "lot")
 //    private List<Inventory> inventories; // 재고 정보와의 연관관계

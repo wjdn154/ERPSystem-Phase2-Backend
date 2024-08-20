@@ -1,18 +1,14 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.enums.EntryType;
-import com.megazone.ERPSystem_phase2_Backend.production.model.material_requirements_planning.bom.StandardBomMaterial;
-import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.HazardousMaterialType;
+import com.megazone.ERPSystem_phase2_Backend.production.model.mrp.bom.StandardBomMaterial;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.MaterialType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.experimental.FieldNameConstants;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /*

@@ -14,6 +14,6 @@ public interface WorkcenterRegistrationService {
 
 //    Optional<Workcenter> deleteById(Long id);
 
-    Workcenter save(Workcenter workcenter);
+    Workcenter save(WorkcenterDTO workcenterDTO);
 }
 

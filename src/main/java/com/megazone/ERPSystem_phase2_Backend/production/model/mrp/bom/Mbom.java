@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.material_requirements_planning.bom;
+package com.megazone.ERPSystem_phase2_Backend.production.model.mrp.bom;
 
 /**
  * MBOM은 주로 제조 공정에서 필요한 부품, 공정, 자재 등의 세부 정보를 관리합니다.
@@ -10,7 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Entity(name = "mbom")
+@Table(name = "bom_mbom")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
