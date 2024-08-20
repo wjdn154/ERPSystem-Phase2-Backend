@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+// 은행 계좌 정보 테이블
 @Entity(name = "client_bank_account")
 @Table(name = "client_bank_account")
 @Getter
