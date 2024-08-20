@@ -4,6 +4,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equ
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.EquipmentType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.OperationStatus;
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 public class EquipmentDataDTO {
 
     private Long id;                            //pk
+    private String equipmentNum;                //설비번호
     private String equipmentName;               //설비명
     private EquipmentType equipmentType;        //설비 유형. 조립, 가공, 포장, 검사, 물류
     private String manufacturer;                //제조사.
@@ -29,4 +31,10 @@ public class EquipmentDataDTO {
     private Workcenter location;                //설비가 설치된 위치 or 구역 (작업장). 작업장 테이블 참조
     private String factory;                     //설비가 설치된 공장 . 공장 테이블 참조?
     private String equipmentImg;                //설비 이미지
+
+
+    public EquipmentData toEntity(EquipmentDataDTO dto) {
+        return null;
+    }
 }
+
