@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@Entity
+@Entity(name="job_title")
 @NoArgsConstructor
+@Table(name="job_title")
 public class JobTitle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

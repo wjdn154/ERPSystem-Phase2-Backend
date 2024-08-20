@@ -5,10 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 // 직위 정보 저장
 
 @Data
-@Entity
+@Entity(name="employee_position")
+@Table(name="employee_position")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Position {
@@ -16,9 +19,8 @@ public class Position {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id",nullable = false) // 사원 참조
-    private Employee employee;
+    @OneToMany(mappedBy = "position")// 사원 참조
+    private List<Employee> employee;
 
     @Column(nullable = false)
     private String positionName; // 직위 이름 ( 예 부장, 과장 )

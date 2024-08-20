@@ -10,8 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 // 사원 기본 정보 저장
@@ -71,7 +69,7 @@ public class Employee {
     private String lastName; // 이름
 
     @Column(nullable = false)
-    private Date dateOfBirth; // 생년월일
+    private LocalDate dateOfBirth; // 생년월일
 
     @Column(nullable = false)
     private String phoneNumber; // 휴대폰 번호

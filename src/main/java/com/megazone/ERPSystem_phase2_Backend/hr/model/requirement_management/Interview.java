@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -21,7 +21,7 @@ public class Interview {
     private Application application; // 지원서
 
     @Column(nullable = false)
-    private Date interviewDate; // 인터뷰 일자
+    private LocalDate interviewDate; // 인터뷰 일자
 
     @Column
     private String location; // 인터뷰 장소
