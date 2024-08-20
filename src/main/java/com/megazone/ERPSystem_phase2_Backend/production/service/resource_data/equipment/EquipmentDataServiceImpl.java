@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -53,8 +54,17 @@ public class EquipmentDataServiceImpl implements EquipmentDataService{
     @Override
     public List<EquipmentDataDTO> findAllEquipmentDataDetails() {
 
+//        return equipmentDataRepository.findAll().stream()
+//                .map(equipmentData -> new EquipmentDataDTO(
+//                        equipmentData.getId(),
+//                        equipmentData.getEquipmentNum(),
+//                        equipmentData.getEquipmentName(),
+//                        equipmentData.getModelNumber(),
+//                        equipmentData.getManufacturer()
+//
+//                )).collect(Collectors.toList());
+        return null;
 
-        return List.of();
     }
 
     @Override
