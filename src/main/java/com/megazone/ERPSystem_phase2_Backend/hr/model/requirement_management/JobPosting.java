@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 // 채용 공고 엔티티
@@ -34,8 +34,8 @@ public class JobPosting {
     private String description; // 공고 설명
 
     @Column(nullable = false)
-    private Date postingDate; // 공고 등록일
+    private LocalDate postingDate; // 공고 등록일
 
     @Column(nullable = false)
-    private Date closingDate; // 공고 마감일
+    private LocalDate closingDate; // 공고 마감일
 }

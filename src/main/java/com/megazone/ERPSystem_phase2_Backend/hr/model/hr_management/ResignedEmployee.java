@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -25,7 +25,7 @@ public class ResignedEmployee {
     private String reason; // 퇴사 사유 ( 개인 사유, 이직, 건강 문제 등 )
 
     @Column(nullable = false)
-    private Date resignationDate; // 퇴사일
+    private LocalDate resignationDate; // 퇴사일
 
     @Column
     private String remarks; // 비고 ( 추가적인 메모나 비고 사항 )
