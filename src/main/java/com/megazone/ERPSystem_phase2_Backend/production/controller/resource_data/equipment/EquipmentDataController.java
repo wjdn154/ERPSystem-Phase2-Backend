@@ -43,6 +43,7 @@ public class EquipmentDataController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    //설비 상세 정보 등록
     @PostMapping("/api/production/equipmentData/createEquipment")
     public ResponseEntity<EquipmentDataDTO> saveEquipmentDataById(@RequestBody EquipmentDataDTO dto){
 

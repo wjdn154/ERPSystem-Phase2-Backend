@@ -18,7 +18,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class EquipmentDataDTO {
 
-    private Long id;                            //pk
     private String equipmentNum;                //설비번호
     private String equipmentName;               //설비명
     private EquipmentType equipmentType;        //설비 유형. 조립, 가공, 포장, 검사, 물류
@@ -33,8 +32,23 @@ public class EquipmentDataDTO {
     private String equipmentImg;                //설비 이미지
 
 
-    public EquipmentData toEntity(EquipmentDataDTO dto) {
-        return null;
+
+    public EquipmentData toEntity() {
+
+        EquipmentData equipmentData = new EquipmentData();
+
+        equipmentData.setId(null);
+        equipmentData.setEquipmentNum(equipmentNum);
+        equipmentData.setEquipmentName(equipmentName);
+        equipmentData.setEquipmentType(equipmentType);
+        equipmentData.setManufacturer(manufacturer);
+        equipmentData.setModelNumber(modelNumber);
+        equipmentData.setPurchaseDate(purchaseDate);
+        equipmentData.setInstallDate(installDate);
+        equipmentData.setOperationStatus(operationStatus);
+        equipmentData.setCost(cost);
+        equipmentData.setLocation(location);
+        return equipmentData;
     }
 }
 

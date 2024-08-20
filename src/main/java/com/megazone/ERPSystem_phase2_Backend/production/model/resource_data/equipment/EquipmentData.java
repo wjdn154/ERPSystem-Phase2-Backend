@@ -61,4 +61,6 @@ public class EquipmentData {
 //    @JoinColumn(name = "factory_id")
 //    private Factory factory;                   //설비가 설치된 공장 . 공장 테이블 참조
 
+    @Column
+    private String equipmentImg;
 }
