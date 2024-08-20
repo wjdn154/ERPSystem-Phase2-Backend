@@ -1,7 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.sales_and_purchase_voucher_entry;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.sales_and_purchase_voucher_entry.enums.JournalEntry;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,7 +28,7 @@ public class UnresolvedSaleAndPurchaseVoucher {
 //    private Long companyId; // 사용회사 ID
 //
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "vatType_id",/*referencedColumnName = "code",*/ nullable = false)
+    @JoinColumn(name = "vatType_id",referencedColumnName = "code",nullable = false)
     private VatType vatType; // 부가세 유형
 //
 //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -37,8 +36,8 @@ public class UnresolvedSaleAndPurchaseVoucher {
 //    private Long vendor; // 거래처 참조
 //
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "journalEntry_id",/*referencedColumnName = "code",*/ nullable = false)
-    private JournalEntry journalEntry; // 분개 참조
+    @JoinColumn(name = "journalEntry_id", referencedColumnName = "code", nullable = false)
+    private JournalEntry journalEntry; // 분개 유형 참조
 //
 //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
 //    @JoinColumn(name = "voucherManager_code",referencedColumnName = "code", nullable = false)

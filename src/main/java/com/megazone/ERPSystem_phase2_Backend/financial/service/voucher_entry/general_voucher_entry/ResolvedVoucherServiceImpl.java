@@ -19,7 +19,7 @@ import java.util.function.Function;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ResolvedVoucherServiceImp implements ResolvedVoucherService {
+public class ResolvedVoucherServiceImpl implements ResolvedVoucherService {
     private final ResolvedVoucherRepository resolvedVoucherRepository;
 
     /**

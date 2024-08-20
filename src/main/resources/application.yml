@@ -35,6 +35,7 @@ spring:
         - classpath:initial-database/financial/client/client_bank.sql
         - classpath:initial-database/logistics/warehouse.sql
         - classpath:initial-database/financial/unresolved_voucher.sql
+#        - classpath:initial-database/financial/journal_entry.sql
 logging:
   level:
     org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)

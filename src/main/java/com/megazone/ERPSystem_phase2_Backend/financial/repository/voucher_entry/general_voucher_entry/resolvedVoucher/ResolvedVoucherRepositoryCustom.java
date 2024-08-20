@@ -3,7 +3,8 @@ package com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.ResolvedVoucherDeleteDTO;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface ResolvedVoucherRepositoryCustom {
-    Collection<Long> deleteVoucherByManager(ResolvedVoucherDeleteDTO dto);
+    List<Long> deleteVoucherByManager(ResolvedVoucherDeleteDTO dto);
 }

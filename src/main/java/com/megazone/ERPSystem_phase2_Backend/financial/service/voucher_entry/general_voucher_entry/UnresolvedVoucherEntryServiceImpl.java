@@ -7,7 +7,6 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.gener
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.resolvedVoucher.ResolvedVoucherRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.unresolvedVoucher.UnresolvedVoucherRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,7 @@ import java.util.function.Function;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class UnresolvedVoucherEntryServiceImp implements UnresolvedVoucherEntryService {
+public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntryService {
 
     private final ResolvedVoucherService resolvedVoucherService;
     private final UnresolvedVoucherRepository unresolvedVoucherRepository;

@@ -20,6 +20,7 @@ public class VatType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String code; // 세금과목 코드
 
     private String vatName; // 세금과목 이름
@@ -28,8 +29,5 @@ public class VatType {
     private TransactionType transactionType; // 매출, 매입 타입
 
     private BigDecimal taxRate; // 세금과목 세율
-//
-//    public boolean isValidTaxRate() {
-//        return taxRate.compareTo(BigDecimal.ZERO) >= 0 && taxRate.compareTo(new BigDecimal("100")) <= 0;
-//    }
+
 }
