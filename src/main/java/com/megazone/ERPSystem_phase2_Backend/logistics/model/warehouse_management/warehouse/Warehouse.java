@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.enums.WarehouseType;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -47,4 +48,6 @@ public class Warehouse {
     @Column(nullable = false) // 사용여부(사용, 미사용)
     private Boolean isActive;
 
+    @OneToMany(mappedBy = "factory")
+    private List<Workcenter> workcenters = new ArrayList<>();// 생산관리의 작업장 엔티티 중 factory와 연결
 }

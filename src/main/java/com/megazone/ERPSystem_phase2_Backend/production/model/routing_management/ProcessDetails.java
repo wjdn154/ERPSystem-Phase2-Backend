@@ -6,48 +6,56 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.routing_managemen
  * 작업장, 작업 시간, 작업자, 사용되는 기계 및 도구, 품질 기준 등이 포함
  */
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
+@Table(name = "process_details", indexes = {
+        @Index(name = "idx_process_code", columnList = "process_code")
+})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProcessDetails {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name="process_id", nullable = false)
     private Long id; // PK
 
-    @Column(nullable = false)
+    @Column(name ="process_code", nullable = false, unique = true)
     private String code; // 공정코드
 
-    @Column(nullable = false)
+    @Column(name="process_name", nullable = false)
     private String name; // 공정명
 
-    @Column(nullable = false)
+    @Column(name="is_process_outsourced", nullable = false)
     private Boolean isOutsourced; // 사내생산/외주 구분 (true:외주, false:자체생산)
 
     // 필요시, enum 공정 소속 카테고리 processGroup 추가
 
-    @Column(nullable = false)
+    @Column(name="process_duration", nullable = false)
     private Double duration; // 표준소요시간
 
-    @Column(nullable = false)
+    @Column(name="process_cost", nullable = false)
     private BigDecimal cost; // 공정수행비용
 
-    @Column(nullable = true)
+    @Column(name="process_defect_rate", nullable = true)
     private Double defectRate; // 평균 불량률
 
-    @Column(nullable = false)
+    @Column(name="process_description", nullable = false)
     private String description;    // 공정 설명
 
-    @Column(nullable = false)
+    @Column(name="process_is_used", nullable = false)
     private Boolean isUsed; // 사용 여부
+
+    @OneToMany(mappedBy = "processDetails", fetch = FetchType.LAZY)
+    private List<Workcenter> workcenters; // 연관 (공정수행) 작업장 목록
 
 //    @ManyToMany(fetch = FetchType.LAZY)
 //    @JoinColumn(nullable = false)
@@ -56,13 +64,6 @@ public class ProcessDetails {
 //    @ManyToMany(fetch = FetchType.LAZY)
 //    @JoinColumn(nullable = false)
 //    private List<Item> item; // 연관 품목 ( 품목군: 생산, 품목 from 물류 )
-
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinColumn(nullable = false)
-//    private List<EquipmentData> equipmentData; // 연관 설비
-
-//    @ManyToMany(mappedBy = "processDetailsList", fetch = FetchType.LAZY)
-//    private List<Workcenter> workcenterList; // 연관 (공정수행) 작업장 목록
 
 //    @ManyToMany(fetch = FetchType.LAZY)
 //    @JoinTable(
