@@ -48,7 +48,7 @@ public class ProcessDetails {
     @Column(name="process_defect_rate", nullable = true)
     private Double defectRate; // 평균 불량률
 
-    @Column(name="process_description", nullable = false)
+    @Column(name="process_description", nullable = true)
     private String description;    // 공정 설명
 
     @Column(name="process_is_used", nullable = false)
