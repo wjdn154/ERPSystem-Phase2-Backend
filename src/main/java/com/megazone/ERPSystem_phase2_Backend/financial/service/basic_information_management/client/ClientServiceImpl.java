@@ -3,7 +3,10 @@ package com.megazone.ERPSystem_phase2_Backend.financial.service.basic_informatio
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto.ClientDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.enums.TransactionType;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Address;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.*;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.common.AddressRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.common.BankRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +19,7 @@ import java.util.Optional;
 public class ClientServiceImpl implements ClientService {
 
     private final AddressRepository addressRepository;
-    private final BankAccountRepository bankAccountRepository;
+    private final ClientBankAccountRepository bankAccountRepository;
     private final BankRepository bankRepository;
     private final ClientRepository clientRepository;
     private final BusinessInfoRepository businessInfoRepository;
@@ -37,51 +40,63 @@ public class ClientServiceImpl implements ClientService {
         Client client = new Client();
 
         // 주소 정보
-        Address address = new Address();
-        address.setPostalCode(clientDTO.getAddress().getPostalCode());
-        address.setRoadAddress(clientDTO.getAddress().getRoadAddress());
-        address.setDetailedAddress(clientDTO.getAddress().getDetailedAddress());
-        addressRepository.save(address);
-        client.setAddress(address);
+        if (clientDTO.getAddress() != null) {
+            Address address = new Address();
+            address.setPostalCode(clientDTO.getAddress().getPostalCode());
+            address.setRoadAddress(clientDTO.getAddress().getRoadAddress());
+            address.setDetailedAddress(clientDTO.getAddress().getDetailedAddress());
+            addressRepository.save(address);
+            client.setAddress(address);
+        }
 
         // 업태 및 종목 정보
-        BusinessInfo businessInfo = new BusinessInfo();
-        businessInfo.setBusinessType(clientDTO.getBusinessInfo().getBusinessType());
-        businessInfo.setBusinessItem(clientDTO.getBusinessInfo().getBusinessItem());
-        businessInfoRepository.save(businessInfo);
-        client.setBusinessInfo(businessInfo);
+        if (clientDTO.getBusinessInfo() != null) {
+            BusinessInfo businessInfo = new BusinessInfo();
+            businessInfo.setBusinessType(clientDTO.getBusinessInfo().getBusinessType());
+            businessInfo.setBusinessItem(clientDTO.getBusinessInfo().getBusinessItem());
+            businessInfoRepository.save(businessInfo);
+            client.setBusinessInfo(businessInfo);
+        }
 
         // 연락처 정보
-        ContactInfo contactInfo = new ContactInfo();
-        contactInfo.setPhoneNumber(clientDTO.getContactInfo().getPhoneNumber());
-        contactInfo.setFaxNumber(clientDTO.getContactInfo().getFaxNumber());
-        contactInfoRepository.save(contactInfo);
-        client.setContactInfo(contactInfo);
+        if (clientDTO.getContactInfo() != null) {
+            ContactInfo contactInfo = new ContactInfo();
+            contactInfo.setPhoneNumber(clientDTO.getContactInfo().getPhoneNumber());
+            contactInfo.setFaxNumber(clientDTO.getContactInfo().getFaxNumber());
+            contactInfoRepository.save(contactInfo);
+            client.setContactInfo(contactInfo);
+        }
 
         // 재무 정보
-        FinancialInfo financialInfo = new FinancialInfo();
-        financialInfo.setCollateralAmount(clientDTO.getFinancialInfo().getCollateralAmount());
-        financialInfo.setCreditLimit(clientDTO.getFinancialInfo().getCreditLimit());
-        financialInfoRepository.save(financialInfo);
-        client.setFinancialInfo(financialInfo);
+        if (clientDTO.getFinancialInfo() != null) {
+            FinancialInfo financialInfo = new FinancialInfo();
+            financialInfo.setCollateralAmount(clientDTO.getFinancialInfo().getCollateralAmount());
+            financialInfo.setCreditLimit(clientDTO.getFinancialInfo().getCreditLimit());
+            financialInfoRepository.save(financialInfo);
+            client.setFinancialInfo(financialInfo);
+        }
 
         // 업체 담당자 정보
-        ManagerInfo managerInfo = new ManagerInfo();
-        managerInfo.setClientManagerPhoneNumber(clientDTO.getManagerInfo().getClientManagerPhoneNumber());
-        managerInfo.setClientManagerEmail(clientDTO.getManagerInfo().getClientManagerEmail());
-        manageInfoRepository.save(managerInfo);
-        client.setManagerInfo(managerInfo);
+        if (clientDTO.getManagerInfo() != null) {
+            ManagerInfo managerInfo = new ManagerInfo();
+            managerInfo.setClientManagerPhoneNumber(clientDTO.getManagerInfo().getClientManagerPhoneNumber());
+            managerInfo.setClientManagerEmail(clientDTO.getManagerInfo().getClientManagerEmail());
+            manageInfoRepository.save(managerInfo);
+            client.setManagerInfo(managerInfo);
+        }
 
         // 주류 정보
         client.setLiquor(liquorRepository.findById(clientDTO.getLiquor().getId()).orElseThrow(() -> new RuntimeException("해당 주류 코드가 존재하지 않습니다.")));
 
         // 은행 계좌 정보
-        BankAccount bankAccount = new BankAccount();
-        bankAccount.setBank(bankRepository.findById(clientDTO.getBankAccount().getBank().getId()).orElseThrow(() -> new RuntimeException("해당 은행이 존재하지 않습니다.")));
-        bankAccount.setAccountNumber(clientDTO.getBankAccount().getAccountNumber());
-        bankAccount.setAccountHolder(clientDTO.getBankAccount().getAccountHolder());
-        bankAccountRepository.save(bankAccount);
-        client.setBankAccount(bankAccount);
+        if (clientDTO.getBankAccount() != null) {
+            BankAccount bankAccount = new BankAccount();
+            bankAccount.setBank(bankRepository.findById(clientDTO.getBankAccount().getBank().getId()).orElseThrow(() -> new RuntimeException("해당 은행이 존재하지 않습니다.")));
+            bankAccount.setAccountNumber(clientDTO.getBankAccount().getAccountNumber());
+            bankAccount.setAccountHolder(clientDTO.getBankAccount().getAccountHolder());
+            bankAccountRepository.save(bankAccount);
+            client.setBankAccount(bankAccount);
+        }
 
         // 거래 유형
         client.setCategory(categoryRepository.findById(clientDTO.getCategory().getId()).orElseThrow(() -> new RuntimeException("해당 거래처 분류 코드가 존재하지 않습니다.")));

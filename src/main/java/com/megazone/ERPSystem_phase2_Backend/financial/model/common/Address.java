@@ -1,12 +1,12 @@
-package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client;
+package com.megazone.ERPSystem_phase2_Backend.financial.model.common;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 // 주소 테이블
-@Entity(name = "client_address")
-@Table(name = "client_address")
+@Entity(name = "financial_address")
+@Table(name = "financial_address")
 @Getter
 @Setter
 public class Address {

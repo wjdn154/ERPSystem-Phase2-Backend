@@ -1,10 +1,10 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Bank;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.common.dto.BankDTO;
 import lombok.*;
 
 /**
- * 은행 계좌 정보
+ * 은행 계좌 정보 DTO
  */
 @Getter
 @Setter

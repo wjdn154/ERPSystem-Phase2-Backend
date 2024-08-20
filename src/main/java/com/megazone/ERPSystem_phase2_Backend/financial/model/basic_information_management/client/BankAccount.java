@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Bank;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

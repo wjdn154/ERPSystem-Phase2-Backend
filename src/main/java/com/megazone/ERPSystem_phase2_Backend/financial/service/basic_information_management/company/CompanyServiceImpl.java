@@ -2,7 +2,9 @@ package com.megazone.ERPSystem_phase2_Backend.financial.service.basic_informatio
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.dto.*;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Contact;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.*;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.common.ContactRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -248,7 +250,7 @@ public class CompanyServiceImpl implements CompanyService {
      * @return 저장된 연락처 엔티티
      */
     private Contact saveContact(ContactDTO dto) {
-        return contactRepository.save(new Contact(dto.getBusinessPhone(), dto.getFax()));
+        return contactRepository.save(new Contact(dto.getPhone(), dto.getFax()));
     }
 
     /**

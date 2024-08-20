@@ -3,7 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_
 import lombok.*;
 
 /**
- * 사업 정보(업태 및 종목)
+ * 사업 정보(업태 및 종목) DTO
  */
 @Getter
 @Setter

@@ -1,5 +1,5 @@
 -- 거래처 은행정보 테이블
-INSERT INTO client_bank (code, bank_name)
+INSERT INTO financial_bank (code, name)
 VALUES
     ('1', '산업은행'),
     ('2', '신한은행'),
@@ -106,51 +106,3 @@ VALUES
     ('103', 'IBK투자증권'),
     ('104', '토스증권'),
     ('105', '상상인증권');
-
-
--- {
---     "address": {
---         "postalCode": "12345",
---         "roadAddress": "Seoul Street",
---         "detailedAddress": "Building 101"
---     },
---     "businessInfo": {
---         "businessType": "Retail",
---         "businessItem": "Electronics"
---     },
---     "contactInfo": {
---         "phoneNumber": "010-1234-5678",
---         "faxNumber": "02-123-4567"
---     },
---     "financialInfo": {
---         "collateralAmount": 1000000,
---         "creditLimit": 5000000
---     },
---     "managerInfo": {
---         "clientManagerPhoneNumber": "010-9876-5432",
---         "clientManagerEmail": "manager@client.com"
---     },
---     "departmentEmployee": "EMP001",
---     "category": {
---         "id": 1
---     },
---     "liquor": {
---             "id": 1
---     },
---     "bankAccount": {
---         "bank": {
---             "id": 1
---         },
---         "accountNumber": "123-456-7890",
---         "accountHolder": "John Doe"
---     },
---     "transactionType": "Sales",
---     "businessRegistrationNumber": "123-45-67890",
---     "idNumber": "900101-1234567",
---     "representativeName": "John Doe",
---     "printClientName": "ABC Corp",
---     "transactionStartDate": "2024-01-01",
---     "transactionEndDate": "2024-12-31",
---     "remarks": "Test client",
---     "isActive": true
--- }

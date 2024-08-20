@@ -7,3 +7,5 @@ INSERT INTO client_category (code, name) VALUES
 ('5', '유통업체'),
 ('6', '공공기관'),
 ('7', '비영리단체');
+
+

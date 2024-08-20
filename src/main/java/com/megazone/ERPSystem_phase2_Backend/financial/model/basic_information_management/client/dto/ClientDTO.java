@@ -1,13 +1,14 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.common.dto.AddressDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.common.dto.BankDTO;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * 거래처 정보
+ * 거래처 정보 DTO
  */
 @Getter
 @Setter
@@ -42,6 +43,7 @@ public class ClientDTO {
      */
     public ClientDTO(Client client) {
         this.address = new AddressDTO(
+                client.getAddress().getId(),
                 client.getAddress().getPostalCode(),
                 client.getAddress().getRoadAddress(),
                 client.getAddress().getDetailedAddress()
@@ -71,7 +73,8 @@ public class ClientDTO {
                 new BankDTO(
                         client.getBankAccount().getBank().getId(),
                         client.getBankAccount().getBank().getCode(),
-                        client.getBankAccount().getBank().getBankName()
+                        client.getBankAccount().getBank().getName(),
+                        client.getBankAccount().getBank().getBusinessNumber()
                 ),
                 client.getBankAccount().getAccountNumber(),
                 client.getBankAccount().getAccountHolder()
