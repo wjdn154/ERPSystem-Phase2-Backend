@@ -38,7 +38,7 @@ public class ShippingOrder {
 
     // 출하예정일자
     @Column(nullable = false)
-    private LocalDate deliveryDate;
+    private LocalDate shippingDate;
 
     // 주소 - 배송 보낼 주소(거래처 주소가 될 수도 있음)
     @Column

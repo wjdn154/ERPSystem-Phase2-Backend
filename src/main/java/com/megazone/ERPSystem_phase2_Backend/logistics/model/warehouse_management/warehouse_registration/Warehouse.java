@@ -21,9 +21,6 @@ public class Warehouse {
     @Column(nullable = false) // 고유식별자
     private Long id;
 
-    @Column(name = "warehouse_code", nullable = false) // 창고코드
-    private String warehouseCode;
-
     @ManyToOne (fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", nullable = false) // 주소정보
     @ToString.Exclude

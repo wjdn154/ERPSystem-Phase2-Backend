@@ -55,6 +55,10 @@ public class PurchaseRequest {
     @Column(nullable = false)
     private LocalDate date;
 
+    // 납기 일자
+    @Column(nullable = false)
+    private LocalDate deliveryDate;
+
     // 비고
     @Column
     private String remarks;

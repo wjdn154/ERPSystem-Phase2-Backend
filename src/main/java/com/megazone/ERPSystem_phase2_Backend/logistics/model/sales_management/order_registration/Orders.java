@@ -1,6 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.order_registration;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.quotation_registration.Quotation;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,9 +12,9 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class Order {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Orders {
 
     // 고유 식별자
     @Id
