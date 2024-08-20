@@ -1,19 +1,46 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.warehouse_management;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse_registration.Warehouse;
-import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.HierarchyGroup.HierarchyGroupRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseDetailDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.hierarchy_group.HierarchyGroupRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class WarehouseRegistrationServiceImpl implements WarehouseRegistrationService {
+public class WarehouseServiceImpl implements WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
     private final HierarchyGroupRepository hierarchyGroupRepository;
+
+
+    /**
+     * 모든 창고 정보를 가져옴
+     * @return 모든 창고 정보를 담은 WarehouseDTO 객체를 반환
+     */
+    @Override
+    public List<WarehouseDTO> findAllWarehouses() {
+        List<Warehouse> warehouses = warehouseRepository.findAll();
+
+        List<WarehouseDTO> warehouseDTOS = warehouses.stream()
+                .map(warehouse -> new WarehouseDTO(
+                        warehouse.getCode(),
+                        warehouse.getName(),
+                        warehouse.getWarehouseType(),
+                        warehouse.getProductionProcess(),
+                        warehouse.getIsActive()
+                ))
+                .collect(Collectors.toList());
+
+        return warehouseDTOS;
+    }
 
     @Override
     public Warehouse saveWarehouse(Warehouse warehouse) {

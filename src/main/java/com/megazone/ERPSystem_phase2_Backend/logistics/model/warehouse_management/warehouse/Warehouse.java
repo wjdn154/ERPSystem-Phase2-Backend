@@ -1,5 +1,6 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse_registration;
+package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.enums.WarehouseType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +10,7 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity (name = "Warehouse")
+@Entity (name = "warehouse")
 @Table (name = "warehouse")
 @Data
 @NoArgsConstructor
@@ -26,9 +27,8 @@ public class Warehouse {
     @ToString.Exclude
     private Address address;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "warehouse_type_id", nullable = false) // 창고유형
-    @ToString.Exclude
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private WarehouseType warehouseType;
 
     @OneToMany(mappedBy = "warehouse", orphanRemoval = true, cascade = CascadeType.ALL)

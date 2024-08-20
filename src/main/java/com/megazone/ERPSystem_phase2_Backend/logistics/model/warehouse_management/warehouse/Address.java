@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse_registration;
+package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
