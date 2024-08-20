@@ -17,7 +17,11 @@ import java.util.List;
  * 작업장 정보 테이블
  */
 
-@Entity
+@Entity(name="workcenter")
+@Table(name = "basic_data_workcenter",
+        indexes = {
+                @Index(name = "idx_workcenter_code", columnList = "code")
+        })
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

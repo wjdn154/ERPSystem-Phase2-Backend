@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
  * "재료 준비 -> 절단 -> 용접 -> 검사 -> 포장"과 같은 일련의 공정 순서
  */
 
-@Entity
+@Entity(name = "routing")
+@Table(name = "routing_management_routing")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

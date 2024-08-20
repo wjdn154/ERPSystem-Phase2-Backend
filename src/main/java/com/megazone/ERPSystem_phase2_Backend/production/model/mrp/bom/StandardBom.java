@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.material_requirements_planning.bom;
+package com.megazone.ERPSystem_phase2_Backend.production.model.mrp.bom;
 
 /*
     제품과 부품 간의 관계를 관리하며, 각 부품의 수량, 손실율, 유효기간 등을 포함한
@@ -13,7 +13,6 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.material_requirem
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.production.model.outsourcing.OutsourcingType;
-import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.MaterialData;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +22,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity(name = "standard_bom")
+@Table(name = "bom_standard_bom")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

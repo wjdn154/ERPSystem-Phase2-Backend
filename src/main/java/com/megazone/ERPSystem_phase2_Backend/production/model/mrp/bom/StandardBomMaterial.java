@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.material_requirements_planning.bom;
+package com.megazone.ERPSystem_phase2_Backend.production.model.mrp.bom;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.MaterialData;
@@ -17,7 +17,8 @@ import java.math.BigDecimal;
  * StandardBomMaterial: 각 BOM에 필요한 자재와 품목 간의 관계 및 수량을 관리.
  */
 
-@Entity
+@Entity(name = "standard_bom_material")
+@Table(name = "bom_standard_bom_material")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

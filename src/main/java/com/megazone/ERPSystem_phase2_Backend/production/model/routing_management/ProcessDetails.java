@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Entity
-@Table(name = "process_details", indexes = {
+@Entity(name = "process_details")
+@Table(name = "routing_management_process_details", indexes = {
         @Index(name = "idx_process_code", columnList = "process_code")
 })
 @Data
@@ -36,8 +36,6 @@ public class ProcessDetails {
 
     @Column(name="is_process_outsourced", nullable = false)
     private Boolean isOutsourced; // 사내생산/외주 구분 (true:외주, false:자체생산)
-
-    // 필요시, enum 공정 소속 카테고리 processGroup 추가
 
     @Column(name="process_duration", nullable = false)
     private Double duration; // 표준소요시간

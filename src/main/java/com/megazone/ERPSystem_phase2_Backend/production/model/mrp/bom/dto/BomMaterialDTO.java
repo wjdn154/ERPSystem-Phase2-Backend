@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.material_requirements_planning.bom.dto;
+package com.megazone.ERPSystem_phase2_Backend.production.model.mrp.bom.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
