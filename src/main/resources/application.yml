@@ -33,6 +33,8 @@ spring:
         - classpath:initial-database/financial/company/company_tax_office.sql
         - classpath:initial-database/financial/company/company_main_business.sql
         - classpath:initial-database/financial/client/client_bank.sql
+        - classpath:initial-database/financial/client/client_liquor.sql
+        - classpath:initial-database/financial/client/client_category.sql
         - classpath:initial-database/logistics/warehouse.sql
         - classpath:initial-database/financial/unresolved_voucher.sql
         - classpath:initial-database/hr/employee.sql

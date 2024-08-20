@@ -16,5 +16,5 @@ public class Category {
 
     private String code; // 분류코드
 
-    private String categoryName; // 분류명
+    private String name; // 분류명
 }

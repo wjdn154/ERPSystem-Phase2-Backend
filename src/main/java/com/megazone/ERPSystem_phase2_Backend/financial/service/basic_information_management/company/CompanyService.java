@@ -5,8 +5,6 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import java.util.Optional;
 
 public interface CompanyService {
-
     Optional<CompanyDTO> saveCompany(CompanyDTO companyDTO);
-
     Optional<CompanyDTO> updateCompany(Long id, CompanyDTO companyDTO);
 }
