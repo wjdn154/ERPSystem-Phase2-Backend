@@ -27,7 +27,7 @@ public class Routing {
     @Column(nullable = false)
     private Long id; // PK
 
-    @Column(nullable = false)
+    @Column(name = "routing_code", nullable = false, unique = true)
     private String code; // Routing 지정코드
 
     @Column(nullable = false)
