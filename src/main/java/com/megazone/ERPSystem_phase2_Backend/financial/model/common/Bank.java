@@ -1,11 +1,11 @@
-package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client;
+package com.megazone.ERPSystem_phase2_Backend.financial.model.common;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity(name = "client_bank")
-@Table(name = "client_bank")
+@Entity(name = "financial_bank")
+@Table(name = "financial_bank")
 @Getter
 @Setter
 public class Bank {
@@ -17,5 +17,8 @@ public class Bank {
     private String code; // 은행 코드
 
     @Column(nullable = false)
-    private String bankName; // 은행명
+    private String name; // 은행명
+
+    private String businessNumber; // 사업자등록번호
+
 }

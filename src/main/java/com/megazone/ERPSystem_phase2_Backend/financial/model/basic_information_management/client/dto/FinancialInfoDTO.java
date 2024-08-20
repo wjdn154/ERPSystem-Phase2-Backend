@@ -5,7 +5,7 @@ import lombok.*;
 import java.math.BigDecimal;
 
 /**
- * 재무 정보
+ * 재무 정보 DTO
  */
 @Getter
 @Setter
