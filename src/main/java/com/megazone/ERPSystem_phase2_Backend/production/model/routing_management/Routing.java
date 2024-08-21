@@ -45,7 +45,12 @@ public class Routing {
     @OneToMany(mappedBy = "routing", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoutingStep> routingSteps; // 연관 RoutingStep 목록
 
-//    @ManyToOne(mappedBy = "routing")
-//    @JoinColumn(name = "product_id")
-//    private Product product; // 연관 제품 logistics
+//    @OneToMany(mappedBy = "routing")
+//    private List<Product> products;
+
+//    // Product 엔티티에서
+//    @ManyToOne
+//    @JoinColumn(name = "routing_id")
+//    private Routing routing;
+
 }
