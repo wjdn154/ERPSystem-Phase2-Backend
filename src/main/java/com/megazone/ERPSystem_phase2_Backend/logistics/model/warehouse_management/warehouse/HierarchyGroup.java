@@ -26,11 +26,13 @@ public class HierarchyGroup {
     @Column(name = "hierarchy_group_name", nullable = false)
     private String hierarchyGroupName;
 
+    private Boolean isActive;
+
     @OneToMany(mappedBy = "hierarchyGroup", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<WarehouseHierarchyGroup> warehouseHierarchyGroups = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "parent_group_id", referencedColumnName = "id")
+    @JoinColumn(name = "parent_group_id")
     private HierarchyGroup parentGroup;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentGroup", cascade = CascadeType.ALL, orphanRemoval = true)

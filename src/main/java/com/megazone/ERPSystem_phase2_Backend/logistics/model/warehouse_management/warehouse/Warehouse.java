@@ -25,7 +25,7 @@ public class Warehouse {
 
 
     @ManyToOne (fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", nullable = false) // 주소정보
+    @JoinColumn(name = "address_id", nullable = true) // 주소정보
     @ToString.Exclude
     private Address address;
 
@@ -50,4 +50,5 @@ public class Warehouse {
 
     @OneToMany(mappedBy = "factory")
     private List<Workcenter> workcenters = new ArrayList<>();// 생산관리의 작업장 엔티티 중 factory와 연결
+
 }
