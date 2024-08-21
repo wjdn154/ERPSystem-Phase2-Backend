@@ -12,12 +12,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductGroupDto {
-
+    private Long id;
     private List<Product> productId; // 품목 아이디
     private String code;    // 품목 그룹 코드를 받을 필드
     private String name;    // 품목 그룹명을 받을 필드
 
     public ProductGroup toEntity() {
-        return new ProductGroup(null, productId, code, name);
+        return new ProductGroup(id, productId, code, name);
     }
 }

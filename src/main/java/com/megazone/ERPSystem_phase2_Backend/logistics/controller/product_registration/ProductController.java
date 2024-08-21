@@ -3,6 +3,8 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.controller.product_regis
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductSaveRequestDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductSaveResponseDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.Product.ProductRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.Product.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
@@ -46,15 +49,22 @@ public class ProductController {
 
     /**
      * 품목 등록
-     * @param productDetailDto
-     * @return
+     * @param productSaveRequestDto
+     * @return 등록된 품목의 DTO를 반환
      */
     @PostMapping("api/logistics/save-product")
-    public ResponseEntity<Product> saveProduct(@RequestBody ProductDetailDto productDetailDto) {
-        Optional<Product> saveProduct = productService.saveProduct(productDetailDto);
-        return saveProduct
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+    public ResponseEntity<ProductSaveResponseDto> saveProduct(@RequestBody ProductSaveRequestDto productSaveRequestDto) {
+        try {
+            return productService.saveProduct(productSaveRequestDto)
+                    .map(ResponseEntity::ok)
+                    .orElseGet(() ->  ResponseEntity.badRequest().build());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
     }
+
+//    @PutMapping("api/logistics/update-")
 
 }

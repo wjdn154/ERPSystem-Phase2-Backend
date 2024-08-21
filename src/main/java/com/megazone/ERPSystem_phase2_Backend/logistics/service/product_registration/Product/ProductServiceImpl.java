@@ -1,8 +1,11 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.Product;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.ProductGroup;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductSaveRequestDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductSaveResponseDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.Product.ProductRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.ProductGroup.ProductGroupRepository;
 import jakarta.transaction.Transactional;
@@ -10,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -48,12 +50,41 @@ public class ProductServiceImpl implements ProductService{
 
     /**
      * 새로운 품목 등록하기
-     * @param productDetailDto 저장할 품목의 정보가 담긴 DTO
+     * @param productSaveRequestDto 저장할 품목의 정보가 담긴 DTO
      * @return 저장된 품목 정보를 담은 DTO를 Optional로 반환함.
      */
     @Override
-    public Optional<Product> saveProduct(ProductDetailDto productDetailDto) {
-        Pro
-        return Optional.empty();
+    public Optional<ProductSaveResponseDto> saveProduct(ProductSaveRequestDto productSaveRequestDto) {
+        // 코드 중복 검사
+        if (productRepository.existsByCode(productSaveRequestDto.getCode())){
+            throw new IllegalArgumentException("입력하신 코드로 등록된 품목이 이미 존재합니다.");
+        }
+
+        // 품목 그룹 조회
+        Optional<ProductGroup> productGroup = productGroupRepository.findById(productSaveRequestDto.getProductGroupId());
+        if (productGroup.isEmpty()) {
+            return Optional.empty(); // 폼목 그룹 없으면 빈 Optional 반홤함
+        }
+
+        // 엔티티로 변환 후 저장
+        Product product = productSaveRequestDto.toEntity(productGroup.get());
+        Product savedproduct = productRepository.save(product);
+
+        // 다시 DTO로 변환 후 반환
+        return Optional.of(toDto(savedproduct));
+    }
+
+    private ProductSaveResponseDto toDto(Product product) {
+        return ProductSaveResponseDto.builder()
+                .code(product.getCode())
+                .name(product.getName())
+                .productGroupName(product.getProductGroup().getName())
+                .standard(product.getStandard())
+                .unit(product.getUnit())
+                .purchasePrice(product.getPurchasePrice())
+                .salesPrice(product.getSalesPrice())
+                .productType(product.getProductType())
+                .productionProcessId(product.getProductionProcessId())
+                .build();
     }
 }

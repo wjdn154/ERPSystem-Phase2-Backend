@@ -11,11 +11,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductSaveDto {
+@Builder
+public class ProductSaveResponseDto {
 
     private String code; // 품목 코드
     private String name; // 품목명
-    private ProductGroupDto productGroup;// 폼목 그룹_id
+    private String productGroupName;// 폼목 그룹_id
     private String standard; // 규격
     private String unit; // 단위
     private Double purchasePrice; // 입고단가
@@ -23,4 +24,17 @@ public class ProductSaveDto {
     private ProductType productType; // 품목 구분
     private Long productionProcessId; // 생산 공정
 
+    public Product toEntity(ProductGroup productGroup) {
+        return Product.builder()
+                .code(code)
+                .name(name)
+                .productGroup(productGroup)
+                .standard(standard)
+                .unit(unit)
+                .purchasePrice(purchasePrice)
+                .salesPrice(salesPrice)
+                .productType(productType)
+                .productionProcessId(productionProcessId)
+                .build();
+    }
 }
