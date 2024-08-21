@@ -15,12 +15,10 @@ import jakarta.transaction.Transactional;
 
 import java.util.List;
 
-import static com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.QProcessDetails.processDetails;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class WorkcenterRegistrationServiceImpl implements WorkcenterRegistrationService {
+public class WorkcenterServiceImpl implements WorkcenterService {
 
     private final WorkcenterRepository workcenterRepository;
     private final WarehouseRepository warehouseRepository;
@@ -58,12 +56,12 @@ public class WorkcenterRegistrationServiceImpl implements WorkcenterRegistration
         workcenter.setDescription(workcenterDTO.getDescription());
         workcenter.setIsActive(workcenterDTO.getIsActive());
 
-//        // processCode를 통해 ProcessDetails를 설정
-//        if (workcenterDTO.getProcessCode() != null) {
-//            ProcessDetails processDetails = processDetailsRepository.findByCode(workcenterDTO.getProcessCode().getCode())
-//                    .orElseThrow(() -> new RuntimeException("생산 공정 코드: " + workcenterDTO.getProcessCode().getCode() + "에 해당하는 공정을 찾을 수 없습니다."));
-//            workcenter.setProcessDetails(processDetails);
-//        }
+        // processCode를 통해 ProcessDetails를 설정
+        if (workcenterDTO.getProcessCode() != null) {
+            ProcessDetails processDetails = processDetailsRepository.findByCode(workcenterDTO.getProcessCode().getCode())
+                    .orElseThrow(() -> new RuntimeException("생산 공정 코드: " + workcenterDTO.getProcessCode().getCode() + "에 해당하는 공정을 찾을 수 없습니다."));
+            workcenter.setProcessDetails(processDetails);
+        }
 
         // factoryCode를 통해 Warehouse를 설정
         if (workcenterDTO.getFactoryCode() != null) {
