@@ -11,10 +11,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WarehouseDetailDTO {
+    private Long id;
     private String code;
     private String name;
     private WarehouseType warehouseType;
     private String productionProcess;
-    private List<HierarchyGroupDTO> hierarchyGroupList;
+    private List<HierarchyGroupResponseDTO> hierarchyGroupList;
     private Boolean isActive;
 }

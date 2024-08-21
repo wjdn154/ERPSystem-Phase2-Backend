@@ -1,7 +1,9 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.warehouse_management;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.HierarchyGroup;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.HierarchyGroupDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.WarehouseHierarchyGroup;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.HierarchyGroupResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.hierarchy_group.HierarchyGroupRepository;
@@ -50,35 +52,68 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public Optional<WarehouseDetailDTO> saveWarehouse(WarehouseDetailDTO dto) {
-        Warehouse warehouse = new Warehouse();
+        Warehouse createWarehouse = new Warehouse();
 
+        warehouseRepository.findByCode(dto.getCode())
+                        .ifPresent(warehouse -> {
+                            throw new RuntimeException("이미 존재하는 코드입니다: " + dto.getCode());
+                        });
 
-        warehouse.setCode(dto.getCode());
-        warehouse.setName(dto.getName());
-        warehouse.setWarehouseType(dto.getWarehouseType());
-        warehouse.setProductionProcess(dto.getProductionProcess());
+        createWarehouse.setId(dto.getId());
+        createWarehouse.setCode(dto.getCode());
+        createWarehouse.setName(dto.getName());
+        createWarehouse.setWarehouseType(dto.getWarehouseType());
+        createWarehouse.setProductionProcess(dto.getProductionProcess());
+        createWarehouse.setIsActive(dto.getIsActive());
 
-        Warehouse savedWarehouse = warehouseRepository.save(warehouse);
+        List<WarehouseHierarchyGroup> warehouseHierarchyGroups = dto.getHierarchyGroupList().stream()
+                .map(hierarchyGroupResponseDTO -> {
+                    HierarchyGroup hierarchyGroup = hierarchyGroupRepository.findById(hierarchyGroupResponseDTO.getId())
+                            .orElseThrow(() -> new RuntimeException("존재하지 않는 계층 그룹입니다: " + hierarchyGroupResponseDTO.getId()));
+
+                    WarehouseHierarchyGroup warehouseHierarchyGroup = new WarehouseHierarchyGroup();
+                    warehouseHierarchyGroup.setWarehouse(createWarehouse);
+                    warehouseHierarchyGroup.setHierarchyGroup(hierarchyGroup);
+
+                    return warehouseHierarchyGroup;
+                })
+                .collect(Collectors.toList());
+
+        createWarehouse.setWarehouseHierarchyGroup(warehouseHierarchyGroups);
+
+        Warehouse savedWarehouse = warehouseRepository.save(createWarehouse);
 
         WarehouseDetailDTO warehouseDetailDTO = new WarehouseDetailDTO(
+                savedWarehouse.getId(),
                 savedWarehouse.getCode(),
                 savedWarehouse.getName(),
                 savedWarehouse.getWarehouseType(),
                 savedWarehouse.getProductionProcess(),
-                savedWarehouse.getWarehouseHierarchyGroup().stream().map(warehouseHierarchyGroup -> new HierarchyGroupDTO(
-                        warehouseHierarchyGroup.getId(),
-                        warehouseHierarchyGroup.getWarehouse().getCode(),
-                        warehouseHierarchyGroup.getWarehouse().getName(),
-                        warehouseHierarchyGroup.getWarehouse().getIsActive(),
-                        warehouseHierarchyGroup.getWarehouse().getWarehouseHierarchyGroup(),
-                        warehouseHierarchyGroup.getWarehouse().
-
-
-                ))
+                savedWarehouse.getWarehouseHierarchyGroup().stream()
+                        .map(warehouseHierarchyGroup -> new HierarchyGroupResponseDTO(
+                                warehouseHierarchyGroup.getId(),
+                                warehouseHierarchyGroup.getHierarchyGroup().getHierarchyGroupCode(),
+                                warehouseHierarchyGroup.getHierarchyGroup().getHierarchyGroupName(),
+                                warehouseHierarchyGroup.getHierarchyGroup().getIsActive(),
+                                warehouseHierarchyGroup.getHierarchyGroup().getParentGroup() != null ? warehouseHierarchyGroup.getHierarchyGroup().getParentGroup().getId() : null,
+                                warehouseHierarchyGroup.getHierarchyGroup().getParentGroup() != null ? warehouseHierarchyGroup.getHierarchyGroup().getHierarchyGroupName() : null,
+                                warehouseHierarchyGroup.getHierarchyGroup().getChildGroup().stream()
+                                        .map(hierarchyGroup -> new HierarchyGroupResponseDTO(
+                                                hierarchyGroup.getId(),
+                                                hierarchyGroup.getHierarchyGroupCode(),
+                                                hierarchyGroup.getHierarchyGroupName(),
+                                                hierarchyGroup.getIsActive(),
+                                                hierarchyGroup.getParentGroup() != null ? hierarchyGroup.getParentGroup().getId() : null,
+                                                hierarchyGroup.getParentGroup() != null ? hierarchyGroup.getParentGroup().getHierarchyGroupName() : null,
+                                                null
+                                        ))
+                                        .collect(Collectors.toList())
+                        ))
+                        .collect(Collectors.toList()),
                 savedWarehouse.getIsActive()
         );
 
-        return Optional.of();
+        return Optional.of(warehouseDetailDTO);
     }
 
 
@@ -105,3 +140,4 @@ public class WarehouseServiceImpl implements WarehouseService {
         warehouseRepository.delete(warehouse);
     }
 }
+

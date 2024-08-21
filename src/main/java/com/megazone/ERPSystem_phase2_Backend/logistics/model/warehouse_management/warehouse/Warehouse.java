@@ -1,6 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.HierarchyGroupDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.enums.WarehouseType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import jakarta.persistence.*;
@@ -26,7 +25,7 @@ public class Warehouse {
 
 
     @ManyToOne (fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", nullable = false) // 주소정보
+    @JoinColumn(name = "address_id", nullable = true) // 주소정보
     @ToString.Exclude
     private Address address;
 

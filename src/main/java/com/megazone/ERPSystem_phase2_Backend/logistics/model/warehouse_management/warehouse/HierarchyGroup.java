@@ -32,7 +32,7 @@ public class HierarchyGroup {
     private List<WarehouseHierarchyGroup> warehouseHierarchyGroups = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "parent_group_id", referencedColumnName = "id")
+    @JoinColumn(name = "parent_group_id")
     private HierarchyGroup parentGroup;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentGroup", cascade = CascadeType.ALL, orphanRemoval = true)
