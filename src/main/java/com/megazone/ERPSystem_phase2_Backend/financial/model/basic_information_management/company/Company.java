@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.dto.CompanyDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.enums.EntityType;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Contact;
 import jakarta.persistence.*;
 import lombok.*;
 

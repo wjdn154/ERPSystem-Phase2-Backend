@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -20,29 +21,64 @@ public class EquipmentDataServiceImpl implements EquipmentDataService{
     @Override
     public Optional<EquipmentDataDTO> saveEquipment(EquipmentDataDTO dto) {
 
-        //dto를 엔티티로 변환하고 저장함.
-        EquipmentData equipmentData = dto.toEntity(dto);
-
-        return Optional.empty();
+//        //dto를 엔티티로 변환함
+//        EquipmentData equipmentData = dto.toEntity();
+//        //엔티티 저장
+//        EquipmentData saveEquipment = equipmentDataRepository.save(equipmentData);
+//
+//        //엔티티를 dto로 변환하여 반환
+//        EquipmentDataDTO equipmentDataDTO = new EquipmentDataDTO(
+//
+//                saveEquipment.getEquipmentNum(),
+//                saveEquipment.getEquipmentName(),
+//                saveEquipment.getEquipmentType(),
+//                saveEquipment.getManufacturer(),
+//                saveEquipment.getModelNumber(),
+//                saveEquipment.getInstallDate(),
+//                saveEquipment.getPurchaseDate(),
+//                saveEquipment.getOperationStatus(),
+//                saveEquipment.getCost(),
+//                saveEquipment.getLocation(),
+//                saveEquipment.getEquipmentImg()
+//        );
+        return Optional.of(null);
     }
 
     @Override
     public Optional<EquipmentDataDTO> updateEquipment(Long id, EquipmentDataDTO dto) {
+
         return Optional.empty();
     }
 
-    @Override
-    public void deleteEquipment(Long id) {
-
-    }
 
     @Override
     public List<EquipmentDataDTO> findAllEquipmentDataDetails() {
-        return List.of();
+
+//        return equipmentDataRepository.findAll().stream()
+//                .map(equipmentData -> new EquipmentDataDTO(
+//                        equipmentData.getId(),
+//                        equipmentData.getEquipmentNum(),
+//                        equipmentData.getEquipmentName(),
+//                        equipmentData.getModelNumber(),
+//                        equipmentData.getManufacturer()
+//
+//                )).collect(Collectors.toList());
+        return null;
+
     }
 
     @Override
     public Optional<EquipmentDataDTO> findEquipmentDataDetailById(Long id) {
-        return Optional.empty();
+
+        return null;
+    }
+
+    @Override
+    public void deleteEquipment(Long id) {
+        //해당 아이디 가져옴
+        EquipmentData equipmentData = equipmentDataRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("해당 아이디로 설비를 조회할 수 없습니다 : "+id));
+        //해당 아이디 설비정보 삭제
+        equipmentDataRepository.delete(equipmentData);
     }
 }

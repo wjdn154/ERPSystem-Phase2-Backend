@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 // 계좌번호 테이블
 
 @Data
-@Entity
+@Table(name="employee_bank_account")
+@Entity(name="employee_bank_account")
 @AllArgsConstructor
 @NoArgsConstructor
 public class BankAccount {

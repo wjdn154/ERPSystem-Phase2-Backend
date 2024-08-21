@@ -34,7 +34,6 @@ public class ClientController {
      */
     @PostMapping("/api/financial/client/save")
     public ResponseEntity<ClientDTO> registerClient(@RequestBody ClientDTO clientDTO) {
-        System.out.println("clientDTO = " + clientDTO.toString());
         Optional<ClientDTO> savedClient = clientService.saveClient(clientDTO);
 
         return savedClient

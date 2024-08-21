@@ -12,7 +12,8 @@ import java.time.LocalDate;
  * 개별 제품 추적하여 특정 생산품의 상태, 위치, 품질 상태 등 추적 위함
  */
 
-@Entity
+@Entity(name="serial_no")
+@Table(name="basic_data_serial_no")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

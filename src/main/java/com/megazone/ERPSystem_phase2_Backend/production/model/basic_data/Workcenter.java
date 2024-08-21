@@ -7,6 +7,7 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equi
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProcessDetails;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +18,11 @@ import java.util.List;
  * 작업장 정보 테이블
  */
 
-@Entity
+@Entity(name="workcenter")
+@Table(name = "basic_data_workcenter",
+        indexes = {
+                @Index(name = "idx_workcenter_code", columnList = "code")
+        })
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

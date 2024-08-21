@@ -31,17 +31,9 @@ public interface WorkcenterRepository extends JpaRepository<Workcenter, Long>, W
      */
     List<Workcenter> findByIsActive(boolean isActive);
 
-
-    /**
-     * ID로 작업장 세부 정보 조회 메서드
-     * @param id 작업장 ID
-     * @return 해당 ID를 가진 Workcenter 객체
-     */
-    Workcenter findWorkcenterDetailsById(Long id);
-
     /**
      * 작업장 유형으로 해당 작업장 조회 메서드
-     * @param types enum 작업장 유형
+     * @param workcenterType enum 작업장 유형
      * @return 선택한 작업장 유형에 해당하는 Workcenter 리스트
      */
     List<Workcenter> findByWorkcenterTypeIn(List<WorkcenterType> workcenterType);
