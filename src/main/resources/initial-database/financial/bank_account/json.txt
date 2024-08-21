@@ -15,6 +15,7 @@
     "phone": "02-1234-5678",
     "fax": "02-8765-4321"
   },
+  "code": "1",
   "clientName": "ABC Corp",
   "accountNumber": "110-123-456789",
   "bankBranchName": "강남역지점",
