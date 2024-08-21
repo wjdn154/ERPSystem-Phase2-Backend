@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto;
+package com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

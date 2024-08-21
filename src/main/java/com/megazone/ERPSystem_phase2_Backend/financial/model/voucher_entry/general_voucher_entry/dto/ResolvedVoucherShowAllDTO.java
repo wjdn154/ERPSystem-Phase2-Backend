@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto;
+package com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,20 +8,20 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class UnresolvedVoucherShowAllDTO {
+public class ResolvedVoucherShowAllDTO {
     private LocalDate searchDate;
-    private List<UnresolvedVoucherShowDTO> voucherDtoList;
+    private List<ResolvedVoucherShowDTO> voucherDtoList;
     private BigDecimal cashAmount;
     private BigDecimal totalDebit;
     private BigDecimal totalCredit;
     private BigDecimal diffCashAmount;
 
-    public static UnresolvedVoucherShowAllDTO create(LocalDate searchDate, List<UnresolvedVoucherShowDTO> voucherDtoList, BigDecimal cashAmount,
+    public static ResolvedVoucherShowAllDTO create(LocalDate searchDate, List<ResolvedVoucherShowDTO> voucherDtoList, BigDecimal cashAmount,
                                                      BigDecimal totalDebit, BigDecimal totalCredit) {
-        return new UnresolvedVoucherShowAllDTO(
+        return new ResolvedVoucherShowAllDTO(
                 searchDate,
                 voucherDtoList,
                 cashAmount,
@@ -30,7 +30,4 @@ public class UnresolvedVoucherShowAllDTO {
                 totalDebit.subtract(totalCredit)
         );
     }
-
-
-
 }

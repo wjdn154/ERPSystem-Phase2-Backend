@@ -1,6 +1,6 @@
-package com.megazone.ERPSystem_phase2_Backend.financial.model.sales_and_purchase_voucher_entry;
+package com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.sales_and_purchase_voucher_entry.enums.TransactionType;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.TransactionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,9 +25,12 @@ public class VatType {
 
     private String vatName; // 세금과목 이름
 
+    private String description; // 세금과목 설명
+
+    private BigDecimal taxRate; // 세금과목 세율
+
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType; // 매출, 매입 타입
 
-    private BigDecimal taxRate; // 세금과목 세율
 
 }

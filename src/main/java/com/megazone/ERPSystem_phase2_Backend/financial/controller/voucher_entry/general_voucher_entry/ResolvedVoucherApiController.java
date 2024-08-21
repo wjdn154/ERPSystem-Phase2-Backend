@@ -1,8 +1,9 @@
-package com.megazone.ERPSystem_phase2_Backend.financial.controller.general_voucher_entry;
+package com.megazone.ERPSystem_phase2_Backend.financial.controller.voucher_entry.general_voucher_entry;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.ResolvedVoucher;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherDeleteDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherShowAllDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry.ResolvedVoucherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

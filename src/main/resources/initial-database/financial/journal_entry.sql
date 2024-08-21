@@ -1,12 +1,17 @@
--- INSERT INTO journal_entry (
---     name,
---     code,
---     transaction_type,
---     account_subject_code
--- ) VALUES
---       ('매출','1','Sales','404'),
---       ('매출채권','2','Sales','108'),
---       ('신용카드매출채권','3','Sales','120'),
---       ('매입','1','Purchase','153'),
---       ('매입채무','2','Purchase','251'),
---       ('신용카드매입채무','3','Purchase','253');
+INSERT INTO journal_entry (
+    jorunal_entry_type_setup_id,
+    code,
+    name,
+    transaction_type
+) VALUES
+      (1,'1','현금','Sales'),
+      (2,'2','외상','Sales'),
+      (3,'3','카드','Sales'),
+      (4,'1','현금','Purchase'),
+      (5,'2','외상','Purchase'),
+      (6,'3','카드','Purchase');
+
+
+SELECT code, name
+FROM journal_entry
+GROUP BY code,name;

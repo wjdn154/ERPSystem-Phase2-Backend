@@ -1,6 +1,6 @@
-package com.megazone.ERPSystem_phase2_Backend.financial.model.sales_and_purchase_voucher_entry;
+package com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

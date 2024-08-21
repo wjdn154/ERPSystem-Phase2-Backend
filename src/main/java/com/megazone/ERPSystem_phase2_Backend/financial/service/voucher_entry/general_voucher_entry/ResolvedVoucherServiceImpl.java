@@ -1,6 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.ResolvedVoucherDeleteDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.ResolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.resolvedVoucher.ResolvedVoucherRepository;
