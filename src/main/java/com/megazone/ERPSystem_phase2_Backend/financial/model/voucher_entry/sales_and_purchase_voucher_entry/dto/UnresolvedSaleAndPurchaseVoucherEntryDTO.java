@@ -14,9 +14,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UnresolvedSaleAndPurchaseVoucherEntryDTO {
-    private VatType vatType;
+    private String vatTypeCode;
 //    private Vendor vendor;
-    private JournalEntry journalEntry;
+    private String journalEntryCode;
 //    private Long voucherManager;
     private LocalDate voucherDate;
     private String itemName;

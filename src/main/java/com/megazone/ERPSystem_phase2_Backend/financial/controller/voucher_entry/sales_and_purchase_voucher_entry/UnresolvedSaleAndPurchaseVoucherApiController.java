@@ -5,6 +5,8 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.UnresolvedSaleAndPurchaseVoucherEntryDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucherService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,9 +19,12 @@ public class UnresolvedSaleAndPurchaseVoucherApiController {
     private final UnresolvedSaleAndPurchaseVoucherService unresolvedSaleAndPurchaseVoucherService;
 
     @PostMapping("/api/financial/sale-and-purchase-voucher/entry")
-    public ResponseEntity Entry(@RequestBody UnresolvedSaleAndPurchaseVoucherEntryDTO dto) {
+    public ResponseEntity<UnresolvedSaleAndPurchaseVoucher> Entry(@RequestBody UnresolvedSaleAndPurchaseVoucherEntryDTO dto) {
         UnresolvedSaleAndPurchaseVoucher unresolvedSaleAndPurchaseVoucher =
                 unresolvedSaleAndPurchaseVoucherService.save(dto);
-        return null;
+        System.out.println(unresolvedSaleAndPurchaseVoucher);
+        return unresolvedSaleAndPurchaseVoucher != null ?
+                ResponseEntity.status(HttpStatus.OK).body(unresolvedSaleAndPurchaseVoucher) :
+                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

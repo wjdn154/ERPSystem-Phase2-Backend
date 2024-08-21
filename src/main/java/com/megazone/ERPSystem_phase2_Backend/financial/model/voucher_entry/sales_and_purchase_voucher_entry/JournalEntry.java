@@ -20,7 +20,7 @@ public class JournalEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "jorunal_entry_type_setup_id")
     private JournalEntryTypeSetup journalEntryTypeSetup;
 

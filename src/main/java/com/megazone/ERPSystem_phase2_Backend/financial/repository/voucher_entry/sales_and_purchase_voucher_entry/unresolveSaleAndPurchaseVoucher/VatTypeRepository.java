@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface vatTypeRepository extends JpaRepository<VatType, Long> {
+public interface VatTypeRepository extends JpaRepository<VatType, Long> {
     Optional<VatType> findByCode(String code);
 }
