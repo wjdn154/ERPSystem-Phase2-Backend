@@ -21,7 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class WarehouseController {
 
-    private final WarehouseService warehouseRegistrationService;
+    private final WarehouseService warehouseService;
     private final WarehouseRepository warehouseRepository;
 
     /**
@@ -31,17 +31,26 @@ public class WarehouseController {
     @PostMapping("/api/logistics/warehouse")
     public ResponseEntity<List<WarehouseDTO>> getAllWarehouse() {
         // 리포지토리에서 모든 창고리스트들을 가져옴
-        List<WarehouseDTO> response = warehouseRegistrationService.findAllWarehouses();
+        List<WarehouseDTO> response = warehouseService.findAllWarehouses();
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * 창고 상세 정보를 가져옴.
+     * @param id
+     * @return 창고 상세 정보를 담은 WarehouseDetailDTO 객체를 반환함.
+     */
     @PostMapping("/api/logistics/warehouse/{id}")
     public ResponseEntity<WarehouseDetailDTO> getWarehouseDetail(@PathVariable Long id) {
-        WarehouseDetailDTO warehouseDetail = warehouseRegistrationService.getWarehouseDetail(id);
+        WarehouseDetailDTO warehouseDetail = warehouseService.getWarehouseDetail(id);
 
         return ResponseEntity.ok(warehouseDetail);
     }
 
+    @PostMapping("/api/logistics/warehouse/saveWarehouse")
+    public ResponseEntity<WarehouseDetailDTO> saveWarehouse(@RequestBody WarehouseDetailDTO warehouseDetailDTO) {
+        Optional<WarehouseDetailDTO> savedWarehouse = warehouseService.
+    }
 
 
 

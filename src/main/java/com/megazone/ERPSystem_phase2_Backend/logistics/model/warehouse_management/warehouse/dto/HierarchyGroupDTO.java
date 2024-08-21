@@ -15,7 +15,6 @@ public class HierarchyGroupDTO {
     private Long id;
     private String code;
     private String name;
-    private List<WarehouseHierarchyGroup> warehouseHierarchyGroups = new ArrayList<>();
-    private List<HierarchyGroupDTO> childHierarchyGroups = new ArrayList<>();
-
+    private Boolean isActive;
+//    private List<HierarchyGroupDTO> childHierarchyGroups;
 }

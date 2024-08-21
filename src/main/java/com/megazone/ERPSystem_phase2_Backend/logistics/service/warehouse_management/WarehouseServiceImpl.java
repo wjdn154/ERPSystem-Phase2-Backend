@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.warehouse_management;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.HierarchyGroupDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.hierarchy_group.HierarchyGroupRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,10 +46,41 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseRepository.getWarehouseDetail(id);
     }
 
+
+
     @Override
-    public Warehouse saveWarehouse(Warehouse warehouse) {
-        return warehouseRepository.save(warehouse);
+    public Optional<WarehouseDetailDTO> saveWarehouse(WarehouseDetailDTO dto) {
+        Warehouse warehouse = new Warehouse();
+
+
+        warehouse.setCode(dto.getCode());
+        warehouse.setName(dto.getName());
+        warehouse.setWarehouseType(dto.getWarehouseType());
+        warehouse.setProductionProcess(dto.getProductionProcess());
+
+        Warehouse savedWarehouse = warehouseRepository.save(warehouse);
+
+        WarehouseDetailDTO warehouseDetailDTO = new WarehouseDetailDTO(
+                savedWarehouse.getCode(),
+                savedWarehouse.getName(),
+                savedWarehouse.getWarehouseType(),
+                savedWarehouse.getProductionProcess(),
+                savedWarehouse.getWarehouseHierarchyGroup().stream().map(warehouseHierarchyGroup -> new HierarchyGroupDTO(
+                        warehouseHierarchyGroup.getId(),
+                        warehouseHierarchyGroup.getWarehouse().getCode(),
+                        warehouseHierarchyGroup.getWarehouse().getName(),
+                        warehouseHierarchyGroup.getWarehouse().getIsActive(),
+                        warehouseHierarchyGroup.getWarehouse().getWarehouseHierarchyGroup(),
+                        warehouseHierarchyGroup.getWarehouse().
+
+
+                ))
+                savedWarehouse.getIsActive()
+        );
+
+        return Optional.of();
     }
+
 
     @Override
     public Warehouse updateWarehouse(Warehouse warehouse) {

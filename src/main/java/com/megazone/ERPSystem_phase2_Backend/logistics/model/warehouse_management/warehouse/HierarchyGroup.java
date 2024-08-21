@@ -26,6 +26,8 @@ public class HierarchyGroup {
     @Column(name = "hierarchy_group_name", nullable = false)
     private String hierarchyGroupName;
 
+    private Boolean isActive;
+
     @OneToMany(mappedBy = "hierarchyGroup", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<WarehouseHierarchyGroup> warehouseHierarchyGroups = new ArrayList<>();
 
