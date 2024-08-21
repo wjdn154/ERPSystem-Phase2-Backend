@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.controller.resource_dat
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.ListEquipmentDataDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.resource_data.equipment.EquipmentDataRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.equipment.EquipmentDataService;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,9 @@ public class EquipmentDataController {
 
     //설비 리스트 조회
     @PostMapping("/api/production/equipmentDatas")
-    public ResponseEntity<List<EquipmentDataDTO>> getAllEquipmentDataDetails(){
+    public ResponseEntity<List<ListEquipmentDataDTO>> getAllEquipmentDataDetails(){
         //서비스에서 모든 설비정보를 가져옴
-        List<EquipmentDataDTO> result = equipmentDataService.findAllEquipmentDataDetails();
+        List<ListEquipmentDataDTO> result = equipmentDataService.findAllEquipmentDataDetails();
 
         return (result != null) ?
                 ResponseEntity.status(HttpStatus.OK).body(result):

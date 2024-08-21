@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Entity
+@Entity(name = "equipment_maintenanceHistory")
+@Table(name = "equipment_maintenanceHistory")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

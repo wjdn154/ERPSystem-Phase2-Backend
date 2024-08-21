@@ -94,7 +94,7 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
         return queryFactory
                 .selectFrom(workcenter)
                 .join(workcenter.equipmentList, equipmentData)
-                .where(equipmentData.modelNumber.containsIgnoreCase(equipmentModelNumber))
+                .where(equipmentData.modelName.containsIgnoreCase(equipmentModelNumber))
                 .fetch();
     }
 

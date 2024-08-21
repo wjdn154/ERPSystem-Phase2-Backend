@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.SerialNo;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.EquipmentType;
@@ -15,7 +16,8 @@ import java.util.Date;
 
 //장비
 
-@Entity
+@Entity(name = "equipmentData")
+@Table(name = "equipmentData")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,7 +40,7 @@ public class EquipmentData {
     private String manufacturer;                //제조사.
 
     @Column(nullable = false)                   //모델명. 설비의 제조업체가 지정한 모델 번호나 명칭을 의미함.
-    private String modelNumber;                 //동일한 모델명을 가진 여러 설비가 있을 수 있음.
+    private String modelName;                 //동일한 모델명을 가진 여러 설비가 있을 수 있음.
 
     @Column(nullable = false)
     private LocalDate purchaseDate;             //설비 구매날짜
@@ -55,11 +57,11 @@ public class EquipmentData {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workcenter_id")
-    private Workcenter location;               //설비가 설치된 위치 or 구역 (작업장). 작업장 테이블 참조
+    private Workcenter workcenter;               //설비가 설치된 위치 or 구역 (작업장). 작업장 테이블 참조
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "factory_id")
-//    private Factory factory;                   //설비가 설치된 공장 . 공장 테이블 참조
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "factory_id")
+    private Warehouse factory;                   //설비가 설치된 공장 . 공장 테이블 참조
 
     @Column
     private String equipmentImg;
