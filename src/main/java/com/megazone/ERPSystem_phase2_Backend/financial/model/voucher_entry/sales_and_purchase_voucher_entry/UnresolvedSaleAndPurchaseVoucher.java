@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity(name = "unresolved_sale_and_purchase_voucher")
 @Builder
@@ -28,7 +30,7 @@ public class UnresolvedSaleAndPurchaseVoucher {
 //    private Long companyId; // 사용회사 ID
 //
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "vatType_id",referencedColumnName = "code",nullable = false)
+    @JoinColumn(name = "vatType_id",nullable = false)
     private VatType vatType; // 부가세 유형
 //
 //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -36,12 +38,19 @@ public class UnresolvedSaleAndPurchaseVoucher {
 //    private Long vendor; // 거래처 참조
 //
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "journalEntry_id", referencedColumnName = "code", nullable = false)
+    @JoinColumn(name = "journalEntry_id", nullable = false)
     private JournalEntry journalEntry; // 분개 유형 참조
 //
 //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
 //    @JoinColumn(name = "voucherManager_code",referencedColumnName = "code", nullable = false)
 //    private Long voucherManager; // 담당자 참조
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "unresolvedVouchers_id")
+    private List<UnresolvedVoucher> unresolvedVouchers;
+
+    @Column(nullable = false)
+    private String voucherNumber;
 
     @Column(nullable = false)
     private LocalDate voucherDate; // 매출매입전표 거래날짜
@@ -71,5 +80,6 @@ public class UnresolvedSaleAndPurchaseVoucher {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ApprovalStatus approvalStatus; // 승인 상태
+
 
 }

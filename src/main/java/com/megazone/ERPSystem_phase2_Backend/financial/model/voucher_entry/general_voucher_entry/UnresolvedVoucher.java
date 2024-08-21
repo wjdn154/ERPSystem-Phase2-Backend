@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.gene
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubject;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherKind;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -76,6 +77,5 @@ public class UnresolvedVoucher {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ApprovalStatus approvalStatus; // 승인상태 ( 승인대기 승인, 반려 )
-
 
 }

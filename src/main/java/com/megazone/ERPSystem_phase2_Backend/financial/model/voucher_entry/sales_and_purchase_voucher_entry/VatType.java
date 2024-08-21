@@ -33,4 +33,6 @@ public class VatType {
     private TransactionType transactionType; // 매출, 매입 타입
 
 
+
+
 }

@@ -5,6 +5,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.gener
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.UnresolvedVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherKind;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.unresolvedVoucher.UnresolvedVoucherRepository;
@@ -49,6 +50,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
 //     * 전표 담당자 Entity 필요
 //     * 적요 Entity 필요
 //     */
+
 
     @Override
     public List<UnresolvedVoucher> unresolvedVoucherEntry(List<UnresolvedVoucherEntryDTO> dtoList) {
@@ -131,6 +133,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
                 .voucherDate(dto.getVoucherDate())
                 .voucherRegistrationTime(nowTime)
                 .approvalStatus(ApprovalStatus.PENDING)
+//                .voucherKind(VoucherKind.GENERAL)
                 .build();
         return unresolvedVoucher;
     }
@@ -290,4 +293,8 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
         return unresolvedVoucherList;
     }
 
+
+    public void HSH(List<UnresolvedVoucher> voucherList) {
+
+    }
 }

@@ -1,5 +1,5 @@
 INSERT INTO journal_entry (
-    jorunal_entry_type_setup_id,
+    journal_entry_type_setup_id,
     code,
     name,
     transaction_type

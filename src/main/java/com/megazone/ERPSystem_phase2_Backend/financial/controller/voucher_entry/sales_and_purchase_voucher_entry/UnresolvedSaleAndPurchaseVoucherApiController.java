@@ -19,12 +19,12 @@ public class UnresolvedSaleAndPurchaseVoucherApiController {
     private final UnresolvedSaleAndPurchaseVoucherService unresolvedSaleAndPurchaseVoucherService;
 
     @PostMapping("/api/financial/sale-and-purchase-voucher/entry")
-    public ResponseEntity<UnresolvedSaleAndPurchaseVoucher> Entry(@RequestBody UnresolvedSaleAndPurchaseVoucherEntryDTO dto) {
+    public ResponseEntity<String> Entry(@RequestBody UnresolvedSaleAndPurchaseVoucherEntryDTO dto) {
         UnresolvedSaleAndPurchaseVoucher unresolvedSaleAndPurchaseVoucher =
                 unresolvedSaleAndPurchaseVoucherService.save(dto);
         System.out.println(unresolvedSaleAndPurchaseVoucher);
         return unresolvedSaleAndPurchaseVoucher != null ?
-                ResponseEntity.status(HttpStatus.OK).body(unresolvedSaleAndPurchaseVoucher) :
+                ResponseEntity.status(HttpStatus.OK).body("등록이 완료되었습니다.") :
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

@@ -29,7 +29,7 @@ public class ResolvedVoucher {
 //    private Long companyId; // 유저 회사 ID
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "account_code",referencedColumnName = "code", nullable = false)
+    @JoinColumn(name = "account_code",nullable = false)
     private AccountSubject accountSubject; // 계정과목 참조
 
 //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
