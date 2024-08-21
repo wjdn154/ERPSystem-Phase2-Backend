@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 // 발령 기록 저장
 
@@ -31,7 +31,7 @@ public class Transfer {
     private Department toDepartment;
 
     @Column(nullable = false)
-    private Date transferDate; // 발령 날짜
+    private LocalDate transferDate; // 발령 날짜
 
     @Column(nullable = false)
     private String transferType; // 발령 유형 ( promotion :승진, demotion : 강등, lateral : 전보)

@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 // 직원의 휴가 신청 및 기록을 저장
 
@@ -29,10 +29,10 @@ public class Leaves {
     private LeavesType leavesType;
 
     @Column(nullable = false)
-    private Date startDate; // 휴가 시작일
+    private LocalDate startDate; // 휴가 시작일
 
     @Column(nullable = false)
-    private Date endDate; // 휴가 종료일
+    private LocalDate endDate; // 휴가 종료일
 
     @Column(nullable = false)
     private String reason; // 휴가 사유

@@ -1,0 +1,28 @@
+{
+  "accountType": {
+    "id": 1
+  },
+  "bank": {
+    "id": 1
+  },
+  "address": {
+    "id": 1,
+    "postalCode": "12345",
+    "roadAddress": "서울특별시 강남구 테헤란로 123",
+    "detailedAddress": "20층"
+  },
+  "contact": {
+    "phone": "02-1234-5678",
+    "fax": "02-8765-4321"
+  },
+  "clientName": "ABC Corp",
+  "accountNumber": "110-123-456789",
+  "bankBranchName": "강남역지점",
+  "accountOpeningDate": "2023-01-01",
+  "depositType": "정기예금",
+  "maturityDate": "2025-01-01",
+  "interestRate": 1.5,
+  "monthlyPayment": 1000000,
+  "overdraftLimit": 5000000,
+  "businessAccount": true
+}

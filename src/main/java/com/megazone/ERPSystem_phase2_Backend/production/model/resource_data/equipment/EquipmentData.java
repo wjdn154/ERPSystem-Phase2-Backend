@@ -23,6 +23,9 @@ public class EquipmentData {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;                              //pk
+    
+    @Column(nullable = false)
+    private String equipmentNum;                 //설비 번호
 
     @Column(nullable = false)                    //설비명. 특정 설비를 식별할 수 있는 고유한 이름.
     private String equipmentName;                //여러대의 동일한 모델이 있을 경우에도 각각의 설비에 고유한 이름을 부여하여 구분 가능.
@@ -58,4 +61,6 @@ public class EquipmentData {
 //    @JoinColumn(name = "factory_id")
 //    private Factory factory;                   //설비가 설치된 공장 . 공장 테이블 참조
 
+    @Column
+    private String equipmentImg;
 }

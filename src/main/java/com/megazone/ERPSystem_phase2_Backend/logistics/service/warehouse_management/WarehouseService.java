@@ -10,6 +10,8 @@ public interface WarehouseService {
 
     List<WarehouseDTO> findAllWarehouses();
 
+    WarehouseDetailDTO getWarehouseDetail(Long id);
+
     Warehouse saveWarehouse(Warehouse warehouse);
 
     Warehouse updateWarehouse(Warehouse warehouse);
@@ -17,3 +19,4 @@ public interface WarehouseService {
     void deleteWarehouse(Long warehouseId);
 
 }
+//

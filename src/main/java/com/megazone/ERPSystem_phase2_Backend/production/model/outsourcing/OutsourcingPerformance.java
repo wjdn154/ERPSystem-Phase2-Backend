@@ -45,6 +45,7 @@ public class OutsourcingPerformance {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "outsourcingOrders_id")
+
     private OutsourcingOrders outsourcingOrders;      //발주 식별자(발주 fk)
 
     @OneToMany(mappedBy = "outsourcingPerformance", fetch = FetchType.LAZY)

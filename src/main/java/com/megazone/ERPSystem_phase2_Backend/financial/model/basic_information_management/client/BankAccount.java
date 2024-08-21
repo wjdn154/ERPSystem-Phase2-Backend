@@ -1,9 +1,11 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Bank;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+// 은행 계좌 정보 테이블
 @Entity(name = "client_bank_account")
 @Table(name = "client_bank_account")
 @Getter
