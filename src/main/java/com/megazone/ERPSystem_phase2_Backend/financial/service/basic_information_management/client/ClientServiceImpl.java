@@ -39,82 +39,18 @@ public class ClientServiceImpl implements ClientService {
     public Optional<ClientDTO> saveClient(ClientDTO clientDTO) {
         Client client = new Client();
 
-        // 주소 정보
-        if (clientDTO.getAddress() != null) {
-            Address address = new Address();
-            address.setPostalCode(clientDTO.getAddress().getPostalCode());
-            address.setRoadAddress(clientDTO.getAddress().getRoadAddress());
-            address.setDetailedAddress(clientDTO.getAddress().getDetailedAddress());
-            addressRepository.save(address);
-            client.setAddress(address);
-        }
+        createAddress(clientDTO, client); // 주소 정보
+        createBusinessInfo(clientDTO, client); // 업태 및 종목 정보
+        createContact(clientDTO, client); // 연락처 정보
+        createFinancialInfo(clientDTO, client); // 재무 정보
+        createManagerInfo(clientDTO, client); // 업체 담당자 정보
+        createBankAccount(clientDTO, client); // 은행 계좌 정보
+        getLiquor(clientDTO, client); // 주류 정보
+        getCategory(clientDTO, client); // 거래 유형
 
-        // 업태 및 종목 정보
-        if (clientDTO.getBusinessInfo() != null) {
-            BusinessInfo businessInfo = new BusinessInfo();
-            businessInfo.setBusinessType(clientDTO.getBusinessInfo().getBusinessType());
-            businessInfo.setBusinessItem(clientDTO.getBusinessInfo().getBusinessItem());
-            businessInfoRepository.save(businessInfo);
-            client.setBusinessInfo(businessInfo);
-        }
+        Client savedClient = createClient(clientDTO, client); // 거래처 정보 저장
 
-        // 연락처 정보
-        if (clientDTO.getContactInfo() != null) {
-            ContactInfo contactInfo = new ContactInfo();
-            contactInfo.setPhoneNumber(clientDTO.getContactInfo().getPhoneNumber());
-            contactInfo.setFaxNumber(clientDTO.getContactInfo().getFaxNumber());
-            contactInfoRepository.save(contactInfo);
-            client.setContactInfo(contactInfo);
-        }
-
-        // 재무 정보
-        if (clientDTO.getFinancialInfo() != null) {
-            FinancialInfo financialInfo = new FinancialInfo();
-            financialInfo.setCollateralAmount(clientDTO.getFinancialInfo().getCollateralAmount());
-            financialInfo.setCreditLimit(clientDTO.getFinancialInfo().getCreditLimit());
-            financialInfoRepository.save(financialInfo);
-            client.setFinancialInfo(financialInfo);
-        }
-
-        // 업체 담당자 정보
-        if (clientDTO.getManagerInfo() != null) {
-            ManagerInfo managerInfo = new ManagerInfo();
-            managerInfo.setClientManagerPhoneNumber(clientDTO.getManagerInfo().getClientManagerPhoneNumber());
-            managerInfo.setClientManagerEmail(clientDTO.getManagerInfo().getClientManagerEmail());
-            manageInfoRepository.save(managerInfo);
-            client.setManagerInfo(managerInfo);
-        }
-
-        // 주류 정보
-        client.setLiquor(liquorRepository.findById(clientDTO.getLiquor().getId()).orElseThrow(() -> new RuntimeException("해당 주류 코드가 존재하지 않습니다.")));
-
-        // 은행 계좌 정보
-        if (clientDTO.getBankAccount() != null) {
-            BankAccount bankAccount = new BankAccount();
-            bankAccount.setBank(bankRepository.findById(clientDTO.getBankAccount().getBank().getId()).orElseThrow(() -> new RuntimeException("해당 은행이 존재하지 않습니다.")));
-            bankAccount.setAccountNumber(clientDTO.getBankAccount().getAccountNumber());
-            bankAccount.setAccountHolder(clientDTO.getBankAccount().getAccountHolder());
-            bankAccountRepository.save(bankAccount);
-            client.setBankAccount(bankAccount);
-        }
-
-        // 거래 유형
-        client.setCategory(categoryRepository.findById(clientDTO.getCategory().getId()).orElseThrow(() -> new RuntimeException("해당 거래처 분류 코드가 존재하지 않습니다.")));
-
-        // 기타 정보
-        client.setDepartmentEmployee(clientDTO.getDepartmentEmployee());
-        client.setTransactionType(TransactionType.valueOf(clientDTO.getTransactionType()));
-        client.setPrintClientName(clientDTO.getPrintClientName());
-        client.setBusinessRegistrationNumber(clientDTO.getBusinessRegistrationNumber());
-        client.setIdNumber(clientDTO.getIdNumber());
-        client.setRepresentativeName(clientDTO.getRepresentativeName());
-        client.setTransactionStartDate(clientDTO.getTransactionStartDate());
-        client.setTransactionEndDate(clientDTO.getTransactionEndDate());
-        client.setRemarks(clientDTO.getRemarks());
-        client.setIsActive(clientDTO.getIsActive());
-
-        // 클라이언트 정보를 저장하고 DTO로 변환하여 반환함
-        return Optional.of(new ClientDTO(clientRepository.save(client)));
+        return Optional.of(new ClientDTO(savedClient));
     }
 
     /**
@@ -127,70 +63,156 @@ public class ClientServiceImpl implements ClientService {
     public Optional<ClientDTO> updateClient(Long id, ClientDTO clientDTO) {
         return clientRepository.findById(id).map(client -> {
 
-            // 주소 정보 수정
-            Address address = client.getAddress();
-            address.setPostalCode(clientDTO.getAddress().getPostalCode());
-            address.setRoadAddress(clientDTO.getAddress().getRoadAddress());
-            address.setDetailedAddress(clientDTO.getAddress().getDetailedAddress());
-            addressRepository.save(address);
-            client.setAddress(address);
+            updateAddress(clientDTO, client); // 주소 정보 수정
+            updateBusinessInfo(clientDTO, client); // 업태 및 종목 정보 수정
+            updateContactInfo(clientDTO, client); // 연락처 정보 수정
+            updateFinancialInfo(clientDTO, client); // 재무 정보 수정
+            updateManagerInfo(clientDTO, client); // 업체 담당자 정보 수정
+            updateBankAccount(clientDTO, client); // 은행 계좌 정보 수정
+            getLiquor(clientDTO, client); // 주류 정보 수정
+            getCategory(clientDTO, client); // 거래처 분류 수정
 
-            // 업태 및 종목 정보 수정
-            BusinessInfo businessInfo = client.getBusinessInfo();
-            businessInfo.setBusinessType(clientDTO.getBusinessInfo().getBusinessType());
-            businessInfo.setBusinessItem(clientDTO.getBusinessInfo().getBusinessItem());
-            businessInfoRepository.save(businessInfo);
-            client.setBusinessInfo(businessInfo);
+            Client savedClient = createClient(clientDTO, client); // 거래처 정보 저장
 
-            // 연락처 정보 수정
-            ContactInfo contactInfo = client.getContactInfo();
-            contactInfo.setPhoneNumber(clientDTO.getContactInfo().getPhoneNumber());
-            contactInfo.setFaxNumber(clientDTO.getContactInfo().getFaxNumber());
-            contactInfoRepository.save(contactInfo);
-            client.setContactInfo(contactInfo);
+            return new ClientDTO(savedClient);
+        });
+    }
 
-            // 재무 정보 수정
-            FinancialInfo financialInfo = client.getFinancialInfo();
-            financialInfo.setCollateralAmount(clientDTO.getFinancialInfo().getCollateralAmount());
-            financialInfo.setCreditLimit(clientDTO.getFinancialInfo().getCreditLimit());
-            financialInfoRepository.save(financialInfo);
-            client.setFinancialInfo(financialInfo);
+    private void updateBankAccount(ClientDTO clientDTO, Client client) {
+        BankAccount bankAccount = client.getBankAccount();
+        bankAccount.setBank(bankRepository.findById(clientDTO.getBankAccount().getBank().getId()).orElseThrow(() -> new RuntimeException("해당 은행이 존재하지 않습니다.")));
+        bankAccount.setAccountNumber(clientDTO.getBankAccount().getAccountNumber());
+        bankAccount.setAccountHolder(clientDTO.getBankAccount().getAccountHolder());
+        bankAccountRepository.save(bankAccount);
+        client.setBankAccount(bankAccount);
+    }
 
-            // 업체 담당자 정보 수정
-            ManagerInfo managerInfo = client.getManagerInfo();
-            managerInfo.setClientManagerPhoneNumber(clientDTO.getManagerInfo().getClientManagerPhoneNumber());
-            managerInfo.setClientManagerEmail(clientDTO.getManagerInfo().getClientManagerEmail());
-            manageInfoRepository.save(managerInfo);
-            client.setManagerInfo(managerInfo);
+    private void updateManagerInfo(ClientDTO clientDTO, Client client) {
+        ManagerInfo managerInfo = client.getManagerInfo();
+        managerInfo.setClientManagerPhoneNumber(clientDTO.getManagerInfo().getClientManagerPhoneNumber());
+        managerInfo.setClientManagerEmail(clientDTO.getManagerInfo().getClientManagerEmail());
+        manageInfoRepository.save(managerInfo);
+        client.setManagerInfo(managerInfo);
+    }
 
-            // 주류 정보 수정
-            client.setLiquor(liquorRepository.findById(clientDTO.getLiquor().getId()).orElseThrow(() -> new RuntimeException("해당 주류 코드가 존재하지 않습니다.")));
+    private void updateFinancialInfo(ClientDTO clientDTO, Client client) {
+        FinancialInfo financialInfo = client.getFinancialInfo();
+        financialInfo.setCollateralAmount(clientDTO.getFinancialInfo().getCollateralAmount());
+        financialInfo.setCreditLimit(clientDTO.getFinancialInfo().getCreditLimit());
+        financialInfoRepository.save(financialInfo);
+        client.setFinancialInfo(financialInfo);
+    }
 
-            // 은행 계좌 정보 수정
-            BankAccount bankAccount = client.getBankAccount();
+    private void updateContactInfo(ClientDTO clientDTO, Client client) {
+        ContactInfo contactInfo = client.getContactInfo();
+        contactInfo.setPhoneNumber(clientDTO.getContactInfo().getPhoneNumber());
+        contactInfo.setFaxNumber(clientDTO.getContactInfo().getFaxNumber());
+        contactInfoRepository.save(contactInfo);
+        client.setContactInfo(contactInfo);
+    }
+
+    private void updateBusinessInfo(ClientDTO clientDTO, Client client) {
+        BusinessInfo businessInfo = client.getBusinessInfo();
+        businessInfo.setBusinessType(clientDTO.getBusinessInfo().getBusinessType());
+        businessInfo.setBusinessItem(clientDTO.getBusinessInfo().getBusinessItem());
+        businessInfoRepository.save(businessInfo);
+        client.setBusinessInfo(businessInfo);
+    }
+
+    private void updateAddress(ClientDTO clientDTO, Client client) {
+        Address address = client.getAddress();
+        address.setPostalCode(clientDTO.getAddress().getPostalCode());
+        address.setRoadAddress(clientDTO.getAddress().getRoadAddress());
+        address.setDetailedAddress(clientDTO.getAddress().getDetailedAddress());
+        addressRepository.save(address);
+        client.setAddress(address);
+    }
+
+    private Client createClient(ClientDTO clientDTO, Client client) {
+        client.setDepartmentEmployee(clientDTO.getDepartmentEmployee());
+        client.setTransactionType(TransactionType.valueOf(clientDTO.getTransactionType()));
+        client.setPrintClientName(clientDTO.getPrintClientName());
+        client.setBusinessRegistrationNumber(clientDTO.getBusinessRegistrationNumber());
+        client.setIdNumber(clientDTO.getIdNumber());
+        client.setRepresentativeName(clientDTO.getRepresentativeName());
+        client.setTransactionStartDate(clientDTO.getTransactionStartDate());
+        client.setTransactionEndDate(clientDTO.getTransactionEndDate());
+        client.setRemarks(clientDTO.getRemarks());
+        client.setIsActive(clientDTO.getIsActive());
+
+        return clientRepository.save(client);
+    }
+
+    private void createBankAccount(ClientDTO clientDTO, Client client) {
+        if (clientDTO.getBankAccount() != null) {
+            BankAccount bankAccount = new BankAccount();
             bankAccount.setBank(bankRepository.findById(clientDTO.getBankAccount().getBank().getId()).orElseThrow(() -> new RuntimeException("해당 은행이 존재하지 않습니다.")));
             bankAccount.setAccountNumber(clientDTO.getBankAccount().getAccountNumber());
             bankAccount.setAccountHolder(clientDTO.getBankAccount().getAccountHolder());
             bankAccountRepository.save(bankAccount);
             client.setBankAccount(bankAccount);
-
-            // 거래처 분류 수정
-            client.setCategory(categoryRepository.findById(clientDTO.getCategory().getId()).orElseThrow(() -> new RuntimeException("해당 거래처 분류 코드가 존재하지 않습니다.")));
-
-            // 기타 정보 수정
-            client.setDepartmentEmployee(clientDTO.getDepartmentEmployee());
-            client.setTransactionType(TransactionType.valueOf(clientDTO.getTransactionType()));
-            client.setPrintClientName(clientDTO.getPrintClientName());
-            client.setBusinessRegistrationNumber(clientDTO.getBusinessRegistrationNumber());
-            client.setIdNumber(clientDTO.getIdNumber());
-            client.setRepresentativeName(clientDTO.getRepresentativeName());
-            client.setTransactionStartDate(clientDTO.getTransactionStartDate());
-            client.setTransactionEndDate(clientDTO.getTransactionEndDate());
-            client.setRemarks(clientDTO.getRemarks());
-            client.setIsActive(clientDTO.getIsActive());
-
-            // 수정된 클라이언트 정보를 저장하고 DTO로 변환하여 반환
-            return new ClientDTO(clientRepository.save(client));
-        });
+        }
     }
+
+    private void createManagerInfo(ClientDTO clientDTO, Client client) {
+        if (clientDTO.getManagerInfo() != null) {
+            ManagerInfo managerInfo = new ManagerInfo();
+            managerInfo.setClientManagerPhoneNumber(clientDTO.getManagerInfo().getClientManagerPhoneNumber());
+            managerInfo.setClientManagerEmail(clientDTO.getManagerInfo().getClientManagerEmail());
+            manageInfoRepository.save(managerInfo);
+            client.setManagerInfo(managerInfo);
+        }
+    }
+
+    private void createFinancialInfo(ClientDTO clientDTO, Client client) {
+        if (clientDTO.getFinancialInfo() != null) {
+            FinancialInfo financialInfo = new FinancialInfo();
+            financialInfo.setCollateralAmount(clientDTO.getFinancialInfo().getCollateralAmount());
+            financialInfo.setCreditLimit(clientDTO.getFinancialInfo().getCreditLimit());
+            financialInfoRepository.save(financialInfo);
+            client.setFinancialInfo(financialInfo);
+        }
+    }
+
+    private void createContact(ClientDTO clientDTO, Client client) {
+        if (clientDTO.getContactInfo() != null) {
+            ContactInfo contactInfo = new ContactInfo();
+            contactInfo.setPhoneNumber(clientDTO.getContactInfo().getPhoneNumber());
+            contactInfo.setFaxNumber(clientDTO.getContactInfo().getFaxNumber());
+            contactInfoRepository.save(contactInfo);
+            client.setContactInfo(contactInfo);
+        }
+    }
+
+    private void createBusinessInfo(ClientDTO clientDTO, Client client) {
+        if (clientDTO.getBusinessInfo() != null) {
+            BusinessInfo businessInfo = new BusinessInfo();
+            businessInfo.setBusinessType(clientDTO.getBusinessInfo().getBusinessType());
+            businessInfo.setBusinessItem(clientDTO.getBusinessInfo().getBusinessItem());
+            businessInfoRepository.save(businessInfo);
+            client.setBusinessInfo(businessInfo);
+        }
+    }
+
+    private void createAddress(ClientDTO clientDTO, Client client) {
+        if (clientDTO.getAddress() != null) {
+            Address address = new Address();
+            address.setPostalCode(clientDTO.getAddress().getPostalCode());
+            address.setRoadAddress(clientDTO.getAddress().getRoadAddress());
+            address.setDetailedAddress(clientDTO.getAddress().getDetailedAddress());
+            addressRepository.save(address);
+            client.setAddress(address);
+        }
+    }
+
+    private void getCategory(ClientDTO clientDTO, Client client) {
+        client.setCategory(categoryRepository.findById(clientDTO.getCategory().getId()).orElseThrow(
+                () -> new RuntimeException("해당 거래처 분류 코드가 존재하지 않습니다.")));
+    }
+
+    private void getLiquor(ClientDTO clientDTO, Client client) {
+        client.setLiquor(liquorRepository.findById(clientDTO.getLiquor().getId()).orElseThrow(
+                () -> new RuntimeException("해당 주류 코드가 존재하지 않습니다.")));
+    }
+
 }
