@@ -14,5 +14,7 @@ public class WarehouseDetailDTO {
     private String code;
     private String name;
     private WarehouseType warehouseType;
+    private String productionProcess;
     private List<HierarchyGroupDTO> hierarchyGroupList;
+    private Boolean isActive;
 }

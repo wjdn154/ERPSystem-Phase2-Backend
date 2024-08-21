@@ -2,7 +2,9 @@ package com.megazone.ERPSystem_phase2_Backend.financial.service.basic_informatio
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.dto.*;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Contact;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.*;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.common.ContactRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ public class CompanyServiceImpl implements CompanyService {
     private final CorporateTypeRepository corporateTypeRepository;
     private final CorporateKindRepository corporateKindRepository;
     private final RepresentativeRepository representativeRepository;
-    private final AddressRepository addressRepository;
+    private final CompanyAddressRepository companyAddressRepository;
     private final ContactRepository contactRepository;
     private final MainBusinessRepository mainBusinessRepository;
     private final TaxOfficeRepository taxOfficeRepository;
@@ -227,7 +229,7 @@ public class CompanyServiceImpl implements CompanyService {
      * @return 저장된 주소 엔티티
      */
     private Address saveAddress(AddressDTO dto) {
-        return addressRepository.save(new Address(
+        return companyAddressRepository.save(new Address(
                 dto.getBusinessPostalCode(), // 사업장 우편번호
                 dto.getBusinesseAddress(), // 사업장 주소
                 dto.getBusinesseAddressDetail(), // 사업장 상세 주소
@@ -248,7 +250,7 @@ public class CompanyServiceImpl implements CompanyService {
      * @return 저장된 연락처 엔티티
      */
     private Contact saveContact(ContactDTO dto) {
-        return contactRepository.save(new Contact(dto.getBusinessPhone(), dto.getFax()));
+        return contactRepository.save(new Contact(dto.getPhone(), dto.getFax()));
     }
 
     /**

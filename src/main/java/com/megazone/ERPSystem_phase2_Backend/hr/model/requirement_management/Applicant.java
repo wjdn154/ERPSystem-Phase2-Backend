@@ -25,7 +25,7 @@ public class Applicant {
     private String name; // 이름
 
     @Column(nullable = false, unique = true)
-    private String email; // 이메일
+    private String email; // 이메일wld
 
     @Column(nullable = false)
     private String phoneNumber; // 전화번호

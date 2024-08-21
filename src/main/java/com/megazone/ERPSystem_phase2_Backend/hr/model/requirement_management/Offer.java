@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -21,7 +21,7 @@ public class Offer {
     private Application application; // 지원서
 
     @Column(nullable = false)
-    private Date offerDate; // 제안 일자
+    private LocalDate offerDate; // 제안 일자
 
     @Column(nullable = false)
     private String offerDetails; // 제안 상세 내용

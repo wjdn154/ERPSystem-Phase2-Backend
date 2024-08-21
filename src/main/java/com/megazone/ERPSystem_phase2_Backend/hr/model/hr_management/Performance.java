@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 // 직원의 성과 평가 정보
 
@@ -29,7 +29,7 @@ public class Performance {
     private Employee evaluator; // 평가자
 
     @Column(nullable = false)
-    private Date evaluationDate; // 평가일
+    private LocalDate evaluationDate; // 평가일
 
     @Column(nullable = false)
     private String score; // 평가 점수

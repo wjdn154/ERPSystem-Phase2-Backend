@@ -1,0 +1,58 @@
+{
+  "corporateType": {
+    "code": "1",
+    "type": "법인유형",
+    "description": "법인유형 설명"
+  },
+  "corporateKind": {
+    "code": "1",
+    "kind": "법인종류",
+    "description": "법인종류 설명"
+  },
+  "representative": {
+    "name": "홍길동",
+    "idNumber": "123456-7890123",
+    "isForeign": false
+  },
+  "address": {
+    "businessPostalCode": "12345",
+    "businesseAddress": "서울특별시 강남구 테헤란로",
+    "businesseAddressDetail": "OO빌딩 10층",
+    "isBusinesseNewAddress": true,
+    "businessePlace": "강남구",
+    "headquarterPostalCode": "54321",
+    "headquarterAddress": "서울특별시 중구 명동",
+    "headquarterAddressDetail": "OO타워 5층",
+    "isHeadquarterNewAddress": true,
+    "headquarterPlace": "중구"
+  },
+  "contact": {
+    "phone": "02-1234-5678",
+    "fax": "02-9876-5432"
+  },
+  "mainBusiness": {
+    "code": "1"
+  },
+  "businessTaxOffice": {
+    "code": "1",
+    "region": "서울"
+  },
+  "headquarterTaxOffice": {
+    "code": "2",
+    "region": "부산"
+  },
+  "localIncomeTaxOffice": "서울지방세무서",
+  "isSme": true,
+  "businessRegistrationNumber": "123-45-672112390",
+  "corporateRegistrationNumber": "987-65-43210",
+  "businessType": "도소2매업",
+  "businessItem": "전자기기",
+  "establishmentDate": "2020-01-01",
+  "openingDate": "2020-01-10",
+  "closingDate": "2023-12-31",
+  "name": "메가존 주식회사",
+  "entityType": "INCORPORATED",
+  "fiscalYearStart": "2023-01-01",
+  "fiscalYearEnd": "2023-12-31",
+  "fiscalCardinalNumber": 3
+}
