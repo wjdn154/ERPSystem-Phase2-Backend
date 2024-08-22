@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProductDetailDto {
 
+    private Long id;
     private String code; // 품목 코드
     private String name; // 품목명
     private String productGroupName;// 폼목 그룹
@@ -22,11 +23,12 @@ public class ProductDetailDto {
     private Double purchasePrice; // 입고단가
     private Double salesPrice; // 출고 단가
     private ProductType productType; // 품목 구분
-    private ProductionRouting productionRouting; // 생산라우팅
+    private String productionRoutingName; // 생산라우팅
 
 
     public static ProductDetailDto createProductDetailDto(Product product) {
         return new ProductDetailDto(
+                product.getId(),
                 product.getCode(),
                 product.getName(),
                 product.getProductGroup().getName(),
@@ -35,7 +37,7 @@ public class ProductDetailDto {
                 product.getPurchasePrice(),
                 product.getSalesPrice(),
                 product.getProductType(),
-                product.getProductionRouting()
+                product.getProductionRouting().getName()
         );
     }
 }

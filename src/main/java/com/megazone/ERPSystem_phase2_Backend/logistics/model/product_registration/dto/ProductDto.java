@@ -14,11 +14,12 @@ public class ProductDto {
 
     private String code; // 품목 코드
     private String name; // 품목명
-    private String productGroupName;// 폼목 그룹
+    private String productGroupName;// 폼목 그룹명
     private String standard; // 규격
     private Double purchasePrice; // 입고단가
     private Double salesPrice; // 출고 단가
     private ProductType productType; // 품목 구분
+    private String productRoutingName; // 생산 라우팅명
 
     public static ProductDto createProductDto(Product product) {
         return new ProductDto(
@@ -28,7 +29,8 @@ public class ProductDto {
                 product.getStandard(),
                 product.getPurchasePrice(),
                 product.getSalesPrice(),
-                product.getProductType()
+                product.getProductType(),
+                product.getProductionRouting().getName()
         );
     }
 }

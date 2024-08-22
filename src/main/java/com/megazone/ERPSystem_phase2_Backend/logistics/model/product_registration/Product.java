@@ -9,8 +9,9 @@ import lombok.*;
  * 품목 테이블
  * 품목에 대한 정보가 있는 테이블 - 품목 등록 시 사용
  */
-@Entity
-@Getter
+@Entity(name = "product")
+@Table(name = "product")
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,6 +30,11 @@ public class Product {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_group_id", referencedColumnName = "id")
     private ProductGroup productGroup;
+
+    // 생산 라우팅 매핑
+    @ManyToOne
+    @JoinColumn(name = "production_routing_id")
+    private ProductionRouting productionRouting;
 
     // 품목구분 (Enum)
     @Enumerated(EnumType.STRING)
@@ -54,9 +60,5 @@ public class Product {
     // 단위
     @Column(nullable = false)
     private String unit;
-
-    @ManyToOne
-    @JoinColumn(name = "production_routing_id")
-    private ProductionRouting productionRouting;
 
 }
