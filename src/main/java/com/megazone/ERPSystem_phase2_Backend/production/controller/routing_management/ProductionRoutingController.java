@@ -29,11 +29,18 @@ public class ProductionRoutingController {
                 .collect(Collectors.toList());
     }
 
+    // GET 상세조회
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductionRoutingDTO> findById(@PathVariable("id") Long id) {
+        Optional<ProductionRouting> productionRouting = productionRoutingRepository.findById(id);
+        return productionRouting.map(routing -> ResponseEntity.ok(productionRoutingService.convertToDTO(routing))).orElse(ResponseEntity.notFound().build());
+    }
+
     // POST 고유코드 중복 확인 후, 개별 등록
-    @PostMapping
-    public ResponseEntity<ProductionRouting> createProductionRouting(@RequestBody ProductionRoutingDTO routingDTO, @RequestBody List<RoutingStepDTO> stepDTOs) {
+    @PostMapping("/post")
+    public ResponseEntity<ProductionRouting> createProductionRouting(@RequestBody ProductionRoutingDTO routingDTO) {
         // 서비스 계층에서 반환된 값을 Optional로 감쌉니다.
-        ProductionRouting createdRouting = productionRoutingService.createProductionRoutingWithSteps(routingDTO, stepDTOs);
+        ProductionRouting createdRouting = productionRoutingService.createProductionRoutingWithSteps(routingDTO);
 
         // createdRouting이 null이 아닌 경우 성공 응답, null인 경우 실패 응답 반환
         return Optional.ofNullable(createdRouting)
