@@ -45,7 +45,7 @@ public class UnresolvedSaleAndPurchaseVoucher {
 //    @JoinColumn(name = "voucherManager_code",referencedColumnName = "code", nullable = false)
 //    private Long voucherManager; // 담당자 참조
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "unresolvedVouchers_id")
     private List<UnresolvedVoucher> unresolvedVouchers;
 
@@ -80,6 +80,4 @@ public class UnresolvedSaleAndPurchaseVoucher {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ApprovalStatus approvalStatus; // 승인 상태
-
-
 }

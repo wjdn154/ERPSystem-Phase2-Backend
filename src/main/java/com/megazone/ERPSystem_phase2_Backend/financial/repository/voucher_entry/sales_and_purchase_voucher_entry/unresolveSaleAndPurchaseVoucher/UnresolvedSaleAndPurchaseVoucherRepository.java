@@ -10,5 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface UnresolvedSaleAndPurchaseVoucherRepository extends JpaRepository<UnresolvedSaleAndPurchaseVoucher, Long> {
-    Optional<UnresolvedVoucher> findFirstByVoucherDateOrderByIdDesc(LocalDate date);
+    Optional<UnresolvedSaleAndPurchaseVoucher> findFirstByVoucherDateOrderByIdDesc(LocalDate date);
 }

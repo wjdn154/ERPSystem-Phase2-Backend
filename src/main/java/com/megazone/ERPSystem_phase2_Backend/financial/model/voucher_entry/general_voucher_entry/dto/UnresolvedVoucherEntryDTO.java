@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherKind;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,6 +34,8 @@ public class UnresolvedVoucherEntryDTO implements Cloneable {
     private BigDecimal creditAmount; // 대변 금액
 
     private LocalDate voucherDate; // 전표 날짜 (거래발생일)
+
+    private VoucherKind voucherKind; // 전표 종류
     // 객체 데이터 깊은 복사 메소드
     @Override
     public UnresolvedVoucherEntryDTO clone() throws CloneNotSupportedException {
@@ -51,7 +54,8 @@ public class UnresolvedVoucherEntryDTO implements Cloneable {
                 unresolvedVoucher.getVoucherType(),
                 unresolvedVoucher.getDebitAmount(),
                 unresolvedVoucher.getCreditAmount(),
-                unresolvedVoucher.getVoucherDate());
+                unresolvedVoucher.getVoucherDate(),
+                unresolvedVoucher.getVoucherKind());
     }
 
 

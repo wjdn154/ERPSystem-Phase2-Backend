@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface JournalEntryRepository extends JpaRepository<JournalEntry, Long> {
-    Optional<JournalEntry> findByCodeAndTransactionType(String journalEntryCode, TransactionType transactionType);
+    JournalEntry findByCodeAndTransactionType(String journalEntryCode, TransactionType transactionType);
 }

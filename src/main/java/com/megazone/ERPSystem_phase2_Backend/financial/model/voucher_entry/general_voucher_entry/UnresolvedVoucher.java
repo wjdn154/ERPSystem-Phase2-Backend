@@ -78,4 +78,8 @@ public class UnresolvedVoucher {
     @Column(nullable = false)
     private ApprovalStatus approvalStatus; // 승인상태 ( 승인대기 승인, 반려 )
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private VoucherKind voucherKind;
+
 }

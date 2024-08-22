@@ -7,8 +7,11 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.gener
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherKind;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.unresolvedVoucher.UnresolvedVoucherRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.unresolveSaleAndPurchaseVoucher.UnresolvedSaleAndPurchaseVoucherRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucherService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -32,6 +36,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
     
     // 현금 자동분개 시 필요한 계정과목 코드
     private final String cashAccountCode = "101";
+    private final UnresolvedSaleAndPurchaseVoucherRepository unresolvedSaleAndPurchaseVoucherRepository;
 
     // 거래처 레포지토리
     // 적요 레포지토리
@@ -61,8 +66,12 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
         // 입금&출금 전표인지, 차변&대변 전표인지 확인
         try {
             // 전표 번호 부여
-            String newVoucherNum = CreateUnresolvedVoucherNumber(dtoList.get(0).getVoucherDate());
+            String newVoucherNum = "";
+            LocalDate currentDate = dtoList.get(0).getVoucherDate();
             LocalDateTime nowTime = LocalDateTime.now();
+
+
+            newVoucherNum = CreateUnresolvedVoucherNumber(currentDate,dtoList.get(0).getVoucherKind());
 
             if(depositAndWithdrawalUnresolvedVoucherTypeCheck(dtoList.get(0))) {
                 UnresolvedVoucherEntryDTO unresolvedVoucherDto = dtoList.get(0);
@@ -75,7 +84,8 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
                 unresolvedVoucherList.add(savedVoucher);
                 // 입금,출금 전표인 경우 현금 계정과목 자동분개 처리
                 if(depositAndWithdrawalUnresolvedVoucherTypeCheck(unresolvedVoucherDto)) {
-                    unresolvedVoucherList.add(createUnresolvedVoucher(autoCreateUnresolvedVoucherDto(unresolvedVoucherDto),newVoucherNum,nowTime));
+                    unresolvedVoucherList.add(createUnresolvedVoucher(autoCreateUnresolvedVoucherDto(unresolvedVoucherDto)
+                            ,newVoucherNum,nowTime));
                 }
             }
             else {
@@ -99,8 +109,9 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
                 }
             }
 
-            savedVoucherList = unresolvedVoucherList.stream().map((voucher) ->
-                    unresolvedVoucherRepository.save(voucher)).toList();
+                     for(int i = 0; i < unresolvedVoucherList.size(); i++) {
+                         savedVoucherList.add(unresolvedVoucherRepository.save(unresolvedVoucherList.get(i)));
+                     }
         }
         catch (IllegalArgumentException e) {
             e.getStackTrace();
@@ -108,6 +119,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e.getMessage());
         }
+        System.out.println(savedVoucherList.toString());
         return savedVoucherList; // 생성된 미결전표 반환
     }
 
@@ -133,7 +145,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
                 .voucherDate(dto.getVoucherDate())
                 .voucherRegistrationTime(nowTime)
                 .approvalStatus(ApprovalStatus.PENDING)
-//                .voucherKind(VoucherKind.GENERAL)
+                .voucherKind(dto.getVoucherKind())
                 .build();
         return unresolvedVoucher;
     }
@@ -158,15 +170,37 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
      * @return 입금,출금,차변,대변 조건에 맞게 번호 부여
      */
     @Override
-    public String CreateUnresolvedVoucherNumber(LocalDate voucherDate) {
+    public String CreateUnresolvedVoucherNumber(LocalDate voucherDate,VoucherKind voucherKind) {
         // 해당 조건의 날짜에 해당하는 마지막 미결전표 Entity 가져오기
-        UnresolvedVoucher lastUnresolvedVoucher = unresolvedVoucherRepository.findFirstByVoucherDateOrderByIdDesc(voucherDate).orElse(null);
 
-        if(lastUnresolvedVoucher == null) {
-            return "1";
+        String lastVoucherNumber = "";
+        String StartNumber = "";
+
+        Optional<?> voucherBox = Optional.empty();
+
+        switch (voucherKind) {
+            case GENERAL:
+                voucherBox = unresolvedVoucherRepository.findFirstByVoucherDateOrderByIdDesc(voucherDate);
+                StartNumber = "1";
+                break;
+            case SALE_AND_PURCHASE:
+                voucherBox = unresolvedSaleAndPurchaseVoucherRepository.findFirstByVoucherDateOrderByIdDesc(voucherDate);
+                StartNumber = "50000";
+                break;
+        }
+
+        if(voucherBox.isEmpty()) {
+            return StartNumber;
         }
         else {
-            int voucherNum = Integer.parseInt(lastUnresolvedVoucher.getVoucherNumber()) + 1;
+            Object voucher = voucherBox.get();
+
+            if (voucher instanceof UnresolvedVoucher) {
+                lastVoucherNumber = ((UnresolvedVoucher) voucher).getVoucherNumber();
+            } else if (voucher instanceof UnresolvedSaleAndPurchaseVoucher) {
+                lastVoucherNumber = ((UnresolvedSaleAndPurchaseVoucher) voucher).getVoucherNumber();
+            }
+            int voucherNum = Integer.parseInt(lastVoucherNumber) + 1;
             return String.valueOf(voucherNum);
         }
     }
@@ -293,8 +327,4 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
         return unresolvedVoucherList;
     }
 
-
-    public void HSH(List<UnresolvedVoucher> voucherList) {
-
-    }
 }
