@@ -8,8 +8,9 @@ import lombok.*;
  * 품목 테이블
  * 품목에 대한 정보가 있는 테이블 - 품목 등록 시 사용
  */
-@Entity
-@Getter
+@Entity(name = "product")
+@Table(name = "product")
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
