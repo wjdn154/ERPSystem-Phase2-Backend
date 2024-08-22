@@ -11,8 +11,8 @@ import lombok.*;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
 
     // 고유 식별자
@@ -25,16 +25,18 @@ public class Product {
     private String code;
 
     // 품목 그룹 코드 참조
-    @Column(nullable = false)
-    private Long groupId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_group_id", referencedColumnName = "id")
+    private ProductGroup productGroup;
 
-    // 생성공정 코드 참조
-    @Column(nullable = false)
+    // 생성공정 코드 참조 -
+    @Column
     private Long productionProcessId;
 
     // 품목구분 (Enum)
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Long productTypeId;
+    private ProductType productType;
 
     // 입고 단가
     @Column(nullable = false)

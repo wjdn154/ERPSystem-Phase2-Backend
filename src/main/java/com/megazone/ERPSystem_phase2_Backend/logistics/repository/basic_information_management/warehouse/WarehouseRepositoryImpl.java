@@ -1,9 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.QHierarchyGroup;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.QWarehouse;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.QWarehouseHierarchyGroup;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.HierarchyGroupDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.HierarchyGroupResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseDetailDTO;
 import com.querydsl.core.types.Projections;
@@ -13,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.QHierarchyGroup.hierarchyGroup;
 import static com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.QWarehouse.warehouse;
@@ -60,8 +56,8 @@ public class WarehouseRepositoryImpl implements WarehouseRepositoryCustom {
                 .where(warehouse.id.eq(id))
                 .fetchOne();
 
-        List<HierarchyGroupDTO> hierarchyGroups = queryFactory
-                .select(Projections.fields(HierarchyGroupDTO.class,
+        List<HierarchyGroupResponseDTO> hierarchyGroups = queryFactory
+                .select(Projections.fields(HierarchyGroupResponseDTO.class,
                         hierarchyGroup.id.as("id"),
                         hierarchyGroup.hierarchyGroupCode.as("code"),
                         hierarchyGroup.hierarchyGroupName.as("name")

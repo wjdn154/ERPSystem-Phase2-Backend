@@ -40,6 +40,8 @@ spring:
         - classpath:initial-database/financial/unresolved_voucher.sql
         - classpath:initial-database/hr/employee.sql
         - classpath:initial-database/hr/users.sql
+        - classpath:initial-database/logistics/product_group.sql
+        - classpath:initial-database/logistics/product.sql
         - classpath:initial-database/financial/vat_type.sql
         - classpath:initial-database/financial/journal_entry_type_setup.sql
         - classpath:initial-database/financial/journal_entry.sql

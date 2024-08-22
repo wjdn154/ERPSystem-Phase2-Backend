@@ -1,40 +1,39 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.quotation_registration;
+package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 /**
- * 견적서 엔티티
- * 견적서에 대한 정보가 있는 엔티티
+ * 발주요청 테이블
+ * 발주요청서에 대한 정보가 있는 테이블
+ * 각 부서 담당자는 구매 관리 부서에 발주를 요청하기 위해 발주 요청을 한다.
  */
-
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class Quotation {
+@NoArgsConstructor
+@AllArgsConstructor
+public class PurchaseRequest {
 
     // 고유 식별자
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 거래처_id - N : 1
+    // 거래처_id
 
-    // 사원_id - N : 1
+    // 사원_id
 
-    // 창고_id - N : 1
+    // 창고_id - 입고될 창고
 
-    // 통화_id - N : 1
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "currency_id", nullable = false)
-    private Long currencyId;
+    // 통화_id
 
-    // 품목_id - 1 : N
-    private Long productId;
+    // 품목_id
 
     // 수량
     @Column(nullable = false )
@@ -55,6 +54,10 @@ public class Quotation {
     // 일자
     @Column(nullable = false)
     private LocalDate date;
+
+    // 납기 일자
+    @Column(nullable = false)
+    private LocalDate deliveryDate;
 
     // 비고
     @Column
