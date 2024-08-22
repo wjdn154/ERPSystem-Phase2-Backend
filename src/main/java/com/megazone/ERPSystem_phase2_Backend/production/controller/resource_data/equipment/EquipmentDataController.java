@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.controller.resource_dat
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.ListEquipmentDataDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.resource_data.equipment.EquipmentDataRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.equipment.EquipmentDataService;
@@ -34,10 +35,10 @@ public class EquipmentDataController {
 
     //설비 상세 조회
     @PostMapping("/api/production/equipmentData/{id}")
-    public ResponseEntity<EquipmentDataDTO> getEquipmentDataById(@PathVariable Long id){
+    public ResponseEntity<EquipmentDataShowDTO> getEquipmentDataById(@PathVariable Long id){
 
         //서비스에서 해당 아이디의 설비 상세 정보를 가져옴
-        Optional<EquipmentDataDTO> result = equipmentDataService.findEquipmentDataDetailById(id);
+        Optional<EquipmentDataShowDTO> result = equipmentDataService.findEquipmentDataDetailById(id);
 
         //해당 아이디의 설비정보가 존재하지 않을 경우 404 상태 반환.
         return result.map(ResponseEntity::ok)

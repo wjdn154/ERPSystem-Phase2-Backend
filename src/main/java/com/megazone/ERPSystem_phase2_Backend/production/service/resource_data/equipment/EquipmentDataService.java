@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.e
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.ListEquipmentDataDTO;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public interface EquipmentDataService {
     List<ListEquipmentDataDTO> findAllEquipmentDataDetails();
 
     //개별 설비 조회
-    Optional<EquipmentDataDTO> findEquipmentDataDetailById(Long id);
+    Optional<EquipmentDataShowDTO> findEquipmentDataDetailById(Long id);
 
 
 }

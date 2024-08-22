@@ -19,7 +19,8 @@ public class ListEquipmentDataDTO {
     private String modelName;             //모델 명
     private EquipmentType equipmentType;  //설비 유형
     private OperationStatus operationStatus;    //가동 상태
-    private WarehouseDTO factoryName;           //공장이름
+    private String factoryName;           //공장이름
+    private String workcenterName;        //작업장 이름
 
 
 }
