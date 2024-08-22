@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class CreateHierarchyGroupDTO {
     private String hierarchyGroupCode;
     private String hierarchyGroupName;
-    private Long parentGroupId; // 상위 계층 그룹 ID (Optional)
+    private Long parentGroupId;
     private Boolean isActive; // 기본값이 정해져 있을 수 있음
 }

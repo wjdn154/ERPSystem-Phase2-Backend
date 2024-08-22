@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface HierarchyGroupRepository extends JpaRepository<HierarchyGroup, Long>, HierarchyGroupRepositoryCustom {
-    Optional<HierarchyGroupResponseDTO> findByHierarchyGroupCode(String code);
+    Optional<HierarchyGroup> findByHierarchyGroupCode(String code);
 
-    Optional<HierarchyGroupResponseDTO> findByHierarchyGroupName(String name);
+    Optional<HierarchyGroup> findByHierarchyGroupName(String name);
 }

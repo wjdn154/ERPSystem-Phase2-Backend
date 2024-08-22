@@ -1,8 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.controller.warehouse;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.HierarchyGroupResponseDTO;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseDTO;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseDetailDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.hierarchy_group.HierarchyGroupRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.service.hierarchy_management.HierarchyGroupService;
@@ -60,6 +58,26 @@ public class WarehouseController {
     public ResponseEntity<List<HierarchyGroupResponseDTO>> getAllHierarchyGroups() {
         List<HierarchyGroupResponseDTO> response = hierarchyGroupService.findAllHierarchyGroup();
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/api/logistics/hierarchyGroup/saveHierarchyGroup")
+    public ResponseEntity<CreateHierarchyGroupDTO> saveHierarchyGroup(@RequestBody CreateHierarchyGroupDTO createHierarchyGroupDTO) {
+        Optional<CreateHierarchyGroupDTO> savedHierarchyGroup = hierarchyGroupService.saveHierarchyGroup(createHierarchyGroupDTO);
+        return savedHierarchyGroup.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+    }
+
+    @PostMapping("/api/logistics/hierarchyGroup/updateHierarchyGroup/{id}")
+    public ResponseEntity<HierarchyGroupResponseDTO> updateHierarchyGroup(@PathVariable Long id, @RequestBody UpdateHierarchyGroupDTO dto) {
+        Optional<HierarchyGroupResponseDTO> updateHierarchyGroup = hierarchyGroupService.updateHierarchyGroup(id, dto);
+
+        return updateHierarchyGroup.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+    }
+
+    @PostMapping("/api/logistics/hierarchyGroup/deleteHierarchyGroup/{id}")
+    public ResponseEntity deleteHierarchyGroup(@PathVariable Long id) {
+        hierarchyGroupService.deleteHierarchyGroup(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

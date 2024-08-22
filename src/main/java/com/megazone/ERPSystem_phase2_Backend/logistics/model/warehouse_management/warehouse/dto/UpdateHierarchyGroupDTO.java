@@ -4,18 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class HierarchyGroupResponseDTO {
+public class UpdateHierarchyGroupDTO {
     private Long id;
     private String hierarchyGroupCode;
     private String hierarchyGroupName;
-    private Boolean isActive;
     private Long parentGroupId;
-    private String parentGroupName;
-    private List<HierarchyGroupResponseDTO> childGroups;
+    private Boolean isActive;
 }
-
