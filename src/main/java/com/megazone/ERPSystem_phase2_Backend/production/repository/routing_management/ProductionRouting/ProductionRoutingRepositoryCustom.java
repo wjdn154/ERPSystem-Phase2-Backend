@@ -7,6 +7,6 @@ import java.util.List;
 public interface ProductionRoutingRepositoryCustom {
 
     List<ProductionRouting> findRoutingsByProcessDetails(Long processId);
-//    List<ProductionRouting> findRoutingsByProduct(Long prooductId); // TODO Routing에 Product 추가한 후 수정
+    List<ProductionRouting> findRoutingsByProduct(Long prooductId);
 
 }
