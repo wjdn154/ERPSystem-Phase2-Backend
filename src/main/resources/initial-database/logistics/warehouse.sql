@@ -15,3 +15,6 @@ INSERT INTO warehouse_hierarchy_group (id, warehouse_id, hierarchy_group_id)
 VALUES (1, 1, 1),
        (2, 1, 2),
        (3, 2, 3);
+
+# drop DATABASE erp;
+# create DATABASE erp;
