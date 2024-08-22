@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registrati
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.ProductGroup;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.ProductType;
+import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProductionRouting;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +23,7 @@ public class ProductSaveResponseDto {
     private Double purchasePrice; // 입고단가
     private Double salesPrice; // 출고 단가
     private ProductType productType; // 품목 구분
-    private Long productionProcessId; // 생산 공정
+    private ProductionRouting productionRouting; // 생산라우팅
 
     public Product toEntity(ProductGroup productGroup) {
         return Product.builder()
@@ -34,7 +35,7 @@ public class ProductSaveResponseDto {
                 .purchasePrice(purchasePrice)
                 .salesPrice(salesPrice)
                 .productType(productType)
-                .productionProcessId(productionProcessId)
+                .productionRouting(productionRouting)
                 .build();
     }
 }
