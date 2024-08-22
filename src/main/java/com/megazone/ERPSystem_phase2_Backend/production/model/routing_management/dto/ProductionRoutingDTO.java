@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.dto;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RoutingDTO {
+public class ProductionRoutingDTO {
     private Long id;
     private String code;
     private String name;
@@ -19,4 +20,5 @@ public class RoutingDTO {
     private boolean isStandard;
     private boolean isActive;
     private List<RoutingStepDTO> routingStepDTOList; // 연관 RoutingStep 목록
+    // private Product product;
 }

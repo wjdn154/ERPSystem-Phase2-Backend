@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.routing_managemen
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,20 +15,21 @@ import java.util.List;
  * "재료 준비 -> 절단 -> 용접 -> 검사 -> 포장"과 같은 일련의 공정 순서
  */
 
-@Entity(name = "routing")
-@Table(name = "routing_management_routing", indexes = {
-        @Index(name = "idx_routing_code", columnList = "routing_code")
+@Entity(name = "routing_management_production_routing")
+@Table(name = "routing_management_production_routing", indexes = {
+        @Index(name = "idx_production_routing_code", columnList = "production_routing_code")
 })
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Routing {
+@Builder
+public class ProductionRouting {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id; // PK
 
-    @Column(name = "routing_code", nullable = false, unique = true)
+    @Column(name = "production_routing_code", nullable = false, unique = true)
     private String code; // Routing 지정코드
 
     @Column(nullable = false)
@@ -42,10 +44,11 @@ public class Routing {
     @Column(nullable = false)
     private boolean isActive; // 사용 여부
 
-    @OneToMany(mappedBy = "routing", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "productionRouting", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("stepOrder ASC") // stepOrder 필드를 기준으로 오름차순 정렬
     private List<RoutingStep> routingSteps; // 연관 RoutingStep 목록
 
-//    @ManyToOne(mappedBy = "routing")
-//    @JoinColumn(name = "product_id")
-//    private Product product; // 연관 제품 logistics
+    @OneToMany(mappedBy = "productionRouting")
+    private List<Product> products;
+
 }

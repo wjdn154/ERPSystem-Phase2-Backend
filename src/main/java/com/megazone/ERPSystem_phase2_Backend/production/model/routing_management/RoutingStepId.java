@@ -13,7 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class RoutingStepId implements Serializable {
 
-    private Long routingId;
+    private Long productionRoutingId;
     private Long processId;
 
 }

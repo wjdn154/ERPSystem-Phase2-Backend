@@ -56,7 +56,7 @@ public class EquipmentData {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workcenter_id")
-    private Workcenter location;               //설비가 설치된 위치 or 구역 (작업장). 작업장 테이블 참조
+    private Workcenter workcenter;               //설비가 설치된 위치 or 구역 (작업장). 작업장 테이블 참조
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "factory_id")
