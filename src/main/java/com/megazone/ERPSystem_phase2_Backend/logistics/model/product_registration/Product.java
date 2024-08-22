@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration;
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProductionRouting;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,10 +30,6 @@ public class Product {
     @JoinColumn(name = "product_group_id", referencedColumnName = "id")
     private ProductGroup productGroup;
 
-    // 생성공정 코드 참조 -
-    @Column
-    private Long productionProcessId;
-
     // 품목구분 (Enum)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -57,5 +54,9 @@ public class Product {
     // 단위
     @Column(nullable = false)
     private String unit;
+
+    @ManyToOne
+    @JoinColumn(name = "production_routing_id")
+    private ProductionRouting productionRouting;
 
 }

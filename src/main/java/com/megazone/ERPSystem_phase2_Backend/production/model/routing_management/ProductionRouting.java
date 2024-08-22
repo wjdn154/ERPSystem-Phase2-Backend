@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.routing_management;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,12 +48,7 @@ public class ProductionRouting {
     @OrderBy("stepOrder ASC") // stepOrder 필드를 기준으로 오름차순 정렬
     private List<RoutingStep> routingSteps; // 연관 RoutingStep 목록
 
-//    @OneToMany(mappedBy = "routing")
-//    private List<Product> products;
-
-//    // Product 엔티티에서
-//    @ManyToOne
-//    @JoinColumn(name = "routing_id")
-//    private Routing routing;
+    @OneToMany(mappedBy = "productionRouting")
+    private List<Product> products;
 
 }

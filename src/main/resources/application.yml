@@ -47,7 +47,7 @@ spring:
         - classpath:initial-database/hr/employee.sql
         - classpath:initial-database/hr/users.sql
         - classpath:initial-database/logistics/product_group.sql
-        - classpath:initial-database/logistics/product.sql
+#        - classpath:initial-database/logistics/product.sql
         - classpath:initial-database/production/workcenter.sql
         - classpath:initial-database/production/processDetails.sql
 logging:
