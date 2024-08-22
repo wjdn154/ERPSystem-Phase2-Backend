@@ -84,7 +84,7 @@ public class ProductServiceImpl implements ProductService{
                 .purchasePrice(product.getPurchasePrice())
                 .salesPrice(product.getSalesPrice())
                 .productType(product.getProductType())
-                .productionProcessId(product.getProductionProcessId())
+                .productionRouting(product.getProductionRouting())
                 .build();
     }
 }

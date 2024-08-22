@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registrati
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.ProductType;
+import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProductionRouting;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +21,8 @@ public class ProductDetailDto {
     private Double purchasePrice; // 입고단가
     private Double salesPrice; // 출고 단가
     private ProductType productType; // 품목 구분
-    private Long productionProcessId; // 생산 공정
+    private ProductionRouting productionRouting; // 생산라우팅
+
 
     public static ProductDetailDto createProductDetailDto(Product product) {
         return new ProductDetailDto(
@@ -32,7 +34,7 @@ public class ProductDetailDto {
                 product.getPurchasePrice(),
                 product.getSalesPrice(),
                 product.getProductType(),
-                product.getProductionProcessId()
+                product.getProductionRouting()
         );
     }
 }
