@@ -18,4 +18,5 @@ public interface ProductionRoutingService {
     // ProductionRouting 삭제 로직
     Optional<ProductionRouting> deleteProductionRouting(Long id);
 
+    ProductionRoutingDTO convertToDTO(ProductionRouting productionRouting);
 }
