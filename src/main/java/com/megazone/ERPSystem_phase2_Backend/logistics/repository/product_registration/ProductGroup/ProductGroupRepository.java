@@ -6,8 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface ProductGroupRepository extends JpaRepository<ProductGroup, Long>, ProductGroupRepositoryCustom {
-    boolean existsByCode(String code);
+public interface ProductGroupRepository extends JpaRepository<ProductGroup, Long> {
 
 }
 

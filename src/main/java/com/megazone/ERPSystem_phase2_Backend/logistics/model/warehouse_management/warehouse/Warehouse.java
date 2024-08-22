@@ -23,7 +23,6 @@ public class Warehouse {
     @Column(nullable = false) // 고유식별자
     private Long id;
 
-
     @ManyToOne (fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", nullable = true) // 주소정보
     @ToString.Exclude
