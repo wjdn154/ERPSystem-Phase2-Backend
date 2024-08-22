@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Entity(name = "process_details")
+@Entity(name = "routing_management_process_details")
 @Table(name = "routing_management_process_details", indexes = {
         @Index(name = "idx_process_code", columnList = "process_code")
 })
@@ -58,9 +58,5 @@ public class ProcessDetails {
 
     @OneToMany(mappedBy = "process", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoutingStep> routingSteps; // 연관 RoutingStep 목록
-
-//    private List<Warehouse> inputWarehouses; // 해당 공정을 위한 자재가 출고되는 창고명, 창고코드 from 물류
-
-//    private List<Warehouse> outputWarehouses; // 생산품 입고 창고 목록  창고명, 창고코드 from 물류
 
 }

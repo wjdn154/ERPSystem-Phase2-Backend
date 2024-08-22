@@ -25,7 +25,7 @@
 //
 //@SpringBootTest
 //@Transactional
-//class CompanyServiceImplTest {
+//class AccountSubjectServiceImplTest {
 //
 //    @Autowired
 //    private EntityManager entityManager;

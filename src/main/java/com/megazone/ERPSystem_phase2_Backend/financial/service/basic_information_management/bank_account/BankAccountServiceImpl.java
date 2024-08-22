@@ -74,7 +74,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     private BankAccount createBankAccount(BankAccountDTO bankAccountDTO, BankAccount bankAccount) {
         bankAccount.setCode(bankAccountDTO.getCode());
-        bankAccount.setClientName(bankAccountDTO.getClientName());
+        bankAccount.setName(bankAccountDTO.getName());
         bankAccount.setAccountNumber(bankAccountDTO.getAccountNumber());
         bankAccount.setBankBranchName(bankAccountDTO.getBankBranchName());
         bankAccount.setAccountOpeningDate(bankAccountDTO.getAccountOpeningDate());

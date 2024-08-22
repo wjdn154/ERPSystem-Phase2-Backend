@@ -23,7 +23,7 @@ public class BankAccountDTO {
     private AddressDTO address; // 주소 정보 (선택 사항)
     private ContactDTO contact; // 연락처 정보
     private String code; // 코드
-    private String clientName; // 은행명
+    private String name; // 은행명
     private String accountNumber; // 계좌번호
     private String bankBranchName; // 은행 지점명
     private LocalDate accountOpeningDate; // 계좌 개설일
@@ -56,7 +56,7 @@ public class BankAccountDTO {
                 bankAccount.getContact().getPhone(),
                 bankAccount.getContact().getFax()
         ) : null;
-        this.clientName = bankAccount.getClientName();
+        this.name = bankAccount.getName();
         this.accountNumber = bankAccount.getAccountNumber();
         this.bankBranchName = bankAccount.getBankBranchName();
         this.accountOpeningDate = bankAccount.getAccountOpeningDate();

@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.SerialNo;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.EquipmentType;
@@ -55,11 +56,11 @@ public class EquipmentData {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workcenter_id")
-    private Workcenter location;               //설비가 설치된 위치 or 구역 (작업장). 작업장 테이블 참조
+    private Workcenter workcenter;               //설비가 설치된 위치 or 구역 (작업장). 작업장 테이블 참조
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "factory_id")
-//    private Factory factory;                   //설비가 설치된 공장 . 공장 테이블 참조
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "factory_id")
+    private Warehouse factory;                   //설비가 설치된 공장 . 공장 테이블 참조
 
     @Column
     private String equipmentImg;

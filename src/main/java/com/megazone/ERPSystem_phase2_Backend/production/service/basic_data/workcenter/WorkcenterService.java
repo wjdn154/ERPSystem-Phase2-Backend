@@ -4,9 +4,8 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcen
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.WorkcenterDTO;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface WorkcenterRegistrationService {
+public interface WorkcenterService {
 
     Workcenter updateWorkcenter(String code, WorkcenterDTO workcenterDTO);
 
