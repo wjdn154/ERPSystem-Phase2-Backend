@@ -40,7 +40,10 @@ public class BankAccount {
     private Contact contact; // 주소 정보
 
     @Column(nullable = false)
-    private String clientName; // 거래처명
+    private String code; // 코드
+
+    @Column(nullable = false)
+    private String clientName; // 은행명
 
     @Column(nullable = false)
     private String accountNumber; // 계좌번호

@@ -5,6 +5,7 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_managemen
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseDetailDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface WarehouseService {
 
@@ -12,7 +13,7 @@ public interface WarehouseService {
 
     WarehouseDetailDTO getWarehouseDetail(Long id);
 
-    Warehouse saveWarehouse(Warehouse warehouse);
+    Optional<WarehouseDetailDTO> saveWarehouse(WarehouseDetailDTO dto);
 
     Warehouse updateWarehouse(Warehouse warehouse);
 
