@@ -21,7 +21,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class EquipmentDataDTO {
 
-    private Long id;
     private String equipmentNum;                //설비번호
     private String equipmentName;               //설비명
     private EquipmentType equipmentType;        //설비 유형. 조립, 가공, 포장, 검사, 물류

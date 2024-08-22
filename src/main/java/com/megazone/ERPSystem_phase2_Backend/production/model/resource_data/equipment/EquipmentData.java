@@ -23,7 +23,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class EquipmentData {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;                              //pk
     
     @Column(nullable = false)

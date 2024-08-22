@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_manageme
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.enums.WarehouseType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -50,4 +51,7 @@ public class Warehouse {
 
     @OneToMany(mappedBy = "factory")
     private List<Workcenter> workcenters = new ArrayList<>();// 생산관리의 작업장 엔티티 중 factory와 연결
+
+    @OneToMany(mappedBy = "factory")
+    private List<EquipmentData> equipmentData = new ArrayList<>(); // 생산관리의 설비 엔티티 중 factory 와 연결
 }

@@ -9,7 +9,6 @@ import com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.eq
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +22,7 @@ public class EquipmentDataController {
     private final EquipmentDataRepository equipmentDataRepository;
 
     //설비 리스트 조회
-    @PostMapping("/api/production/equipmentDatas")
+    @GetMapping("/api/production/equipmentDatas")
     public ResponseEntity<List<ListEquipmentDataDTO>> getAllEquipmentDataDetails(){
         //서비스에서 모든 설비정보를 가져옴
         List<ListEquipmentDataDTO> result = equipmentDataService.findAllEquipmentDataDetails();
@@ -34,9 +33,10 @@ public class EquipmentDataController {
     }
 
     //설비 상세 조회
-    @PostMapping("/api/production/equipmentData/{id}")
-    public ResponseEntity<EquipmentDataShowDTO> getEquipmentDataById(@PathVariable Long id){
+    @GetMapping("/api/production/equipmentData/{id}")
+    public ResponseEntity<EquipmentDataShowDTO> getEquipmentDataById(@PathVariable("id") Long id){
 
+        System.out.println("test");
         //서비스에서 해당 아이디의 설비 상세 정보를 가져옴
         Optional<EquipmentDataShowDTO> result = equipmentDataService.findEquipmentDataDetailById(id);
 
@@ -58,7 +58,7 @@ public class EquipmentDataController {
 
     //설비 정보 수정
     @PostMapping("/api/production/equipmentData/updateEquipment/{id}")
-    public ResponseEntity<EquipmentDataDTO> updateEquipmentDataById(@PathVariable Long id, @RequestBody EquipmentDataDTO dto){
+    public ResponseEntity<EquipmentDataDTO> updateEquipmentDataById(@PathVariable("id") Long id, @RequestBody EquipmentDataDTO dto){
 
         //서비스에서 해당 아이디의 설비 상세 정보를 수정함.
         Optional<EquipmentDataDTO> result = equipmentDataService.updateEquipment(id,dto);
@@ -69,7 +69,7 @@ public class EquipmentDataController {
 
     //설비 정보 삭제
     @DeleteMapping("/api/production/equipmentData/deleteEquipment/{id}")
-    public ResponseEntity<String> deleteEquipmentDataById(@PathVariable Long id){
+    public ResponseEntity<String> deleteEquipmentDataById(@PathVariable("id") Long id){
         try {
             //서비스에서 해당 아이디의 설비 상세 정보를 삭제함
             equipmentDataService.deleteEquipment(id);

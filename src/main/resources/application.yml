@@ -39,6 +39,7 @@ spring:
         - classpath:initial-database/financial/bank_account/financial_address.sql
         - classpath:initial-database/financial/bank_account/financial_contact.sql
         - classpath:initial-database/financial/bank_account/financial_bank_account.sql
+
 #        - classpath:initial-database/financial/credit_card/credit_card.sql
 
 
@@ -48,6 +49,8 @@ spring:
         - classpath:initial-database/hr/users.sql
         - classpath:initial-database/logistics/product_group.sql
         - classpath:initial-database/logistics/product.sql
+
+        - classpath:initial-database/production/equipmentData.sql
 logging:
   level:
     org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)
