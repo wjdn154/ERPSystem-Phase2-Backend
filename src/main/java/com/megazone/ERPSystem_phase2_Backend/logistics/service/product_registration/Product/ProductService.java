@@ -1,11 +1,19 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.Product;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductSaveRequestDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductSaveResponseDto;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface ProductService {
-    Product saveProduct(Product product);
 
-    Product updateProduct(Product product);
+    List<ProductDto> findAllProducts();
 
-    void deleteProduct(Long productId);
+    ProductDetailDto findProductDetailById(Long id);
+
+    Optional<ProductSaveResponseDto> saveProduct(ProductSaveRequestDto productSaveRequestDto);
 }

@@ -3,6 +3,8 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registrati
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 /**
  * 품목그룹 엔티티
  * 품목그룹에 대한 정보가 있는 엔티티
@@ -21,6 +23,9 @@ public class ProductGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToMany(mappedBy = "productGroup")
+    private List<Product> products;
 
     // 품목 그룹 코드
     @Column(nullable = false, unique = true)

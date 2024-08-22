@@ -37,10 +37,13 @@ public class BankAccount {
 
     @ManyToOne
     @JoinColumn(name = "contact_id")
-    private Contact contact; // 주소 정보
+    private Contact contact; // 연락처 정보
 
     @Column(nullable = false)
-    private String clientName; // 거래처명
+    private String code; // 코드
+
+    @Column(nullable = false)
+    private String name; // 은행명
 
     @Column(nullable = false)
     private String accountNumber; // 계좌번호
