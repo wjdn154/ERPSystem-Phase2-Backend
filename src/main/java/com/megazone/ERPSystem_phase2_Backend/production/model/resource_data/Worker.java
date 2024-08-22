@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data;
 
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management.Employee;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
