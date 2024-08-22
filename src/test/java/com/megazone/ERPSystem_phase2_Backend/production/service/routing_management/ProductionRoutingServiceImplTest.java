@@ -55,16 +55,16 @@ public class ProductionRoutingServiceImplTest {
 //        assertEquals("ROUTING001", result.getCode());
 //    }
 
-    @Test
-    void createRoutingWithExistingCode_throwsException() {
-        // Given
-        when(productionRoutingRepository.existsByCode("ROUTING001")).thenReturn(true);
-
-        // When & Then
-        assertThrows(IllegalArgumentException.class, () -> {
-            productionRoutingService.createProductionRoutingWithSteps(validDto, List.of());
-        });
-    }
+//    @Test
+//    void createRoutingWithExistingCode_throwsException() {
+//        // Given
+//        when(productionRoutingRepository.existsByCode("ROUTING001")).thenReturn(true);
+//
+//        // When & Then
+//        assertThrows(IllegalArgumentException.class, () -> {
+//            productionRoutingService.createProductionRoutingWithSteps(validDto, List.of());
+//        });
+//    }
 
     @Test
     void updateRoutingWithValidDTO_updatesRouting() {

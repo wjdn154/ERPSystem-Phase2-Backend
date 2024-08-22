@@ -48,8 +48,11 @@ spring:
         - classpath:initial-database/hr/users.sql
         - classpath:initial-database/logistics/product_group.sql
 #        - classpath:initial-database/logistics/product.sql
+
+
         - classpath:initial-database/production/workcenter.sql
         - classpath:initial-database/production/processDetails.sql
+        - classpath:initial-database/production/productionRouting.sql
 logging:
   level:
     org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)

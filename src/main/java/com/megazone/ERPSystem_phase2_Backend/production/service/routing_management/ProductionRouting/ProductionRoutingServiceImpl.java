@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.routing_management.ProductionRouting;
 
-//import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
-//import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.ProductGroup.ProductGroupRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProcessDetails;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProductionRouting;
@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 //import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +35,7 @@ public class ProductionRoutingServiceImpl implements ProductionRoutingService {
 
 
     @Transactional
-    public ProductionRouting createProductionRoutingWithSteps(ProductionRoutingDTO routingDTO, List<RoutingStepDTO> stepDTOs) {
+    public ProductionRouting createProductionRoutingWithSteps(ProductionRoutingDTO routingDTO) {
         // 1. 고유코드 중복 확인
         if (productionRoutingRepository.existsByCode(routingDTO.getCode())) {
             throw new IllegalArgumentException("이미 존재하는 코드입니다: " + routingDTO.getCode());
@@ -44,14 +45,13 @@ public class ProductionRoutingServiceImpl implements ProductionRoutingService {
         ProductionRouting routing = convertToEntity(routingDTO);
         ProductionRouting savedRouting = productionRoutingRepository.save(routing);
 
-        // 3. 순서 검증 로직 추가
-        validateStepOrder(stepDTOs);
+        // 3. 순서 검증 로직 호출
+        validateStepOrder(routingDTO.getRoutingStepDTOList());
 
         // 4. Stream API를 사용하여 각 RoutingStepDTO를 RoutingStep 엔티티로 변환하고 순서 설정 후 저장
-        stepDTOs.stream()
+        routingDTO.getRoutingStepDTOList().stream()
                 .map(stepDTO -> {
                     RoutingStep routingStep = new RoutingStep();
-
                     // RoutingStepId 생성
                     RoutingStepId id = new RoutingStepId(savedRouting.getId(), stepDTO.getProcessId());
                     routingStep.setId(id);
@@ -61,8 +61,8 @@ public class ProductionRoutingServiceImpl implements ProductionRoutingService {
                             .orElseThrow(() -> new IllegalArgumentException("Invalid Process ID: " + stepDTO.getProcessId()));
 
                     // 다른 필드 설정
-                    routingStep.setProductionRouting(savedRouting); // ProductionRouting 객체 사용
-                    routingStep.setProcess(processDetails); // 조회한 ProcessDetails 객체 사용
+                    routingStep.setProductionRouting(savedRouting);
+                    routingStep.setProcess(processDetails);
                     routingStep.setStepOrder(stepDTO.getStepOrder());
 
                     return routingStep;
@@ -72,7 +72,13 @@ public class ProductionRoutingServiceImpl implements ProductionRoutingService {
         return savedRouting;
     }
 
+    // 순서 검증 메서드
     private void validateStepOrder(List<RoutingStepDTO> stepDTOs) {
+        if (stepDTOs == null || stepDTOs.isEmpty()) {
+            throw new IllegalArgumentException("RoutingStep 목록이 비어있습니다.");
+        }
+
+
         Set<Long> stepOrders = new HashSet<>();
         for (RoutingStepDTO stepDTO : stepDTOs) {
             if (!stepOrders.add(stepDTO.getStepOrder())) {
@@ -89,6 +95,7 @@ public class ProductionRoutingServiceImpl implements ProductionRoutingService {
             throw new IllegalArgumentException("연속된 stepOrder 값이 아닙니다.");
         }
     }
+
 
     // ProductionRouting 업데이트 로직
     public Optional<ProductionRouting> updateProductionRouting(Long id, ProductionRoutingDTO productionRoutingDTO) {
@@ -114,16 +121,8 @@ public class ProductionRoutingServiceImpl implements ProductionRoutingService {
                 });
     }
 
-    // ProductionRouting DTO 변환 메서드
+    // ProductionRouting -> DTO 메서드
     public ProductionRoutingDTO convertToDTO(ProductionRouting productionRouting) {
-
-//        List<RoutingStepDTO> routingStepDTOList = productionRouting.getRoutingSteps().stream()
-//                .map(this::convertRoutingStepToDTO) // 각 RoutingStep을 RoutingStepDTO로 변환
-//                .collect(Collectors.toList());
-//
-//        List<ProductDetailDto> productDTOList = productionRouting.getProducts().stream()
-//                .map(this::convertProductToDTO) // 각 Product를 ProductDetailDto로 변환
-//                .collect(Collectors.toList());
 
         return ProductionRoutingDTO.builder()
                 .id(productionRouting.getId())
@@ -132,39 +131,41 @@ public class ProductionRoutingServiceImpl implements ProductionRoutingService {
                 .description(productionRouting.getDescription())
                 .isStandard(productionRouting.isStandard())
                 .isActive(productionRouting.isActive())
-//                .routingStepDTOList(routingStepDTOList) // 변환된 RoutingStep 목록 추가
-//                .products(productDTOList) // 변환된 Product 목록 추가
+                .routingStepDTOList(
+                        productionRouting.getRoutingSteps().stream()
+                                .map(routingStep -> RoutingStepDTO.builder()
+                                        .routingId(routingStep.getId().getProductionRoutingId())
+                                        .processId(routingStep.getProcess().getId())
+                                        .stepOrder(routingStep.getStepOrder())
+                                        .build())
+                                .collect(Collectors.toList())
+                ) // 변환된 RoutingStep 목록 추가
+                .products(
+                        productionRouting.getProducts().stream()
+                                .map(product -> ProductDetailDto.builder()
+                                        .code(product.getCode())
+                                        .name(product.getName())
+                                        .productGroupName(product.getProductGroup().getName())
+                                        .standard(product.getStandard())
+                                        .unit(product.getUnit())
+                                        .productType(product.getProductType())
+                                        .build())
+                                .collect(Collectors.toList())
+                ) // 변환된 Product 목록 추가
                 .build();
     }
 
-
-//    // Product Entity -> DTO
-//    public ProductDetailDto convertToDTO(Product product) {
-//        return ProductDetailDto.builder()
-//                .code(product.getCode()) // 품목 코드
-//                .name(product.getName()) // 품목명
-//                .productGroupName(product.getProductGroup().getName()) // 폼목 그룹 이름
-//                .standard(product.getStandard()) // 규격
-//                .unit(product.getUnit()) // 단위
-//                .purchasePrice(product.getPurchasePrice()) // 입고 단가
-//                .salesPrice(product.getSalesPrice()) // 출고 단가
-//                .productType(product.getProductType()) // 품목 구분
-//                .productionRouting(product.getProductionRouting()) // 생산라우팅
-//                .build();
-//    }
-
-
-    //
-//    public RoutingStepDTO convertToDTO(RoutingStep routingStep) {
-//        return RoutingStepDTO.builder()
-//                .routingId(routingStep.getId().getRoutingId()) // Routing ID
-//                .processId(routingStep.getProcess().getId()) // Process ID
-//                .stepOrder(routingStep.getStepOrder()) // 공정 순서
-//                .processDetailsDTO(convertProcessDetailsToDTO(routingStep.getProcess())) // 공정 정보 DTO로 변환
-//                .productionRoutingDTO(convertProductionRoutingToDTO(routingStep.getProductionRouting())) // Routing 정보 DTO로 변환
-//                .build();
-//    }
-
+    // TODO: 뭐가 더 낫나 .. ? 메서드참조만 하고 convert 메서드 별도 작성? ,,,
+//                .routingStepDTOList(
+//                        productionRouting.getRoutingSteps().stream()
+//                                .map(this::convertRoutingStepToDTO)
+//                                .collect(Collectors.toList())
+//                ) // 변환된 RoutingStep 목록 추가
+//                .products(
+//                        productionRouting.getProducts().stream()
+//                                .map(this::convertProductToDTO)
+//                                .collect(Collectors.toList())
+//                ) // 변환된 Product 목록 추가
 
     // ProcessDetails Entity -> DTO
     private ProcessDetailsDTO convertProcessDetailsToDTO(ProcessDetails processDetails) {
@@ -191,54 +192,50 @@ public class ProductionRoutingServiceImpl implements ProductionRoutingService {
                 .isActive(dto.isActive()) // 사용 여부
                 .build();
 
-//        // DTO의 RoutingStepDTO 리스트를 RoutingStep 엔티티 리스트로 변환
-//        List<RoutingStep> routingSteps = dto.getRoutingStepDTOList().stream()
-//                .map(this::convertDTOToRoutingStep) // 각 RoutingStepDTO를 RoutingStep으로 변환
-//                .collect(Collectors.toList());
-//
-//        // DTO의 ProductDetailDto 리스트를 Product 엔티티 리스트로 변환
-//        List<Product> products = dto.getProducts().stream()
-//                .map(this::convertDTOToProduct) // 각 ProductDetailDto를 Product로 변환
-//                .collect(Collectors.toList());
-//
-//        // 변환된 엔티티 리스트들을 ProductionRouting 엔티티에 설정
-//        productionRouting.setRoutingSteps(routingSteps); // 변환된 RoutingStep 목록 설정
-//        productionRouting.setProducts(products); // 변환된 Product 목록 설정
+        // DTO의 RoutingStepDTO 리스트를 RoutingStep 엔티티 리스트로 변환
+        List<RoutingStep> routingSteps = dto.getRoutingStepDTOList().stream()
+                .map(this::convertDTOToRoutingStep) // 각 RoutingStepDTO를 RoutingStep으로 변환
+                .collect(Collectors.toList());
+
+        // DTO의 ProductDetailDto 리스트를 Product 엔티티 리스트로 변환
+        List<Product> products = dto.getProducts().stream()
+                .map(this::convertDTOToProduct) // 각 ProductDetailDto를 Product로 변환
+                .collect(Collectors.toList());
+
+        // 변환된 엔티티 리스트들을 ProductionRouting 엔티티에 설정
+        productionRouting.setRoutingSteps(routingSteps); // 변환된 RoutingStep 목록 설정
+        productionRouting.setProducts(products); // 변환된 Product 목록 설정
 
         return productionRouting;
     }
-//
-//    // RoutingStepDTO -> Entity
-//    private RoutingStep convertDTOToRoutingStep(RoutingStepDTO dto) {
-//        ProcessDetails processDetails = processDetailsRepository.findById(dto.getProcessId())
-//                .orElseThrow(() -> new IllegalArgumentException("Invalid process ID: " + dto.getProcessId()));
-//
-//        return RoutingStep.builder()
-//                .id(new RoutingStepId(dto.getRoutingId(), dto.getProcessId())) // 복합 키 설정
-//                .process(processDetails) // ProcessDetails 엔티티 설정
-//                .stepOrder(dto.getStepOrder()) // 공정 순서 설정
-//                .productionRouting(productionRoutingRepository.findById(dto.getRoutingId())
-//                        .orElseThrow(() -> new IllegalArgumentException("Invalid routing ID: " + dto.getRoutingId()))) // ProductionRouting 설정
-//                .build();
-//    }
-//
-//    // ProductDetailDto -> Entity
-//    private Product convertDTOToProduct(ProductDetailDto dto) {
-//        // Product 엔티티는 적절한 ProductRepository를 사용해 변환
-//        return Product.builder()
-//                .id(dto.getId()) // Product ID 설정
-//                .name(dto.getName()) // Product 이름 설정
-//                .code(dto.getCode()) // Product 코드 설정
+
+    // RoutingStepDTO -> Entity 변환 메서드
+    private RoutingStep convertDTOToRoutingStep(RoutingStepDTO dto) {
+        ProcessDetails processDetails = processDetailsRepository.findById(dto.getProcessId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid process ID: " + dto.getProcessId()));
+
+        return RoutingStep.builder()
+                .id(new RoutingStepId(dto.getRoutingId(), dto.getProcessId())) // 복합 키 설정
+                .process(processDetails) // ProcessDetails 엔티티 설정
+                .stepOrder(dto.getStepOrder()) // 공정 순서 설정
+                .build();
+    }
+
+    // ProductDetailDto -> Entity 변환 메서드
+    private Product convertDTOToProduct(ProductDetailDto dto) {
+        // Product 엔티티는 적절한 ProductRepository를 사용해 변환
+        return Product.builder()
+                .name(dto.getName()) // Product 이름 설정
+                .code(dto.getCode()) // Product 코드 설정
 //                .productGroup(productGroupRepository.findByName(dto.getProductGroupName())
 //                        .orElseThrow(() -> new IllegalArgumentException("Invalid product group name: " + dto.getProductGroupName()))) // ProductGroup 설정
-//                .standard(dto.getStandard()) // 규격 설정
-//                .unit(dto.getUnit()) // 단위 설정
-//                .purchasePrice(dto.getPurchasePrice()) // 입고 단가 설정
-//                .salesPrice(dto.getSalesPrice()) // 출고 단가 설정
-//                .productType(dto.getProductType()) // 품목 구분 설정
-//                .productionRouting(productionRoutingRepository.findById(dto.getProductionRouting().getId())
-//                        .orElseThrow(() -> new IllegalArgumentException("Invalid routing ID: " + dto.getProductionRouting().getId()))) // ProductionRouting 설정
-//                .build();
-//    }
+                .standard(dto.getStandard()) // 규격 설정
+                .unit(dto.getUnit()) // 단위 설정
+                .purchasePrice(dto.getPurchasePrice()) // 입고 단가 설정
+                .salesPrice(dto.getSalesPrice()) // 출고 단가 설정
+                .productType(dto.getProductType()) // 품목 구분 설정
+                .build();
+    }
+
 
 }
