@@ -8,8 +8,11 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registratio
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductSaveResponseDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.Product.ProductRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.ProductGroup.ProductGroupRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProductionRouting;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.routing_management.ProductionRouting.ProductionRoutingRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +25,7 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService{
 
     private final ProductRepository productRepository;
+    private final ProductionRoutingRepository productionRoutingRepository;
     private final ProductGroupRepository productGroupRepository;
 
     /**
@@ -66,8 +70,14 @@ public class ProductServiceImpl implements ProductService{
             return Optional.empty(); // 폼목 그룹 없으면 빈 Optional 반홤함
         }
 
+        // 생산 라우팅 조회
+        Optional<ProductionRouting> productionRouting = productionRoutingRepository.findById(productSaveRequestDto.getProductionRoutingId());
+        if (productionRouting.isEmpty()) {
+            return Optional.empty(); // 생산 라우팅 없으면 빈 Optional 반홤함
+        }
+
         // 엔티티로 변환 후 저장
-        Product product = productSaveRequestDto.toEntity(productGroup.get());
+        Product product = productSaveRequestDto.toEntity(productGroup.get(), productionRouting.get());
         Product savedproduct = productRepository.save(product);
 
         // 다시 DTO로 변환 후 반환
@@ -100,6 +110,14 @@ public class ProductServiceImpl implements ProductService{
                 return Optional.empty();
             }
 
+            // 생산 라우팅 조회 및 업데이트
+            Optional<ProductionRouting> findProductionRouting = productionRoutingRepository.findById(productSaveRequestDto.getProductionRoutingId());
+            if (findProductionRouting.isPresent()) {
+                product.setProductionRouting(findProductionRouting.get());
+            } else {
+                return Optional.empty();
+            }
+
             // 나머지 필드 업데이트
             product.setCode(productSaveRequestDto.getCode());
             product.setName(productSaveRequestDto.getName());
@@ -108,7 +126,6 @@ public class ProductServiceImpl implements ProductService{
             product.setPurchasePrice(productSaveRequestDto.getPurchasePrice());
             product.setSalesPrice(productSaveRequestDto.getSalesPrice());
             product.setProductType(productSaveRequestDto.getProductType());
-            product.setProductionProcessId(productSaveRequestDto.getProductionProcessId());
 
             // 저장
             Product updatedProduct = productRepository.save(product);
@@ -139,12 +156,12 @@ public class ProductServiceImpl implements ProductService{
                 .code(product.getCode())
                 .name(product.getName())
                 .productGroupName(product.getProductGroup().getName())
+                .productionRoutingName(product.getProductionRouting().getName())
                 .standard(product.getStandard())
                 .unit(product.getUnit())
                 .purchasePrice(product.getPurchasePrice())
                 .salesPrice(product.getSalesPrice())
                 .productType(product.getProductType())
-                .productionRouting(product.getProductionRouting())
                 .build();
     }
 }

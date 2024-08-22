@@ -31,6 +31,11 @@ public class Product {
     @JoinColumn(name = "product_group_id", referencedColumnName = "id")
     private ProductGroup productGroup;
 
+    // 생산 라우팅 매핑
+    @ManyToOne
+    @JoinColumn(name = "production_routing_id")
+    private ProductionRouting productionRouting;
+
     // 품목구분 (Enum)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -55,9 +60,5 @@ public class Product {
     // 단위
     @Column(nullable = false)
     private String unit;
-
-    @ManyToOne
-    @JoinColumn(name = "production_routing_id")
-    private ProductionRouting productionRouting;
 
 }
