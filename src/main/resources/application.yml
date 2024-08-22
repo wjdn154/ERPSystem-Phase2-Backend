@@ -51,7 +51,7 @@ spring:
 #        - classpath:initial-database/logistics/product.sql
         - classpath:initial-database/production/workcenter.sql
         - classpath:initial-database/production/processDetails.sql
-        - classpath:initial-database/logistics/product.sql
+#        - classpath:initial-database/logistics/product.sql
 
         - classpath:initial-database/production/equipmentData.sql
 logging:
