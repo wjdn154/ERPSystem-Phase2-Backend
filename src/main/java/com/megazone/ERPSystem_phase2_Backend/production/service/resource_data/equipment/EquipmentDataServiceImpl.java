@@ -29,11 +29,11 @@ public class EquipmentDataServiceImpl implements EquipmentDataService{
 
     //설비 등록.저장
     @Override
-    public Optional<EquipmentDataDTO> saveEquipment(EquipmentDataDTO dto) {
+    public Optional<EquipmentDataShowDTO> saveEquipment(EquipmentDataDTO dto) {
 
         //설비 아이디 중복 확인.
         if(equipmentDataRepository.existsByEquipmentNum(dto.getEquipmentNum())){
-            throw new RuntimeException(("이미 존재하는 설비번호입니다." + dto.getEquipmentNum()));
+            throw new IllegalArgumentException(("이미 존재하는 설비번호입니다." + dto.getEquipmentNum()));
         }
        // dto를 엔티티로 변환함
         EquipmentData equipmentData = equipmentToEntity(dto);
@@ -42,7 +42,7 @@ public class EquipmentDataServiceImpl implements EquipmentDataService{
         EquipmentData saveEquipment = equipmentDataRepository.save(equipmentData);
 
        // 엔티티를 dto로 변환하여 반환
-        EquipmentDataDTO equipmentDataDTO = equipmentToDTO(saveEquipment);
+        EquipmentDataShowDTO equipmentDataDTO = equipmentShowToDTO(saveEquipment);
 
         return Optional.of(equipmentDataDTO);
 
@@ -50,16 +50,38 @@ public class EquipmentDataServiceImpl implements EquipmentDataService{
 
     //설비 수정
     @Override
-    public Optional<EquipmentDataDTO> updateEquipment(Long id, EquipmentDataDTO dto) {
+    public Optional<EquipmentDataShowDTO> updateEquipment(Long id, EquipmentDataDTO dto) {
 
-        //dto를 엔티티로 변환
-        EquipmentData equipmentData = equipmentToEntity(dto);
-        //id에 해당하는 데이터 조회
-        EquipmentData target = equipmentDataRepository.findById(id)
+        //id에 해당하는 엔티티 데이터 조회
+        EquipmentData equipmentData = equipmentDataRepository.findById(id)
                 .orElseThrow(() ->  new RuntimeException(id+"에 해당하는 아이디를 찾을 수 없습니다."));
 
+        //새로 들어온 dto를 수정할 id에 해당하는 엔티티에 업데이트
+        equipmentData.setEquipmentNum(dto.getEquipmentNum());
+        equipmentData.setEquipmentName(dto.getEquipmentName());
+        equipmentData.setEquipmentType(dto.getEquipmentType());
+        equipmentData.setManufacturer(dto.getManufacturer());
+        equipmentData.setModelName(dto.getModelName());
+        equipmentData.setInstallDate(dto.getInstallDate());
+        equipmentData.setOperationStatus(dto.getOperationStatus());
+        equipmentData.setCost(dto.getCost());
 
-        return Optional.empty();
+        Workcenter workcenter = workcenterRepository.findByCode(dto.getWorkcenterCode())
+                        .orElseThrow(() -> new IllegalArgumentException("해당 아이디를 조회할 수 없습니다. "));
+        equipmentData.setWorkcenter(workcenter);
+
+        Warehouse factory = warehouseRepository.findByCode(dto.getFactoryCode())
+                .orElseThrow(() -> new IllegalArgumentException("해당 아이디를 조회할 수 없습니다."));
+        equipmentData.setFactory(factory);
+
+        equipmentData.setEquipmentImg(dto.getEquipmentImg());
+
+        //업데이트된 엔티티 저장.
+        EquipmentData updatedEquipmentEntity =equipmentDataRepository.save(equipmentData);
+
+        //저장된 엔티티 dto로 변환.
+        EquipmentDataShowDTO equipmentDataShowDTO = equipmentShowToDTO(updatedEquipmentEntity);
+        return Optional.of(equipmentDataShowDTO);
     }
 
     //설비 리스트 조회
@@ -88,13 +110,25 @@ public class EquipmentDataServiceImpl implements EquipmentDataService{
         //엔티티 조회
         EquipmentData equipmentDetail = equipmentDataRepository.findById(id)
                 .orElseThrow( () -> new IllegalArgumentException("아이디가 올바르지 않습니다."));
+
         //엔티티를 dto로 변환.
-        EquipmentDataShowDTO equipmentDataShowDTO =equipmentShowToDTO(equipmentDetail);
+        EquipmentDataShowDTO equipmentDataShowDTO = equipmentShowToDTO(equipmentDetail);
 
         return Optional.of(equipmentDataShowDTO);
 
 
     }
+
+    //설비 삭제
+    @Override
+    public void deleteEquipment(Long id) {
+        //해당 아이디 가져옴
+        EquipmentData equipmentData = equipmentDataRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("해당 아이디를 조회할 수 없습니다 : "+id));
+        //해당 아이디 설비정보 삭제
+        equipmentDataRepository.delete(equipmentData);
+    }
+
     //equipmentData 엔티티를 equipmentDataDTO로 변환.
     private EquipmentDataShowDTO equipmentShowToDTO(EquipmentData equipmentDetail){
 
@@ -115,15 +149,6 @@ public class EquipmentDataServiceImpl implements EquipmentDataService{
 
         return equipmentDataShowDTO;
     }
-    //설비 삭제
-    @Override
-    public void deleteEquipment(Long id) {
-        //해당 아이디 가져옴
-        EquipmentData equipmentData = equipmentDataRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("해당 아이디로 설비를 조회할 수 없습니다 : "+id));
-        //해당 아이디 설비정보 삭제
-        equipmentDataRepository.delete(equipmentData);
-    }
 
     //equipmentDataDto를 엔티티로 변환하는 메서드
     private EquipmentData equipmentToEntity(EquipmentDataDTO dto){
@@ -140,36 +165,19 @@ public class EquipmentDataServiceImpl implements EquipmentDataService{
 
         //workcenter 엔티티로 변환.<<
 
-        Workcenter workcenter = workcenterRepository.findById(dto.getWorkcenterId())
-                .orElseThrow(() -> new RuntimeException(dto.getWorkcenterId()+"에 해당하는 아이디를 찾을 수 없습니다"));
+        Workcenter workcenter = workcenterRepository.findByCode(dto.getWorkcenterCode())
+                .orElseThrow(() -> new RuntimeException(dto.getWorkcenterCode()+"에 해당하는 코드를 찾을 수 없습니다"));
         equipmentData.setWorkcenter(workcenter);
 
         //factory 엔티티로 변환
-        Warehouse warehouse = warehouseRepository.findById(dto.getFactoryId())
-                .orElseThrow(() -> new RuntimeException(dto.getFactoryId() + "에 해당하는 아이디를 찾을 수 없습니다."));
+        Warehouse warehouse = warehouseRepository.findByCode(dto.getFactoryCode())
+                .orElseThrow(() -> new RuntimeException(dto.getFactoryCode() + "에 해당하는 코드를 찾을 수 없습니다."));
         equipmentData.setFactory(warehouse);
 
         equipmentData.setEquipmentImg(dto.getEquipmentImg());
+
         return equipmentData;
     }
 
-    //equipmentData 엔티티를 equipmentDataDTO로 변환.
-    private EquipmentDataDTO equipmentToDTO(EquipmentData equipmentData){
 
-        EquipmentDataDTO equipmentDataDTO = new EquipmentDataDTO();
-        equipmentDataDTO.setEquipmentNum(equipmentData.getEquipmentNum());
-        equipmentDataDTO.setEquipmentName(equipmentData.getEquipmentName());
-        equipmentDataDTO.setEquipmentType(equipmentData.getEquipmentType());
-        equipmentDataDTO.setManufacturer(equipmentData.getManufacturer());
-        equipmentDataDTO.setModelName(equipmentData.getModelName());
-        equipmentDataDTO.setPurchaseDate(equipmentData.getPurchaseDate());
-        equipmentDataDTO.setInstallDate(equipmentData.getInstallDate());
-        equipmentDataDTO.setOperationStatus(equipmentData.getOperationStatus());
-        equipmentDataDTO.setCost(equipmentData.getCost());
-        equipmentDataDTO.setWorkcenterId(equipmentData.getWorkcenter().getId());
-        equipmentDataDTO.setFactoryId(equipmentData.getFactory().getId());
-        equipmentDataDTO.setEquipmentImg(equipmentData.getEquipmentImg());
-
-        return equipmentDataDTO;
-    }
 }

@@ -47,10 +47,10 @@ public class EquipmentDataController {
 
     //설비 상세 정보 등록
     @PostMapping("/api/production/equipmentData/createEquipment")
-    public ResponseEntity<EquipmentDataDTO> saveEquipmentDataById(@RequestBody EquipmentDataDTO dto){
+    public ResponseEntity<EquipmentDataShowDTO> saveEquipmentDataById(@RequestBody EquipmentDataDTO dto){
 
         //서비스에 해당 아이디의 설비 상세 정보를 등록함.
-        Optional<EquipmentDataDTO> result = equipmentDataService.saveEquipment(dto);
+        Optional<EquipmentDataShowDTO> result = equipmentDataService.saveEquipment(dto);
 
         return result.map(ResponseEntity::ok)
                 .orElseGet( () -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
@@ -58,10 +58,10 @@ public class EquipmentDataController {
 
     //설비 정보 수정
     @PostMapping("/api/production/equipmentData/updateEquipment/{id}")
-    public ResponseEntity<EquipmentDataDTO> updateEquipmentDataById(@PathVariable("id") Long id, @RequestBody EquipmentDataDTO dto){
+    public ResponseEntity<EquipmentDataShowDTO> updateEquipmentDataById(@PathVariable("id") Long id, @RequestBody EquipmentDataDTO dto){
 
         //서비스에서 해당 아이디의 설비 상세 정보를 수정함.
-        Optional<EquipmentDataDTO> result = equipmentDataService.updateEquipment(id,dto);
+        Optional<EquipmentDataShowDTO> result = equipmentDataService.updateEquipment(id,dto);
 
         return result.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());

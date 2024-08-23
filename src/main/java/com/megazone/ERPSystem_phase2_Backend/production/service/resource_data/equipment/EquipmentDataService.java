@@ -12,10 +12,10 @@ import java.util.Optional;
 public interface EquipmentDataService {
 
     //설비 생성
-    Optional<EquipmentDataDTO> saveEquipment(EquipmentDataDTO dto);
+    Optional<EquipmentDataShowDTO> saveEquipment(EquipmentDataDTO dto);
 
     //설비 수정
-    Optional<EquipmentDataDTO> updateEquipment(Long id, EquipmentDataDTO dto);
+    Optional<EquipmentDataShowDTO> updateEquipment(Long id, EquipmentDataDTO dto);
 
     //설비 삭제
     void deleteEquipment(Long id);
