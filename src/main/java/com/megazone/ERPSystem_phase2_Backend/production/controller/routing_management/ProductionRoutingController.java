@@ -1,10 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.routing_management;
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProductionRouting;
+import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.dto.ProcessDetailsDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.dto.ProductionRoutingDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.dto.RoutingStepDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.routing_management.ProductionRouting.ProductionRoutingRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.service.routing_management.ProductionRouting.ProductionRoutingService;
+import com.megazone.ERPSystem_phase2_Backend.production.service.routing_management.ProductionRouting.ProductionRoutingServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,7 @@ public class ProductionRoutingController {
     private final ProductionRoutingRepository productionRoutingRepository;
     private final ProductionRoutingService productionRoutingService;
 
+
     // GET ProductionRouting 전체조회
     @GetMapping
     public List<ProductionRoutingDTO> getAllProductionRoutings() {
@@ -29,7 +32,7 @@ public class ProductionRoutingController {
                 .collect(Collectors.toList());
     }
 
-    // GET 상세조회
+    // GET ProductionRouting 상세조회
     @GetMapping("/{id}")
     public ResponseEntity<ProductionRoutingDTO> findById(@PathVariable("id") Long id) {
         Optional<ProductionRouting> productionRouting = productionRoutingRepository.findById(id);
@@ -47,6 +50,16 @@ public class ProductionRoutingController {
                 .map(routing -> ResponseEntity.ok().body(routing)) // 성공 시 200 OK 응답
                 .orElse(ResponseEntity.badRequest().body(null)); // 실패 시 400 Bad Request 응답
     }
+
+    // GET routing 등록하기 위한 ProcessDetails 검색
+    @GetMapping("/processDetails/{id}")
+    public ProcessDetailsDTO getProcessDetailsById(@PathVariable("id") Long id) {
+        return productionRoutingService.getProcessDetailsById(id);
+    }
+
+    // GET routing 등록하기 위한 Product 검색
+    @GetMapping("/products/{id}")
+    public
 
     // PUT 각 ProductionRouting ID를 통해 개별 수정
     @PutMapping("/{id}")

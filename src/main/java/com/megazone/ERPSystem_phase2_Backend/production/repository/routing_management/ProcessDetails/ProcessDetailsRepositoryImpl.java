@@ -5,22 +5,20 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.stereotype.Repository;
+import java.util.List;
 
-import java.util.Optional;
-
-@Repository
 @RequiredArgsConstructor
 public class ProcessDetailsRepositoryImpl implements ProcessDetailsRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+    QProcessDetails processDetails = QProcessDetails.processDetails;
 
     @Override
-    public Optional<ProcessDetails> findByCode(String code) {
-        QProcessDetails processDetails = QProcessDetails.processDetails;
-        ProcessDetails result = queryFactory.selectFrom(processDetails)
-                .where(processDetails.code.eq(code))
-                .fetchOne();
-        return Optional.ofNullable(result);
+    public List<ProcessDetails> findByCodeOrNameContaining(String keyword) {
+
+        return queryFactory.selectFrom(processDetails)
+                .where(processDetails.code.containsIgnoreCase(keyword)
+                        .or(processDetails.name.containsIgnoreCase(keyword)))
+                .fetch();
     }
 }

@@ -1,6 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.routing_management.ProductionRouting;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProductionRouting;
+import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.dto.ProcessDetailsDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.dto.ProductionRoutingDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.dto.RoutingStepDTO;
 
@@ -20,4 +22,12 @@ public interface ProductionRoutingService {
     Optional<ProductionRouting> deleteProductionRouting(Long id);
 
     ProductionRoutingDTO convertToDTO(ProductionRouting productionRouting);
+
+    // Search
+    List<ProcessDetailsDTO> searchProcessDetails(String keyword);
+    List<ProductDetailDto> searchProducts(String keyword);
+
+    // Get
+    ProductDetailDto getProductById(Long id);
+    ProcessDetailsDTO getProcessDetailsById(Long id);
 }
