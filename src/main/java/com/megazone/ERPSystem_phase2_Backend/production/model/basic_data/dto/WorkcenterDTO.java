@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.enums.WorkcenterType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.EquipmentDataDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.WorkerAssignmentDTO;
@@ -27,4 +28,5 @@ public class WorkcenterDTO {
     private ProcessDetailsDTO processCode; // ProcessDetails의 코드
     private List<EquipmentDataDTO> equipmentList;
     private List<WorkerAssignmentDTO> workerAssignments;
+
 }
