@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.routing_managemen
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class RoutingStep {
 
     @EmbeddedId

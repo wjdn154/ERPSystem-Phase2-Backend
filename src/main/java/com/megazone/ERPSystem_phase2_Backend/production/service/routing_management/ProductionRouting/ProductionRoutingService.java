@@ -10,7 +10,8 @@ import java.util.Optional;
 public interface ProductionRoutingService {
 
     // Routing 생성 시 RoutingStep 순서 지정해서 등록
-    ProductionRouting createProductionRoutingWithSteps(ProductionRoutingDTO routingDTO, List<RoutingStepDTO> stepDTOs);
+//    ProductionRouting createProductionRoutingWithSteps(ProductionRoutingDTO routingDTO, List<RoutingStepDTO> stepDTOs);
+    ProductionRouting createProductionRoutingWithSteps(ProductionRoutingDTO routingDTO);
 
     // ProductionRouting 업데이트 로직
     Optional<ProductionRouting> updateProductionRouting(Long id, ProductionRoutingDTO productionRoutingDTO);

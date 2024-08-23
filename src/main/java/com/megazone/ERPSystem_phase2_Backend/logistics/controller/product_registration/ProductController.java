@@ -1,6 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.controller.product_registration;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductSaveRequestDto;
@@ -11,16 +10,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/api/logistics")
 public class ProductController {
     private final ProductService productService;
     private final ProductRepository productRepository;
@@ -29,7 +25,7 @@ public class ProductController {
      * 품목등록 리스트 조회
      * @return 등록된 모든 품목을 반환
      */
-    @PostMapping("/api/logistics/product-list")
+    @PostMapping("/product-list")
     public ResponseEntity<List<ProductDto>> getAllProductList() {
         // 서비스에서 등록된 모든 품목 리스트를 가져옴
         List<ProductDto> response = productService.findAllProducts();
@@ -41,18 +37,22 @@ public class ProductController {
      * 등록된 각 품목의 상세 정보 조회
      * @return 특정 id에 해당하는 품목의 상세 정보 조회
      */
-    @PostMapping("api/logistics/product-detail/{id}")
+    @PostMapping("/product-detail/{id}")
     public ResponseEntity<ProductDetailDto> getProductDetailById(@PathVariable("id") Long id) {
-        ProductDetailDto response = productService.findProductDetailById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        try {
+            ProductDetailDto response = productService.findProductDetailById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
     }
 
     /**
-     * 품목 등록
+     * 품목을 등록함
      * @param productSaveRequestDto
      * @return 등록된 품목의 DTO를 반환
      */
-    @PostMapping("api/logistics/save-product")
+    @PostMapping("/save-product")
     public ResponseEntity<ProductSaveResponseDto> saveProduct(@RequestBody ProductSaveRequestDto productSaveRequestDto) {
         try {
             return productService.saveProduct(productSaveRequestDto)
@@ -65,6 +65,35 @@ public class ProductController {
         }
     }
 
-//    @PutMapping("api/logistics/update-")
+    /**
+     * 품목 업데이트
+     * @param id 업데이트하려는 품목의 id
+     * @param productSaveRequestDto 업데이트할 품목 정보
+     * @return 업데이트된 품목 정보를 반환함
+     */
+    @PutMapping("/update-product/{id}")
+    public ResponseEntity<ProductSaveResponseDto> updateProduct(@PathVariable("id") Long id,
+                                                                @RequestBody ProductSaveRequestDto productSaveRequestDto){
+        try{
+            return productService.updateProduct(id, productSaveRequestDto)
+                    .map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    @DeleteMapping("/delete-product/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable("id") Long id){
+        try {
+            String result = productService.deleteProduct(id);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(500)
+                    .body("품목 상제 중 오류가 발생했습니다.");
+        }
+    }
 
 }

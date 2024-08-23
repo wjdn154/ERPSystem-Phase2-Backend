@@ -10,7 +10,7 @@ import java.util.List;
  * 품목그룹에 대한 정보가 있는 엔티티
  */
 
-@Entity
+@Entity(name = "product_group")
 @Table(name = "product_group")
 @Getter
 @Builder
