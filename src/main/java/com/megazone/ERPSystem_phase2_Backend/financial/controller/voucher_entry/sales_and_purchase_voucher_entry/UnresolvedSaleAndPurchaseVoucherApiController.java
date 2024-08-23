@@ -1,20 +1,26 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.controller.voucher_entry.sales_and_purchase_voucher_entry;
 
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.UnresolvedVoucherShowAllDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.UnresolvedVoucherShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.UnresolvedSaleAndPurchaseVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.UnresolvedSaleAndPurchaseVoucherEntryDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.UnresolvedSaleAndPurchaseVoucherShowAllDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.UnresolvedSaleAndPurchaseVoucherShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry.UnresolvedVoucherEntryService;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucherService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +30,7 @@ import java.util.Map;
 public class UnresolvedSaleAndPurchaseVoucherApiController {
 
     private final UnresolvedSaleAndPurchaseVoucherService unresolvedSaleAndPurchaseVoucherService;
+    private final UnresolvedVoucherEntryService unresolvedVoucherEntryService;
 
     /**
      * 미결 매출매입전표 등록 기능
@@ -69,5 +76,27 @@ public class UnresolvedSaleAndPurchaseVoucherApiController {
         return (!unresolvedVoucherList.isEmpty()) ?
                 ResponseEntity.status(HttpStatus.OK).body("삭제가 완료되었습니다.") :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body("삭제가능한 전표가 없습니다.");
+    }
+
+    @PostMapping("/api/financial/sale-end-purchase-unresolved-voucher/show{voucherNumber}")
+    public ResponseEntity<UnresolvedVoucherShowAllDTO> showOne(@PathVariable("voucherNumber") String voucherNumber) {
+        List<UnresolvedVoucher> vouchers = unresolvedSaleAndPurchaseVoucherService.searchVoucher(voucherNumber);
+
+        if(vouchers.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        List<UnresolvedVoucherShowDTO> showDTOs = vouchers.stream().map(
+                UnresolvedVoucherShowDTO::create).toList();
+
+        UnresolvedVoucherShowAllDTO showAllDTO = UnresolvedVoucherShowAllDTO.create(
+                showDTOs.get(0).getVoucherDate(),
+                showDTOs,
+                BigDecimal.ZERO,
+                unresolvedSaleAndPurchaseVoucherService.totalDebit(vouchers),
+                unresolvedSaleAndPurchaseVoucherService.totalCredit(vouchers)
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(showAllDTO);
     }
 }

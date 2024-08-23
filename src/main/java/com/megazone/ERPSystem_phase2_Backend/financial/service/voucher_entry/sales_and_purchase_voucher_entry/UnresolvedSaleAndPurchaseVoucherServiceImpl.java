@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -295,4 +296,30 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
         }
         return deleteVouchers;
     }
+
+
+    @Override
+    public BigDecimal calculateTotalAmount(List<UnresolvedVoucher> vouchers, Function<UnresolvedVoucher, BigDecimal> amount) {
+        BigDecimal totalAmount = BigDecimal.ZERO;
+
+        for (UnresolvedVoucher voucher : vouchers) {
+            totalAmount = totalAmount.add(amount.apply(voucher));
+        }
+
+        return totalAmount;
+    }
+    @Override
+    public BigDecimal totalDebit(List<UnresolvedVoucher> vouchers) {
+        return calculateTotalAmount(vouchers, UnresolvedVoucher::getDebitAmount);
+    }
+    @Override
+    public BigDecimal totalCredit(List<UnresolvedVoucher> vouchers) {
+        return calculateTotalAmount(vouchers, UnresolvedVoucher::getCreditAmount);
+    }
+
+    @Override
+    public List<UnresolvedVoucher> searchVoucher(String voucherNumber) {
+        return unresolvedSaleAndPurchaseVoucherRepository.findByVoucherNumber(voucherNumber).getUnresolvedVouchers();
+    }
+
 }

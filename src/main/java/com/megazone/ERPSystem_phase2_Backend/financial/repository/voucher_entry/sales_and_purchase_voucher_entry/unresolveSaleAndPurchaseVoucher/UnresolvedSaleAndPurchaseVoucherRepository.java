@@ -16,4 +16,5 @@ public interface UnresolvedSaleAndPurchaseVoucherRepository extends JpaRepositor
 
     List<UnresolvedSaleAndPurchaseVoucher> findByVoucherDateOrderByVoucherNumberAsc(LocalDate date);
 
+    UnresolvedSaleAndPurchaseVoucher findByVoucherNumber(String voucherNumber);
 }
