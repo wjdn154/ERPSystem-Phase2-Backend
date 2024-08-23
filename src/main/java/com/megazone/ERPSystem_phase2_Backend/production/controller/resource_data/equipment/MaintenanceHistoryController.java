@@ -15,14 +15,14 @@ import java.util.List;
 @RequestMapping("")
 public class MaintenanceHistoryController {
 
-    private final MaintenanceHistoryService maintenanceHistoryService;
+    //private final MaintenanceHistoryService maintenanceHistoryService;
 
     //유지보수 이력 리스트 조회
     @PostMapping("")
     public ResponseEntity<List<ListMaintenanceHistoryDTO>> getAllMaintenanceHistory(){
 
         //서비스에서 모든 유지보수이력 정보를 가져옴
-        List<ListMaintenanceHistoryDTO> result = maintenanceHistoryService.findAllMaintenanceHistory();
+        //List<ListMaintenanceHistoryDTO> result = maintenanceHistoryService.findAllMaintenanceHistory();
         return null;
     }
 }
