@@ -7,21 +7,18 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.gener
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherKind;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.JournalEntry;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.JournalEntryTypeSetup;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.VatType;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.UnresolvedSaleAndPurchaseVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.UnresolvedSaleAndPurchaseVoucherEntryDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.TransactionType;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.unresolvedVoucher.UnresolvedVoucherRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.unresolveSaleAndPurchaseVoucher.JournalEntryRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.journalEntry.JournalEntryRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.unresolveSaleAndPurchaseVoucher.UnresolvedSaleAndPurchaseVoucherRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.unresolveSaleAndPurchaseVoucher.VatTypeRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.vatType.VatTypeRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry.UnresolvedVoucherEntryService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -29,6 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -118,6 +116,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
         }
     }
 
+
 //    과세유형으로 매출 매입인지 확인
 //
 //    분개유형으로 1, 2, 3 확인
@@ -163,7 +162,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                             date));
 
                     if (vatAmount.compareTo(BigDecimal.ZERO) > 0) {
-                        unresolvedVoucherList.add(createAutoUnresolvedVoucher(voucher.getVatType().getAccountSubject(),
+                        unresolvedVoucherList.add(createAutoUnresolvedVoucher(vatTypeAccountSubject,
                                 VoucherType.DEPOSIT,
                                 createTransactionDescription(itemName, quantity,unitPrice),
                                 BigDecimal.ZERO,
@@ -180,7 +179,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
 
                     if (vatAmount.compareTo(BigDecimal.ZERO) > 0) {
                         unresolvedVoucherList.add(createAutoUnresolvedVoucher(
-                                voucher.getVatType().getAccountSubject(),
+                                vatTypeAccountSubject,
                                 VoucherType.WITHDRAWAL,
                                 createTransactionDescription(itemName, quantity,unitPrice),
                                 vatAmount,
@@ -209,17 +208,17 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                                     VoucherType.CREDIT,
                                     createTransactionDescription(itemName, quantity,unitPrice),
                                     BigDecimal.ZERO,
-                                    vatAmount,
+                                    supplyAmount,
                                     date));
 
                     // 부가세 분개처리
                     if (vatAmount.compareTo(BigDecimal.ZERO) > 0) {
                         unresolvedVoucherList.add(createAutoUnresolvedVoucher(
-                                voucher.getVatType().getAccountSubject(),
+                                vatTypeAccountSubject,
                                 VoucherType.CREDIT,
                                 createTransactionDescription(itemName, quantity,unitPrice),
                                 BigDecimal.ZERO,
-                                supplyAmount,
+                                vatAmount,
                                 date));
                     }
                 } else if (transactionType == TransactionType.PURCHASE) {
@@ -238,16 +237,16 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                                                 .getJournalEntryTypeSetup().getAccountSubject(),
                                         VoucherType.DEBIT,
                                         createTransactionDescription(itemName, quantity,unitPrice),
-                                        vatAmount,
+                                        supplyAmount,
                                         BigDecimal.ZERO,
                                         date));
 
                         if (vatAmount.compareTo(BigDecimal.ZERO) > 0) {
                             unresolvedVoucherList.add(createAutoUnresolvedVoucher(
-                                    voucher.getVatType().getAccountSubject(),
+                                    vatTypeAccountSubject,
                                     VoucherType.DEBIT,
                                     createTransactionDescription(itemName, quantity,unitPrice),
-                                    supplyAmount,
+                                    vatAmount,
                                     BigDecimal.ZERO,
                                     date));
                         }
@@ -258,5 +257,42 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
         unresolvedVoucherEntryDTOS = unresolvedVoucherList.stream().map((changeVoucher) -> { return UnresolvedVoucherEntryDTO.create(changeVoucher);})
                 .toList();
         return unresolvedVoucherEntryService.unresolvedVoucherEntry(unresolvedVoucherEntryDTOS);
+    }
+
+    @Override
+    public List<UnresolvedSaleAndPurchaseVoucher> searchAllVoucher(LocalDate date) {
+
+        List<UnresolvedSaleAndPurchaseVoucher> voucherList = new ArrayList<UnresolvedSaleAndPurchaseVoucher>();
+
+        try {
+            voucherList = unresolvedSaleAndPurchaseVoucherRepository.findByVoucherDateOrderByVoucherNumberAsc(date);
+            if(voucherList.isEmpty()) {
+                throw new NoSuchElementException("해당 날짜에 등록된 미결전표가 없습니다.");
+            }
+        }
+        catch (NoSuchElementException e) {
+            e.getStackTrace();
+        }
+        return voucherList;
+    }
+
+    @Override
+    public List<Long> deleteVoucher(UnresolvedSaleAndPurchaseVoucherDeleteDTO dto) {
+
+        // 전표에 담당자 이거나, 승인권자면 삭제가능 << 기능구현 필요
+
+        List<Long> deleteVouchers = new ArrayList<Long>();
+        try {
+            if(true) { // 전표의 담당자 이거나, 승인권자면 삭제가능 << 기능구현 필요
+                deleteVouchers.addAll(unresolvedSaleAndPurchaseVoucherRepository.deleteVoucherByManager(dto));
+                if(deleteVouchers.isEmpty()) {
+                    throw new NoSuchElementException("검색조건에 해당하는 미결전표가 없습니다.");
+                }
+            }
+        }
+        catch (Exception e) {
+            e.getStackTrace();
+        }
+        return deleteVouchers;
     }
 }

@@ -29,8 +29,7 @@ public class UnresolvedVoucherRepositoryImpl implements UnresolvedVoucherReposit
                         .where(qUnresolvedVoucher.voucherDate.eq(dto.getSearchDate())
                                 .and(qUnresolvedVoucher.voucherNumber.eq(voucherNum))
 //                                .and(qUnresolvedVoucher.voucherManager.id.eq(managerId)))
-                        ).fetch().stream())
-                .collect(Collectors.toList());
+                        ).fetch().stream()).toList();
 
         if(!deletedVoucher.isEmpty()) {
             queryFactory.delete(qUnresolvedVoucher)

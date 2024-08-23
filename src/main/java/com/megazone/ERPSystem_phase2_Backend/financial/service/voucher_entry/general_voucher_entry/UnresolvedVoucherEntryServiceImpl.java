@@ -66,7 +66,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
         // 입금&출금 전표인지, 차변&대변 전표인지 확인
         try {
             // 전표 번호 부여
-            String newVoucherNum = "";
+            String newVoucherNum = null;
             LocalDate currentDate = dtoList.get(0).getVoucherDate();
             LocalDateTime nowTime = LocalDateTime.now();
 
@@ -74,18 +74,19 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
             newVoucherNum = CreateUnresolvedVoucherNumber(currentDate,dtoList.get(0).getVoucherKind());
 
             if(depositAndWithdrawalUnresolvedVoucherTypeCheck(dtoList.get(0))) {
-                UnresolvedVoucherEntryDTO unresolvedVoucherDto = dtoList.get(0);
 
-                if(unresolvedVoucherDto.getAccountSubjectCode().equals(cashAccountCode)) {
-                    throw new IllegalArgumentException("입금 출금 전표는 현금계정과목을 사용할 수 없습니다.");
-                }
+                for (UnresolvedVoucherEntryDTO dto : dtoList) {
+                    if(dto.getAccountSubjectCode().equals(cashAccountCode)) {
+                        throw new IllegalArgumentException("입금 출금 전표는 현금계정과목을 사용할 수 없습니다.");
+                    }
 
-                UnresolvedVoucher savedVoucher = createUnresolvedVoucher(unresolvedVoucherDto,newVoucherNum,nowTime);
-                unresolvedVoucherList.add(savedVoucher);
-                // 입금,출금 전표인 경우 현금 계정과목 자동분개 처리
-                if(depositAndWithdrawalUnresolvedVoucherTypeCheck(unresolvedVoucherDto)) {
-                    unresolvedVoucherList.add(createUnresolvedVoucher(autoCreateUnresolvedVoucherDto(unresolvedVoucherDto)
-                            ,newVoucherNum,nowTime));
+                    UnresolvedVoucher savedVoucher = createUnresolvedVoucher(dto,newVoucherNum,nowTime);
+                    unresolvedVoucherList.add(savedVoucher);
+                    // 입금,출금 전표인 경우 현금 계정과목 자동분개 처리
+                    if(depositAndWithdrawalUnresolvedVoucherTypeCheck(dto)) {
+                        unresolvedVoucherList.add(createUnresolvedVoucher(autoCreateUnresolvedVoucherDto(dto)
+                                ,newVoucherNum,nowTime));
+                    }
                 }
             }
             else {
@@ -240,7 +241,6 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
         List<UnresolvedVoucher> unresolvedVoucherList = new ArrayList<UnresolvedVoucher>();
         try {
             unresolvedVoucherList = unresolvedVoucherRepository.findByVoucherDateOrderByVoucherNumberAsc(date);
-            System.out.println(unresolvedVoucherList.toString());
             if(unresolvedVoucherList.isEmpty()) {
                 throw new NoSuchElementException("해당 날짜에 등록된 미결전표가 없습니다.");
             }
