@@ -16,13 +16,14 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/production")
 public class EquipmentDataController {
 
     private final EquipmentDataService equipmentDataService;
     private final EquipmentDataRepository equipmentDataRepository;
 
     //설비 리스트 조회
-    @GetMapping("/api/production/equipmentDatas")
+    @PostMapping("/equipmentDatas")
     public ResponseEntity<List<ListEquipmentDataDTO>> getAllEquipmentDataDetails(){
         //서비스에서 모든 설비정보를 가져옴
         List<ListEquipmentDataDTO> result = equipmentDataService.findAllEquipmentDataDetails();
@@ -33,7 +34,7 @@ public class EquipmentDataController {
     }
 
     //설비 상세 조회
-    @GetMapping("/api/production/equipmentData/{id}")
+    @PostMapping("/equipmentData/{id}")
     public ResponseEntity<EquipmentDataShowDTO> getEquipmentDataById(@PathVariable("id") Long id){
 
         System.out.println("test");
@@ -46,7 +47,7 @@ public class EquipmentDataController {
     }
 
     //설비 상세 정보 등록
-    @PostMapping("/api/production/equipmentData/createEquipment")
+    @PostMapping("/equipmentData/createEquipment")
     public ResponseEntity<EquipmentDataShowDTO> saveEquipmentDataById(@RequestBody EquipmentDataDTO dto){
 
         //서비스에 해당 아이디의 설비 상세 정보를 등록함.
@@ -57,7 +58,7 @@ public class EquipmentDataController {
     }
 
     //설비 정보 수정
-    @PostMapping("/api/production/equipmentData/updateEquipment/{id}")
+    @PutMapping("/equipmentData/updateEquipment/{id}")
     public ResponseEntity<EquipmentDataShowDTO> updateEquipmentDataById(@PathVariable("id") Long id, @RequestBody EquipmentDataDTO dto){
 
         //서비스에서 해당 아이디의 설비 상세 정보를 수정함.
@@ -68,7 +69,7 @@ public class EquipmentDataController {
     }
 
     //설비 정보 삭제
-    @DeleteMapping("/api/production/equipmentData/deleteEquipment/{id}")
+    @DeleteMapping("/equipmentData/deleteEquipment/{id}")
     public ResponseEntity<String> deleteEquipmentDataById(@PathVariable("id") Long id){
         try {
             //서비스에서 해당 아이디의 설비 상세 정보를 삭제함
