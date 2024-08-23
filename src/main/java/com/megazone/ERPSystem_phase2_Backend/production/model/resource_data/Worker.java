@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 
 //작업자 관리 테이블
 
-@Entity
+@Entity(name = "worker")
+@Table(name = "worker")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

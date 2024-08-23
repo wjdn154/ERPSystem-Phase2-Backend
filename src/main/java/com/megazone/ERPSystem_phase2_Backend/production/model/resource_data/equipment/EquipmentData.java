@@ -12,17 +12,21 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 //장비
 
-@Entity
+@Entity(name = "equipmentData")
+@Table(name = "equipmentData")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class EquipmentData {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;                              //pk
     
     @Column(nullable = false)
@@ -39,7 +43,7 @@ public class EquipmentData {
     private String manufacturer;                //제조사.
 
     @Column(nullable = false)                   //모델명. 설비의 제조업체가 지정한 모델 번호나 명칭을 의미함.
-    private String modelNumber;                 //동일한 모델명을 가진 여러 설비가 있을 수 있음.
+    private String modelName;                 //동일한 모델명을 가진 여러 설비가 있을 수 있음.
 
     @Column(nullable = false)
     private LocalDate purchaseDate;             //설비 구매날짜
@@ -64,4 +68,7 @@ public class EquipmentData {
 
     @Column
     private String equipmentImg;
+
+    @OneToMany(mappedBy = "equipment")
+    private List<MaintenanceHistory> maintenanceHistory = new ArrayList<>();  //설비의 유지보수 관리 이력
 }

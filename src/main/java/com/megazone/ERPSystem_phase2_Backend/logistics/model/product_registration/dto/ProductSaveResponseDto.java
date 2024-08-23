@@ -17,25 +17,12 @@ public class ProductSaveResponseDto {
 
     private String code; // 품목 코드
     private String name; // 품목명
-    private String productGroupName;// 폼목 그룹_id
+    private String productGroupName;// 폼목 그룹명
     private String standard; // 규격
     private String unit; // 단위
     private Double purchasePrice; // 입고단가
     private Double salesPrice; // 출고 단가
     private ProductType productType; // 품목 구분
-    private ProductionRouting productionRouting; // 생산라우팅
+    private String productionRoutingName; // 생산라우팅명
 
-    public Product toEntity(ProductGroup productGroup) {
-        return Product.builder()
-                .code(code)
-                .name(name)
-                .productGroup(productGroup)
-                .standard(standard)
-                .unit(unit)
-                .purchasePrice(purchasePrice)
-                .salesPrice(salesPrice)
-                .productType(productType)
-                .productionRouting(productionRouting)
-                .build();
-    }
 }

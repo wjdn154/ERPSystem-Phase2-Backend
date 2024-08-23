@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom {
     boolean existsByCode(String code);
+
+    boolean existsByCodeAndIdNot(String code, Long id);
 }
