@@ -16,6 +16,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 
     Optional<Product> findByName(String name);
 
-    List<Product> findByCodeOrNameContaining(String keyword);
+    List<Product> findByCodeContainingOrNameContaining(String code, String name);
 
 }

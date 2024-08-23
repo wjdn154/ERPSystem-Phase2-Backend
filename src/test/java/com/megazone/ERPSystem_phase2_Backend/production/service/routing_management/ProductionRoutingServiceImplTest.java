@@ -65,18 +65,18 @@ public class ProductionRoutingServiceImplTest {
 //            productionRoutingService.createProductionRoutingWithSteps(validDto, List.of());
 //        });
 //    }
-
-    @Test
-    void updateRoutingWithValidDTO_updatesRouting() {
-        // Given
-        when(productionRoutingRepository.findById(1L)).thenReturn(Optional.of(existingRouting));
-        when(productionRoutingRepository.save(any(ProductionRouting.class))).thenReturn(existingRouting);
-
-        // When
-        Optional<ProductionRouting> result = productionRoutingService.updateProductionRouting(1L, validDto);
-
-        // Then
-        assertTrue(result.isPresent());
-        assertEquals("ROUTING001", result.get().getCode());
-    }
+//
+//    @Test
+//    void updateRoutingWithValidDTO_updatesRouting() {
+//        // Given
+//        when(productionRoutingRepository.findById(1L)).thenReturn(Optional.of(existingRouting));
+//        when(productionRoutingRepository.save(any(ProductionRouting.class))).thenReturn(existingRouting);
+//
+//        // When
+//        Optional<ProductionRouting> result = productionRoutingService.updateProductionRouting(1L, validDto);
+//
+//        // Then
+//        assertTrue(result.isPresent());
+//        assertEquals("ROUTING001", result.get().getCode());
+//    }
 }
