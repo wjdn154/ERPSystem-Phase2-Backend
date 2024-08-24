@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.Product;
+package com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.product;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.ProductGroup;
@@ -6,13 +6,12 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registratio
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductSaveRequestDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductSaveResponseDto;
-import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.Product.ProductRepository;
-import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.ProductGroup.ProductGroupRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product_group.ProductGroupRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProductionRouting;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.routing_management.ProductionRouting.ProductionRoutingRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

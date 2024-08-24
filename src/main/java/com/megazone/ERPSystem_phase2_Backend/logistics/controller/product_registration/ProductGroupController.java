@@ -1,10 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.controller.product_registration;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.ProductGroup;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductGroupDto;
-import com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.ProductGroup.ProductGroupService;
+import com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.product_group.ProductGroupService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

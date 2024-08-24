@@ -2,7 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.service.routing_managem
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
-import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.ProductGroup.ProductGroupRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product_group.ProductGroupRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProcessDetails;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProductionRouting;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.RoutingStep;

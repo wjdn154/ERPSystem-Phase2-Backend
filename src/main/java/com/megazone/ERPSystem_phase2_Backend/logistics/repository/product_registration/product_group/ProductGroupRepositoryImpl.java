@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.ProductGroup;
+package com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product_group;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.ProductGroup;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.QProductGroup;

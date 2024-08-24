@@ -1,9 +1,9 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.ProductGroup;
+package com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.product_group;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.ProductGroup;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductGroupDto;
-import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.Product.ProductRepository;
-import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.ProductGroup.ProductGroupRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product_group.ProductGroupRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
