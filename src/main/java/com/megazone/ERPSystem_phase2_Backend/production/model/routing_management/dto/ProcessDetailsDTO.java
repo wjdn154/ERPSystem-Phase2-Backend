@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -23,6 +24,6 @@ public class ProcessDetailsDTO {
     private Double defectRate;
     private String description;
     private Boolean isUsed;
-    private List<WorkcenterDTO> workcenterDTOList; // 연관 작업장 목록
-    private List<RoutingStepDTO> routingStepDTOList; // 연관 RoutingStep 목록 (필요 시)
+    private List<WorkcenterDTO> workcenterDTOList = new ArrayList<>(); // 연관 작업장 목록
+    private List<RoutingStepDTO> routingStepDTOList = new ArrayList<>(); // 연관 RoutingStep 목록 (필요 시)
 }

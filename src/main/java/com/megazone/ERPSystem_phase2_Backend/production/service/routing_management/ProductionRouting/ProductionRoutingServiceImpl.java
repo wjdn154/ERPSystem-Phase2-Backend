@@ -189,6 +189,9 @@ public class ProductionRoutingServiceImpl implements ProductionRoutingService {
      * @return ProcessDetails의 ID
      */
     private Long getProcessIdByCodeOrName(ProcessDetailsDTO processDetailsDTO) {
+        if (processDetailsDTO == null) {
+            throw new IllegalArgumentException("ProcessDetailsDTO cannot be null");
+        }
         // 우선 코드로 조회, 없으면 이름으로 조회
         return processDetailsRepository.findByCode(processDetailsDTO.getCode())
                 .map(ProcessDetails::getId)
@@ -378,6 +381,7 @@ public class ProductionRoutingServiceImpl implements ProductionRoutingService {
     // 1. ProductionRoutingDTO
     public ProductionRouting convertToEntity(ProductionRoutingDTO dto) {
         ProductionRouting productionRouting = ProductionRouting.builder()
+                .id(dto.getId())
                 .code(dto.getCode()) // Routing 지정코드
                 .name(dto.getName()) // Routing 이름
                 .description(dto.getDescription()) // Routing 설명
@@ -420,6 +424,7 @@ public class ProductionRoutingServiceImpl implements ProductionRoutingService {
 
         // Product 엔티티는 적절한 ProductRepository를 사용해 변환
         return Product.builder()
+                .id(dto.getId())
                 .name(dto.getName()) // Product 이름 설정
                 .code(dto.getCode()) // Product 코드 설정
                 .productGroup(productGroupRepository.findByName(dto.getProductGroupName())

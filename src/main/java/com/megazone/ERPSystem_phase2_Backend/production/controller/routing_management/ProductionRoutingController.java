@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/production/productionRouting")
@@ -30,7 +29,7 @@ public class ProductionRoutingController {
 
     // 2. productionRouting 개별상세조회
     @GetMapping("/{id}")
-    public ResponseEntity<ProductionRouting> getProductionRoutingById(@PathVariable Long id) {
+    public ResponseEntity<ProductionRouting> getProductionRoutingById(@PathVariable("id") Long id) {
         return productionRoutingRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

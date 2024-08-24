@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -21,8 +22,8 @@ public class ProductionRoutingDTO {
     private String description;
     private boolean isStandard;
     private boolean isActive;
-    private List<RoutingStepDTO> routingStepDTOList; // 연관 RoutingStep 목록
-    private List<ProductDetailDto> products; // 연관 Product 목록
+    private List<RoutingStepDTO> routingStepDTOList = new ArrayList<>(); // 연관 RoutingStep 목록
+    private List<ProductDetailDto> products = new ArrayList<>(); // 연관 Product 목록
 
     public void setDeletedAt(LocalDateTime now) {
 

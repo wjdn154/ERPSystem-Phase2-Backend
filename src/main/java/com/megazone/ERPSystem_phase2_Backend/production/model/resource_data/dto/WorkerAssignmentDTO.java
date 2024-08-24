@@ -1,9 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto;
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.WorkcenterDTO;
-
-import java.util.List;
 
 public class WorkerAssignmentDTO {
     private WorkerDTO worker;
