@@ -57,7 +57,7 @@ public class ProductController {
         try {
             return productService.saveProduct(productSaveRequestDto)
                     .map(ResponseEntity::ok)
-                    .orElseGet(() ->  ResponseEntity.badRequest().build());
+                    .orElseGet(() -> ResponseEntity.badRequest().build());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {

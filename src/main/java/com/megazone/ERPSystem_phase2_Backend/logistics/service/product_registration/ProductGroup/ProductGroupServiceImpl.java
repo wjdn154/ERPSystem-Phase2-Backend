@@ -1,71 +1,138 @@
-//package com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.ProductGroup;
-//
-//import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.ProductGroup;
-//import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductGroupDto;
-//import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.ProductGroup.ProductGroupRepository;
-//import jakarta.transaction.Transactional;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.List;
-//
-//@Service
-//@RequiredArgsConstructor
-//@Transactional
-//public class ProductGroupServiceImpl implements ProductGroupService{
-//
-//    private final ProductGroupRepository productGroupRepository;
-//
-//    /**
-//     * 모든 품목그룹 조회
-//     *
-//     * @return
-//     */
-//    public List<ProductGroup> searchAllProductGroup() {
-//        return productGroupRepository.findAll();
-//    }
-//
-//    /**
-//     * id로 폼목 그룹 조회
-//     * @param id
-//     * @return
-//     */
-//    @Override
-//    public ProductGroup searchByIdProductGroup(Long id) {
-//        return productGroupRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("id를 찾을 수가 없습니다. " + id));
-//    }
-//
-//    /**
-//     * 새로운 품목 그룹 저장
-//     * @param
-//     * @return
-//     */
-//    @Override
-//    public ProductGroup saveProductGroup(ProductGroupDto dto) {
-//        ProductGroup productGroup = dto.toEntity();
-//        if (productGroupRepository.existsByCode(productGroup.getCode())) {
-//            throw new IllegalArgumentException("중복된 code입니다.");
-//        }
-//
-//        return productGroupRepository.save(productGroup);
-//    }
-//
-//    /**
-//     * 폼목 그룹 수정
-//     * @param id
-//     * @param dto
-//     * @return
-//     */
-//    @Override
-//    public ProductGroup updateProductGroup(Long id, ProductGroupDto dto) {
-//        ProductGroup productGroup = dto.toEntity();
-//
-//        ProductGroup target = productGroupRepository.findById(id).orElse(null);
-//        if (target == null){
-//            throw new RuntimeException("존재하지 않는 품목 그룹입니다.");
-//        }
-//
-//        return productGroupRepository.save(productGroup);
-//    }
-//}
+package com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.ProductGroup;
+
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.ProductGroup;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductGroupDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.Product.ProductRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.ProductGroup.ProductGroupRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class ProductGroupServiceImpl implements ProductGroupService{
+
+    private final ProductGroupRepository productGroupRepository;
+    private final ProductRepository productRepository;
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public List<ProductGroupDto> findAllProductGroups() {
+
+        return productGroupRepository.findAll().stream()
+                                            .map(this::toDto)
+                                            .collect(Collectors.toList());
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public ProductGroupDto getProductGroupById(Long id) {
+        return productGroupRepository.findById(id)
+                                        .map(this::toDto)
+                                        .orElseThrow(() -> new IllegalArgumentException("해당 ID의 품목 그룹을 찾을 수가 없습니다." + id));
+    }
+
+    /**
+     *
+     * @param productGroupDto
+     * @return
+     */
+    @Override
+    public Optional<ProductGroupDto> saveProductGroup(ProductGroupDto productGroupDto) {
+        // code와 name에 대한 유효성 검증(null 이거나 비어있지 않은지 확인)
+        validateProductGroup(productGroupDto);
+
+        if (productGroupRepository.existsByCode(productGroupDto.getCode())) {
+            throw new IllegalArgumentException("해당 코드로 등록된 품목 그룹이 이미 존재합니다.");
+        }
+
+        ProductGroup productGroup = ProductGroup.builder()
+                                                .code(productGroupDto.getCode())
+                                                .name(productGroupDto.getName())
+                                                .build();
+        ProductGroup savedGroup = productGroupRepository.save(productGroup);
+
+        return Optional.of(toDto(savedGroup));
+    }
+
+    /**
+     * 등록된 품목 그룹 수정하기
+     * @param id
+     * @param productGroupDto
+     * @return
+     */
+    @Override
+    public Optional<ProductGroupDto> updateProduct(Long id, ProductGroupDto productGroupDto) {
+
+        validateProductGroup(productGroupDto);
+
+        Optional<ProductGroup> findProductGroup = productGroupRepository.findById(id);
+
+        if (findProductGroup.isPresent()) {
+            ProductGroup productGroup = findProductGroup.get();
+
+            if (productGroupRepository.existsByCodeAndIdNot(productGroupDto.getCode(), id)) {
+                throw new IllegalArgumentException("해당 코드로 등록된 품목 그룹이 이미 존재합니다.");
+            }
+
+            productGroup.setCode(productGroupDto.getCode());
+            productGroup.setName(productGroupDto.getName());
+
+            ProductGroup updatedProductGroup = productGroupRepository.save(productGroup);
+
+            return Optional.of(toDto(updatedProductGroup));
+        } else {
+            return Optional.empty();
+        }
+
+    }
+
+    /**
+     * 품목 그룹 삭제
+     * @param id
+     * @return 삭제 완료 유무 문자열 반환
+     */
+    @Override
+    public String deleteProductGroup(Long id) {
+        ProductGroup productGroup = productGroupRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("삭제 실패 : 삭제하려는 품목 그룹의 ID를 찾을 수 없습니다."));
+
+        // 삭제 전 Product 의 productGroup 필드를 null로 설정
+        productRepository.nullifyProductGroupId(id);
+
+        productGroupRepository.delete(productGroup);
+        return productGroup.getName() + " 품목 그룹이 삭제되었습니다.";
+    }
+
+    // code와 name에 대한 유효성 검증 메소드
+    private static void validateProductGroup(ProductGroupDto productGroupDto) {
+        if (productGroupDto.getCode() == null || productGroupDto.getCode().isEmpty()) {
+            throw new IllegalArgumentException("코드를 입력해주세요.");
+        }
+        if (productGroupDto.getName() == null || productGroupDto.getName().isEmpty()) {
+            throw new IllegalArgumentException("품목 그룹명을 입력해주세요.");
+        }
+    }
+
+    // Entity -> DTO 변환 메소드
+    private ProductGroupDto toDto(ProductGroup productGroup) {
+        return ProductGroupDto.builder()
+                .id(productGroup.getId())
+                .code(productGroup.getCode())
+                .name(productGroup.getName())
+                .build();
+    }
+
+}

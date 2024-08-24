@@ -25,12 +25,12 @@ public class ProductDto {
         return new ProductDto(
                 product.getCode(),
                 product.getName(),
-                product.getProductGroup().getName(),
+                product.getProductGroup() != null ? product.getProductGroup().getName() : null,
                 product.getStandard(),
                 product.getPurchasePrice(),
                 product.getSalesPrice(),
                 product.getProductType(),
-                product.getProductionRouting().getName()
+                product.getProductionRouting() != null ? product.getProductionRouting().getName() : null
         );
     }
 }

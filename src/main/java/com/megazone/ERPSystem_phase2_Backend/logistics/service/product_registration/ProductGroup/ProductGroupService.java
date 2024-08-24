@@ -1,19 +1,20 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.ProductGroup;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.ProductGroup;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductGroupDto;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface ProductGroupService {
 
-    List<ProductGroup> searchAllProductGroup();
+    List<ProductGroupDto> findAllProductGroups();
 
-    ProductGroup searchByIdProductGroup(Long id);
+    ProductGroupDto getProductGroupById(Long id);
 
-    ProductGroup saveProductGroup(ProductGroupDto dto);
+    Optional<ProductGroupDto> saveProductGroup(ProductGroupDto productGroupDto);
 
-    ProductGroup updateProductGroup(Long id, ProductGroupDto dto);
+    Optional<ProductGroupDto> updateProduct(Long id, ProductGroupDto productGroupDto);
 
+    String deleteProductGroup(Long id);
 }

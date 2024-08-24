@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity(name = "product_group")
 @Table(name = "product_group")
-@Getter
+@Data
 @Builder
 @ToString
 @NoArgsConstructor
@@ -34,6 +34,19 @@ public class ProductGroup {
     // 품목 그룹 명
     @Column(nullable = false)
     private String name;
+
+    // 폼목 그룹 활성화 여부
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean active = true;
+
+    public void deactivate() {
+        this.active = false;
+    }
+
+    public void reactivate() {
+        this.active = true;
+    }
 
 
 }

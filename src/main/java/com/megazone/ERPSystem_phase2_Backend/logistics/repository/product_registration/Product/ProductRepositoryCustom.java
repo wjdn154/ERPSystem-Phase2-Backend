@@ -5,5 +5,5 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registratio
 import java.util.List;
 
 public interface ProductRepositoryCustom {
-
+    void nullifyProductGroupId(Long productGroupId);
 }
