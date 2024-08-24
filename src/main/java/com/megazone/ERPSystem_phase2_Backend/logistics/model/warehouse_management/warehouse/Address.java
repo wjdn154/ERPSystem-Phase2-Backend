@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 주소 정보 테이블
  * 회사등록 시 필요한 주소 데이터 테이블
@@ -19,6 +22,9 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id; // 고유 식별자
+
+    @OneToMany(mappedBy = "address")
+    private List<Warehouse> warehouseList = new ArrayList<>();
 
     @Column(nullable = false) // 창고 주소
     private String warehouseAddress;

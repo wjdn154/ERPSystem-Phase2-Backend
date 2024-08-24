@@ -11,8 +11,8 @@ import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_informat
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.credit_card.CreditCardCompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.credit_card.CreditCardRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.credit_card.OwnershipRepository;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management.Employee;
-import com.megazone.ERPSystem_phase2_Backend.hr.repository.hr_management.Employee.EmployeeRepository;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
