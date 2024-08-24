@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management;
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.enums.AttendanceStatus;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management.Employee;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,8 @@ import java.time.LocalDate;
 //  직원의 출퇴근 기록을 저장
 
 @Data
-@Entity
+@Entity(name="attendance_management")
+@Table(name="attendance_management")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Attendance {

@@ -11,7 +11,8 @@ import java.util.List;
 // 휴가 유형 정보를 저장
 
 @Data
-@Entity
+@Entity(name="leaves_leavestype")
+@Table(name="leaves_leavestype")
 @NoArgsConstructor
 @AllArgsConstructor
 public class LeavesType {
