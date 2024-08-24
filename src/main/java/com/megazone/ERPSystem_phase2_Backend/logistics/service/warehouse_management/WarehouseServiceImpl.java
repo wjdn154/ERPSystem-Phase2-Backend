@@ -4,16 +4,19 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_managemen
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.WarehouseHierarchyGroup;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.HierarchyGroupResponseDTO;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.UpdateWarehouseDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.hierarchy_group.HierarchyGroupRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse_hierarchy_group.WarehouseHierarchyGroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,16 +26,18 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
     private final HierarchyGroupRepository hierarchyGroupRepository;
+    private final WarehouseHierarchyGroupRepository warehouseHierarchyGroupRepository;
 
 
     /**
      * 모든 창고 정보를 가져옴
-     * @return 모든 창고 정보를 담은 WarehouseDTO 객체를 반환
+     *
+     * @return 모든 창고 정보를 담은 WarehouseResponseDTO 객체를 반환
      */
     @Override
-    public List<WarehouseDTO> findAllWarehouses() {
+    public List<WarehouseResponseDTO> findAllWarehouses() {
         return warehouseRepository.findAll().stream()
-                .map(warehouse -> new WarehouseDTO(
+                .map(warehouse -> new WarehouseResponseDTO(
                         warehouse.getId(),
                         warehouse.getCode(),
                         warehouse.getName(),
@@ -49,15 +54,14 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
 
-
     @Override
     public Optional<WarehouseDetailDTO> saveWarehouse(WarehouseDetailDTO dto) {
         Warehouse createWarehouse = new Warehouse();
 
         warehouseRepository.findByCode(dto.getCode())
-                        .ifPresent(warehouse -> {
-                            throw new RuntimeException("이미 존재하는 코드입니다: " + dto.getCode());
-                        });
+                .ifPresent(warehouse -> {
+                    throw new RuntimeException("이미 존재하는 코드입니다: " + dto.getCode());
+                });
 
         createWarehouse.setId(dto.getId());
         createWarehouse.setCode(dto.getCode());
@@ -116,28 +120,84 @@ public class WarehouseServiceImpl implements WarehouseService {
         return Optional.of(warehouseDetailDTO);
     }
 
-
     @Override
-    public Warehouse updateWarehouse(Warehouse warehouse) {
+    @Transactional
+    public Optional<UpdateWarehouseDTO> updateWarehouse(Long id, UpdateWarehouseDTO dto) {
 
-        Warehouse existingWarehouse = warehouseRepository.findById(warehouse.getId()).orElseThrow(() -> new RuntimeException("아이디로 창고를 찾을 수 없습니다: " + warehouse.getId()));
+        Warehouse warehouse = warehouseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("창고를 찾을 수 없습니다: " + id));
 
-        existingWarehouse.setCode(warehouse.getCode());
-        existingWarehouse.setName(warehouse.getName());
-        existingWarehouse.setProductionProcess(warehouse.getProductionProcess());
-        existingWarehouse.setIsActive(warehouse.getIsActive());
+        warehouse.setName(dto.getName());
+        warehouse.setWarehouseType(dto.getWarehouseType());
+        warehouse.setProductionProcess(dto.getProductionProcess());
 
-        if (warehouse.getWarehouseType() != null) existingWarehouse.setWarehouseType(warehouse.getWarehouseType());
-        if (warehouse.getAddress() != null) existingWarehouse.setAddress(warehouse.getAddress());
+        List<WarehouseHierarchyGroup> existingGroups = warehouse.getWarehouseHierarchyGroup();
 
-        return warehouseRepository.save(existingWarehouse);
+        Set<Long> updatedGroupIds = dto.getHierarchyGroupList().stream()
+                .map(HierarchyGroupResponseDTO::getId)
+                .collect(Collectors.toSet());
+
+        List<WarehouseHierarchyGroup> removedGroup = existingGroups.stream()
+                .filter(group -> !updatedGroupIds.contains(group.getHierarchyGroup().getId()))
+                .collect(Collectors.toList());
+
+        removedGroup.forEach(warehouseHierarchyGroup -> {
+            warehouse.getWarehouseHierarchyGroup().remove(warehouseHierarchyGroup);
+            warehouseHierarchyGroupRepository.delete(warehouseHierarchyGroup);
+        });
+
+        dto.getHierarchyGroupList().forEach(hierarchyGroupResponseDTO -> {
+            boolean exists = existingGroups.stream()
+                    .anyMatch(group -> group.getHierarchyGroup().getId().equals(hierarchyGroupResponseDTO.getId()));
+
+            if (!exists) {
+                HierarchyGroup hierarchyGroup = hierarchyGroupRepository.findById(hierarchyGroupResponseDTO.getId())
+                        .orElseThrow(() -> new RuntimeException("존재하지 않는 계층그룹입니다: " + hierarchyGroupResponseDTO.getId()));
+
+                WarehouseHierarchyGroup newGroup = new WarehouseHierarchyGroup();
+                newGroup.setWarehouse(warehouse);
+                newGroup.setHierarchyGroup(hierarchyGroup);
+                existingGroups.add(newGroup);
+            }
+        });
+
+        warehouse.setIsActive(dto.getIsActive());
+
+        Warehouse updatedWarehouse = warehouseRepository.save(warehouse);
+
+        UpdateWarehouseDTO updateWarehouseDTO = new UpdateWarehouseDTO(
+                updatedWarehouse.getName(),
+                updatedWarehouse.getWarehouseType(),
+                updatedWarehouse.getProductionProcess(),
+                updatedWarehouse.getWarehouseHierarchyGroup().stream()
+                        .map(warehouseHierarchyGroup -> {
+                            HierarchyGroup hierarchyGroup = warehouseHierarchyGroup.getHierarchyGroup();
+                            return new HierarchyGroupResponseDTO(
+                                    hierarchyGroup.getId(),
+                                    hierarchyGroup.getHierarchyGroupCode(),
+                                    hierarchyGroup.getHierarchyGroupName(),
+                                    hierarchyGroup.getIsActive(),
+                                    hierarchyGroup.getParentGroup() != null ? hierarchyGroup.getParentGroup().getId() : null,
+                                    hierarchyGroup.getParentGroup() != null ? hierarchyGroup.getParentGroup().getHierarchyGroupName() : null,
+                                    null
+                            );
+                        })
+                        .collect(Collectors.toList()),
+                updatedWarehouse.getIsActive()
+        );
+
+        return Optional.of(updateWarehouseDTO);
     }
 
+
     @Override
-    public void deleteWarehouse(Long warehouseId) {
-        Warehouse warehouse = warehouseRepository.findById(warehouseId)
-                .orElseThrow(() -> new RuntimeException("아이디로 창고를 찾을 수 없습니다: " + warehouseId));
-        warehouseRepository.delete(warehouse);
+    public String deleteWarehouse(Long id) {
+        return warehouseRepository.findById(id)
+                .map(warehouse -> {
+                    warehouseRepository.delete(warehouse);
+                    return warehouse.getName() + "가 삭제되었습니다.";
+                })
+                .orElse("삭제 실패 : 삭제하려는 창고 ID를 찾을 수 없습니다.");
     }
 }
 
