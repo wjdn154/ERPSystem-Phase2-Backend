@@ -49,9 +49,8 @@ public class Warehouse {
     private Boolean isActive;
 
     @OneToMany(mappedBy = "factory")
-    private List<Workcenter> workcenters = new ArrayList<>(); // 생산관리의 작업장 엔티티 중 factory와 연결
+    private List<Workcenter> workcenters = new ArrayList<>();// 생산관리의 작업장 엔티티 중 factory와 연결
 
     @OneToMany(mappedBy = "factory")
     private List<EquipmentData> equipmentData = new ArrayList<>(); // 생산관리의 설비 엔티티 중 factory 와 연결
-
 }

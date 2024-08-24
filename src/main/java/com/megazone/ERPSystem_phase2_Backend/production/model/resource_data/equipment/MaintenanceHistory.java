@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Entity
+@Entity(name = "equipment_maintenanceHistory")
+@Table(name = "equipment_maintenanceHistory")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,11 +42,8 @@ public class MaintenanceHistory {
     @Column(nullable = false)
     private LocalDate nextMaintenanceDate;          //다음 유지보수 예정일
 
-    @Column
-    private String remarks;                         //비고
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "equimentData_id")
-    private EquipmentData equipment;      //유지보수 관리하는 설비정보 테이블 참조.(설비명)
+    private EquipmentData equipment;      //유지보수 관리하는 설비정보 테이블 참조.(설비명, 작업장이름, 공장이름)
 
 }

@@ -15,7 +15,8 @@ import java.util.List;
 * 자재 정보 관리
 * */
 
-@Entity
+@Entity(name = "production_materialData")
+@Table(name = "production_materialData")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

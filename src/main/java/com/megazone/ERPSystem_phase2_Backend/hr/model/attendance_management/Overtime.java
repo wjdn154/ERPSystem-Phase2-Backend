@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management;
 
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management.Employee;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 // 초과 근무 저장 엔티티
 
 @Data
-@Entity
+@Entity(name="attendance_overtime")
+@Table(name="attendance_overtime")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Overtime {

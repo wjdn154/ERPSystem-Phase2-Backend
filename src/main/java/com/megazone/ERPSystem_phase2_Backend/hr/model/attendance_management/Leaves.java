@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management;
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.enums.LeaveStatus;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.hr_management.Employee;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,8 @@ import java.time.LocalDate;
 // 직원의 휴가 신청 및 기록을 저장
 
 @Data
-@Entity
+@Entity(name="leaves")
+@Table(name="leaves")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Leaves {
