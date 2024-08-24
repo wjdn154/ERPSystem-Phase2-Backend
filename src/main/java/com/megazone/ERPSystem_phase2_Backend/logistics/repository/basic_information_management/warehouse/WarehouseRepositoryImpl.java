@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.HierarchyGroupResponseDTO;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseDetailDTO;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
@@ -26,9 +26,9 @@ public class WarehouseRepositoryImpl implements WarehouseRepositoryCustom {
      * @return 창고 목록을 반환함.
      */
     @Override
-    public List<WarehouseDTO> findAllWarehouse() {
+    public List<WarehouseResponseDTO> findAllWarehouse() {
         return queryFactory
-                .select(Projections.fields(WarehouseDTO.class,
+                .select(Projections.fields(WarehouseResponseDTO.class,
                         warehouse.code.as("code"),
                         warehouse.name.as("name"),
                         warehouse.warehouseType.as("warehouseType"),
@@ -46,6 +46,7 @@ public class WarehouseRepositoryImpl implements WarehouseRepositoryCustom {
         // 창고코드, 창고명, 창고타입, 영업단가그룹(예정), 구매단가그룹(예정), 창고계층그룹, 창고사용여부
         WarehouseDetailDTO warehouseDetail = queryFactory
                 .select(Projections.fields(WarehouseDetailDTO.class,
+                        warehouse.id.as("id"),
                         warehouse.code.as("code"),
                         warehouse.name.as("name"),
                         warehouse.warehouseType.as("warehouseType"),
@@ -59,8 +60,8 @@ public class WarehouseRepositoryImpl implements WarehouseRepositoryCustom {
         List<HierarchyGroupResponseDTO> hierarchyGroups = queryFactory
                 .select(Projections.fields(HierarchyGroupResponseDTO.class,
                         hierarchyGroup.id.as("id"),
-                        hierarchyGroup.hierarchyGroupCode.as("code"),
-                        hierarchyGroup.hierarchyGroupName.as("name")
+                        hierarchyGroup.hierarchyGroupCode.as("hierarchyGroupCode"),
+                        hierarchyGroup.hierarchyGroupName.as("hierarchyGroupName")
                         ))
                 .from(warehouseHierarchyGroup)
                 .leftJoin(warehouseHierarchyGroup.hierarchyGroup, hierarchyGroup)
