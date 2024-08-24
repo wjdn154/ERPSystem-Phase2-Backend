@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -33,6 +34,7 @@ public class EquipmentDataDTO {
     private String workcenterCode;                //설비가 설치된 위치 or 구역 (작업장). 작업장 테이블 작업장 코드 참조
     private String factoryCode;               //설비가 설치된 공장 . 창고 테이블에 있는 공장코드 참조
     private String equipmentImg;                //설비 이미지
+
 
 
 }
