@@ -18,8 +18,6 @@ public class ProductionRoutingRepositoryImpl implements ProductionRoutingReposit
     private final JPAQueryFactory queryFactory;
     QProductionRouting productionRouting = QProductionRouting.productionRouting;
 
-    private final RoutingStepRepository routingStepRepository;
-
     @Override
     public List<ProductionRouting> findRoutingsByProcessDetails(Long processId) {
         QRoutingStep routingStep = QRoutingStep.routingStep;
