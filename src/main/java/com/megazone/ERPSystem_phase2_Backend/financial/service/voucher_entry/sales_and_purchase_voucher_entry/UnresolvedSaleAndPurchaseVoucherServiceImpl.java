@@ -7,8 +7,10 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.gener
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherKind;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.JournalEntry;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.ResolvedSaleAndPurchaseVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.VatType;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.UnresolvedSaleAndPurchaseVoucherApprovalDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.UnresolvedSaleAndPurchaseVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.UnresolvedSaleAndPurchaseVoucherEntryDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
@@ -19,16 +21,19 @@ import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.
 import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry.UnresolvedVoucherEntryService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -38,6 +43,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
     private final JournalEntryRepository journalEntryRepository;
     private final UnresolvedSaleAndPurchaseVoucherRepository unresolvedSaleAndPurchaseVoucherRepository;
     private final UnresolvedVoucherEntryService unresolvedVoucherEntryService;
+    private final ResolvedSaleAndPurchaseVoucherService resolvedSaleAndPurchaseVoucherService;
 
     @Override
     public UnresolvedSaleAndPurchaseVoucher save(UnresolvedSaleAndPurchaseVoucherEntryDTO dto) {
@@ -102,21 +108,6 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                 .voucherKind(VoucherKind.SALE_AND_PURCHASE)
                 .build();
     }
-
-    @Override
-    public String CreateVoucherNumber(LocalDate voucherDate) {
-        // 해당 조건의 날짜에 해당하는 마지막 미결전표 Entity 가져오기
-        UnresolvedSaleAndPurchaseVoucher lastUnresolvedVoucher = unresolvedSaleAndPurchaseVoucherRepository.findFirstByVoucherDateOrderByIdDesc(voucherDate).orElse(null);
-
-        if(lastUnresolvedVoucher == null) {
-            return "50000";
-        }
-        else {
-            int voucherNum = Integer.parseInt(lastUnresolvedVoucher.getVoucherNumber()) + 1;
-            return String.valueOf(voucherNum);
-        }
-    }
-
 
 //    과세유형으로 매출 매입인지 확인
 //
@@ -278,23 +269,19 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
     }
 
     @Override
-    public List<Long> deleteVoucher(UnresolvedSaleAndPurchaseVoucherDeleteDTO dto) {
-
-        // 전표에 담당자 이거나, 승인권자면 삭제가능 << 기능구현 필요
-
-        List<Long> deleteVouchers = new ArrayList<Long>();
+    public String deleteVoucher(UnresolvedSaleAndPurchaseVoucherDeleteDTO dto) {
         try {
             if(true) { // 전표의 담당자 이거나, 승인권자면 삭제가능 << 기능구현 필요
-                deleteVouchers.addAll(unresolvedSaleAndPurchaseVoucherRepository.deleteVoucherByManager(dto));
-                if(deleteVouchers.isEmpty()) {
-                    throw new NoSuchElementException("검색조건에 해당하는 미결전표가 없습니다.");
-                }
+                dto.getSearchVoucherNumList().forEach((voucherNumber) -> {
+                                    unresolvedSaleAndPurchaseVoucherRepository.deleteByVoucherNumberAndVoucherDate(
+                                            voucherNumber, dto.getSearchDate());});
             }
         }
         catch (Exception e) {
             e.getStackTrace();
+            return null;
         }
-        return deleteVouchers;
+        return "미결 매출매입전표 삭제 성공";
     }
 
 
@@ -308,6 +295,8 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
 
         return totalAmount;
     }
+
+
     @Override
     public BigDecimal totalDebit(List<UnresolvedVoucher> vouchers) {
         return calculateTotalAmount(vouchers, UnresolvedVoucher::getDebitAmount);
@@ -320,6 +309,39 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
     @Override
     public List<UnresolvedVoucher> searchVoucher(String voucherNumber) {
         return unresolvedSaleAndPurchaseVoucherRepository.findByVoucherNumber(voucherNumber).getUnresolvedVouchers();
+    }
+
+    @Override
+    public List<UnresolvedSaleAndPurchaseVoucher> ApprovalProcessing(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto) {
+
+        List<UnresolvedSaleAndPurchaseVoucher> unresolvedVoucherList = unresolvedSaleAndPurchaseVoucherRepository.findApprovalTypeVoucher(dto);
+
+        try {
+            if(dto.getApprovalStatus().equals(ApprovalStatus.PENDING)) {
+                throw new IllegalArgumentException("승인 대기 상태로는 변경할 수 없습니다.");
+            }
+
+            if(!unresolvedVoucherList.isEmpty())
+            {
+                unresolvedVoucherList.stream().forEach(
+                        unresolvedVoucher -> {
+                            unresolvedVoucher.setApprovalStatus(dto.getApprovalStatus());
+                            unresolvedVoucher.getUnresolvedVouchers().forEach(
+                                    unresolvedVoucher1 -> unresolvedVoucher1.setApprovalStatus(dto.getApprovalStatus())
+                            );
+                        });
+                // 연관된 매출매입전표 모두 생성
+                resolvedSaleAndPurchaseVoucherService.resolvedVoucherEntry(unresolvedVoucherList);
+            }
+            else {
+                throw new IllegalArgumentException("권한 또는 해당하는 전표가 없습니다.");
+            }
+        }
+        catch (Exception e) {
+            e.getStackTrace();
+            return null;
+        }
+        return unresolvedVoucherList;
     }
 
 }

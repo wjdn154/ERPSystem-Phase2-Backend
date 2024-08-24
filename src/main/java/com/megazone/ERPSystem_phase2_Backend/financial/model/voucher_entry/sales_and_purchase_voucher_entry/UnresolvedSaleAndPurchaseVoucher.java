@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "unresolved_sale_and_purchase_voucher")
@@ -45,8 +46,8 @@ public class UnresolvedSaleAndPurchaseVoucher {
 //    @JoinColumn(name = "voucherManager_code",referencedColumnName = "code", nullable = false)
 //    private Long voucherManager; // 담당자 참조
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,  orphanRemoval = true)
-    @JoinColumn(name = "unresolved_Vouchers_id")
+    @OneToMany(cascade = CascadeType.ALL,  orphanRemoval = true)
+    @JoinColumn(name = "unresolved_vouchers_id")
     private List<UnresolvedVoucher> unresolvedVouchers;
 
     @Column(nullable = false)
