@@ -24,9 +24,8 @@ public class Warehouse {
     @Column(nullable = false) // 고유식별자
     private Long id;
 
-
-    @ManyToOne (fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", nullable = false) // 주소정보
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id", nullable = true) // 주소정보
     @ToString.Exclude
     private Address address;
 
@@ -34,7 +33,7 @@ public class Warehouse {
     @Column(nullable = false)
     private WarehouseType warehouseType;
 
-    @OneToMany(mappedBy = "warehouse", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     private List<WarehouseHierarchyGroup> warehouseHierarchyGroup = new ArrayList<>();
 
     @Column(name = "warehouse_code", nullable = false) // 창고코드

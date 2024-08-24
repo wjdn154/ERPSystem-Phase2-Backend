@@ -20,31 +20,12 @@ public class ProcessDetailsController {
     private final ProcessDetailsRepository processDetailsRepository;
     private final ProcessDetailsService processDetailsService;
 
-
+    // GET: 모든 ProcessDetails 조회
     @GetMapping
     public ResponseEntity<List<ProcessDetailsDTO>> getAllProcessDetails() {
-        List<ProcessDetails> processDetailsList = processDetailsRepository.findAll();
-
-        List<ProcessDetailsDTO> processDetailsDTOs = processDetailsList.stream()
-                .map(processDetails -> ProcessDetailsDTO.builder()
-                        .code(processDetails.getCode())
-                        .name(processDetails.getName())
-                        .isOutsourced(processDetails.getIsOutsourced())
-                        .duration(processDetails.getDuration())
-                        .cost(processDetails.getCost())
-                        .isUsed(processDetails.getIsUsed())
-                        .build())
-                .collect(Collectors.toList());
-
+        List<ProcessDetailsDTO> processDetailsDTOs = processDetailsService.getAllProcessDetails();
         return ResponseEntity.ok(processDetailsDTOs);
     }
-
-//    // GET: 모든 ProcessDetails 조회
-//    @GetMapping
-//    public ResponseEntity<List<ProcessDetailsDTO>> getAllProcessDetails() {
-//        List<ProcessDetailsDTO> processDetailsDTOs = processDetailsService.getAllProcessDetails();
-//        return ResponseEntity.ok(processDetailsDTOs);
-//    }
 
     // GET: ID로 특정 ProcessDetails 조회
     @GetMapping("/{id}")

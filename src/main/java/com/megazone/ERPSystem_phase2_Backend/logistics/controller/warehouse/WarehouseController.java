@@ -9,15 +9,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/api/logistics")
 public class WarehouseController {
 
     private final WarehouseService warehouseService;
@@ -27,12 +26,12 @@ public class WarehouseController {
 
     /**
      * 모든 창고리스트들을 가져옴.
-     * @return 모든 창고 정보를 담은 WarehouseDTO 객체를 반환함
+     * @return 모든 창고 정보를 담은 WarehouseResponseDTO 객체를 반환함
      */
-    @PostMapping("/api/logistics/warehouse")
-    public ResponseEntity<List<WarehouseDTO>> getAllWarehouse() {
+    @PostMapping("/warehouse")
+    public ResponseEntity<List<WarehouseResponseDTO>> getAllWarehouse() {
         // 리포지토리에서 모든 창고리스트들을 가져옴
-        List<WarehouseDTO> response = warehouseService.findAllWarehouses();
+        List<WarehouseResponseDTO> response = warehouseService.findAllWarehouses();
         return ResponseEntity.ok(response);
     }
 
@@ -41,32 +40,51 @@ public class WarehouseController {
      * @param id
      * @return 창고 상세 정보를 담은 WarehouseDetailDTO 객체를 반환함.
      */
-    @PostMapping("/api/logistics/warehouse/{id}")
+    @PostMapping("/warehouse/{id}")
     public ResponseEntity<WarehouseDetailDTO> getWarehouseDetail(@PathVariable Long id) {
         WarehouseDetailDTO warehouseDetail = warehouseService.getWarehouseDetail(id);
 
         return ResponseEntity.ok(warehouseDetail);
     }
 
-    @PostMapping("/api/logistics/warehouse/saveWarehouse")
+    @PostMapping("/warehouse/saveWarehouse")
     public ResponseEntity<WarehouseDetailDTO> saveWarehouse(@RequestBody WarehouseDetailDTO warehouseDetailDTO) {
         Optional<WarehouseDetailDTO> savedWarehouse = warehouseService.saveWarehouse(warehouseDetailDTO);
         return savedWarehouse.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
-    @PostMapping("/api/logistics/hierarchyGroup")
+    @PutMapping("/warehouse/updateWarehouse/{id}")
+    public ResponseEntity<UpdateWarehouseDTO> updateWarehouse(@PathVariable Long id, @RequestBody UpdateWarehouseDTO dto) {
+        Optional<UpdateWarehouseDTO> updateWarehouse = warehouseService.updateWarehouse(id, dto);
+        return updateWarehouse
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @DeleteMapping("/warehouse/deleteWarehouse/{id}")
+    public ResponseEntity<String> deleteWarehouse(@PathVariable("id") Long id) {
+        try {
+            String result = warehouseService.deleteWarehouse(id);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(500)
+                    .body("창고 삭제 중 오류가 발생했습니다.");
+        }
+    }
+
+    @PostMapping("/hierarchyGroup")
     public ResponseEntity<List<HierarchyGroupResponseDTO>> getAllHierarchyGroups() {
         List<HierarchyGroupResponseDTO> response = hierarchyGroupService.findAllHierarchyGroup();
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/api/logistics/hierarchyGroup/saveHierarchyGroup")
+    @PostMapping("/hierarchyGroup/saveHierarchyGroup")
     public ResponseEntity<CreateHierarchyGroupDTO> saveHierarchyGroup(@RequestBody CreateHierarchyGroupDTO createHierarchyGroupDTO) {
         Optional<CreateHierarchyGroupDTO> savedHierarchyGroup = hierarchyGroupService.saveHierarchyGroup(createHierarchyGroupDTO);
         return savedHierarchyGroup.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
-    @PostMapping("/api/logistics/hierarchyGroup/updateHierarchyGroup/{id}")
+    @PutMapping("/hierarchyGroup/updateHierarchyGroup/{id}")
     public ResponseEntity<HierarchyGroupResponseDTO> updateHierarchyGroup(@PathVariable Long id, @RequestBody UpdateHierarchyGroupDTO dto) {
         Optional<HierarchyGroupResponseDTO> updateHierarchyGroup = hierarchyGroupService.updateHierarchyGroup(id, dto);
 
@@ -74,8 +92,8 @@ public class WarehouseController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
-    @PostMapping("/api/logistics/hierarchyGroup/deleteHierarchyGroup/{id}")
-    public ResponseEntity deleteHierarchyGroup(@PathVariable Long id) {
+    @PostMapping("/hierarchyGroup/deleteHierarchyGroup/{id}")
+    public ResponseEntity<Void> deleteHierarchyGroup(@PathVariable Long id) {
         hierarchyGroupService.deleteHierarchyGroup(id);
         return ResponseEntity.noContent().build();
     }

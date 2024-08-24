@@ -69,6 +69,6 @@ public class EquipmentData {
     @Column
     private String equipmentImg;
 
-    @OneToMany(mappedBy = "equipment")
+    @OneToMany(mappedBy = "equipment", cascade = CascadeType.ALL)
     private List<MaintenanceHistory> maintenanceHistory = new ArrayList<>();  //설비의 유지보수 관리 이력
 }
