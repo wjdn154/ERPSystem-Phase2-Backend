@@ -26,6 +26,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Workcenter {
 
     @Id
@@ -53,9 +54,11 @@ public class Workcenter {
     private Warehouse factory;  // 공장 엔티티 from 물류 창고관리의 공장
 
     @OneToMany(mappedBy = "workcenter")
+    @Builder.Default
     private List<EquipmentData> equipmentList = new ArrayList<>(); // 설비 목록
 
     @OneToMany(mappedBy = "workcenter")
+    @Builder.Default
     private List<WorkerAssignment> workerAssignments = new ArrayList<>(); // 작업자 배치 이력
 
     @ManyToOne(fetch = FetchType.LAZY)

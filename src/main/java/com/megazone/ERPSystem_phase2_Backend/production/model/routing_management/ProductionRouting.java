@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,9 +47,11 @@ public class ProductionRouting {
 
     @OneToMany(mappedBy = "productionRouting", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("stepOrder ASC") // stepOrder 필드를 기준으로 오름차순 정렬
-    private List<RoutingStep> routingSteps; // 연관 RoutingStep 목록
+    @Builder.Default
+    private List<RoutingStep> routingSteps = new ArrayList<>(); // 연관 RoutingStep 목록
 
     @OneToMany(mappedBy = "productionRouting")
-    private List<Product> products;
+    @Builder.Default
+    private List<Product> products = new ArrayList<>();
 
 }
