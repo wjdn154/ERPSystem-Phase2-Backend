@@ -8,4 +8,10 @@ import java.util.Optional;
 public interface EquipmentDataRepository extends JpaRepository<EquipmentData, Long> , EquipmentDataRepositoryCustom{
 
     boolean existsByEquipmentNum(String equipmentNum);
+
+    Optional<EquipmentData> findByEquipmentNum(String equipmentNum);
+
+    //Optional<EquipmentData> findByCode(String equipmentCode);
+
+
 }

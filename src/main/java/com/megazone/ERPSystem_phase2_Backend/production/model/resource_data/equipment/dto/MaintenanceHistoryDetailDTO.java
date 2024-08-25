@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class MaintenanceHistoryDetailDTO {
 
 
-    private String equipmentCode;                 //설비코드
+    private String equipmentNum;                  //설비번호
     private String maintenanceManager;            //담당자. 타입 작업자?workerDTO?
     private MaintenanceType maintenanceType;      //유지보수 유형
     private BigDecimal maintenanceCost;           //유지보수에 드는 비용

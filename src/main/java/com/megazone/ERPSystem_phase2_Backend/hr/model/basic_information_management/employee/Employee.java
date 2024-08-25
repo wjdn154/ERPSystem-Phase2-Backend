@@ -20,7 +20,7 @@ import java.util.List;
 @Table(name = "employee")
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "department, position, jobTitle")
+//@ToString(exclude = "department, position, jobTitle")
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -96,7 +96,7 @@ public class Employee {
 
     @Column(nullable = false)
     private boolean isHouseholdHead; // 세대주 여부
-    
+
     @Column
     private String profilePicture; // 프로필 사진
 }
