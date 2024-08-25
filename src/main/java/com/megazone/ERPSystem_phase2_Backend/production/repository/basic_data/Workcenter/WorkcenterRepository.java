@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface WorkcenterRepository extends JpaRepository<Workcenter, Long>, WorkcenterRepositoryCustom {
     Optional<Workcenter> findByCode(String code);
+    Optional<Workcenter> findByName(String name);
+    Optional<Workcenter> findById(Long id);
 
     /**
      * 이름의 일부 또는 정확한 이름으로 작업장 목록 조회 (부분 일치)

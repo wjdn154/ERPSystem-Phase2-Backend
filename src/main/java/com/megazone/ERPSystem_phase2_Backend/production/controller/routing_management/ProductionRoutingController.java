@@ -1,66 +1,89 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.routing_management;
-
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProductionRouting;
+import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.dto.ProcessDetailsDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.dto.ProductionRoutingDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.dto.RoutingStepDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.routing_management.ProductionRouting.ProductionRoutingRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.service.routing_management.ProductionRouting.ProductionRoutingService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/production/productionRouting")
+@RequestMapping("/production/productionRouting")
 @RequiredArgsConstructor
 public class ProductionRoutingController {
 
-    private final ProductionRoutingRepository productionRoutingRepository;
     private final ProductionRoutingService productionRoutingService;
+    private final ProductionRoutingRepository productionRoutingRepository;
 
-    // GET ProductionRouting 전체조회
+    // 1. productionRouting 전체 조회
     @GetMapping
-    public List<ProductionRoutingDTO> getAllProductionRoutings() {
-        return productionRoutingRepository.findAll().stream()
-                .map(productionRoutingService::convertToDTO) // 서비스 계층의 convertToDTO 메서드 호출
-                .collect(Collectors.toList());
+    public ResponseEntity<List<ProductionRouting>> getAllProductionRoutings() {
+        List<ProductionRouting> productionRoutings = productionRoutingRepository.findAll();
+        return ResponseEntity.ok(productionRoutings);
     }
 
-    // GET 상세조회
+    // 2. productionRouting 개별상세조회
     @GetMapping("/{id}")
-    public ResponseEntity<ProductionRoutingDTO> findById(@PathVariable("id") Long id) {
-        Optional<ProductionRouting> productionRouting = productionRoutingRepository.findById(id);
-        return productionRouting.map(routing -> ResponseEntity.ok(productionRoutingService.convertToDTO(routing))).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ProductionRouting> getProductionRoutingById(@PathVariable("id") Long id) {
+        return productionRoutingRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // POST 고유코드 중복 확인 후, 개별 등록
-    @PostMapping("/post")
-    public ResponseEntity<ProductionRouting> createProductionRouting(@RequestBody ProductionRoutingDTO routingDTO) {
-        // 서비스 계층에서 반환된 값을 Optional로 감쌉니다.
-        ProductionRouting createdRouting = productionRoutingService.createProductionRoutingWithSteps(routingDTO);
-
-        // createdRouting이 null이 아닌 경우 성공 응답, null인 경우 실패 응답 반환
-        return Optional.ofNullable(createdRouting)
-                .map(routing -> ResponseEntity.ok().body(routing)) // 성공 시 200 OK 응답
-                .orElse(ResponseEntity.badRequest().body(null)); // 실패 시 400 Bad Request 응답
+    // 3. productionRouting 생성(등록)
+    @PostMapping
+    public ResponseEntity<ProductionRoutingDTO> createProductionRouting(@RequestBody ProductionRoutingDTO productionRoutingDTO) {
+        ProductionRoutingDTO createdRouting = productionRoutingService.createProductionRoutingWithSteps(productionRoutingDTO);
+        return ResponseEntity.ok(createdRouting);
     }
 
-    // PUT 각 ProductionRouting ID를 통해 개별 수정
+    // 3.1 생성 시 등록창 내에서 생산공정 검색 (RoutingStep 등록 위함)
+    @GetMapping("/searchProcessDetails")
+    public ResponseEntity<List<ProcessDetailsDTO>> searchProcessDetails(@RequestParam String keyword) {
+        List<ProcessDetailsDTO> processDetailsList = productionRoutingService.searchProcessDetails(keyword);
+        return ResponseEntity.ok(processDetailsList);
+    }
+
+    // 3.2 생성 시 등록창 내에서 품목Product 검색
+    @GetMapping("/searchProducts")
+    public ResponseEntity<List<ProductDetailDto>> searchProducts(@RequestParam String keyword) {
+        List<ProductDetailDto> productList = productionRoutingService.searchProducts(keyword);
+        return ResponseEntity.ok(productList);
+    }
+
+    // 3.3 선택 시 각 항목을 미리보기로 상세조회
+    @GetMapping("/previewProcessDetails/{id}")
+    public ResponseEntity<ProcessDetailsDTO> previewProcessDetails(@PathVariable Long id) {
+        ProcessDetailsDTO processDetails = productionRoutingService.getProcessDetailsById(id);
+        return ResponseEntity.ok(processDetails);
+    }
+
+    @GetMapping("/previewProduct/{id}")
+    public ResponseEntity<ProductDetailDto> previewProduct(@PathVariable Long id) {
+        ProductDetailDto product = productionRoutingService.getProductById(id);
+        return ResponseEntity.ok(product);
+    }
+
+    // 4. 수정
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateProductionRouting(@PathVariable Long id, @RequestBody ProductionRoutingDTO productionRoutingDTO) {
-        Optional<ProductionRouting> updatedRouting = productionRoutingService.updateProductionRouting(id, productionRoutingDTO);
-        return updatedRouting.isPresent() ? ResponseEntity.ok("생산 라우팅이 성공적으로 수정되었습니다.")
-                : ResponseEntity.badRequest().body("생산 라우팅을 수정할 수 없습니다.");
+    public ResponseEntity<ProductionRoutingDTO> updateProductionRouting(
+            @PathVariable Long id,
+            @RequestBody ProductionRoutingDTO productionRoutingDTO) {
+        ProductionRoutingDTO updatedRouting = productionRoutingService.updateProductionRouting(id, productionRoutingDTO);
+        return ResponseEntity.ok(updatedRouting);
     }
 
-    // DELETE Routing 삭제 시, 사용 중인지 확인 후 진행 그게 아니면 경고 메시지 출력
+
+    // 5. 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProductionRouting(@PathVariable Long id) {
-        Optional<ProductionRouting> deletedRouting = productionRoutingService.deleteProductionRouting(id);
-        return deletedRouting.isPresent() ? ResponseEntity.ok("생산 라우팅이 성공적으로 삭제되었습니다.")
-                : ResponseEntity.badRequest().body("해당 라우팅이 사용 중입니다. 삭제가 불가합니다.");
+    public ResponseEntity<Void> deleteProductionRouting(@PathVariable Long id) {
+        productionRoutingService.deleteProductionRouting(id);
+        return ResponseEntity.noContent().build();
     }
 }
+

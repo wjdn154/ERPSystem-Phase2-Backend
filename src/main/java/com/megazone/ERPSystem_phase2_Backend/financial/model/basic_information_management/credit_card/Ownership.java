@@ -1,4 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.credit_card;
+//import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

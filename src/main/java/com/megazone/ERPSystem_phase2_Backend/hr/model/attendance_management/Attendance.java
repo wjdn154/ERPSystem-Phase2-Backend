@@ -26,6 +26,9 @@ public class Attendance {
     @JoinColumn(name="employee_id", nullable=false)
     private Employee employee; // 사원 참조
 
+    @Column(nullable = false,unique = true)
+    private String attendanceCode; // 근태코드
+
     @Column(nullable = false)
     private LocalDate date; // 날짜
 
