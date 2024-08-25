@@ -26,7 +26,6 @@ public class WorkcenterDTO {
     private Boolean isActive;
     private WarehouseResponseDTO factoryCode; // Factory의 코드 (Warehouse의 정보 중 일부)
     private ProcessDetailsDTO processCode; // ProcessDetails의 코드
-    private List<EquipmentDataDTO> equipmentList = new ArrayList<>();
-    private List<WorkerAssignmentDTO> workerAssignments = new ArrayList<>();
-
+    private List<EquipmentDataDTO> equipmentList;
+    private List<WorkerAssignmentDTO> workerAssignments;
 }
