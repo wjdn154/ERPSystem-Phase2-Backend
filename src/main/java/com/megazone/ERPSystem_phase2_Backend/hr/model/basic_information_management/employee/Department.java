@@ -28,12 +28,15 @@ public class Department {
     @OneToMany(mappedBy = "toDepartment") // 도착 부서
     private List<Transfer> transfersTo;
 
-    @Column(nullable = false)
+    @Column(name="departmentCode", nullable = false,unique = true)
+    private String departmentCode; // 부서번호
+
+    @Column(name="departmentName", nullable = false)
     private String departmentName; // 부서명
 
-    @Column(nullable = false)
-    private String Location; // 부서 위치
+    @Column(name="location", nullable = false)
+    private String location; // 부서 위치
 
-    @Column(nullable = false)
+    @Column(name ="mangerId", nullable = false)
     private String managerId;
 }

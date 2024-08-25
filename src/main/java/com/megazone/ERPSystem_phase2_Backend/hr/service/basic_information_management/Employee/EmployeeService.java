@@ -1,40 +1,25 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Employee;
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.EmployeeDTO;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.EmployeeShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.*;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface EmployeeService {
-//    Optional<EmployeeDTO> saveEmployee(EmployeeDTO employeeDTO);
-//
-//
-//    Optional<EmployeeDTO> getEmployeeById(Long id);
 
+    // 사원 리스트 조회
     List<EmployeeShowDTO> findAllEmployees();
 
+    // 사원 상세 조회
+    Optional<EmployeeOneDTO> findEmployeeById(Long id);
 
-    void deleteEmployee(Long employeeid);
+    // 사원 수정
+    Optional<EmployeeDTO> updateEmployee(Long id, EmployeeDataDTO dto);
 
-    Optional<EmployeeDTO> findEmployeeById(Long id);
+    // 사원 등록. 저장
+    Optional<EmployeeDTO> saveEmployee(EmployeeCreateDTO dto);
 
-    Optional<EmployeeDTO> updateEmployee(Long id, EmployeeDTO employeeDTO);
 
-    Optional<EmployeeDTO> saveEmployee(EmployeeDTO employeeDTO);
-
-//    List<EmployeeDTO> searchEmployeesByLastName(String lastName);
-//
-//    List<EmployeeDTO> searchEmployeesByDepartment(String departmentName);
-//
-//    Optional<EmployeeDTO> updateEmploymentStatus(Long id, EmploymentStatus newStatus);
-//
-//    EmployeeDTO convertToDTO(Employee employee);
-//
-//    Employee convertToEntity(EmployeeDTO employeeDTO);
-//
-//    List<EmployeeDTO> findAllEmployees();
-//
-//    Optional<EmployeeDTO> findEmployeeById(Long id);
+    // 사원 삭제
+    void deleteEmployee(Long id);
 }
