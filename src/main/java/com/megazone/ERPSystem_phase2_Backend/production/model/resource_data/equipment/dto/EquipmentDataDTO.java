@@ -1,7 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto;
 
 
-
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.EquipmentType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.OperationStatus;
 
