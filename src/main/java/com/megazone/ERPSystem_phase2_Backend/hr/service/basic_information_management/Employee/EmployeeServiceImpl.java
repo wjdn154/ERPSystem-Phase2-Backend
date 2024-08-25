@@ -1,8 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Employee;
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.*;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.EmployeeDTO;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.EmployeeShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.BankAccount.EmployeeBankAccountRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Department.DepartmentRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
@@ -13,6 +12,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,57 +23,26 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class EmployeeServiceImpl implements EmployeeService{
+public class EmployeeServiceImpl implements EmployeeService {
 
-        private final EmployeeRepository employeeRepository;
-        //private final ResignedEmployeeRepository resignedEmployeeRepository;
-        private final PerformanceRepository performanceRepository;
-        @Autowired
-        private DepartmentRepository departmentRepository;
-        private PositionRepository positionRepository;
-        private JobTitleRepository jobTitleRepository;
-        private EmployeeBankAccountRepository bankAccountRepository;
+    private final EmployeeRepository employeeRepository;
+    private final PerformanceRepository performanceRepository;
+    @Autowired
+    private DepartmentRepository departmentRepository;
+    @Autowired
+    private PositionRepository positionRepository;
+    @Autowired
+    private JobTitleRepository jobTitleRepository;
+    @Autowired
+    private EmployeeBankAccountRepository bankAccountRepository;
 
-        public EmployeeDTO getEmployeeDTO(Long id) {
-            Employee employee = employeeRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException("Employee not found"));
-
-            EmployeeDTO dto = new EmployeeDTO();
-            dto.setId(employee.getId());
-            dto.setFirstName(employee.getFirstName());
-            dto.setLastName(employee.getLastName());
-            dto.setDateOfBirth(employee.getDateOfBirth());
-            dto.setPhoneNumber(employee.getPhoneNumber());
-            dto.setEmploymentStatus(employee.getEmploymentStatus());
-            dto.setEmploymentType(employee.getEmploymentType());
-            dto.setEmail(employee.getEmail());
-            dto.setAddress(employee.getAddress());
-            dto.setHireDate(employee.getHireDate());
-            dto.setHouseholdHead(employee.isHouseholdHead());
-
-            // 참조 데이터 설정
-//            dto.setDepartmentName(employee.getDepartment().getId());
-//            dto.setPositionName(employee.getPosition().getId());
-//            dto.setJobTitleName(employee.getJobTitle().getId());
-//            dto.setBankAccountNumber(employee.getBankAccount().getAccountNumber());
-
-            // 추가 정보 설정 (예: 성과, 휴가, 근태 요약 등)
-            //dto.setPerformanceSummary("Performance summary here...");
-            //dto.setLeavesSummary("Leaves summary here...");
-            //dto.setAttendanceSummary("Attendance summary here...");
-
-            return dto;
-        }
-
+    // 사원 리스트 조회
     @Override
     public List<EmployeeShowDTO> findAllEmployees() {
-
-            //엔티티 조회
-            //List<Employee> employee1 = employeeRepository.findAll();
-            //엔티티 dto로 변환
+        //엔티티 dto로 변환
         return employeeRepository.findAll().stream()
                 .map(employee -> new EmployeeShowDTO(
-                        employee.getId(),
+                        employee.getEmployeeNumber(),
                         employee.getFirstName(),
                         employee.getLastName(),
                         employee.getDateOfBirth(),
@@ -92,159 +62,64 @@ public class EmployeeServiceImpl implements EmployeeService{
                 .collect(Collectors.toList());
     }
 
-
-
+    // 사원 상세 조회
     @Override
-    //@Transactional
+    public Optional<EmployeeOneDTO> findEmployeeById(Long id) {
+        //엔티티 조회
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("아이디가 올바르지 않습니다."));
+
+        //엔티티를 dto로 변환.
+        EmployeeOneDTO employeeDTO = convertToDTO(employee);
+
+        return Optional.of(employeeDTO);
+    }
+
+    private EmployeeOneDTO convertToDTO(Employee employee) {
+        EmployeeOneDTO dto = new EmployeeOneDTO();
+        dto.setId(employee.getId());
+        dto.setEmployeeNumber(employee.getEmployeeNumber());
+        dto.setFirstName(employee.getFirstName());
+        dto.setLastName(employee.getLastName());
+        dto.setDateOfBirth(employee.getDateOfBirth());
+        dto.setPhoneNumber(employee.getPhoneNumber());
+        dto.setEmploymentStatus(employee.getEmploymentStatus());
+        dto.setEmploymentType(employee.getEmploymentType());
+        dto.setEmail(employee.getEmail());
+        dto.setAddress(employee.getAddress());
+        dto.setHireDate(employee.getHireDate());
+        dto.setHouseholdHead(employee.isHouseholdHead());
+        dto.setProfilePicture(employee.getProfilePicture());
+        dto.setDepartmentName(employee.getDepartment().getDepartmentName());
+        dto.setPositionName(employee.getPosition().getPositionName());
+        dto.setJobTitleName(employee.getJobTitle().getTitleName());
+        dto.setBankAccountNumber(employee.getBankAccount().getAccountNumber());
+        return dto;
+    }
+
+   ///**
+   // * 특정 ID에 해당하는 사원의 상세 정보를 조회함.
+   // *
+   // * @param employeeNumber 조회할 사원의 사원번호
+   // * @return 해당 ID의 사원 상세 정보를 담은 EmployeeDTO 객체를 반환함.
+   // */
+   //@Override
+   //public Optional<EmployeeOneDTO> findEmployeeByEmployeeNumber(String employeeNumber) {
+   //    return employeeRepository.findByEmployeeNumber(employeeNumber)
+   //            .map(this::convertToDTO); // 여기서 변환 메서드를 사용
+   //}
+
+    // 사원 삭제
+    @Override
     public void deleteEmployee(Long id) {
-            performanceRepository.deleteByEvaluatorId(id);
-            // 먼저 관련된 자식 테이블 데이터 삭제
-            //employeeRepository.deleteByEvaluatorId(id);
-            // 그 후에 직원 삭제
+        performanceRepository.deleteByEvaluatorId(id);
         employeeRepository.deleteById(id);
     }
 
-//    @Override
-//    public Optional<EmployeeDTO> findEmployeeById(Long id) {
-//        // 1. 엔티티를 데이터베이스에서 조회
-//        Optional<Employee> employeeOptional = employeeRepository.findById(id);
-//        // 2. DTO로 변환
-//        if (employeeOptional.isPresent()) {
-//            Employee employee = employeeOptional.get();
-//            EmployeeDTO employeeDTO = new EmployeeDTO();
-//
-//            // DTO로 변환하는 로직
-//            employeeDTO.setId(employee.getId());
-//            employeeDTO.setFirstName(employee.getFirstName());
-//            employeeDTO.setLastName(employee.getLastName());
-//            employeeDTO.setEmail(employee.getEmail());
-//            // 필요한 필드들을 채워줍니다.
-//
-//            // 3. DTO를 Optional로 반환
-//            return Optional.of(employeeDTO);
-//        } else {
-//            // 해당 ID의 직원이 없으면 Optional.empty()를 반환
-//            return Optional.empty();
-//        }
-//    }
+    public EmployeeDTO getEmployeeDTO(Long id) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Employee not found"));
 
-    /**
-     *  특정 ID에 해당하는 직원의 상세 정보를 조회함.
-      * @param id 조회할 직원의 ID
-     * @return 해당 ID의 직원 상세 정보를 담은 EmployeeDTO 객체를 반환함.
-     */
-@Override
-public Optional<EmployeeDTO> findEmployeeById(Long id) {
-    return employeeRepository.findById(id)
-            .map(this::convertToDTO); // 여기서 변환 메서드를 사용
-}
-
-    @Override
-    public Optional<EmployeeDTO> updateEmployee(Long id, EmployeeDTO employeeDTO) {
-        // 1. 기존 직원 엔티티 조회
-        Optional<Employee> employeeOptional = employeeRepository.findById(id);
-
-        if (employeeOptional.isPresent()) {
-            Employee employee = employeeOptional.get();
-
-            // 2. 엔티티 업데이트
-            // employeeDTO의 값으로 엔티티의 값을 업데이트
-            employee.setFirstName(employeeDTO.getFirstName());
-            employee.setLastName(employeeDTO.getLastName());
-            employee.setEmail(employeeDTO.getEmail());
-            employee.setPhoneNumber(employeeDTO.getPhoneNumber());
-            employee.setEmploymentStatus(employeeDTO.getEmploymentStatus());
-            employee.setEmploymentType(employeeDTO.getEmploymentType());
-            employee.setAddress(employeeDTO.getAddress());
-            employee.setHireDate(employeeDTO.getHireDate());
-            //employee.setPosition(employeeDTO.getPosition());
-            // 필요한 다른 필드들도 업데이트
-
-            // 3. 엔티티 저장
-            Employee updatedEmployee = employeeRepository.save(employee);
-
-            // 4. DTO로 변환하여 반환
-            EmployeeDTO updatedEmployeeDTO = new EmployeeDTO();
-            updatedEmployeeDTO.setId(updatedEmployee.getId());
-            updatedEmployeeDTO.setFirstName(updatedEmployee.getFirstName());
-            updatedEmployeeDTO.setLastName(updatedEmployee.getLastName());
-            updatedEmployeeDTO.setEmail(updatedEmployee.getEmail());
-            updatedEmployeeDTO.setPhoneNumber(updatedEmployee.getPhoneNumber());
-            updatedEmployeeDTO.setEmploymentStatus(updatedEmployee.getEmploymentStatus());
-            updatedEmployeeDTO.setEmploymentType(updatedEmployee.getEmploymentType());
-            updatedEmployeeDTO.setAddress(updatedEmployee.getAddress());
-            updatedEmployeeDTO.setHireDate(updatedEmployee.getHireDate());
-            //updatedEmployeeDTO.setPosition(updatedEmployee.getPosition());
-            // 필요한 필드들을 채워줍니다.
-
-            return Optional.of(updatedEmployeeDTO);
-        } else {
-            // 해당 ID의 직원이 없으면 Optional.empty()를 반환
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public Optional<EmployeeDTO> saveEmployee(EmployeeDTO employeeDTO) {
-        Employee employee = new Employee();
-        // employeeDTO를 사용하여 Employee 엔티티를 초기화
-        employee.setFirstName(employeeDTO.getFirstName());
-        employee.setLastName(employeeDTO.getLastName());
-        employee.setEmail(employeeDTO.getEmail());
-        employee.setPhoneNumber(employeeDTO.getPhoneNumber());
-        employee.setEmploymentStatus(employeeDTO.getEmploymentStatus());
-        employee.setEmploymentType(employeeDTO.getEmploymentType());
-        employee.setAddress(employeeDTO.getAddress());
-        employee.setHireDate(employeeDTO.getHireDate());
-        employee.setDateOfBirth(employeeDTO.getDateOfBirth());
-        // Department 설정
-        Department department = departmentRepository.findById(employeeDTO.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Department not found"));
-        employee.setDepartment(department);
-
-        // Position 설정
-        Position position = positionRepository.findById(employeeDTO.getPositionName().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Position not found"));
-        employee.setPosition(position);
-
-        // JobTitle 설정
-        JobTitle jobTitle = jobTitleRepository.findById(employeeDTO.getJobTitleName().getId())
-                .orElseThrow(() -> new EntityNotFoundException("JobTitle not found"));
-        employee.setJobTitle(jobTitle);
-
-        // BankAccount 설정
-        BankAccount bankAccount = bankAccountRepository.findById(employeeDTO.getBankAccountNumber().getId())
-                .orElseThrow(() -> new EntityNotFoundException("BankAccount not found"));
-        employee.setBankAccount(bankAccount);
-//        employee.setDepartment(employeeDTO.getDepartmentName());
-//        employee.setPosition(employeeDTO.getPositionName());
-//        employee.setJobTitle(employeeDTO.getJobTitleName());
-//        employee.setBankAccount(employeeDTO.getBankAccountNumber());
-
-        Employee savedEmployee = employeeRepository.save(employee);
-        EmployeeDTO savedEmployeeDTO = new EmployeeDTO(
-                savedEmployee.getId(),
-                savedEmployee.getFirstName(),
-                savedEmployee.getLastName(),
-                savedEmployee.getDateOfBirth(),
-                savedEmployee.getPhoneNumber(),
-                savedEmployee.getEmploymentStatus(),
-                savedEmployee.getEmploymentType(),
-                savedEmployee.getEmail(),
-                savedEmployee.getAddress(),
-                savedEmployee.getHireDate(),
-                savedEmployee.isHouseholdHead(),
-                savedEmployee.getProfilePicture(),
-                savedEmployee.getDepartment(),
-                savedEmployee.getPosition(),
-                savedEmployee.getJobTitle(),
-                savedEmployee.getBankAccount()
-        );
-        return Optional.of(savedEmployeeDTO);
-}
-
-
-    private EmployeeDTO convertToDTO(Employee employee) {
         EmployeeDTO dto = new EmployeeDTO();
         dto.setId(employee.getId());
         dto.setFirstName(employee.getFirstName());
@@ -257,6 +132,159 @@ public Optional<EmployeeDTO> findEmployeeById(Long id) {
         dto.setAddress(employee.getAddress());
         dto.setHireDate(employee.getHireDate());
         dto.setHouseholdHead(employee.isHouseholdHead());
-        dto.setProfilePicture(employee.getProfilePicture());
-        // 나머지 필드들도 동일하게 설정
-        return dto;}}
+        dto.setDepartmentId(employee.getDepartment().getId());
+        dto.setPositionId(employee.getPosition().getId());
+        dto.setJobTitleId(employee.getJobTitle().getId());
+        dto.setBankAccountId(employee.getBankAccount().getId());
+        return dto;
+    }
+
+    @Override
+    public Optional<EmployeeDTO> updateEmployee(Long id, EmployeeDataDTO dto) {
+        // id 에 해당하는 엔티티 데이터 조회
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() ->  new RuntimeException(id+"에 해당하는 아이디를 찾을 수 없습니다."));
+
+            // 2. 엔티티 업데이트
+            // employeeDTO의 값으로 엔티티의 값을 업데이트
+            employee.setFirstName(dto.getFirstName());
+            employee.setLastName(dto.getLastName());
+            employee.setEmail(dto.getEmail());
+            employee.setPhoneNumber(dto.getPhoneNumber());
+            employee.setEmploymentStatus(dto.getEmploymentStatus());
+            employee.setEmploymentType(dto.getEmploymentType());
+            employee.setAddress(dto.getAddress());
+            employee.setHireDate(dto.getHireDate());
+            employee.setDateOfBirth(dto.getDateOfBirth());
+            employee.setProfilePicture(dto.getProfilePicture());
+            employee.setHouseholdHead(dto.isHouseholdHead());
+
+            // Position 설정
+            if (dto.getPositionId() != null) {
+                Position position = positionRepository.findById(dto.getPositionId())
+                        .orElseThrow(() -> new EntityNotFoundException("Position not found"));
+                employee.setPosition(position);
+            }
+
+            // Department 설정
+            if (dto.getDepartmentId() != null) {
+                Department department = departmentRepository.findById(dto.getDepartmentId())
+                        .orElseThrow(() -> new EntityNotFoundException("Department not found"));
+                employee.setDepartment(department);
+            }
+
+            // JobTitle 설정
+            if (dto.getJobTitleId() != null) {
+                JobTitle jobTitle = jobTitleRepository.findById(dto.getJobTitleId())
+                        .orElseThrow(() -> new EntityNotFoundException("JobTitle not found"));
+                employee.setJobTitle(jobTitle);
+            }
+
+            // BankAccount 설정
+            if (dto.getBankAccountId() != null) {
+                BankAccount bankAccount = bankAccountRepository.findById(dto.getBankAccountId())
+                        .orElseThrow(() -> new EntityNotFoundException("BankAccount not found"));
+                employee.setBankAccount(bankAccount);
+            }
+
+            // 3. 엔티티 저장
+            Employee updatedEmployee = employeeRepository.save(employee);
+
+            // 4. DTO로 변환하여 반환
+            EmployeeDTO updatedEmployeeDTO = new EmployeeDTO(
+                    updatedEmployee.getId(),
+                    updatedEmployee.getEmployeeNumber(),
+                    updatedEmployee.getFirstName(),
+                    updatedEmployee.getLastName(),
+                    updatedEmployee.getDateOfBirth(),
+                    updatedEmployee.getPhoneNumber(),
+                    updatedEmployee.getEmploymentStatus(),
+                    updatedEmployee.getEmploymentType(),
+                    updatedEmployee.getEmail(),
+                    updatedEmployee.getAddress(),
+                    updatedEmployee.getHireDate(),
+                    updatedEmployee.isHouseholdHead(),
+                    updatedEmployee.getProfilePicture(),
+                    updatedEmployee.getDepartment() != null ? updatedEmployee.getDepartment().getId() : null,
+                    updatedEmployee.getPosition() != null ? updatedEmployee.getPosition().getId() : null,
+                    updatedEmployee.getJobTitle() != null ? updatedEmployee.getJobTitle().getId() : null,
+                    updatedEmployee.getBankAccount() != null ? updatedEmployee.getBankAccount().getId() : null
+            );
+            return Optional.of(updatedEmployeeDTO);
+    }
+
+    // 사원 등록. 저장
+    @Override
+    public Optional<EmployeeDTO> saveEmployee(EmployeeCreateDTO dto) {
+        // Check if employeeNumber already exists
+        if (employeeRepository.findByEmployeeNumber(dto.getEmployeeNumber()).isPresent()) {
+            throw new DuplicateKeyException("Employee number already exists."+ dto.getEmployeeNumber());
+        }
+        // Employee 엔티티를 초기화합니다.
+        Employee employee = new Employee();
+        employee.setEmployeeNumber(dto.getEmployeeNumber());
+        employee.setFirstName(dto.getFirstName());
+        employee.setLastName(dto.getLastName());
+        employee.setEmail(dto.getEmail());
+        employee.setPhoneNumber(dto.getPhoneNumber());
+        employee.setEmploymentStatus(dto.getEmploymentStatus());
+        employee.setEmploymentType(dto.getEmploymentType());
+        employee.setAddress(dto.getAddress());
+        employee.setHireDate(dto.getHireDate());
+        employee.setDateOfBirth(dto.getDateOfBirth());
+
+        // Department 설정
+        if (dto.getDepartmentId() != null) {
+            Department department = departmentRepository.findById(dto.getDepartmentId())
+                    .orElseThrow(() -> new EntityNotFoundException("Department not found"));
+            employee.setDepartment(department);
+        }
+
+        // Position 설정
+        if (dto.getPositionId() != null) {
+            Position position = positionRepository.findById(dto.getPositionId())
+                    .orElseThrow(() -> new EntityNotFoundException("Position not found"));
+            employee.setPosition(position);
+        }
+
+        // JobTitle 설정
+        if (dto.getJobTitleId() != null) {
+            JobTitle jobTitle = jobTitleRepository.findById(dto.getJobTitleId())
+                    .orElseThrow(() -> new EntityNotFoundException("JobTitle not found"));
+            employee.setJobTitle(jobTitle);
+        }
+
+        // BankAccount 설정
+        if (dto.getBankAccountId() != null) {
+            BankAccount bankAccount = bankAccountRepository.findById(dto.getBankAccountId())
+                    .orElseThrow(() -> new EntityNotFoundException("BankAccount not found"));
+            employee.setBankAccount(bankAccount);
+        }
+
+        // 사원 정보를 저장합니다.
+        Employee savedEmployee = employeeRepository.save(employee);
+
+        // 저장된 정보를 DTO로 변환하여 반환합니다.
+        EmployeeDTO savedEmployeeDTO = new EmployeeDTO(
+                savedEmployee.getId(),
+                savedEmployee.getEmployeeNumber(),
+                savedEmployee.getFirstName(),
+                savedEmployee.getLastName(),
+                savedEmployee.getDateOfBirth(),
+                savedEmployee.getPhoneNumber(),
+                savedEmployee.getEmploymentStatus(),
+                savedEmployee.getEmploymentType(),
+                savedEmployee.getEmail(),
+                savedEmployee.getAddress(),
+                savedEmployee.getHireDate(),
+                savedEmployee.isHouseholdHead(),
+                savedEmployee.getProfilePicture(),
+                savedEmployee.getDepartment() != null ? savedEmployee.getDepartment().getId() : null,
+                savedEmployee.getPosition() != null ? savedEmployee.getPosition().getId() : null,
+                savedEmployee.getJobTitle() != null ? savedEmployee.getJobTitle().getId() : null,
+                savedEmployee.getBankAccount() != null ? savedEmployee.getBankAccount().getId() : null
+        );
+
+        return Optional.of(savedEmployeeDTO);
+    }
+}

@@ -14,8 +14,9 @@ import java.util.List;
 
 import static com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.QUsers.users;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/hr")
 public class UsersController {
 
     private final UsersService usersService;
@@ -26,7 +27,7 @@ public class UsersController {
      * 모든 사용자 정보를 가져옴.
      * @return 모든 사용자 정보를 담은 리스트를 반환함.
      */
-    @PostMapping("/api/hr/users")
+    @PostMapping("/users/all")
     public ResponseEntity<List<UsersDTO>> getAllUsers() {
         List<UsersDTO> users = usersService.findAllUsers();
         return ResponseEntity.ok(users);
@@ -37,7 +38,7 @@ public class UsersController {
      * @param id 조회할 사용자의 ID
      * @return 조회된 사용자 정보를 반환함.
      */
-    @PostMapping("/api/hr/users/{id}")
+    @PostMapping("/users/{id}")
     public ResponseEntity<UsersDTO> getUserById(@PathVariable Long id) {
         UsersDTO user = usersService.findUserById(id);
         return ResponseEntity.ok(user);
@@ -48,7 +49,7 @@ public class UsersController {
      * @param usersDTO 생성할 사용자 정보
      * @return 생성된 사용자 정보를 반환함.
      */
-    @PostMapping("/api/hr/users/create")
+    @PostMapping("/users/create")
     public ResponseEntity<UsersDTO> createUser(@RequestBody UsersDTO usersDTO) {
         UsersDTO createdUser = usersService.createUser(usersDTO);
         return ResponseEntity.ok(createdUser);
@@ -60,18 +61,18 @@ public class UsersController {
      * @param usersDTO 수정할 사용자 정보
      * @return 수정된 사용자 정보를 반환함.
      */
-    @PutMapping("/api/hr/users/put/{id}")
+    @PutMapping("/users/put/{id}")
     public ResponseEntity<UsersDTO> updateUser(@PathVariable Long id, @RequestBody UsersDTO usersDTO) {
         UsersDTO updatedUser = usersService.updateUser(id, usersDTO);
         return ResponseEntity.ok(updatedUser);
-    } // 되네?
+    } // 다시 해야 됨
 
     /**
      * ID로 사용자를 삭제함.
      * @param id 삭제할 사용자의 ID
      * @return 삭제 성공 메시지를 반환함.
      */
-    @DeleteMapping("/api/hr/users/del/{id}")
+    @DeleteMapping("/users/del/{id}")
     public ResponseEntity<String> deleteUsers(@PathVariable Long id) {
         usersService.deleteUsers(id);
         return ResponseEntity.ok("User deleted successfully");

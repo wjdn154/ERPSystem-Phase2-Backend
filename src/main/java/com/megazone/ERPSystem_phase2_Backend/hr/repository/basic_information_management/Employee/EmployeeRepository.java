@@ -5,10 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
+// Employee 엔티티와 ID 타입(Long)을 정의
 public interface EmployeeRepository extends JpaRepository<Employee, Long>, EmployeeRepositoryCustom {
-    //Optional<Employee> findByFirstNameANDLastName(String firstname, String lastname);
-    Optional<Employee> findById(Long id);
+    Optional<Employee> findByEmployeeNumber(String employeeNumber);
 
-    //void deleteByEvaluatorId(Long );
-    //findAllEmployees
 }

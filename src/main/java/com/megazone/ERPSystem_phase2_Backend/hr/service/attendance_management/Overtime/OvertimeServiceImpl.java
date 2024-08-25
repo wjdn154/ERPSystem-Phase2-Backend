@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class OvertimeServiceImpl implements OvertimeService{
+public class OvertimeServiceImpl implements OvertimeService {
 
     @Autowired // OvertimeRepository 인스턴스를 자동으루 주입하도록 함.
     private OvertimeRepository overtimeRepository;
