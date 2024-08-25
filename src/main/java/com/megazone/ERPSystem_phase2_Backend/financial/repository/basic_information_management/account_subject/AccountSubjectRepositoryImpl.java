@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_informa
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.*;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -40,6 +41,7 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
                         accountSubject.name.as("name"), // 계정과목 이름
                         accountSubject.englishName.as("englishName"), // 영문명
                         accountSubject.natureCode.as("natureCode"), // 성격 코드
+                        QNature.nature.name.max().as("natureName"), // 성격명
                         accountSubject.entryType.as("entryType"), // 차대구분 (enum)
                         accountSubject.increaseDecreaseType.as("increaseDecreaseType"), // 증감구분 (enum)
                         accountSubject.isActive.as("isActive"), // 활성화 여부
@@ -48,25 +50,31 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
                         accountSubject.isBusinessCar.as("isBusinessCar") // 업무용 차량 여부
                 ))
                 .from(accountSubject)
+                .leftJoin(QNature.nature).on(accountSubject.natureCode.eq(QNature.nature.code))
+                .groupBy(accountSubject.id, accountSubject.structure.code, accountSubject.parent.code, accountSubject.code,
+                        accountSubject.name, accountSubject.englishName, accountSubject.natureCode,
+                        accountSubject.entryType, accountSubject.increaseDecreaseType, accountSubject.isActive,
+                        accountSubject.modificationType, accountSubject.isForeignCurrency, accountSubject.isBusinessCar)
                 .orderBy(Expressions.stringTemplate("LENGTH({0})", accountSubject.code).asc(),
-                        accountSubject.code.asc()) // 코드로 정렬
-                .fetch(); // 결과를 리스트로 반환
+                        accountSubject.code.asc())
+                .fetch();
     }
 
     /**
-     * 특정 코드에 해당하는 계정과목의 상세 정보를 조회함.     *
+     * 특정 코드에 해당하는 계정과목의 상세 정보를 조회함.
      * @param code 계정과목 코드
      * @return 계정과목 상세 정보를 담은 Optional 객체를 반환함.
      */
     @Override
     public Optional<AccountSubjectDetailDTO> findAccountSubjectDetailByCode(String code) {
 
-        QAccountSubject parentAlias = new QAccountSubject("parentAlias");
+        QNature nature = QNature.nature;
+        QStandardFinancialStatement standardFinancialStatement = QStandardFinancialStatement.standardFinancialStatement;
 
         // 서브쿼리로 cashMemos 가져옴
         List<CashMemoDTO> cashMemos = queryFactory
                 .select(Projections.fields(CashMemoDTO.class,
-                        cashMemo.id, // 현금 메모 ID
+                        cashMemo.code, // 현금 메모 code
                         cashMemo.content // 현금 메모 내용
                 ))
                 .from(cashMemo)
@@ -76,7 +84,7 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
         // 서브쿼리로 transferMemos 가져옴
         List<TransferMemoDTO> transferMemos = queryFactory
                 .select(Projections.fields(TransferMemoDTO.class,
-                        transferMemo.id, // 대체 메모 ID
+                        transferMemo.code, // 대체 메모 code
                         transferMemo.content // 대체 메모 내용
                 ))
                 .from(transferMemo)
@@ -86,7 +94,7 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
         // 서브쿼리로 fixedMemos 가져옴
         List<FixedMemoDTO> fixedMemos = queryFactory
                 .select(Projections.fields(FixedMemoDTO.class,
-                        fixedMemo.id, // 고정 메모 ID
+                        fixedMemo.code, // 고정 메모 code
                         fixedMemo.content, // 고정 메모 내용
                         fixedMemo.category // 고정 메모 카테고리
                 ))
@@ -114,27 +122,41 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
                 .select(Projections.fields(AccountSubjectDetailDTO.class,
                         accountSubject.code.as("code"), // 계정과목 코드
                         accountSubject.name.as("name"), // 계정과목 이름
-                        parentAlias.code.as("parentCode"), // 부모 계정과목 코드
-                        parentAlias.name.as("parentName"), // 부모 계정과목 이름
+                        accountSubject.parent.code.as("parentCode"), // 부모 계정과목 코드
                         accountSubject.englishName.as("englishName"), // 영문명
                         accountSubject.isActive.as("isActive"), // 활성화 여부
+                        accountSubject.natureCode.as("natureCode"), // 성격 코드
+                        accountSubject.standardFinancialStatementCode.as("standardFinancialStatementCode"), // 표준 재무제표 코드
                         accountSubject.modificationType.as("modificationType"), // 수정 가능 여부
                         accountSubject.structure.code.as("structureCode"), // 계정과목 체계 코드
                         accountSubject.isForeignCurrency.as("isForeignCurrency"), // 외화 사용 여부
-                        accountSubject.isBusinessCar.as("isBusinessCar") // 업무용 차량 여부
+                        accountSubject.isBusinessCar.as("isBusinessCar"), // 업무용 차량
+                        nature.name.as("natureName"), // 성격명
+                        standardFinancialStatement.name.as("standardFinancialStatementName") // 표준 재무제표 이름
                 ))
                 .from(accountSubject)
-                .leftJoin(accountSubject.parent, parentAlias) // 부모 계정과목에 대한 조인
                 .leftJoin(accountSubject.structure, structure) // 계정과목 체계에 대한 조인
+                .leftJoin(nature).on(accountSubject.natureCode.eq(nature.code)
+                        .and(nature.structure.eq(accountSubject.structure))) // 성격 정보에 대한 조인
+                .leftJoin(standardFinancialStatement).on(accountSubject.structure.eq(standardFinancialStatement.structure)
+                        .and(standardFinancialStatement.code.eq(accountSubject.standardFinancialStatementCode))) // 표준 재무제표 정보에 대한 조인
                 .where(accountSubject.code.eq(code)) // 계정과목 코드로 필터링
                 .fetchOne();
 
         if (result != null) {
-            // 조회된 메모들과 표준 재무제표를 DTO에 설정함
+            // 조회된 적요들과 표준 재무제표, 성격을 DTO에 설정함
             result.setStandardFinancialStatement(standardFinancialStatements);
             result.setCashMemos(cashMemos);
             result.setTransferMemos(transferMemos);
             result.setFixedMemos(fixedMemos);
+            if (result.getParentCode() != null) {
+                // 부모 계정과목 이름을 조회하여 설정함
+                result.setParentName(queryFactory
+                        .select(accountSubject.name)
+                        .from(accountSubject)
+                        .where(accountSubject.code.eq(result.getParentCode()))
+                        .fetchOne());
+            }
         }
 
         // Optional로 반환

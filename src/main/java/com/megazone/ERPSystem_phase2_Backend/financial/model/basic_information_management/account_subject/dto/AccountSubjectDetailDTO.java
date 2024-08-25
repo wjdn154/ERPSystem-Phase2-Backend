@@ -21,6 +21,10 @@ public class AccountSubjectDetailDTO {
     private Boolean isActive; // 활성화 여부
     private Boolean modificationType; // 수정 가능 여부
     private String structureCode; // 계정과목 체계 코드
+    private String natureCode; // 계정과목 성격 코드
+    private String natureName; // 계정과목 성격 이름
+    private String standardFinancialStatementCode; // 표준 재무제표 코드
+    private String standardFinancialStatementName; // 표준 재무제표 이름
     private List<StandardFinancialStatementDTO> standardFinancialStatement; // 표준 재무제표 리스트
     private Boolean isForeignCurrency; // 외화 사용 여부
     private Boolean isBusinessCar; // 업무용 차량 여부
