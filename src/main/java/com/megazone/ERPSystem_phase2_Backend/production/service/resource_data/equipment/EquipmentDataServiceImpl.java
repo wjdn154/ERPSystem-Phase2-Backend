@@ -166,12 +166,12 @@ public class EquipmentDataServiceImpl implements EquipmentDataService{
         //workcenter 엔티티로 변환.<<
 
         Workcenter workcenter = workcenterRepository.findByCode(dto.getWorkcenterCode())
-                .orElseThrow(() -> new RuntimeException(dto.getWorkcenterCode()+"에 해당하는 코드를 찾을 수 없습니다"));
+                .orElseThrow(() -> new RuntimeException(dto.getWorkcenterCode()+"에 해당하는 작업장 코드를 찾을 수 없습니다"));
         equipmentData.setWorkcenter(workcenter);
 
         //factory 엔티티로 변환
         Warehouse warehouse = warehouseRepository.findByCode(dto.getFactoryCode())
-                .orElseThrow(() -> new RuntimeException(dto.getFactoryCode() + "에 해당하는 코드를 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException(dto.getFactoryCode() + "에 해당하는 공장 코드를 찾을 수 없습니다."));
         equipmentData.setFactory(warehouse);
 
         equipmentData.setEquipmentImg(dto.getEquipmentImg());

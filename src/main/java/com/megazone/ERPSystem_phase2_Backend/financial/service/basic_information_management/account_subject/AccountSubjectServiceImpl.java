@@ -1,13 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.basic_information_management.account_subject;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubject;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.CashMemo;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.Structure;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.TransferMemo;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.AccountSubjectDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.AccountSubjectDetailDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.AccountSubjectsAndMemosDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.StructureDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.*;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.NatureRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.StructureRepository;
@@ -19,8 +13,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -59,7 +53,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
         String firstAccountCode = accountSubjects.isEmpty() ? null : accountSubjects.get(0).getCode();
 
         // 첫 번째 계정과목의 상세 정보를 조회하거나, 리스트가 비어 있으면 null 반환
-         AccountSubjectDetailDTO accountSubjectDetail = firstAccountCode != null
+        AccountSubjectDetailDTO accountSubjectDetail = firstAccountCode != null
                 ? accountSubjectRepository.findAccountSubjectDetailByCode(firstAccountCode).orElse(null)
                 : null;
 
@@ -101,7 +95,6 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
                 throw new IllegalArgumentException("적요 타입이 잘못되었습니다: " + memoType);
         }
     }
-
 
     /**
      * 새로운 계정과목을 저장함.
@@ -155,21 +148,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
         AccountSubject savedAccountSubject = accountSubjectRepository.save(accountSubject);
 
         // 엔티티를 DTO로 변환하여 반환
-        AccountSubjectDTO accountSubjectDTO = new AccountSubjectDTO(
-                savedAccountSubject.getId(),
-                savedAccountSubject.getStructure().getCode(),
-                savedAccountSubject.getParent() != null ? savedAccountSubject.getParent().getCode() : null,
-                savedAccountSubject.getCode(),
-                savedAccountSubject.getName(),
-                savedAccountSubject.getEnglishName(),
-                savedAccountSubject.getNatureCode(),
-                savedAccountSubject.getEntryType(),
-                savedAccountSubject.getIncreaseDecreaseType(),
-                savedAccountSubject.getIsActive(),
-                savedAccountSubject.getModificationType(),
-                savedAccountSubject.getIsForeignCurrency(),
-                savedAccountSubject.getIsBusinessCar()
-        );
+        AccountSubjectDTO accountSubjectDTO = convertToDTO(savedAccountSubject);
 
         return Optional.of(accountSubjectDTO);
     }
@@ -183,9 +162,10 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
      */
     @Override
     public Optional<AccountSubjectDTO> updateAccountSubject(String code, AccountSubjectDTO dto) {
-        // 기존 계정과목을 ID로 조회함
+
+        // 기존 계정과목을 코드로 조회함
         AccountSubject accountSubject = accountSubjectRepository.findByCode(code)
-                .orElseThrow(() -> new RuntimeException("해당 ID로 계정과목을 찾을 수 없습니다: " + code));
+                .orElseThrow(() -> new RuntimeException("해당 코드로 계정과목을 찾을 수 없습니다: " + code));
 
         if (!dto.getModificationType()) {
             throw new RuntimeException("수정할 수 없는 계정과목입니다. 코드번호 : " + code);
@@ -206,15 +186,25 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
         }
 
         // 계정과목의 필드 업데이트
-        accountSubject.setName(dto.getName());
-        accountSubject.setEnglishName(dto.getEnglishName());
-        accountSubject.setNatureCode(dto.getNatureCode());
-        accountSubject.setEntryType(dto.getEntryType());
-        accountSubject.setIncreaseDecreaseType(dto.getIncreaseDecreaseType());
-        accountSubject.setIsActive(dto.getIsActive());
-        accountSubject.setModificationType(dto.getModificationType());
-        accountSubject.setIsForeignCurrency(dto.getIsForeignCurrency());
-        accountSubject.setIsBusinessCar(dto.getIsBusinessCar());
+        if(dto.getName() != null) accountSubject.setName(dto.getName());
+        if(dto.getEnglishName() != null) accountSubject.setEnglishName(dto.getEnglishName());
+        if(dto.getNatureCode() != null) accountSubject.setNatureCode(dto.getNatureCode());
+        if(dto.getStandardFinancialStatementCode() != null) accountSubject.setStandardFinancialStatementCode(dto.getStandardFinancialStatementCode());
+        if(dto.getEntryType() != null) accountSubject.setEntryType(dto.getEntryType());
+        if(dto.getIncreaseDecreaseType() != null) accountSubject.setIncreaseDecreaseType(dto.getIncreaseDecreaseType());
+        if(dto.getIsActive() != null) accountSubject.setIsActive(dto.getIsActive());
+        if(dto.getModificationType() != null) accountSubject.setModificationType(dto.getModificationType());
+        if(dto.getIsForeignCurrency() != null) accountSubject.setIsForeignCurrency(dto.getIsForeignCurrency());
+        if(dto.getIsBusinessCar() != null) accountSubject.setIsBusinessCar(dto.getIsBusinessCar());
+
+        // CashMemos 업데이트
+        updateCashMemos(accountSubject, dto.getCashMemos());
+
+        // TransferMemos 업데이트
+        updateTransferMemos(accountSubject, dto.getTransferMemos());
+
+        // FixedMemos 업데이트
+        updateFixedMemos(accountSubject, dto.getFixedMemos());
 
         // 엔티티 저장
         AccountSubject updatedAccountSubject = accountSubjectRepository.save(accountSubject);
@@ -228,15 +218,102 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
                 updatedAccountSubject.getName(),
                 updatedAccountSubject.getEnglishName(),
                 updatedAccountSubject.getNatureCode(),
+                null,
+                updatedAccountSubject.getStandardFinancialStatementCode(),
                 updatedAccountSubject.getEntryType(),
                 updatedAccountSubject.getIncreaseDecreaseType(),
                 updatedAccountSubject.getIsActive(),
                 updatedAccountSubject.getModificationType(),
                 updatedAccountSubject.getIsForeignCurrency(),
-                updatedAccountSubject.getIsBusinessCar()
+                updatedAccountSubject.getIsBusinessCar(),
+                updatedAccountSubject.getCashMemo().stream()
+                        .map(memo -> new CashMemoDTO(memo.getCode(), memo.getContent()))
+                        .collect(Collectors.toList()),
+                updatedAccountSubject.getTransferMemo().stream()
+                        .map(memo -> new TransferMemoDTO(memo.getCode(), memo.getContent()))
+                        .collect(Collectors.toList()),
+                updatedAccountSubject.getFixedMemo().stream()
+                        .map(memo -> new FixedMemoDTO(memo.getCode(), memo.getCategory(), memo.getContent()))
+                        .collect(Collectors.toList())
         );
 
         return Optional.of(accountSubjectDTO);
+    }
+
+    private void updateCashMemos(AccountSubject accountSubject, List<CashMemoDTO> cashMemoDTOs) {
+        // 기존 현금적요 모두 삭제
+        List<CashMemo> existingCashMemos = accountSubject.getCashMemo();
+        if (existingCashMemos != null && !existingCashMemos.isEmpty()) {
+            cashMemoRepository.deleteAll(existingCashMemos);
+        }
+
+        // 새로운 현금적요 등록
+        List<CashMemo> newCashMemos = cashMemoDTOs.stream()
+                .map(dtoMemo -> {
+                    CashMemo newMemo = new CashMemo();
+                    newMemo.setAccountSubject(accountSubject);
+                    newMemo.setContent(dtoMemo.getContent());
+                    newMemo.setCode(dtoMemo.getCode());
+                    return newMemo;
+                })
+                .collect(Collectors.toList());
+
+        // 계정과목에 새로운 현금적요 설정
+        accountSubject.setCashMemo(newCashMemos);
+
+        // 새로운 현금적요 저장
+        cashMemoRepository.saveAll(newCashMemos);
+    }
+
+    private void updateTransferMemos(AccountSubject accountSubject, List<TransferMemoDTO> transferMemoDTOs) {
+        // 기존 대체적요 모두 삭제
+        List<TransferMemo> existingTransferMemos = accountSubject.getTransferMemo();
+        if (existingTransferMemos != null && !existingTransferMemos.isEmpty()) {
+            transferMemoRepository.deleteAll(existingTransferMemos);
+        }
+
+        // 새로운 대체적요 등록
+        List<TransferMemo> newTransferMemos = transferMemoDTOs.stream()
+                .map(dtoMemo -> {
+                    TransferMemo newMemo = new TransferMemo();
+                    newMemo.setAccountSubject(accountSubject);
+                    newMemo.setContent(dtoMemo.getContent());
+                    newMemo.setCode(dtoMemo.getCode());
+                    return newMemo;
+                })
+                .collect(Collectors.toList());
+
+        // 계정과목에 새로운 대체적요 설정
+        accountSubject.setTransferMemo(newTransferMemos);
+
+        // 새로운 대체적요 저장
+        transferMemoRepository.saveAll(newTransferMemos);
+    }
+
+    private void updateFixedMemos(AccountSubject accountSubject, List<FixedMemoDTO> fixedMemoDTOs) {
+        // 기존 고정적요 모두 삭제
+        List<FixedMemo> existingFixedMemos = accountSubject.getFixedMemo();
+        if (existingFixedMemos != null && !existingFixedMemos.isEmpty()) {
+            fixedMemoRepository.deleteAll(existingFixedMemos);
+        }
+
+        // 새로운 고정적요 등록
+        List<FixedMemo> newFixedMemos = fixedMemoDTOs.stream()
+                .map(dtoMemo -> {
+                    FixedMemo newMemo = new FixedMemo();
+                    newMemo.setAccountSubject(accountSubject);
+                    newMemo.setContent(dtoMemo.getContent());
+                    newMemo.setCode(dtoMemo.getCode());
+                    newMemo.setCategory(dtoMemo.getCategory());
+                    return newMemo;
+                })
+                .collect(Collectors.toList());
+
+        // 계정과목에 새로운 고정적요 설정
+        accountSubject.setFixedMemo(newFixedMemos);
+
+        // 새로운 고정적요 저장
+        fixedMemoRepository.saveAll(newFixedMemos);
     }
 
     /**
@@ -256,5 +333,34 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
 
         // 계정과목을 삭제함
         accountSubjectRepository.delete(accountSubject);
+    }
+
+    private AccountSubjectDTO convertToDTO(AccountSubject accountSubject) {
+        return new AccountSubjectDTO(
+                accountSubject.getId(),
+                accountSubject.getStructure().getCode(),
+                accountSubject.getParent() != null ? accountSubject.getParent().getCode() : null,
+                accountSubject.getCode(),
+                accountSubject.getName(),
+                accountSubject.getEnglishName(),
+                accountSubject.getNatureCode(),
+                null,
+                accountSubject.getStandardFinancialStatementCode(),
+                accountSubject.getEntryType(),
+                accountSubject.getIncreaseDecreaseType(),
+                accountSubject.getIsActive(),
+                accountSubject.getModificationType(),
+                accountSubject.getIsForeignCurrency(),
+                accountSubject.getIsBusinessCar(),
+                accountSubject.getCashMemo().stream()
+                        .map(memo -> new CashMemoDTO(memo.getCode(), memo.getContent()))
+                        .collect(Collectors.toList()),
+                accountSubject.getTransferMemo().stream()
+                        .map(memo -> new TransferMemoDTO(memo.getCode(), memo.getContent()))
+                        .collect(Collectors.toList()),
+                accountSubject.getFixedMemo().stream()
+                        .map(memo -> new FixedMemoDTO(memo.getCode(), memo.getCategory(), memo.getContent()))
+                        .collect(Collectors.toList())
+        );
     }
 }

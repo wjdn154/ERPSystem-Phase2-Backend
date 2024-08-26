@@ -27,8 +27,12 @@ public class MaintenanceHistory {
     @Column(nullable = false)
     private LocalDate maintenanceDate;              //유지보수 날짜
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MaintenanceType maintenanceType;        //유지보수 종류(유형). 정기점검, 고장 수리, 긴급 수리
+    
+    @Column(nullable = false)
+    private String title;                            //유지보수 작업의 제목
 
     @Column(nullable = false)
     private String maintenanceDetail;               //유지보수 작업의 상세 내용
@@ -37,7 +41,7 @@ public class MaintenanceHistory {
     private BigDecimal maintenanceCost;             //유지보수에 소요된 비용
 
     @Column(nullable = false)
-    private Boolean maintenanceOutcome;             //유지보수의 결과 (완료, 추가작업 필요)
+    private Boolean maintenanceStatus;             //유지보수 상태(완료, 작업중)
 
     @Column(nullable = false)
     private LocalDate nextMaintenanceDate;          //다음 유지보수 예정일

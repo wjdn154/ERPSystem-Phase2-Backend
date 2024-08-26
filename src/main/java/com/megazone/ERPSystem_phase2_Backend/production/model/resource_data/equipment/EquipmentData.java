@@ -1,7 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.SerialNo;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.EquipmentType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.OperationStatus;
@@ -29,7 +28,7 @@ public class EquipmentData {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;                              //pk
     
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String equipmentNum;                 //설비 번호
 
     @Column(nullable = false)                    //설비명. 특정 설비를 식별할 수 있는 고유한 이름.

@@ -56,9 +56,11 @@ public class ProcessDetails {
     private Boolean isUsed; // 사용 여부
 
     @OneToMany(mappedBy = "processDetails", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<Workcenter> workcenters = new ArrayList<>(); // 연관 (공정수행) 작업장 목록
 
     @OneToMany(mappedBy = "process", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<RoutingStep> routingSteps = new ArrayList<>(); // 연관 RoutingStep 목록
 
 }

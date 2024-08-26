@@ -42,7 +42,7 @@ public class CreditCardController {
      * 신용카드 수정
      * @param id 수정할 신용카드의 ID
      * @param creditCardDTO 수정할 신용카드 정보가 담긴 DTO
-     * @return 수정된 신용카드 정보를 담은 creditCardDTO 객체를 반환함.
+     * @return 수정된 신용카드 정보를 담은 creditCardDTO 객체를 반환.
      */
     @PutMapping("/api/financial/creditCard/update/{id}")
     public ResponseEntity<CreditCardDTO> updateCompany(@PathVariable("id") Long id, @RequestBody CreditCardDTO creditCardDTO) {

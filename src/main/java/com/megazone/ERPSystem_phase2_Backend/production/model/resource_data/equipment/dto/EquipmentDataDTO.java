@@ -6,8 +6,7 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcen
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.WorkcenterDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.EquipmentType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.OperationStatus;
-import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
-import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
