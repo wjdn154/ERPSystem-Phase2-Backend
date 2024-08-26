@@ -56,7 +56,6 @@ spring:
         - classpath:initial-database/production/processDetails.sql
         - classpath:initial-database/production/productionRouting.sql
 
-        - classpath:initial-database/logistics/product_group.sql
         - classpath:initial-database/logistics/product.sql
 
         - classpath:initial-database/production/resource_data/equipmentData.sql
