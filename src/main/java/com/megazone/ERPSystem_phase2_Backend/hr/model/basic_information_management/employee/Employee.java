@@ -4,12 +4,11 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Atte
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Leaves;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.EmploymentStatus;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.EmploymentType;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.hr_payment.Salary;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.payment.Salary;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
