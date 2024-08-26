@@ -48,7 +48,7 @@ public class ResolvedSaleAndPurchaseVoucher {
 
     @OneToMany(cascade = CascadeType.ALL,  orphanRemoval = true)
     @JoinColumn(name = "resolved_vouchers_id")
-    private List<ResolvedVoucher> unresolvedVouchers;
+    private List<ResolvedVoucher> resolvedVouchers;
 
     @Column(nullable = false)
     private String voucherNumber;

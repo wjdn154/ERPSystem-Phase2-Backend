@@ -1,18 +1,23 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.sales_and_purchase_voucher_entry;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.ResolvedVoucher;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.ResolvedSaleAndPurchaseVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucher;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.ResolvedSaleAndPurchaseVoucherDeleteDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.UnresolvedSaleAndPurchaseVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.resolvedVoucher.ResolvedVoucherRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.resolvedSaleAndPurchaseVoucher.ResolvedSaleAndPurchaseVoucherRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +28,21 @@ public class ResolvedSaleAndPurchaseVoucherServiceImpl implements ResolvedSaleAn
     private final ResolvedVoucherRepository resolvedVoucherRepository;
 
 
+    @Override
+    public List<ResolvedSaleAndPurchaseVoucher> searchAllVoucher(LocalDate date) {
+        List<ResolvedSaleAndPurchaseVoucher> voucherList = new ArrayList<ResolvedSaleAndPurchaseVoucher>();
 
-
-
-
+        try {
+            voucherList = resolvedSaleAndPurchaseVoucherRepository.findByVoucherDateOrderByVoucherNumberAsc(date);
+            if(voucherList.isEmpty()) {
+                throw new NoSuchElementException("해당 날짜에 등록된 미결전표가 없습니다.");
+            }
+        }
+        catch (NoSuchElementException e) {
+            e.getStackTrace();
+        }
+        return voucherList;
+    }
 
     /**
      * 미결전표가 승인되었을때 일반전표가 등록되는 메소드
@@ -42,6 +58,47 @@ public class ResolvedSaleAndPurchaseVoucherServiceImpl implements ResolvedSaleAn
                     ResolvedSaleAndPurchaseVoucher resolvedVoucher = createResolvedVoucher(unresolvedVoucher,nowTime);
                     resolvedVoucherList.add(resolvedSaleAndPurchaseVoucherRepository.save(resolvedVoucher));
                 });
+    }
+
+    @Override
+    public List<ResolvedVoucher> searchEntryVoucher(String voucherNumber) {
+        return resolvedSaleAndPurchaseVoucherRepository.findByVoucherNumber(voucherNumber).getResolvedVouchers();
+    }
+
+    @Override
+    public BigDecimal calculateTotalAmount(List<ResolvedVoucher> vouchers, Function<ResolvedVoucher, BigDecimal> amount) {
+        BigDecimal totalAmount = BigDecimal.ZERO;
+
+        for (ResolvedVoucher voucher : vouchers) {
+            totalAmount = totalAmount.add(amount.apply(voucher));
+        }
+
+        return totalAmount;
+    }
+
+    @Override
+    public BigDecimal totalDebit(List<ResolvedVoucher> vouchers) {
+        return calculateTotalAmount(vouchers, ResolvedVoucher::getDebitAmount);
+    }
+    @Override
+    public BigDecimal totalCredit(List<ResolvedVoucher> vouchers) {
+        return calculateTotalAmount(vouchers, ResolvedVoucher::getCreditAmount);
+    }
+
+    @Override
+    public String deleteVoucher(ResolvedSaleAndPurchaseVoucherDeleteDTO dto) {
+        try {
+            if(true) { // 전표의 담당자 이거나, 승인권자면 삭제가능 << 기능구현 필요
+                dto.getSearchVoucherNumList().forEach((voucherNumber) -> {
+                    resolvedSaleAndPurchaseVoucherRepository.deleteByVoucherNumberAndVoucherDate(
+                            voucherNumber, dto.getSearchDate());});
+            }
+        }
+        catch (Exception e) {
+            e.getStackTrace();
+            return null;
+        }
+        return "미결 매출매입전표 삭제 성공";
     }
 
     private ResolvedSaleAndPurchaseVoucher createResolvedVoucher(UnresolvedSaleAndPurchaseVoucher unresolvedVoucher, LocalDateTime nowTime) {
@@ -60,7 +117,7 @@ public class ResolvedSaleAndPurchaseVoucherServiceImpl implements ResolvedSaleAn
         return ResolvedSaleAndPurchaseVoucher.builder()
                 .vatType(unresolvedVoucher.getVatType())
                 .journalEntry(unresolvedVoucher.getJournalEntry())
-                .unresolvedVouchers(ResolvedVouchers)
+                .resolvedVouchers(ResolvedVouchers)
                 .voucherNumber(unresolvedVoucher.getVoucherNumber())
                 .voucherDate(unresolvedVoucher.getVoucherDate())
                 .itemName(unresolvedVoucher.getItemName())
