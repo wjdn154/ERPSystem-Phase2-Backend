@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude ="employee")
+//@ToString(exclude ="employee")
 public class EmployeeOneDTO {
     private Long id;
     private String employeeNumber;
