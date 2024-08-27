@@ -1,0 +1,39 @@
+{
+  "structureCode": "1",
+  "parentCode": "101",
+  "code": "197",
+  "name": "현금",
+  "englishName": "Cash",
+  "natureCode": "ASSET",
+  "natureName": "자산",
+  "standardFinancialStatementCode": "1",
+  "entryType": "DEBIT",
+  "increaseDecreaseType": "INCREASE",
+  "isActive": true,
+  "modificationType": true,
+  "isForeignCurrency": false,
+  "isBusinessCar": false,
+  "cashMemos": [
+    {
+      "code": "4",
+      "content": "현금 적요 내용"
+    },
+    {
+      "code": "4",
+      "content": "현금 적요 내용"
+    }
+  ],
+  "transferMemos": [
+    {
+      "code": "5",
+      "content": "대체 적요 내용"
+    }
+  ],
+  "fixedMemos": [
+    {
+      "code": "6",
+      "content": "고정 적요 내용",
+      "category": "카테고리"
+    }
+  ]
+}

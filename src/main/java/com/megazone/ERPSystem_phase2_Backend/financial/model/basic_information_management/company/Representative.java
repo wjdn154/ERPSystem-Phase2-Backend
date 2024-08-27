@@ -23,7 +23,7 @@ public class Representative {
     @Column(nullable = false)
     private String name; // 대표자명
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String idNumber; // 대표자 주민번호
 
     @Column(nullable = false)

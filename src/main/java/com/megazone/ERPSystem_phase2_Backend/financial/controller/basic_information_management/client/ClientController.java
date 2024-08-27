@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@Controller
+@RestController
+@RequestMapping("/api/financial/client")
 @RequiredArgsConstructor
 public class ClientController {
 
@@ -32,7 +33,7 @@ public class ClientController {
      * @param clientDTO 수정할 거래처 DTO
      * @return 등록한 거래처 정보를 담은 ClientDTO 객체를 반환.
      */
-    @PostMapping("/api/financial/client/save")
+    @PostMapping("/save")
     public ResponseEntity<ClientDTO> registerClient(@RequestBody ClientDTO clientDTO) {
         Optional<ClientDTO> savedClient = clientService.saveClient(clientDTO);
 
@@ -47,7 +48,7 @@ public class ClientController {
      * @param clientDTO 수정할 거래처 DTO
      * @return 수정된 거래처 정보를 담은 ClientDTO 객체를 반환.
      */
-    @PutMapping("/api/financial/client/update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<ClientDTO> updateClient(@PathVariable("id") Long id, @RequestBody ClientDTO clientDTO) {
         Optional<ClientDTO> updatedClient = clientService.updateClient(id, clientDTO);
         return updatedClient

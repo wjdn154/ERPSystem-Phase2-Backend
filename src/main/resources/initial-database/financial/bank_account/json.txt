@@ -16,9 +16,9 @@
     "fax": "02-8765-4321"
   },
   "code": "1",
+  "name": "김찬민",
   "clientName": "ABC Corp",
   "accountNumber": "110-123-456789",
-  "bankBranchName": "강남역지점",
   "accountOpeningDate": "2023-01-01",
   "depositType": "정기예금",
   "maturityDate": "2025-01-01",

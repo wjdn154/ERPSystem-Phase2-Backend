@@ -74,8 +74,9 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
         // 서브쿼리로 cashMemos 가져옴
         List<CashMemoDTO> cashMemos = queryFactory
                 .select(Projections.fields(CashMemoDTO.class,
-                        cashMemo.code, // 현금 메모 code
-                        cashMemo.content // 현금 메모 내용
+                        cashMemo.id, // 현금 적요 ID
+                        cashMemo.code, // 현금 적요 code
+                        cashMemo.content // 현금 적요 내용
                 ))
                 .from(cashMemo)
                 .where(cashMemo.accountSubject.code.eq(code)) // 계정과목 코드로 필터링
@@ -84,8 +85,9 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
         // 서브쿼리로 transferMemos 가져옴
         List<TransferMemoDTO> transferMemos = queryFactory
                 .select(Projections.fields(TransferMemoDTO.class,
-                        transferMemo.code, // 대체 메모 code
-                        transferMemo.content // 대체 메모 내용
+                        transferMemo.id, // 대체 적요 ID
+                        transferMemo.code, // 대체 적요 code
+                        transferMemo.content // 대체 적요 내용
                 ))
                 .from(transferMemo)
                 .where(transferMemo.accountSubject.code.eq(code)) // 계정과목 코드로 필터링
@@ -94,9 +96,10 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
         // 서브쿼리로 fixedMemos 가져옴
         List<FixedMemoDTO> fixedMemos = queryFactory
                 .select(Projections.fields(FixedMemoDTO.class,
-                        fixedMemo.code, // 고정 메모 code
-                        fixedMemo.content, // 고정 메모 내용
-                        fixedMemo.category // 고정 메모 카테고리
+                        fixedMemo.id, // 고정 적요 ID
+                        fixedMemo.code, // 고정 적요 code
+                        fixedMemo.content, // 고정 적요 내용
+                        fixedMemo.category // 고정 적요 카테고리
                 ))
                 .from(fixedMemo)
                 .where(fixedMemo.accountSubject.code.eq(code)) // 계정과목 코드로 필터링

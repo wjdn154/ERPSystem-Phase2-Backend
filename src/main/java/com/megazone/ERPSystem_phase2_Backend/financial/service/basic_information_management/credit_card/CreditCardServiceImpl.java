@@ -58,7 +58,6 @@ public class CreditCardServiceImpl implements CreditCardService {
 
         // 나머지 정보 저장
         creditCard.setCardNumber(creditCardDTO.getCardNumber());
-        System.out.println("getTransactionType = " + creditCardDTO.getTransactionType());
         creditCard.setTransactionType(creditCardDTO.getTransactionType());
         creditCard.setCardType(CardType.valueOf(creditCardDTO.getCardType()));
         creditCard.setRemarks(creditCardDTO.getRemarks());
@@ -67,33 +66,35 @@ public class CreditCardServiceImpl implements CreditCardService {
         creditCard.setPaymentDate(creditCardDTO.getPaymentDate());
         creditCard.setLimitAmount(creditCardDTO.getLimitAmount());
 
-        // Ownership 정보 저장
-//        if (creditCardDTO.getOwnership() != null) {
-//            OwnershipDTO ownershipDTO = creditCardDTO.getOwnership();
-//            Ownership ownership = new Ownership();
-//
-//            ownership.setCreditCard(creditCard);
-//
-//            // Owner 설정
-//            if (ownershipDTO.getOwnerId() != null) {
-//                Employee owner = employeeRepository.findById(ownershipDTO.getOwnerId())
-//                        .orElseThrow(() -> new IllegalArgumentException("소유자를 찾을 수 없습니다."));
-//                ownership.setOwner(owner);
-//            }
-//
-//            // Manager 설정
-//            if (ownershipDTO.getManagerId() != null) {
-//                Employee manager = employeeRepository.findById(ownershipDTO.getManagerId())
-//                        .orElseThrow(() -> new IllegalArgumentException("담당자를 찾을 수 없습니다."));
-//                ownership.setManager(manager);
-//            }
-//
-//            ownershipRepository.save(ownership);
-//            creditCard.setOwnership(ownership);  // CreditCard와 Ownership 연결
-//        }
-
-        // 신용카드 저장
+        // 신용카드 먼저 저장
         CreditCard savedCreditCard = creditCardRepository.save(creditCard);
+
+        // Ownership 정보 저장
+        if (creditCardDTO.getOwnership() != null) {
+            OwnershipDTO ownershipDTO = creditCardDTO.getOwnership();
+            Ownership ownership = new Ownership();
+
+            ownership.setCreditCard(savedCreditCard); // 이제 CreditCard는 저장된 상태입니다.
+
+            // Owner 설정
+            if (ownershipDTO.getOwnerId() != null) {
+                Employee owner = employeeRepository.findById(ownershipDTO.getOwnerId())
+                        .orElseThrow(() -> new IllegalArgumentException("소유자를 찾을 수 없습니다."));
+                ownership.setOwner(owner);
+            }
+
+            // Manager 설정
+            if (ownershipDTO.getManagerId() != null) {
+                Employee manager = employeeRepository.findById(ownershipDTO.getManagerId())
+                        .orElseThrow(() -> new IllegalArgumentException("담당자를 찾을 수 없습니다."));
+                ownership.setManager(manager);
+            }
+
+            ownershipRepository.save(ownership);
+            savedCreditCard.setOwnership(ownership);  // CreditCard와 Ownership 연결
+        }
+
+        savedCreditCard = creditCardRepository.save(savedCreditCard);
 
         return Optional.of(new CreditCardDTO(savedCreditCard));
     }
