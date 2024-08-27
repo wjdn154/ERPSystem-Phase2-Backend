@@ -15,12 +15,13 @@ import com.megazone.ERPSystem_phase2_Backend.production.repository.routing_manag
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 // TODO
@@ -42,9 +43,16 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
     }
 
     @Override
-    public ProcessDetailsDTO getProcessDetailsById(Long id) {
-        ProcessDetails processDetails = processDetailsRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Process not found"));
+    public List<ProcessDetailsDTO> findByNameContaining(String name) {
+        List<ProcessDetails> processes = processDetailsRepository.findByNameContaining(name);
+        return processes.stream()
+                .map(this::convertToDTO).toList();
+    }
+
+    @Override
+    public Optional<ProcessDetailsDTO> getProcessDetailsByCode(String code) {
+        ProcessDetails processDetails = processDetailsRepository.findByCode(code)
+                .orElseThrow(() -> new EntityNotFoundException("Process with code " + code + " not found"));
 
         // 품질 검사와 작업 실적 기록에 따라 표준 소요 시간, 공정 수행 비용, 평균 불량률 계산
         double calculatedDuration = calculateDuration(processDetails);
@@ -56,7 +64,10 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
         processDetails.setCost(calculatedCost);
         processDetails.setDefectRate(calculatedDefectRate);
 
-        return convertToDTO(processDetails);
+        // 변경 사항을 데이터베이스에 저장
+        ProcessDetails savedProcessDetails = processDetailsRepository.save(processDetails);
+
+        return Optional.ofNullable(convertToDTO(savedProcessDetails));
     }
 
     private double calculateDuration(ProcessDetails processDetails) {
@@ -94,23 +105,73 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
         // return (double) totalDefects / totalProduced;
     }
 
-
     @Override
+    @Transactional
     public ProcessDetailsDTO createProcessDetails(ProcessDetailsDTO processDetailsDTO) {
+        // 1. Code가 이미 존재하는지 확인
+        if (processDetailsRepository.existsByCode(processDetailsDTO.getCode())) {
+            // 2. 존재하면 예외를 던져 중복 처리
+            throw new IllegalArgumentException("이미 존재하는 코드입니다: " + processDetailsDTO.getCode());
+        }
+
+        // 3. 중복되지 않은 경우, 엔티티로 변환 후 저장
         ProcessDetails processDetails = convertToEntity(processDetailsDTO);
         ProcessDetails savedProcessDetails = processDetailsRepository.save(processDetails);
+
+        // 4. 저장된 엔티티를 DTO로 변환하여 반환
         return convertToDTO(savedProcessDetails);
     }
 
     @Override
-    public ProcessDetailsDTO updateProcessDetails(Long id, ProcessDetailsDTO processDetailsDTO) {
-        return null; // TODO
+    @Transactional
+    public ProcessDetailsDTO updateByCode(String code, ProcessDetailsDTO processDetailsDTO) {
+        // 1. CODE를 사용해 기존 ProcessDetails 엔티티를 조회
+        ProcessDetails existingProcessDetails = processDetailsRepository.findByCode(code)
+                .orElseThrow(() -> new EntityNotFoundException("Process with code " + code + " not found"));
+
+        // 2. ProcessDetailsDTO에서 받은 데이터를 사용해 필드를 업데이트
+        existingProcessDetails.setCode(processDetailsDTO.getCode());
+        existingProcessDetails.setName(processDetailsDTO.getName());
+        existingProcessDetails.setDuration(processDetailsDTO.getDuration());
+        existingProcessDetails.setCost(processDetailsDTO.getCost());
+        existingProcessDetails.setDefectRate(processDetailsDTO.getDefectRate());
+        existingProcessDetails.setIsUsed(processDetailsDTO.getIsUsed());
+
+        try {
+            // 3. 변경된 엔티티를 데이터베이스에 저장
+            ProcessDetails updatedProcessDetails = processDetailsRepository.save(existingProcessDetails);
+
+            // 4. 수정된 엔티티를 DTO로 변환하여 반환
+            return convertToDTO(updatedProcessDetails);
+        } catch (DataIntegrityViolationException e) {
+            // 데이터베이스에서 고유성 위반이 발생할 경우 예외 처리
+            throw new IllegalArgumentException("The provided code already exists.");
+        }
     }
 
     @Override
-    public void deleteProcessDetails(Long id) {
-        // TODO
+    @Transactional
+    public ProcessDetailsDTO deleteByCode(String code) {
+        // 1. Code를 사용해 기존 ProcessDetails 엔티티를 조회
+        ProcessDetails processDetails = processDetailsRepository.findByCode(code)
+                .orElseThrow(() -> new EntityNotFoundException("Process with code " + code + " not found"));
+
+        if (processDetails.getIsUsed()) {
+            throw new IllegalArgumentException("해당 공정은 사용 중이므로 삭제할 수 없습니다: " + code);
+        }
+
+        // 2. 삭제하기 전에 엔티티를 DTO로 변환
+        ProcessDetailsDTO deletedProcessDetailsDTO = convertToDTO(processDetails);
+
+
+        // 3. 엔티티 삭제
+        processDetailsRepository.delete(processDetails);
+
+        // 4. 삭제된 엔티티의 정보를 반환
+        return deletedProcessDetailsDTO;
     }
+
+
 
     // DTO 변환 메서드
     private ProcessDetailsDTO convertToDTO(ProcessDetails processDetails) {
