@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -22,9 +24,11 @@ public class WorkMonthlyReport {
     private String summary; // 월간보고요약
 
     @Column(nullable = false)
-    private Double DefectRate; // 불량률
+    private Double DefectRate; // 불량률 (자동계산)
 
     @Column(nullable = true)
     private String remarks; // 비고
 
+    @OneToMany(mappedBy = "workMonthlyReport")
+    private List<WorkWeeklyReport> workWeeklyReports;
 }

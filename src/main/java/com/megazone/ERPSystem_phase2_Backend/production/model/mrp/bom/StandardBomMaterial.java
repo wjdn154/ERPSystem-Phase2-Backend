@@ -17,7 +17,7 @@ import java.math.BigDecimal;
  * StandardBomMaterial: 각 BOM에 필요한 자재와 품목 간의 관계 및 수량을 관리.
  */
 
-@Entity(name = "standard_bom_material")
+@Entity(name = "bom_standard_bom_material")
 @Table(name = "bom_standard_bom_material")
 @Data
 @NoArgsConstructor

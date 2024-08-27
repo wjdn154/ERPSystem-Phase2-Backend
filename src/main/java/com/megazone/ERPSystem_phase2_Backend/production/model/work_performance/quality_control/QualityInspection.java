@@ -1,9 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control;
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -27,4 +30,15 @@ public class QualityInspection {
 
     @Column(nullable = false)
     private Boolean isPassed; // 검사통과여부
+
+    @OneToMany(mappedBy = "qualityInspections")
+    private List<DefectCategory> defectCategories;     // 불량유형
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "work_performance_id")
+    private WorkPerformance workPerformance;     // 연관 작업실적 WorkPerformance
+
+    @OneToMany(mappedBy = "qualityInspection")
+    private List<InboundRegistration> inboundRegistrations;
+
 }
