@@ -1,10 +1,9 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto;
 
-<<<<<<< HEAD
+
 //import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 //import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseDTO;
-=======
->>>>>>> origin/develop
+
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.EquipmentType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.OperationStatus;
 import lombok.AllArgsConstructor;
