@@ -11,4 +11,7 @@ public interface ProcessDetailsRepository extends JpaRepository<ProcessDetails, 
     Optional<ProcessDetails> findByCode(String code);
     Optional<ProcessDetails> findByName(String name);
     List<ProcessDetails> findByCodeContainingOrNameContaining(String code, String name);
+
+    boolean existsByCode(String code);
+
 }
