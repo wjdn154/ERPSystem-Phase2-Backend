@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"previousLot", "inboundRegistration", "serialNoList"}) // 순환 참조 방지
 public class Lot {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
