@@ -1,5 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.Currency;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * 발주요청 테이블
@@ -34,13 +37,13 @@ public class PurchaseRequest {
     private Long employeeId;
 
     // 창고_id - 입고될 창고
-    @Column(nullable = false)
-    private Long warehouseId;
+    @ManyToOne
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse warehouse;
 
-    // 통화_id - N : 1
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "currency_id", nullable = false)
-    private Long currencyId;
+    @ManyToOne
+    @JoinColumn(name = "currency_id")
+    private Currency currency;
 
     // 품목_id
     @Column
