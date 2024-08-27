@@ -103,7 +103,7 @@ public class AccountSubjectController {
     public ResponseEntity<String> deleteAccount(@PathVariable("code") String code) {
         try {
             accountSubjectService.deleteAccount(code);
-            return ResponseEntity.noContent().build(); // HTTP 204 No Content 반환
+            return ResponseEntity.ok("계정과목을 삭제했습니다. 코드번호 : " + code);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); // 계정과목을 찾지 못했을 때 404 반환
         }
