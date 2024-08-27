@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.controller.basic_data;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.WorkcenterDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.workcenter.WorkcenterService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,45 +19,84 @@ public class WorkcenterController {
 
     private final WorkcenterService workcenterService;
 
-    @GetMapping
-    public ResponseEntity<List<WorkcenterDTO>> getWorkcenters(
-            @RequestParam(name = "name", required = false) String name) {
-        List<WorkcenterDTO> workcenterDTOs;
-        if (name != null) {
-            workcenterDTOs = workcenterService.findByNameContaining(name);
-        } else {
-            workcenterDTOs = workcenterService.findAll();
-        }
+    // 1. 전체 작업장 조회
+    @PostMapping
+    public ResponseEntity<List<WorkcenterDTO>> getAllWorkcenters() {
+        List<WorkcenterDTO> workcenterDTOs = workcenterService.findAll();
         return ResponseEntity.ok(workcenterDTOs);
     }
 
-    @GetMapping("/{code}")
-    public ResponseEntity<WorkcenterDTO> getWorkcenterDetail(
+
+    // 3. 이름으로 작업장 리스트 검색 조회
+    @PostMapping("/search")
+    public ResponseEntity<List<WorkcenterDTO>> getWorkcentersByName(
+            @RequestParam("name") String name) {
+        List<WorkcenterDTO> workcenterDTOs = workcenterService.findByNameContaining(name);
+        return ResponseEntity.ok(workcenterDTOs);
+    }
+
+    // 코드로 작업장 세부 정보 조회
+    @PostMapping("/details/{code}")
+    public ResponseEntity<WorkcenterDTO> getWorkcenterDetailByCode(
             @PathVariable("code") String code) {
         Optional<WorkcenterDTO> workcenterDTO = workcenterService.findByCode(code);
 
         return workcenterDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
+    // 새로운 작업장 생성
     @PostMapping("/create")
     public ResponseEntity<Workcenter> saveWorkcenter(@RequestBody WorkcenterDTO workcenterDTO) {
-        Workcenter savedWorkcenter = workcenterService. save(workcenterDTO);
+        Workcenter savedWorkcenter = workcenterService.save(workcenterDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedWorkcenter);
     }
 
-    @PutMapping("/{code}")
-    public ResponseEntity<Optional<Workcenter>> updateWorkcenter(
+    @PostMapping("/update/{code}")
+    public ResponseEntity<WorkcenterDTO> updateWorkcenter(
             @PathVariable("code") String code,
             @RequestBody WorkcenterDTO workcenterDTO) {
-        Optional<Workcenter> updatedWorkcenter = workcenterService.updateWorkcenter(code, workcenterDTO);
-        return ResponseEntity.ok(updatedWorkcenter);
+        try {
+            Optional<WorkcenterDTO> updatedWorkcenterDTO = workcenterService.updateByCode(code, workcenterDTO);
+            if (updatedWorkcenterDTO.isPresent()) {
+                return ResponseEntity.ok(updatedWorkcenterDTO.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteWorkcenter(@PathVariable("id") Long id) {
-        workcenterService.deleteById(id);
-        return ResponseEntity.noContent().build(); // 삭제 후 204 No Content 응답
+    @PostMapping("/delete/{code}")
+    public ResponseEntity<WorkcenterDTO> deleteWorkcenter(@PathVariable("code") String code) {
+        try {
+            Optional<WorkcenterDTO> deletedWorkcenterDTO = workcenterService.deleteByCode(code);
+
+            if (deletedWorkcenterDTO.isPresent()) {
+                // 삭제된 DTO 정보 로그 출력
+                System.out.println("Deleted Workcenter: " + deletedWorkcenterDTO.get());
+                return ResponseEntity.ok(deletedWorkcenterDTO.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 코드로 찾은 작업장이 없으면 404 응답
+            }
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 코드로 찾은 작업장이 없으면 404 응답
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 기타 오류 발생 시 500 응답
+        }
     }
+
+
+//    @PostMapping("/delete/{code}")
+//    public ResponseEntity<Void> deleteWorkcenter(@PathVariable("code") String code) {
+//        try {
+//            workcenterService.deleteByCode(code);
+//            return ResponseEntity.noContent().build(); // 삭제 후 204 No Content 응답
+//        } catch (EntityNotFoundException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 코드로 찾은 작업장이 없으면 404 응답
+//        }
+//    }
 
 //    @DeleteMapping
 //    public ResponseEntity<List<Workcenter>> deleteWorkcenters(@RequestBody List<Long> ids) {
