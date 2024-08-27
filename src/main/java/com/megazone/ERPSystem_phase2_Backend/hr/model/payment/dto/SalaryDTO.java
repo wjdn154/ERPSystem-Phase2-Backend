@@ -2,9 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.hr.model.payment.dto;
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.payment.Allowance;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.payment.Salary;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,27 +12,21 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class SalaryDTO{
 
-    private Long id;                // 급여 ID
-    private Long employeeId;         // 직원 ID
+    private String firstname;         // 직원 성
+    private String lastname;          // 직원 이름
     private BigDecimal baseSalary;   // 기본 급여
     private BigDecimal grossPay;  // 총 급여
     private BigDecimal netPay;    // 순 급여
     private LocalDate salaryDate;    // 급여 지급일
 
-    private List<AllowanceDTO> allowances;   // 공제 리스트
+    private List<AllowanceDTO> allowances;   // 수당 리스트
     private List<DeductionDTO> deductions;   // 공제 리스트
 
-    private SalaryDTO convertToDTO(Salary salary) {
-        SalaryDTO dto = new SalaryDTO();
-        dto.setId(salary.getId());
-        dto.setEmployeeId(salary.getEmployee().getId());
-        dto.setBaseSalary(salary.getBaseSalary());
-        dto.setGrossPay(salary.getGrossPay());
-        dto.setNetPay(salary.getNetPay());
-        dto.setSalaryDate(salary.getSalaryDate());
-
+    public static SalaryDTO convertToDTO(Salary salary) {
         // 보너스 리스트 변환
         List<AllowanceDTO> allowanceDTOs = salary.getAllowances().stream()
                 .map(allowance -> {
@@ -45,7 +37,6 @@ public class SalaryDTO{
                     allowanceDTO.setType(String.valueOf(allowance.getAllowanceType()));
                     return allowanceDTO;
                 }).collect(Collectors.toList());
-        dto.setAllowances(allowanceDTOs);
 
         // 공제 리스트 변환
         List<DeductionDTO> deductionDTOs = salary.getDeductions().stream()
@@ -56,8 +47,19 @@ public class SalaryDTO{
                     deductionDTO.setType(String.valueOf(deduction.getDeductionType()));
                     return deductionDTO;
                 }).collect(Collectors.toList());
-        dto.setDeductions(deductionDTOs);
 
-        return dto;
+        return new SalaryDTO(
+                salary.getEmployee().getFirstName(),
+                salary.getEmployee().getLastName(),
+                salary.getBaseSalary(),
+                salary.getGrossPay(),
+                salary.getNetPay(),
+                salary.getSalaryDate(),
+                allowanceDTOs,
+                deductionDTOs
+
+        );
+
     }
+
 }

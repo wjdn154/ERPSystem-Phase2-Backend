@@ -20,10 +20,6 @@ public class Allowance {
     @Column
     private String name; // 수당 이름
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "salary_id", nullable = false)
-    private Salary salary;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AllowanceType allowanceType; // 수당 유형

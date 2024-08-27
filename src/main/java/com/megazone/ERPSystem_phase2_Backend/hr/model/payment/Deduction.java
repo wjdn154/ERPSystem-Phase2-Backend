@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 /********* 공제 *********/
 @Data
 @Entity
-@Table
+@Table(name = "deductions")
 public class Deduction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,10 +17,6 @@ public class Deduction {
 
     @Column
     private String name; // 공제 이름
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "salary_id", nullable = false)
-    private Salary salary;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
