@@ -19,7 +19,6 @@ spring:
         - 'classpath:/META-INF/resources/' # 정적 리소스 위치 지정 (클래스패스 기준)
         - 'file:src/main/frontend/dist/' # 정적 리소스 위치 지정 (파일 시스템 기준)
   sql:
-
     init:
       mode: always # 항상 SQL 초기화 모드를 사용하도록 설정
       data-locations:

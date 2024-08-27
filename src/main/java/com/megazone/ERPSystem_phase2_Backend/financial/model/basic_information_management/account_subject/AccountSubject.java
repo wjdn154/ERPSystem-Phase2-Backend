@@ -18,7 +18,7 @@ import java.util.List;
 public class AccountSubject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 계정과목 ID
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "structure_code", referencedColumnName = "code")

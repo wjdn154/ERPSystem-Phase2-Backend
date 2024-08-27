@@ -50,7 +50,7 @@
   "establishmentDate": "2020-01-01",
   "openingDate": "2020-01-10",
   "closingDate": "2023-12-31",
-  "name": "메가존 주식회사",
+  "name": "메가존 클라우드",
   "entityType": "INCORPORATED",
   "fiscalYearStart": "2023-01-01",
   "fiscalYearEnd": "2023-12-31",

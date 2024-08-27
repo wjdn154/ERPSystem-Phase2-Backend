@@ -64,35 +64,35 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
     /**
      * 계정과목에 적요를 추가함.
      *
-     * @param code     계정과목 코드
-     * @param memoType 적요 구분 (현금적요, 대체적요)
-     * @param content  적요 내용
+     * @param accountSubjectCode     계정과목 코드
+     * @param memoRequestDTO 적요 정보 DTO
      * @throws RuntimeException         계정과목을 찾을 수 없는 경우 예외를 던짐
      * @throws IllegalArgumentException 잘못된 적요 타입이 입력된 경우 예외를 던짐
      */
     @Override
-    public void addMemoToAccountSubject(String code, String memoType, String content) {
+    public Optional<Object> addMemoToAccountSubject(String accountSubjectCode, MemoRequestDTO memoRequestDTO) {
         // 계정과목을 코드로 조회하고, 없으면 예외를 던짐
-        AccountSubject accountSubject = accountSubjectRepository.findByCode(code)
-                .orElseThrow(() -> new RuntimeException("계정 코드로 계정을 찾을 수 없습니다: " + code));
+        AccountSubject accountSubject = accountSubjectRepository.findByCode(accountSubjectCode)
+                .orElseThrow(() -> new RuntimeException("계정 코드로 계정을 찾을 수 없습니다: " + accountSubjectCode));
 
         // 메모 타입에 따라 적절한 메모 객체를 생성하고 저장함
-        switch (memoType.toUpperCase()) {
+        switch (memoRequestDTO.getMemoType().toUpperCase()) {
             case "CASH":
                 CashMemo cashMemo = new CashMemo();
                 cashMemo.setAccountSubject(accountSubject);
-                cashMemo.setContent(content);
-                cashMemoRepository.save(cashMemo);
-                break;
+                cashMemo.setContent(memoRequestDTO.getContent());
+                cashMemo.setCode(memoRequestDTO.getCode());
+                CashMemo savedMemo = cashMemoRepository.save(cashMemo);
+                return Optional.of(new CashMemoDTO(savedMemo.getId(), savedMemo.getCode(), savedMemo.getContent()));
             case "TRANSFER":
                 TransferMemo transferMemo = new TransferMemo();
                 transferMemo.setAccountSubject(accountSubject);
-                transferMemo.setContent(content);
-                transferMemoRepository.save(transferMemo);
-                break;
+                transferMemo.setContent(memoRequestDTO.getContent());
+                TransferMemo savedTransferMemo = transferMemoRepository.save(transferMemo);
+                return Optional.of(new TransferMemoDTO(savedTransferMemo.getId(), savedTransferMemo.getCode(), savedTransferMemo.getContent()));
             default:
                 // 잘못된 메모 타입이 입력된 경우 예외를 던짐
-                throw new IllegalArgumentException("적요 타입이 잘못되었습니다: " + memoType);
+                throw new IllegalArgumentException("적요 타입이 잘못되었습니다: " + memoRequestDTO.getMemoType().toUpperCase());
         }
     }
 
@@ -143,6 +143,37 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
         accountSubject.setModificationType(dto.getModificationType());
         accountSubject.setIsForeignCurrency(dto.getIsForeignCurrency());
         accountSubject.setIsBusinessCar(dto.getIsBusinessCar());
+        accountSubject.setCashMemo(dto.getCashMemos().stream()
+                .map(memo -> {
+                    CashMemo cashMemo = new CashMemo();
+                    cashMemo.setAccountSubject(accountSubject);
+                    cashMemo.setContent(memo.getContent());
+                    cashMemo.setCode(memo.getCode());
+                    cashMemoRepository.save(cashMemo);
+                    return cashMemo;
+                })
+                .collect(Collectors.toList()));
+        accountSubject.setTransferMemo(dto.getTransferMemos().stream()
+                .map(memo -> {
+                    TransferMemo transferMemo = new TransferMemo();
+                    transferMemo.setAccountSubject(accountSubject);
+                    transferMemo.setContent(memo.getContent());
+                    transferMemo.setCode(memo.getCode());
+                    transferMemoRepository.save(transferMemo);
+                    return transferMemo;
+                })
+                .collect(Collectors.toList()));
+        accountSubject.setFixedMemo(dto.getFixedMemos().stream()
+                .map(memo -> {
+                    FixedMemo fixedMemo = new FixedMemo();
+                    fixedMemo.setAccountSubject(accountSubject);
+                    fixedMemo.setContent(memo.getContent());
+                    fixedMemo.setCode(memo.getCode());
+                    fixedMemo.setCategory(memo.getCategory());
+                    fixedMemoRepository.save(fixedMemo);
+                    return fixedMemo;
+                })
+                .collect(Collectors.toList()));
 
         // 엔티티 저장
         AccountSubject savedAccountSubject = accountSubjectRepository.save(accountSubject);
@@ -352,15 +383,15 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
                 accountSubject.getModificationType(),
                 accountSubject.getIsForeignCurrency(),
                 accountSubject.getIsBusinessCar(),
-                accountSubject.getCashMemo().stream()
-                        .map(memo -> new CashMemoDTO(memo.getCode(), memo.getContent()))
-                        .collect(Collectors.toList()),
-                accountSubject.getTransferMemo().stream()
-                        .map(memo -> new TransferMemoDTO(memo.getCode(), memo.getContent()))
-                        .collect(Collectors.toList()),
-                accountSubject.getFixedMemo().stream()
-                        .map(memo -> new FixedMemoDTO(memo.getCode(), memo.getCategory(), memo.getContent()))
-                        .collect(Collectors.toList())
+                accountSubject.getCashMemo() != null ? accountSubject.getCashMemo().stream()
+                        .map(memo -> new CashMemoDTO(memo.getId(), memo.getCode(), memo.getContent()))
+                        .collect(Collectors.toList()) : null,
+                accountSubject.getTransferMemo() != null ? accountSubject.getTransferMemo().stream()
+                        .map(memo -> new TransferMemoDTO(memo.getId(), memo.getCode(), memo.getContent()))
+                        .collect(Collectors.toList()) : null,
+                accountSubject.getFixedMemo() != null ? accountSubject.getFixedMemo().stream()
+                        .map(memo -> new FixedMemoDTO(memo.getId(), memo.getCode(), memo.getCategory(), memo.getContent()))
+                        .collect(Collectors.toList()) : null
         );
     }
 }
