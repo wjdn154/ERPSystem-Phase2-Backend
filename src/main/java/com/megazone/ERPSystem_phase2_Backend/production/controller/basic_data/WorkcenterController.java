@@ -3,7 +3,6 @@ package com.megazone.ERPSystem_phase2_Backend.production.controller.basic_data;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.WorkcenterDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.workcenter.WorkcenterService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,25 +67,40 @@ public class WorkcenterController {
         }
     }
 
-    @PostMapping("/delete/{code}")
-    public ResponseEntity<WorkcenterDTO> deleteWorkcenter(@PathVariable("code") String code) {
+    @PostMapping("/delete")
+    public Optional<WorkcenterDTO> deleteWorkcenter(@RequestParam("code") String code) {
         try {
-            Optional<WorkcenterDTO> deletedWorkcenterDTO = workcenterService.deleteByCode(code);
-
-            if (deletedWorkcenterDTO.isPresent()) {
-                // 삭제된 DTO 정보 로그 출력
-                System.out.println("Deleted Workcenter: " + deletedWorkcenterDTO.get());
-                return ResponseEntity.ok(deletedWorkcenterDTO.get());
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 코드로 찾은 작업장이 없으면 404 응답
-            }
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 코드로 찾은 작업장이 없으면 404 응답
+            return workcenterService.deleteByCode(code);
+        } catch (IllegalArgumentException e) {
+            // 코드가 없거나 사용 중인 경우에 대한 예외 처리
+            throw new IllegalArgumentException("삭제할 수 없습니다. 이유: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 기타 오류 발생 시 500 응답
+            // 기타 예외에 대한 처리
+            throw new RuntimeException("작업장을 삭제하는 중에 예상치 못한 오류가 발생했습니다. 상세 정보: " + e.getMessage(), e);
         }
     }
 
+
+
+//    @PostMapping("/delete/{code}")
+//    public ResponseEntity<WorkcenterDTO> deleteWorkcenter(@PathVariable("code") String code) {
+//        try {
+//            Optional<WorkcenterDTO> deletedWorkcenterDTO = workcenterService.deleteByCode(code);
+//
+//            if (deletedWorkcenterDTO.isPresent()) {
+//                // 삭제된 DTO 정보 로그 출력
+//                System.out.println("Deleted Workcenter: " + deletedWorkcenterDTO.get());
+//                return ResponseEntity.ok(deletedWorkcenterDTO.get());
+//            } else {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 코드로 찾은 작업장이 없으면 404 응답
+//            }
+//        } catch (EntityNotFoundException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 코드로 찾은 작업장이 없으면 404 응답
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 기타 오류 발생 시 500 응답
+//        }
+//    }
+}
 
 //    @PostMapping("/delete/{code}")
 //    public ResponseEntity<Void> deleteWorkcenter(@PathVariable("code") String code) {
@@ -103,4 +117,4 @@ public class WorkcenterController {
 //        List<Workcenter> deletedWorkcenters = workcenterService.deleteByIds(ids);
 //        return ResponseEntity.ok(deletedWorkcenters);
 //    }
-}
+

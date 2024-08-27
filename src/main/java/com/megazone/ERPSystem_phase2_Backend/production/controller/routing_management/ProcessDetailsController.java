@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.routing_management;
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.WorkcenterDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.dto.ProcessDetailsDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.routing_management.ProcessDetails.ProcessDetailsRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.service.routing_management.ProcessDetails.ProcessDetailsService;
@@ -34,6 +35,14 @@ public class ProcessDetailsController {
         return ResponseEntity.ok(processDetailsDTO);
     }
 
+    // 3. 이름으로 공정 리스트 검색 조회
+    @PostMapping("/search")
+    public ResponseEntity<List<ProcessDetailsDTO>> getProcessDetailsByName(
+            @RequestParam("name") String name) {
+        List<ProcessDetailsDTO> processDetailsDTOs = processDetailsService.findByNameContaining(name);
+        return ResponseEntity.ok(processDetailsDTOs);
+    }
+
     @PostMapping("/create")
     public ProcessDetailsDTO createProcessDetails(@RequestBody ProcessDetailsDTO processDetailsDTO) {
         try {
@@ -58,18 +67,20 @@ public class ProcessDetailsController {
         }
     }
 
-
-
-    // DELETE: 특정 ProcessDetails 삭제
+    // DELETE
     @PostMapping("/delete")
     public ProcessDetailsDTO deleteProcessDetails(@RequestParam("code") String code) {
         try {
-             return processDetailsService.deleteByCode(code);
-        } catch (EntityNotFoundException e) {
-             throw new IllegalArgumentException("해당 코드의 공정을 찾을 수 없습니다: " + code);
+            return processDetailsService.deleteByCode(code);
+        } catch (IllegalArgumentException e) {
+            // 코드가 없거나 사용 중인 경우에 대한 예외 처리
+            throw new IllegalArgumentException("삭제할 수 없습니다. 이유: " + e.getMessage());
         } catch (Exception e) {
-             throw new RuntimeException("공정 정보를 삭제하는 중에 오류가 발생했습니다.");
+            // 기타 예외에 대한 처리
+            throw new RuntimeException("공정 정보를 삭제하는 중에 예상치 못한 오류가 발생했습니다. 상세 정보: " + e.getMessage(), e);
         }
     }
+
+
 }
 

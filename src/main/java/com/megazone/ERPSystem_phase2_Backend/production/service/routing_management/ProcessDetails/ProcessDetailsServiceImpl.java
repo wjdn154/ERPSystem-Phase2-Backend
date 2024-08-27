@@ -43,6 +43,13 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
     }
 
     @Override
+    public List<ProcessDetailsDTO> findByNameContaining(String name) {
+        List<ProcessDetails> processes = processDetailsRepository.findByNameContaining(name);
+        return processes.stream()
+                .map(this::convertToDTO).toList();
+    }
+
+    @Override
     public Optional<ProcessDetailsDTO> getProcessDetailsByCode(String code) {
         ProcessDetails processDetails = processDetailsRepository.findByCode(code)
                 .orElseThrow(() -> new EntityNotFoundException("Process with code " + code + " not found"));
@@ -115,14 +122,6 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
         return convertToDTO(savedProcessDetails);
     }
 
-
-//    @Override
-//    public ProcessDetailsDTO createProcessDetails(ProcessDetailsDTO processDetailsDTO) {
-//        ProcessDetails processDetails = convertToEntity(processDetailsDTO);
-//        ProcessDetails savedProcessDetails = processDetailsRepository.save(processDetails);
-//        return convertToDTO(savedProcessDetails);
-//    }
-
     @Override
     @Transactional
     public ProcessDetailsDTO updateByCode(String code, ProcessDetailsDTO processDetailsDTO) {
@@ -136,7 +135,7 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
         existingProcessDetails.setDuration(processDetailsDTO.getDuration());
         existingProcessDetails.setCost(processDetailsDTO.getCost());
         existingProcessDetails.setDefectRate(processDetailsDTO.getDefectRate());
-        // 필요한 다른 필드들도 설정
+        existingProcessDetails.setIsUsed(processDetailsDTO.getIsUsed());
 
         try {
             // 3. 변경된 엔티티를 데이터베이스에 저장
@@ -157,8 +156,13 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
         ProcessDetails processDetails = processDetailsRepository.findByCode(code)
                 .orElseThrow(() -> new EntityNotFoundException("Process with code " + code + " not found"));
 
+        if (processDetails.getIsUsed()) {
+            throw new IllegalArgumentException("해당 공정은 사용 중이므로 삭제할 수 없습니다: " + code);
+        }
+
         // 2. 삭제하기 전에 엔티티를 DTO로 변환
         ProcessDetailsDTO deletedProcessDetailsDTO = convertToDTO(processDetails);
+
 
         // 3. 엔티티 삭제
         processDetailsRepository.delete(processDetails);

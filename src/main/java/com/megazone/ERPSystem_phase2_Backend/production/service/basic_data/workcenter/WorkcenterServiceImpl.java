@@ -45,6 +45,10 @@ public class WorkcenterServiceImpl implements WorkcenterService {
         Workcenter workcenter = workcenterRepository.findByCode(code)
                 .orElseThrow(() -> new EntityNotFoundException("작업장 코드: " + code + "를 찾을 수 없습니다."));
 
+        if (workcenter.getIsActive()) {
+            throw new IllegalArgumentException("해당 작업장은 사용 중이므로 삭제할 수 없습니다: " + code);
+        }
+
         // 2. 삭제 전 작업장을 DTO로 변환
         WorkcenterDTO deletedWorkcenterDTO = new WorkcenterDTO(
                 workcenter.getId(),

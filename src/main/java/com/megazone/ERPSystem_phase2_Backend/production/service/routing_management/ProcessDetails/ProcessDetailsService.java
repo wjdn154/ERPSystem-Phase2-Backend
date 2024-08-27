@@ -17,4 +17,7 @@ public interface ProcessDetailsService {
     ProcessDetailsDTO deleteByCode(String code);
 
     Optional<ProcessDetailsDTO> getProcessDetailsByCode(String code);
+
+    List<ProcessDetailsDTO> findByNameContaining(String name);
+    
 }
