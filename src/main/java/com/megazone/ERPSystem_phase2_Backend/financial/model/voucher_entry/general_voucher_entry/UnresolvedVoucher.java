@@ -2,7 +2,9 @@ package com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.gene
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubject;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherKind;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucher;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,7 +39,7 @@ public class UnresolvedVoucher {
 //    private Long companyId; // 유저 회사 ID
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "account_code",referencedColumnName = "code", nullable = false)
+    @JoinColumn(name = "account_id", nullable = false)
     private AccountSubject accountSubject; // 계정과목 참조
 
 //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -77,5 +79,8 @@ public class UnresolvedVoucher {
     @Column(nullable = false)
     private ApprovalStatus approvalStatus; // 승인상태 ( 승인대기 승인, 반려 )
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private VoucherKind voucherKind;
 
 }
