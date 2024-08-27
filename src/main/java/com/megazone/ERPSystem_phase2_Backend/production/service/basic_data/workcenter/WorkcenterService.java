@@ -8,9 +8,11 @@ import java.util.Optional;
 
 public interface WorkcenterService {
 
-    Optional<WorkcenterDTO> updateByCode(String code, WorkcenterDTO workcenterDTO);
+    Optional<Workcenter> updateWorkcenter(String code, WorkcenterDTO workcenterDTO);
 
     List<Workcenter> deleteByIds(List<Long> ids);
+
+    Optional<Workcenter> deleteById(Long id);
 
     Workcenter save(WorkcenterDTO workcenterDTO);
 
@@ -21,8 +23,6 @@ public interface WorkcenterService {
     Optional<WorkcenterDTO> findByCode(String code);
 
     Optional<WorkcenterDTO> findById(Long id);
-
-    Optional<WorkcenterDTO> deleteByCode(String code);
 
     List<WorkcenterDTO> findAll();
 }

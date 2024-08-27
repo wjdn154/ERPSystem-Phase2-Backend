@@ -6,7 +6,6 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.Wor
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.resource_data.equipment.EquipmentDataRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.routing_management.ProcessDetails.ProcessDetailsRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -37,39 +36,17 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 //                .factoryCode(workcenter.getFactory() != null ? workcenter.getFactory().getCode() : null)
 //                .processCode(workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getCode() : null)
                 .build();
-    }
-
-    @Override
-    public Optional<WorkcenterDTO> deleteByCode(String code) {
-        // 1. 작업장을 조회하고, 존재하지 않으면 예외 발생
-        Workcenter workcenter = workcenterRepository.findByCode(code)
-                .orElseThrow(() -> new EntityNotFoundException("작업장 코드: " + code + "를 찾을 수 없습니다."));
-
-        if (workcenter.getIsActive()) {
-            throw new IllegalArgumentException("해당 작업장은 사용 중이므로 삭제할 수 없습니다: " + code);
         }
 
-        // 2. 삭제 전 작업장을 DTO로 변환
-        WorkcenterDTO deletedWorkcenterDTO = new WorkcenterDTO(
-                workcenter.getId(),
-                workcenter.getCode(),
-                workcenter.getWorkcenterType(),
-                workcenter.getName(),
-                workcenter.getDescription(),
-                workcenter.getIsActive(),
-                null, // factoryCode 매핑 필요 시 추가
-                null, // processCode 매핑 필요 시 추가
-                null, // equipmentList 매핑 필요 시 추가
-                null  // workerAssignments 매핑 필요 시 추가
-        );
 
-        // 3. 작업장 삭제
-        workcenterRepository.delete(workcenter);
-
-        // 4. 삭제된 작업장의 정보를 반환
-        return Optional.of(deletedWorkcenterDTO);
+    @Override
+    public Optional<Workcenter> deleteById(Long id) {
+        Optional<Workcenter> workcenter = workcenterRepository.findById(id);
+        if (workcenter.isPresent()) {
+            workcenterRepository.deleteById(id);
+        }
+        return workcenter;
     }
-
 
     @Override
     public List<WorkcenterDTO> findAll() {
@@ -108,7 +85,6 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 
     /**
      * 저장 시 중복코드 검증
-     *
      * @param workcenterDTO 저장할 작업장
      * @return 저장된 Workcenter 객체
      */
@@ -222,7 +198,6 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 
     /**
      * 삭제 시 사용 중인 작업장 확인
-     *
      * @param ids 삭제할 Workcenter ID
      */
     @Override
@@ -250,147 +225,73 @@ public class WorkcenterServiceImpl implements WorkcenterService {
         }
     }
 
+
+
     @Override
-    public Optional<WorkcenterDTO> updateByCode(String code, WorkcenterDTO workcenterDTO) {
-        return workcenterRepository.findByCode(code).map(existingWorkcenter -> {
-            existingWorkcenter.setCode(workcenterDTO.getCode());
+    public Optional<Workcenter> updateWorkcenter(String code, WorkcenterDTO workcenterDTO) {
+        try {
+            // 1. 작업장 코드를 사용하여 기존 작업장을 조회
+            Workcenter existingWorkcenter = workcenterRepository.findByCode(code)
+                    .orElseThrow(() -> new RuntimeException("작업장 코드: " + code + "를 찾을 수 없습니다."));
+
+            // 2. 작업장 코드가 변경되었을 경우 중복 검사를 수행
+            if (!existingWorkcenter.getCode().equals(workcenterDTO.getCode())) {
+                if (workcenterRepository.findByCode(workcenterDTO.getCode()).isPresent()) {
+                    throw new RuntimeException("코드 " + workcenterDTO.getCode() + "는 이미 존재합니다.");
+                }
+                existingWorkcenter.setCode(workcenterDTO.getCode());
+            }
+
+            // 3. 나머지 필드 업데이트
             existingWorkcenter.setName(workcenterDTO.getName());
             existingWorkcenter.setWorkcenterType(workcenterDTO.getWorkcenterType());
             existingWorkcenter.setDescription(workcenterDTO.getDescription());
             existingWorkcenter.setIsActive(workcenterDTO.getIsActive());
 
-            // 작업장 업데이트 후 저장
-            Workcenter updatedWorkcenter = workcenterRepository.save(existingWorkcenter);
+//            // 4. 공장 변경 처리
+//            try {
+//                if (workcenterDTO.getFactoryCode() != null) {
+//                    // 공장코드 포함 작업장 리스트 조회
+//                    List<Workcenter> workcenters = workcenterRepository.findByFactoryCodeContaining(workcenterDTO.getFactoryCode().getCode());
+//
+//                    // 작업장이 없으면 예외를 던짐
+//                    Workcenter selectedWorkcenter = workcenters.stream()
+//                            .findFirst()
+//                            .orElseThrow(() -> new RuntimeException("공장 코드: " + workcenterDTO.getFactoryCode() + "에 해당하는 작업장을 찾을 수 없습니다."));
+//
+//                    // 첫 번째 작업장의 Factory(Warehouse)를 설정
+//                    existingWorkcenter.setFactory(selectedWorkcenter.getFactory());
+//                }
+//            } catch (Exception e) {
+//                System.out.println("Factory 설정 중 오류 발생: " + e.getMessage());
+//                existingWorkcenter.setFactory(null); // 또는 기본값 설정
+//            }
+//
+//            // 생산공정 변경 처리
+//            try {
+//                if (workcenterDTO.getProcessCode() != null) {
+//                    // 공정코드가 포함된 작업장 리스트를 조회
+//                    List<Workcenter> workcenters = workcenterRepository.findByCodeContaining(workcenterDTO.getProcessCode().getCode());
+//
+//                    // 작업장이 없을 경우 예외를 던짐
+//                    Workcenter selectedWorkcenter = workcenters.stream()
+//                            .findFirst()
+//                            .orElseThrow(() -> new RuntimeException("생산 공정 코드: " + workcenterDTO.getProcessCode() + "에 해당하는 작업장을 찾을 수 없습니다."));
+//
+//                    // 첫 번째 작업장의 ProcessDetails를 설정
+//                    existingWorkcenter.setProcessDetails(selectedWorkcenter.getProcessDetails());
+//                }
+//            } catch (Exception e) {
+//                System.out.println("ProcessDetails 설정 중 오류 발생: " + e.getMessage());
+//                existingWorkcenter.setProcessDetails(null); // 또는 기본값 설정
+//            }
+//
+//            // 5. 작업장 업데이트 후 저장
+//            return workcenterRepository.save(existingWorkcenter);
 
-            // 수정된 작업장을 DTO로 변환하여 반환
-            WorkcenterDTO updatedWorkcenterDTO = new WorkcenterDTO(
-                    updatedWorkcenter.getId(),
-                    updatedWorkcenter.getCode(),
-                    updatedWorkcenter.getWorkcenterType(),
-                    updatedWorkcenter.getName(),
-                    updatedWorkcenter.getDescription(),
-                    updatedWorkcenter.getIsActive(),
-                    null, // factoryCode 매핑 필요 시 추가
-                    null, // processCode 매핑 필요 시 추가
-                    null, // equipmentList 매핑 필요 시 추가
-                    null  // workerAssignments 매핑 필요 시 추가
-            );
-
-            return Optional.of(updatedWorkcenterDTO);
-        }).orElse(Optional.empty());
+        } catch (Exception e) {
+            throw new RuntimeException("작업장 업데이트 중 오류가 발생했습니다: " + e.getMessage());
+        }
+        return Optional.empty();
     }
 }
-
-
-
-//    @Override
-//    public Optional<WorkcenterDTO> updateByCode(String code, WorkcenterDTO workcenterDTO) {
-//        try {
-//            // 1. 작업장 코드를 사용하여 기존 작업장을 조회
-//            Workcenter existingWorkcenter = workcenterRepository.findByCode(code)
-//                    .orElseThrow(() -> new RuntimeException("작업장 코드: " + code + "를 찾을 수 없습니다."));
-//
-//            // 2. 작업장 코드가 변경되었을 경우 중복 검사를 수행
-//            if (!existingWorkcenter.getCode().equals(workcenterDTO.getCode())) {
-//                if (workcenterRepository.findByCode(workcenterDTO.getCode()).isPresent()) {
-//                    throw new RuntimeException("코드 " + workcenterDTO.getCode() + "는 이미 존재합니다.");
-//                }
-//                existingWorkcenter.setCode(workcenterDTO.getCode());
-//            }
-//
-//            // 3. 나머지 필드 업데이트
-//            existingWorkcenter.setName(workcenterDTO.getName());
-//            existingWorkcenter.setWorkcenterType(workcenterDTO.getWorkcenterType());
-//            existingWorkcenter.setDescription(workcenterDTO.getDescription());
-//            existingWorkcenter.setIsActive(workcenterDTO.getIsActive());
-//
-//            // 4. 작업장 업데이트 후 저장
-//            Workcenter updatedWorkcenter = workcenterRepository.save(existingWorkcenter);
-//
-//            // 5. 업데이트된 엔티티를 DTO로 변환하여 반환
-//            WorkcenterDTO updatedWorkcenterDTO = WorkcenterDTO.builder()
-//                    .id(updatedWorkcenter.getId())
-//                    .code(updatedWorkcenter.getCode())
-//                    .workcenterType(updatedWorkcenter.getWorkcenterType())
-//                    .name(updatedWorkcenter.getName())
-//                    .description(updatedWorkcenter.getDescription())
-//                    .isActive(updatedWorkcenter.getIsActive())
-//                    // 필요한 다른 필드들도 변환하여 설정
-//                    .build();
-//
-//            return Optional.of(updatedWorkcenterDTO);
-//
-//        } catch (Exception e) {
-//            throw new RuntimeException("작업장 업데이트 중 오류가 발생했습니다: " + e.getMessage());
-//        }
-//    }
-//}
-
-//    @Override
-//    public Optional<Workcenter> updateWorkcenter(String code, WorkcenterDTO workcenterDTO) {
-//        try {
-//            // 1. 작업장 코드를 사용하여 기존 작업장을 조회
-//            Workcenter existingWorkcenter = workcenterRepository.findByCode(code)
-//                    .orElseThrow(() -> new RuntimeException("작업장 코드: " + code + "를 찾을 수 없습니다."));
-//
-//            // 2. 작업장 코드가 변경되었을 경우 중복 검사를 수행
-//            if (!existingWorkcenter.getCode().equals(workcenterDTO.getCode())) {
-//                if (workcenterRepository.findByCode(workcenterDTO.getCode()).isPresent()) {
-//                    throw new RuntimeException("코드 " + workcenterDTO.getCode() + "는 이미 존재합니다.");
-//                }
-//                existingWorkcenter.setCode(workcenterDTO.getCode());
-//            }
-//
-//            // 3. 나머지 필드 업데이트
-//            existingWorkcenter.setName(workcenterDTO.getName());
-//            existingWorkcenter.setWorkcenterType(workcenterDTO.getWorkcenterType());
-//            existingWorkcenter.setDescription(workcenterDTO.getDescription());
-//            existingWorkcenter.setIsActive(workcenterDTO.getIsActive());
-//
-////            // 4. 공장 변경 처리
-////            try {
-////                if (workcenterDTO.getFactoryCode() != null) {
-////                    // 공장코드 포함 작업장 리스트 조회
-////                    List<Workcenter> workcenters = workcenterRepository.findByFactoryCodeContaining(workcenterDTO.getFactoryCode().getCode());
-////
-////                    // 작업장이 없으면 예외를 던짐
-////                    Workcenter selectedWorkcenter = workcenters.stream()
-////                            .findFirst()
-////                            .orElseThrow(() -> new RuntimeException("공장 코드: " + workcenterDTO.getFactoryCode() + "에 해당하는 작업장을 찾을 수 없습니다."));
-////
-////                    // 첫 번째 작업장의 Factory(Warehouse)를 설정
-////                    existingWorkcenter.setFactory(selectedWorkcenter.getFactory());
-////                }
-////            } catch (Exception e) {
-////                System.out.println("Factory 설정 중 오류 발생: " + e.getMessage());
-////                existingWorkcenter.setFactory(null); // 또는 기본값 설정
-////            }
-////
-////            // 생산공정 변경 처리
-////            try {
-////                if (workcenterDTO.getProcessCode() != null) {
-////                    // 공정코드가 포함된 작업장 리스트를 조회
-////                    List<Workcenter> workcenters = workcenterRepository.findByCodeContaining(workcenterDTO.getProcessCode().getCode());
-////
-////                    // 작업장이 없을 경우 예외를 던짐
-////                    Workcenter selectedWorkcenter = workcenters.stream()
-////                            .findFirst()
-////                            .orElseThrow(() -> new RuntimeException("생산 공정 코드: " + workcenterDTO.getProcessCode() + "에 해당하는 작업장을 찾을 수 없습니다."));
-////
-////                    // 첫 번째 작업장의 ProcessDetails를 설정
-////                    existingWorkcenter.setProcessDetails(selectedWorkcenter.getProcessDetails());
-////                }
-////            } catch (Exception e) {
-////                System.out.println("ProcessDetails 설정 중 오류 발생: " + e.getMessage());
-////                existingWorkcenter.setProcessDetails(null); // 또는 기본값 설정
-////            }
-////
-////            // 5. 작업장 업데이트 후 저장
-////            return workcenterRepository.save(existingWorkcenter);
-//
-//        } catch (Exception e) {
-//            throw new RuntimeException("작업장 업데이트 중 오류가 발생했습니다: " + e.getMessage());
-//        }
-//        return Optional.empty();
-//    }
-//}

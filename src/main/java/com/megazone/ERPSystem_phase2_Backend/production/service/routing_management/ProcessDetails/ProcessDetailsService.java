@@ -4,20 +4,16 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
 public interface ProcessDetailsService {
 
     List<ProcessDetailsDTO> getAllProcessDetails();
-//    ProcessDetailsDTO getProcessDetailsById(Long id);
+    ProcessDetailsDTO getProcessDetailsById(Long id);
     ProcessDetailsDTO createProcessDetails(ProcessDetailsDTO processDetailsDTO);
-    ProcessDetailsDTO updateByCode(String code, ProcessDetailsDTO processDetailsDTO);
-    ProcessDetailsDTO deleteByCode(String code);
+    ProcessDetailsDTO updateProcessDetails(Long id, ProcessDetailsDTO processDetailsDTO);
+    void deleteProcessDetails(Long id);
 
-    Optional<ProcessDetailsDTO> getProcessDetailsByCode(String code);
 
-    List<ProcessDetailsDTO> findByNameContaining(String name);
-    
 }
