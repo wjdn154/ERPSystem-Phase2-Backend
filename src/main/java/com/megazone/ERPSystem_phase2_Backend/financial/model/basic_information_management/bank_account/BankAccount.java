@@ -43,13 +43,10 @@ public class BankAccount {
     private String code; // 코드
 
     @Column(nullable = false)
-    private String name; // 은행명
+    private String name; // 소유자명
 
     @Column(nullable = false)
     private String accountNumber; // 계좌번호
-
-    @Column(nullable = false)
-    private String bankBranchName; // 은행 지점명
 
     @Column(nullable = false)
     private LocalDate accountOpeningDate; // 계좌 개설일

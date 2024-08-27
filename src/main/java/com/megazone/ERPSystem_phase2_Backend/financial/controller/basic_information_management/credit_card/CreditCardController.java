@@ -10,14 +10,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@Controller
+@RestController
+@RequestMapping("/api/financial/creditCard")
 @RequiredArgsConstructor
 public class CreditCardController {
 
@@ -29,9 +27,8 @@ public class CreditCardController {
      * @param creditCardDTO 등록할 신용카드 정보가 담긴 DTO
      * @return 등록한 신용카드 정보를 담은 creditCardDTO 객체를 반환.
      */
-    @PostMapping("/api/financial/creditCard/save")
+    @PostMapping("/save")
     public ResponseEntity<CreditCardDTO> saveCompany(@RequestBody CreditCardDTO creditCardDTO) {
-        System.out.println("creditCardDTO.toString() = " + creditCardDTO.toString());
         Optional<CreditCardDTO> savedCreditCard = creditCardService.saveCreditCard(creditCardDTO);
         return savedCreditCard
                 .map(ResponseEntity::ok)
@@ -44,7 +41,7 @@ public class CreditCardController {
      * @param creditCardDTO 수정할 신용카드 정보가 담긴 DTO
      * @return 수정된 신용카드 정보를 담은 creditCardDTO 객체를 반환.
      */
-    @PutMapping("/api/financial/creditCard/update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<CreditCardDTO> updateCompany(@PathVariable("id") Long id, @RequestBody CreditCardDTO creditCardDTO) {
         Optional<CreditCardDTO> savedCreditCard = creditCardService.updateCreditCard(id, creditCardDTO);
         return savedCreditCard

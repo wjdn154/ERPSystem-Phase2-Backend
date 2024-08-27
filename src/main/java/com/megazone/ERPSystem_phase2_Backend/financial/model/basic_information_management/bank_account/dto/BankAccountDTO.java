@@ -58,7 +58,6 @@ public class BankAccountDTO {
         ) : null;
         this.name = bankAccount.getName();
         this.accountNumber = bankAccount.getAccountNumber();
-        this.bankBranchName = bankAccount.getBankBranchName();
         this.accountOpeningDate = bankAccount.getAccountOpeningDate();
         this.depositType = bankAccount.getDepositType();
         this.maturityDate = bankAccount.getMaturityDate();

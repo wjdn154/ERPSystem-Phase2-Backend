@@ -12,11 +12,13 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.mrp.bom;
  */
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
+import com.megazone.ERPSystem_phase2_Backend.production.model.mrp.Mrp;
 import com.megazone.ERPSystem_phase2_Backend.production.model.outsourcing.OutsourcingType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"parentBom", "parentProduct", "childProduct", "childBoms", "bomMaterials", "mrps"})
 public class StandardBom {
 
     @Id
@@ -76,5 +79,8 @@ public class StandardBom {
 
     @OneToMany(mappedBy = "bom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StandardBomMaterial> bomMaterials = new ArrayList<>(); // 중간 엔티티 리스트
+
+    @OneToMany(mappedBy = "standardBom", fetch = FetchType.LAZY)
+    private List<Mrp> mrps = new ArrayList<>(); // 연관 S bom 목록
 
 }

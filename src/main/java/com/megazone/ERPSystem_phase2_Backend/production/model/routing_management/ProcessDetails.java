@@ -7,6 +7,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.routing_managemen
  */
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
+import com.megazone.ERPSystem_phase2_Backend.production.model.mrp.MaterialInputStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -62,5 +63,8 @@ public class ProcessDetails {
     @OneToMany(mappedBy = "process", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<RoutingStep> routingSteps = new ArrayList<>(); // 연관 RoutingStep 목록
+
+    @OneToMany(mappedBy = "processDetails")
+    private List<MaterialInputStatus>  materialInputStatus;
 
 }

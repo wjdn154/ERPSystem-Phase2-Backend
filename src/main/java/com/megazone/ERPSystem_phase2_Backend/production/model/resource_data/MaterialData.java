@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data;
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.mrp.MaterialInputStatus;
 import com.megazone.ERPSystem_phase2_Backend.production.model.mrp.bom.StandardBomMaterial;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.MaterialType;
 import jakarta.persistence.*;
@@ -47,6 +48,9 @@ public class MaterialData {
     @OneToMany(mappedBy = "material", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StandardBomMaterial> bomMaterials = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "material_input_status_id", nullable = false)
+    private MaterialInputStatus materialInputStatus;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(nullable = false)

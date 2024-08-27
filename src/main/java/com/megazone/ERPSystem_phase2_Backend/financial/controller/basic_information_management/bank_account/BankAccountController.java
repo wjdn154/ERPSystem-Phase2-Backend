@@ -10,14 +10,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@Controller
+@RestController
+@RequestMapping("/api/financial/bankAccount")
 @RequiredArgsConstructor
 public class BankAccountController {
 
@@ -30,7 +28,7 @@ public class BankAccountController {
      * @param bankAccountDTO 수정할 은행 계좌 정보 DTO
      * @return 등록한 은행 계좌 정보를 담은 BankAccountDTO 객체를 반환.
      */
-    @PostMapping("/api/financial/bankAccount/save")
+    @PostMapping("/save")
     public ResponseEntity<BankAccountDTO> registerClient(@RequestBody BankAccountDTO bankAccountDTO) {
         Optional<BankAccountDTO> savedBankAccount = bankAccountService.saveBankAccount(bankAccountDTO);
 
@@ -45,7 +43,7 @@ public class BankAccountController {
      * @param bankAccountDTO 수정할 은행 계좌 DTO
      * @return 수정된 은행 계좌 정보를 담은 BankAccountDTO 객체를 반환.
      */
-    @PutMapping("/api/financial/bankAccount/update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<BankAccountDTO> updateClient(@PathVariable("id") Long id, @RequestBody BankAccountDTO bankAccountDTO) {
         Optional<BankAccountDTO> updatedBankAccount = bankAccountService.updateBankAccount(id, bankAccountDTO);
         return updatedBankAccount
