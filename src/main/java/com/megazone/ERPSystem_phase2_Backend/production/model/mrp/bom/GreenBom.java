@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Entity(name = "green_bom")
+@Entity(name = "bom_green_bom")
 @Table(name = "bom_green_bom")
 @Data
 @NoArgsConstructor
