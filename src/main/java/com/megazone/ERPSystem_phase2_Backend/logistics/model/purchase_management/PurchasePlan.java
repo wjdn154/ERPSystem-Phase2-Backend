@@ -19,7 +19,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PurchasePlan extends Product {
+public class PurchasePlan {
 
     // 고유 식별자
     @Id

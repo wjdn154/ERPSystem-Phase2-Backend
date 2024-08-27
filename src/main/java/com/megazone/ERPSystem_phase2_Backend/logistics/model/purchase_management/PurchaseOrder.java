@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PurchaseOrder extends PurchasePlan {
+public class PurchaseOrder {
 
     // 고유 식별자
     @Id
