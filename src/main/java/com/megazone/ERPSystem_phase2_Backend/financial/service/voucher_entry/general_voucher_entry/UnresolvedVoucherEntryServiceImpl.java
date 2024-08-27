@@ -120,7 +120,6 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e.getMessage());
         }
-        System.out.println(savedVoucherList.toString());
         return savedVoucherList; // 생성된 미결전표 반환
     }
 

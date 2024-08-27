@@ -23,7 +23,7 @@ import java.util.List;
 public class JournalApiController {
     private final JournalService journalService;
 
-    @PostMapping("/test")
+    @PostMapping("/api/financial/journal/show")
     public ResponseEntity<JournalShowDTO> journalShow(@RequestBody JournalDTO dto) {
         List<ResolvedVoucherShowDTO> ShowDTOs = journalService.journalSearch(dto.getStartDate(),dto.getEndDate())
                 .stream().map(ResolvedVoucherShowDTO::create).toList();
@@ -31,7 +31,8 @@ public class JournalApiController {
         List<BigDecimal> totalAmounts = journalService.journalTotalAmount(dto.getStartDate(),dto.getEndDate());
         BigDecimal totalCount = journalService.journalTotalCount(dto.getStartDate(),dto.getEndDate());
 
-        JournalShowDTO journalShowDTO = JournalShowDTO.create(ShowDTOs,totalAmounts.get(0),totalAmounts.get(1),totalCount);
+        JournalShowDTO journalShowDTO = JournalShowDTO.create(ShowDTOs,totalAmounts.get(0),totalAmounts.get(1),
+                totalCount);
 
         return journalShowDTO != null ?
                 ResponseEntity.status(HttpStatus.OK).body(journalShowDTO) :

@@ -60,7 +60,6 @@ spring:
 
         - classpath:initial-database/production/resource_data/equipmentData.sql
         - classpath:initial-database/production/resource_data/maintenanceHistory.sql
-        - classpath:initial-database/production/equipmentData.sql
 logging:
   level:
     org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)

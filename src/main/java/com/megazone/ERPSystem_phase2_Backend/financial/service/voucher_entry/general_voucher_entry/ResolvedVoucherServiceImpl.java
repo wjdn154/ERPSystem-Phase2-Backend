@@ -58,6 +58,7 @@ public class ResolvedVoucherServiceImpl implements ResolvedVoucherService {
                 .creditAmount(unresolvedVoucher.getCreditAmount())
                 .voucherDate(unresolvedVoucher.getVoucherDate())
                 .voucherApprovalTime(approvalTime)
+                .voucherKind(unresolvedVoucher.getVoucherKind())
                 .build();
     }
 

@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.sales_and_purchase_voucher_entry;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.ResolvedVoucher;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherKind;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.ResolvedSaleAndPurchaseVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.ResolvedSaleAndPurchaseVoucherDeleteDTO;
@@ -112,6 +113,7 @@ public class ResolvedSaleAndPurchaseVoucherServiceImpl implements ResolvedSaleAn
                         .creditAmount(voucher.getCreditAmount())
                         .voucherDate(voucher.getVoucherDate())
                         .voucherApprovalTime(nowTime)
+                        .voucherKind(VoucherKind.SALE_AND_PURCHASE)
                         .build();}).toList();
 
         return ResolvedSaleAndPurchaseVoucher.builder()

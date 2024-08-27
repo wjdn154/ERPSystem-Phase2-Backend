@@ -10,12 +10,14 @@ import lombok.Data;
 public class VatTypeShowDTO {
     private String vatTypeCode;
     private String vatTypeName;
+    private String description;
     private TransactionType transactionType;
 
     public static VatTypeShowDTO create(VatType vatType) {
         return new VatTypeShowDTO(
                 vatType.getCode(),
                 vatType.getVatName(),
+                vatType.getDescription(),
                 vatType.getTransactionType()
         );
     }

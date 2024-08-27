@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.ResolvedVoucher;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherKind;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,20 +25,22 @@ public class ResolvedVoucherShowDTO {
 //    private String descriptionName;
     private BigDecimal debitAmount;
     private BigDecimal creditAmount;
+    private VoucherKind voucherKind;
 
-    public static ResolvedVoucherShowDTO create(ResolvedVoucher unresolvedVoucher) {
+    public static ResolvedVoucherShowDTO create(ResolvedVoucher resolvedVoucher) {
         return new ResolvedVoucherShowDTO(
-                unresolvedVoucher.getVoucherDate(),
-                unresolvedVoucher.getVoucherNumber(),
-                unresolvedVoucher.getVoucherType(),
-                unresolvedVoucher.getAccountSubject().getCode(),
-                unresolvedVoucher.getAccountSubject().getName(),
-//                unresolvedVoucher.getVendor().getCode(),
-//                unresolvedVoucher.getVendor().getName(),
-//                unresolvedVoucher.getDescription().getCode(),
-//                unresolvedVoucher.getDescription().getName(),
-                unresolvedVoucher.getDebitAmount(),
-                unresolvedVoucher.getCreditAmount()
+                resolvedVoucher.getVoucherDate(),
+                resolvedVoucher.getVoucherNumber(),
+                resolvedVoucher.getVoucherType(),
+                resolvedVoucher.getAccountSubject().getCode(),
+                resolvedVoucher.getAccountSubject().getName(),
+//                resolvedVoucher.getVendor().getCode(),
+//                resolvedVoucher.getVendor().getName(),
+//                resolvedVoucher.getDescription().getCode(),
+//                resolvedVoucher.getDescription().getName(),
+                resolvedVoucher.getDebitAmount(),
+                resolvedVoucher.getCreditAmount(),
+                resolvedVoucher.getVoucherKind()
         );
     }
 }
