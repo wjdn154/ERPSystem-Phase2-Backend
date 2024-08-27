@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemoRequestDTO {
+    private String code;     // 적요 코드
     private String memoType; // 적요 구분 (현금적요, 대체적요, 고정적요)
     private String content;  // 적요 내용
 }

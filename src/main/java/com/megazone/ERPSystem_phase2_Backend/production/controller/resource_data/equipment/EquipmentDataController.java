@@ -37,7 +37,6 @@ public class EquipmentDataController {
     @PostMapping("/equipmentData/{id}")
     public ResponseEntity<EquipmentDataShowDTO> getEquipmentDataById(@PathVariable("id") Long id){
 
-        System.out.println("test");
         //서비스에서 해당 아이디의 설비 상세 정보를 가져옴
         Optional<EquipmentDataShowDTO> result = equipmentDataService.findEquipmentDataDetailById(id);
 
@@ -48,7 +47,7 @@ public class EquipmentDataController {
 
     //설비 상세 정보 등록
     @PostMapping("/equipmentData/createEquipment")
-    public ResponseEntity<EquipmentDataShowDTO> saveEquipmentDataById(@RequestBody EquipmentDataDTO dto){
+    public ResponseEntity<EquipmentDataShowDTO> saveEquipmentData(@RequestBody EquipmentDataDTO dto){
 
         //서비스에 해당 아이디의 설비 상세 정보를 등록함.
         Optional<EquipmentDataShowDTO> result = equipmentDataService.saveEquipment(dto);

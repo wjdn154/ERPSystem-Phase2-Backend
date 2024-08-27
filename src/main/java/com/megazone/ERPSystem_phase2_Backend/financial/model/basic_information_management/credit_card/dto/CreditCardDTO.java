@@ -43,13 +43,13 @@ public class CreditCardDTO {
         );
 
         // 신용카드 소유 및 담당자 정보를 OwnershipDTO로 변환
-//        if (creditCard.getOwnership() != null) {
-//            this.ownership = new OwnershipDTO(
-//                    creditCard.getOwnership().getCreditCard().getId(),
-//                    creditCard.getOwnership().getOwner() != null ? creditCard.getOwnership().getOwner().getId() : null,
-//                    creditCard.getOwnership().getManager() != null ? creditCard.getOwnership().getManager().getId() : null
-//            );
-//        }
+        if (creditCard.getOwnership() != null) {
+            this.ownership = new OwnershipDTO(
+                    creditCard.getOwnership().getCreditCard().getId(),
+                    creditCard.getOwnership().getOwner() != null ? creditCard.getOwnership().getOwner().getId() : null,
+                    creditCard.getOwnership().getManager() != null ? creditCard.getOwnership().getManager().getId() : null
+            );
+        }
 
         this.remarks = creditCard.getRemarks();
         this.isActive = creditCard.getIsActive();

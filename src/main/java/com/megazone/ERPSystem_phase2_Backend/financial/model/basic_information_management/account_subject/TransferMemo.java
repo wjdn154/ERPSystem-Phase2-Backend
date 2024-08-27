@@ -16,10 +16,20 @@ public class TransferMemo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 적요 ID
 
+    private String code; // 적요 코드
+
     @Column(nullable = false)
     private String content; // 적요 내용
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_subject_code", referencedColumnName = "code")
     private AccountSubject accountSubject; // 참조하는 계정과목
+
+    public TransferMemo() {
+    }
+
+    public TransferMemo(Long id, String content) {
+        this.id = id;
+        this.content = content;
+    }
 }

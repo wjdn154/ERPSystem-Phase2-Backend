@@ -18,10 +18,10 @@ import java.util.List;
 public class AccountSubject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 계정과목 ID
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "structure_code")
+    @JoinColumn(name = "structure_code", referencedColumnName = "code")
     private Structure structure; // 계정체계 참조
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,6 +41,8 @@ public class AccountSubject {
     private List<FixedMemo> fixedMemo; // 관련 고정적요 목록
 
     private String natureCode; // 계정과목 성격 코드
+
+    private String standardFinancialStatementCode; // 표준재무제표 코드
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

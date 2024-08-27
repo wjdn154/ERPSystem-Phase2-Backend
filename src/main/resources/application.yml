@@ -19,7 +19,6 @@ spring:
         - 'classpath:/META-INF/resources/' # 정적 리소스 위치 지정 (클래스패스 기준)
         - 'file:src/main/frontend/dist/' # 정적 리소스 위치 지정 (파일 시스템 기준)
   sql:
-
     init:
       mode: always # 항상 SQL 초기화 모드를 사용하도록 설정
       data-locations:
@@ -46,6 +45,7 @@ spring:
         - classpath:initial-database/financial/unresolved_voucher.sql
         - classpath:initial-database/hr/employee.sql
         - classpath:initial-database/hr/users.sql
+        - classpath:initial-database/hr/attendance_management.sql
 
         - classpath:initial-database/production/workcenter.sql
         - classpath:initial-database/production/processDetails.sql
@@ -54,7 +54,8 @@ spring:
         - classpath:initial-database/logistics/product_group.sql
         - classpath:initial-database/logistics/product.sql
 
-        - classpath:initial-database/production/equipmentData.sql
+        - classpath:initial-database/production/resource_data/equipmentData.sql
+        - classpath:initial-database/production/resource_data/maintenanceHistory.sql
 logging:
   level:
     org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)

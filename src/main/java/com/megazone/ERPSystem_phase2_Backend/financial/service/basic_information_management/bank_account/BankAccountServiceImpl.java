@@ -76,7 +76,6 @@ public class BankAccountServiceImpl implements BankAccountService {
         bankAccount.setCode(bankAccountDTO.getCode());
         bankAccount.setName(bankAccountDTO.getName());
         bankAccount.setAccountNumber(bankAccountDTO.getAccountNumber());
-        bankAccount.setBankBranchName(bankAccountDTO.getBankBranchName());
         bankAccount.setAccountOpeningDate(bankAccountDTO.getAccountOpeningDate());
         bankAccount.setDepositType(bankAccountDTO.getDepositType());
         bankAccount.setMaturityDate(bankAccountDTO.getMaturityDate());
@@ -84,8 +83,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         bankAccount.setMonthlyPayment(bankAccountDTO.getMonthlyPayment());
         bankAccount.setOverdraftLimit(bankAccountDTO.getOverdraftLimit());
         bankAccount.setBusinessAccount(bankAccountDTO.getBusinessAccount());
-        BankAccount updatedBankAccount = bankAccountRepository.save(bankAccount);
-        return updatedBankAccount;
+        return bankAccountRepository.save(bankAccount);
     }
 
 

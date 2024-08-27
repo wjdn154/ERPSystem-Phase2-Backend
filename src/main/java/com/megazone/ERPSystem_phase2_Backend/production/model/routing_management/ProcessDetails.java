@@ -7,6 +7,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.routing_managemen
  */
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
+import com.megazone.ERPSystem_phase2_Backend.production.model.mrp.MaterialInputStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +15,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "routing_management_process_details")
@@ -23,6 +25,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ProcessDetails {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,9 +57,14 @@ public class ProcessDetails {
     private Boolean isUsed; // 사용 여부
 
     @OneToMany(mappedBy = "processDetails", fetch = FetchType.LAZY)
-    private List<Workcenter> workcenters; // 연관 (공정수행) 작업장 목록
+    @Builder.Default
+    private List<Workcenter> workcenters = new ArrayList<>(); // 연관 (공정수행) 작업장 목록
 
     @OneToMany(mappedBy = "process", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RoutingStep> routingSteps; // 연관 RoutingStep 목록
+    @Builder.Default
+    private List<RoutingStep> routingSteps = new ArrayList<>(); // 연관 RoutingStep 목록
+
+    @OneToMany(mappedBy = "processDetails")
+    private List<MaterialInputStatus>  materialInputStatus;
 
 }
