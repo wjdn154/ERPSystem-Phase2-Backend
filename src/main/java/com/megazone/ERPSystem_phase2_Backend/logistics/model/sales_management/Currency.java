@@ -1,7 +1,10 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.quotation_registration;
+package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.PurchaseRequest;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 /**
  * 통화 엔티티
@@ -30,4 +33,7 @@ public class Currency {
     // 환율
     @Column(nullable = false)
     private Double exchangeRate;
+
+    @OneToMany(mappedBy = "currency")
+    private List<PurchaseRequest> purchaseRequests;
 }

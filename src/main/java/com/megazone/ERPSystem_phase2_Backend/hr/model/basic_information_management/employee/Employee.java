@@ -85,7 +85,7 @@ public class Employee {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EmploymentType employmentType; // 고용 유형
+    private EmploymentType employmentType; // 고용 유형 
 
     @Column(nullable = false)
     private String email; // 이메일

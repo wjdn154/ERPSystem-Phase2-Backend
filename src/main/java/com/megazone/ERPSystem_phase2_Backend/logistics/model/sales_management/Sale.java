@@ -1,34 +1,31 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management;
+package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
 /**
- * 발주계획 테이블
- * 발주계획에 대한 정보가 있는 테이블
- * 발주요청에 따라 발주계획을 등록할 수 있어야 한다.
+ * 판매서 테이블
+ * 판매서에 대한 정보가 있는 테이블
+ * 등록된 주문을 바탕으로 실제 판매를 등록
  */
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PurchasePlan {
+public class Sale {
 
     // 고유 식별자
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 발주 요청_id 참조
-    @Column
-    private Long purchaseRequestId;
+    // 주문서_id 조인
+//    @OneToMany(mappedBy = "")
+//    @JoinColumn(name = "order_id", nullable = false)
+    private Long orderId;
 
     // 거래처_id - N : 1
     @Column(nullable = false)
@@ -38,7 +35,7 @@ public class PurchasePlan {
     @Column(nullable = false)
     private Long employeeId;
 
-    // 창고_id - 입고될 창고
+    // 창고_id - N : 1
     @Column(nullable = false)
     private Long warehouseId;
 
@@ -47,12 +44,12 @@ public class PurchasePlan {
 //    @JoinColumn(name = "currency_id", nullable = false)
     private Long currencyId;
 
-    // 품목_id
+    // 품목_id - 1 : N
     @Column
     private Long productId;
 
     // 수량
-    @Column(nullable = false )
+    @Column(nullable = false)
     private Integer quantity;
 
     // 공급가액 - 수량 * 단가
@@ -66,10 +63,6 @@ public class PurchasePlan {
     // 부가세 - 공급가액의 10%
     @Column
     private Double vat;
-
-    // 납기 일자
-    @Column(nullable = false)
-    private LocalDate deliveryDate;
 
     // 일자
     @Column(nullable = false)
