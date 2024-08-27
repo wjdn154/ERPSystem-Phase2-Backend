@@ -78,12 +78,28 @@ public class ProductGroupController {
         }
     }
 
+    /**
+     * 등록된 품목 그룹을 삭제함
+     * @param id 삭제할 품목 그룹의 id
+     * @return 품목 그룹 삭제 성공 여부를 문자열로 반환
+     */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteProductGroup(@PathVariable("id") Long id) {
         String result = productGroupService.deleteProductGroup(id);
         return ResponseEntity.ok(result);
     }
 
+    @PutMapping("/{id}/deactivate")
+    public ResponseEntity<String> deactivateProductGroup(@PathVariable("id") Long id) {
+        String result = productGroupService.deactivateProductGroup(id);
+        return ResponseEntity.ok(result);
+    }
+
+    @PutMapping("/{id}/reactivate")
+    public ResponseEntity<String> reactivateProductGroup(@PathVariable("id") Long id) {
+        String result = productGroupService.reactivateProductGroup(id);
+        return ResponseEntity.ok(result);
+    }
 
 
 }

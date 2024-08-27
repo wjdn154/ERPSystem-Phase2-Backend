@@ -25,15 +25,26 @@ public class PurchaseRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 거래처_id
+    // 거래처_id - N : 1
+    @Column(nullable = false)
+    private Long clientId;
 
-    // 사원_id
+    // 사원_id - N : 1
+    @Column(nullable = false)
+    private Long employeeId;
 
     // 창고_id - 입고될 창고
+    @Column(nullable = false)
+    private Long warehouseId;
 
-    // 통화_id
+    // 통화_id - N : 1
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "currency_id", nullable = false)
+    private Long currencyId;
 
     // 품목_id
+    @Column
+    private Long productId;
 
     // 수량
     @Column(nullable = false )

@@ -1,4 +1,4 @@
-INSERT INTO product_group (code, name, active) VALUES
+INSERT INTO product_group (code, name, is_active) VALUES
 ('01', '가공식품', TRUE),
 ('02', '신선식품', TRUE),
 ('03', '일상용품', TRUE),

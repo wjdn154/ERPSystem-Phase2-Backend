@@ -9,24 +9,28 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 /**
- * 발주서 테이블
- * 발주서에 대한 정보가 있는 테이블
+ * 구매서 테이블
+ * 구매서에 대한 정보가 있는 테이블
  */
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PurchaseOrder extends PurchasePlan {
+public class Purchase {
 
     // 고유 식별자
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 발주 계획_id 참조
+    // 발주서_id
     @Column
-    private Long purchasePlanId;
+    private Long purchaseRequestId;
+
+    // 주문서_id
+    @Column
+    private Long ordersId;
 
     // 거래처_id - N : 1
     @Column(nullable = false)
@@ -65,10 +69,6 @@ public class PurchaseOrder extends PurchasePlan {
     @Column
     private Double vat;
 
-    // 납기 일자
-    @Column(nullable = false)
-    private LocalDate deliveryDate;
-
     // 일자
     @Column(nullable = false)
     private LocalDate date;
@@ -76,5 +76,4 @@ public class PurchaseOrder extends PurchasePlan {
     // 비고
     @Column
     private String remarks;
-
 }

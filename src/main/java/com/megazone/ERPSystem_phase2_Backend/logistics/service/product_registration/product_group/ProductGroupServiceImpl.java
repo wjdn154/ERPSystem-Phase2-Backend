@@ -21,8 +21,8 @@ public class ProductGroupServiceImpl implements ProductGroupService{
     private final ProductRepository productRepository;
 
     /**
-     *
-     * @return
+     * 모든 품목 그룹 조회
+     * @return 모든 품목 그룹 DTO를 List로 반환
      */
     @Override
     public List<ProductGroupDto> findAllProductGroups() {
@@ -33,9 +33,9 @@ public class ProductGroupServiceImpl implements ProductGroupService{
     }
 
     /**
-     *
+     * 특정 id로 품목 그룹 조회
      * @param id
-     * @return
+     * @return 특정 id를 가진 폼목 그룹 DTO 반환
      */
     @Override
     public ProductGroupDto getProductGroupById(Long id) {
@@ -45,9 +45,9 @@ public class ProductGroupServiceImpl implements ProductGroupService{
     }
 
     /**
-     *
+     * 폼목 그룹 등록
      * @param productGroupDto
-     * @return
+     * @return 등록된 품목 그룹 DTO를 반환
      */
     @Override
     public Optional<ProductGroupDto> saveProductGroup(ProductGroupDto productGroupDto) {
@@ -114,6 +114,35 @@ public class ProductGroupServiceImpl implements ProductGroupService{
 
         productGroupRepository.delete(productGroup);
         return productGroup.getName() + " 품목 그룹이 삭제되었습니다.";
+    }
+
+    @Override
+    public String deactivateProductGroup(Long id) {
+        ProductGroup productGroup = productGroupRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 Id의 품목 그룹을 찾을 수 없습니다."));
+
+        // 품목 그룹 사용중단
+        productGroup.deactivate();
+        productGroupRepository.save(productGroup);
+
+        // Product 의 productGroup 필드를 null로 설정
+        productRepository.nullifyProductGroupId(id);
+
+        return productGroup.getName() + " 품목 그룹이 사용 중단되었습니다.";
+    }
+
+    @Override
+    public String reactivateProductGroup(Long id) {
+        ProductGroup productGroup = productGroupRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 Id의 품목 그룹을 찾을 수 없습니다."));
+
+        // 품목 그룹 재사용
+        productGroup.reactivate();
+        productGroupRepository.save(productGroup);
+
+        // Product의 productGroup 필드를 다시 id 로 설정
+//        productRepository.updateStatusByProductGroupId(id);
+        return null;
     }
 
     // code와 name에 대한 유효성 검증 메소드

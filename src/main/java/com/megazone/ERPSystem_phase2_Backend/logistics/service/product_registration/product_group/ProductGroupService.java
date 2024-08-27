@@ -17,4 +17,8 @@ public interface ProductGroupService {
     Optional<ProductGroupDto> updateProduct(Long id, ProductGroupDto productGroupDto);
 
     String deleteProductGroup(Long id);
+
+    String deactivateProductGroup(Long id);
+
+    String reactivateProductGroup(Long id);
 }

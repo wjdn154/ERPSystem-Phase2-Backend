@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.quotation_registration;
+package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management;
 
 import jakarta.persistence.*;
 import lombok.*;

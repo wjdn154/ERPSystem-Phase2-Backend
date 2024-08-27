@@ -36,7 +36,16 @@ public class ProductServiceImpl implements ProductService{
     public List<ProductDto> findAllProducts() {
 
         return productRepository.findAll().stream()
-                .map(ProductDto::createProductDto)
+                .map(product -> ProductDto.builder()
+                        .code(product.getCode())
+                        .name(product.getName())
+                        .productGroupName(product.getProductGroup() != null ? product.getProductGroup().getName() : null)
+                        .standard(product.getStandard())
+                        .purchasePrice(product.getPurchasePrice())
+                        .salesPrice(product.getSalesPrice())
+                        .productType(product.getProductType())
+                        .productRoutingName(product.getProductionRouting() != null ? product.getProductionRouting().getName() : null)
+                        .build())
                 .collect(Collectors.toList());
     }
 

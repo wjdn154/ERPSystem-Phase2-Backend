@@ -9,24 +9,24 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 /**
- * 발주서 테이블
- * 발주서에 대한 정보가 있는 테이블
+ * 구매서 테이블
+ * 구매서에 대한 정보가 있는 테이블
  */
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PurchaseOrder extends PurchasePlan {
+public class ReceivingOrder {
 
     // 고유 식별자
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 발주 계획_id 참조
+    // 구매_id 참조
     @Column
-    private Long purchasePlanId;
+    private Long purchaseId;
 
     // 거래처_id - N : 1
     @Column(nullable = false)
@@ -36,40 +36,27 @@ public class PurchaseOrder extends PurchasePlan {
     @Column(nullable = false)
     private Long employeeId;
 
-    // 창고_id - 입고될 창고
+    // 연락처
+    @Column
+    private String contact;
+
+    // 입고될 창고_id - N : 1
     @Column(nullable = false)
     private Long warehouseId;
 
-    // 통화_id - N : 1
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "currency_id", nullable = false)
-    private Long currencyId;
-
-    // 품목_id
+    // 품목_id - 1 : N
     @Column
     private Long productId;
 
     // 수량
-    @Column(nullable = false )
+    @Column(nullable = false)
     private Integer quantity;
 
-    // 공급가액 - 수량 * 단가
+    // 입고 예정 일자
     @Column(nullable = false)
-    private Double supplyPrice;
+    private LocalDate receivingDate;
 
-    // 부가세율 적용 or 미적용
-    @Column(nullable = false)
-    private Boolean vatType;
-
-    // 부가세 - 공급가액의 10%
-    @Column
-    private Double vat;
-
-    // 납기 일자
-    @Column(nullable = false)
-    private LocalDate deliveryDate;
-
-    // 일자
+    // 일자 - 입고지시서 입력 일자
     @Column(nullable = false)
     private LocalDate date;
 
@@ -77,4 +64,7 @@ public class PurchaseOrder extends PurchasePlan {
     @Column
     private String remarks;
 
+    // 진행상태 (진행중, 완료)
+    @Column(nullable = false)
+    private Boolean status;
 }

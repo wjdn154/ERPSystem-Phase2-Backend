@@ -38,14 +38,14 @@ public class ProductGroup {
     // 폼목 그룹 활성화 여부
     @Column(nullable = false)
     @Builder.Default
-    private boolean active = true;
+    private boolean isActive = true;
 
     public void deactivate() {
-        this.active = false;
+        this.isActive = false;
     }
 
     public void reactivate() {
-        this.active = true;
+        this.isActive = true;
     }
 
 
