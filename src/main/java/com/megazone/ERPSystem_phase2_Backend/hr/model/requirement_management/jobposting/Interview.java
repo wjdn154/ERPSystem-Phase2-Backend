@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-// 인터뷰 엔티티
+// 인터뷰 엔티티 = 면접
 
 @Data
 @Entity(name="jobposting_interview")
