@@ -45,15 +45,15 @@ public class EmployeeServiceImpl implements EmployeeService {
                         employee.getEmployeeNumber(),
                         employee.getFirstName(),
                         employee.getLastName(),
-                        employee.getDateOfBirth(),
-                        employee.getPhoneNumber(),
+//                        employee.getDateOfBirth(),
+//                        employee.getPhoneNumber(),
                         employee.getEmploymentStatus(),
                         employee.getEmploymentType(),
-                        employee.getEmail(),
-                        employee.getAddress(),
-                        employee.getHireDate(),
-                        employee.isHouseholdHead(),
-                        employee.getProfilePicture(),
+//                        employee.getEmail(),
+//                        employee.getAddress(),
+//                        employee.getHireDate(),
+//                        employee.isHouseholdHead(),
+//                        employee.getProfilePicture(),
                         employee.getDepartment().getDepartmentName(),
                         employee.getPosition().getPositionName(),
                         employee.getJobTitle().getTitleName(),
@@ -225,13 +225,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setEmployeeNumber(dto.getEmployeeNumber());
         employee.setFirstName(dto.getFirstName());
         employee.setLastName(dto.getLastName());
-        employee.setEmail(dto.getEmail());
+        employee.setDateOfBirth(dto.getDateOfBirth());
         employee.setPhoneNumber(dto.getPhoneNumber());
         employee.setEmploymentStatus(dto.getEmploymentStatus());
         employee.setEmploymentType(dto.getEmploymentType());
+        employee.setEmail(dto.getEmail());
         employee.setAddress(dto.getAddress());
         employee.setHireDate(dto.getHireDate());
-        employee.setDateOfBirth(dto.getDateOfBirth());
+        employee.setHouseholdHead(dto.isHouseholdHead());
+        employee.setProfilePicture(dto.getProfilePicture());
 
         // Department 설정
         if (dto.getDepartmentId() != null) {
@@ -260,6 +262,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                     .orElseThrow(() -> new EntityNotFoundException("BankAccount not found"));
             employee.setBankAccount(bankAccount);
         }
+
 
         // 사원 정보를 저장합니다.
         Employee savedEmployee = employeeRepository.save(employee);

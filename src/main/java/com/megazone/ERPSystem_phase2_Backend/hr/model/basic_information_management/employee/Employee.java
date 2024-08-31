@@ -50,8 +50,7 @@ public class Employee {
     @OneToOne(mappedBy = "employee",fetch = FetchType.LAZY, cascade = CascadeType.ALL , orphanRemoval = true) // Users 랑 1대1 참조
     private Users users;
 
-    @OneToOne(cascade = CascadeType.ALL) // 계좌번호랑 1대 1참조
-    @JoinColumn(name = "bankaccount_id")
+    @OneToOne(mappedBy = "employee",fetch = FetchType.LAZY) // 계좌번호랑 1대 1참조
     private BankAccount bankAccount;
 
     @OneToMany(mappedBy = "employee",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // 휴가 참조

@@ -18,7 +18,8 @@ public class BankAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "bankAccount",fetch = FetchType.LAZY) // 사원과 1대1 참조
+    @OneToOne(cascade = CascadeType.ALL) // 사원과 1대1 참조
+    @JoinColumn(name = "employee_id")
     private Employee employee;
 
     @Column(nullable = false)

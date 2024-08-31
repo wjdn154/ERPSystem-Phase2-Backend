@@ -8,9 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DepartmentCreateDTO {
+
     private String departmentCode;
     private String departmentName;
-    private String departmentAddress;
+    private String departmentLocation;
     private String managerId;
 
     public DepartmentCreateDTO(Long id) {

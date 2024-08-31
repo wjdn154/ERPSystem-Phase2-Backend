@@ -77,6 +77,10 @@ public class DepartmentServiceImpl implements DepartmentService {
         Department savedDepartment = departmentRepository.save(department);
 
         // 저장된 엔티티의 ID를 포함한 DTO를 반환
-        return new DepartmentCreateDTO(savedDepartment.getId());
+        return new DepartmentCreateDTO(
+                savedDepartment.getDepartmentCode(),
+                savedDepartment.getDepartmentName(),
+                savedDepartment.getLocation(),
+                savedDepartment.getManagerId());
     }
 }
