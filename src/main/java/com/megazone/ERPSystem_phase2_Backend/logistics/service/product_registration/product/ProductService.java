@@ -1,7 +1,5 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.Product;
+package com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.product;
 
-import aj.org.objectweb.asm.commons.Remapper;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductSaveRequestDto;

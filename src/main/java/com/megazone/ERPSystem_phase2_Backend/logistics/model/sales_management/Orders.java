@@ -1,32 +1,31 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management;
+package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.Currency;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 /**
- * 발주요청 테이블
- * 발주요청서에 대한 정보가 있는 테이블
- * 각 부서 담당자는 구매 관리 부서에 발주를 요청하기 위해 발주 요청을 한다.
+ * 주문서 테이블
+ * 주문서에 대한 정보가 있는 테이블
  */
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PurchaseRequest {
+public class Orders {
 
     // 고유 식별자
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // 견적서_id 참조
+//    @OneToMany(mappedBy = "")
+//    @JoinColumn(name = "quotation_id", nullable = false)
+    @Column(nullable = false)
+    private Long quotationId;
 
     // 거래처_id - N : 1
     @Column(nullable = false)
@@ -36,21 +35,21 @@ public class PurchaseRequest {
     @Column(nullable = false)
     private Long employeeId;
 
-    // 창고_id - 입고될 창고
-    @ManyToOne
-    @JoinColumn(name = "warehouse_id")
-    private Warehouse warehouse;
+    // 창고_id - N : 1
+    @Column(nullable = false)
+    private Long warehouseId;
 
-    @ManyToOne
-    @JoinColumn(name = "currency_id")
-    private Currency currency;
+    // 통화_id - N : 1
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "currency_id", nullable = false)
+    private Long currencyId;
 
-    // 품목_id
+    // 품목_id - 1 : N
     @Column
     private Long productId;
 
     // 수량
-    @Column(nullable = false )
+    @Column(nullable = false)
     private Integer quantity;
 
     // 공급가액 - 수량 * 단가
@@ -76,4 +75,5 @@ public class PurchaseRequest {
     // 비고
     @Column
     private String remarks;
+
 }

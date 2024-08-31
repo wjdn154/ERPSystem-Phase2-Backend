@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.shipping_order;
+package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,24 +25,41 @@ public class ShippingOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 거래처 - 거래처_id 참조
-
-    // 담당자 - 사원_id 참조
-
-    // 출하창고 - 창고_id 참조
-
     // 판매_id 참조
-    @Column(nullable = false)
-    private Long sale_id;
-    // 연락처
+    @Column
+    private Long saleId;
 
-    // 출하예정일자
+    // 거래처_id - N : 1
     @Column(nullable = false)
-    private LocalDate shippingDate;
+    private Long clientId;
+
+    // 사원_id - N : 1
+    @Column(nullable = false)
+    private Long employeeId;
+
+    // 연락처
+    @Column
+    private String contact;
+
+    // 출하 창고_id - N : 1
+    @Column(nullable = false)
+    private Long warehouseId;
 
     // 주소 - 배송 보낼 주소(거래처 주소가 될 수도 있음)
     @Column
     private String shippingAddress;
+
+    // 품목_id - 1 : N
+    @Column
+    private Long productId;
+
+    // 수량
+    @Column(nullable = false)
+    private Integer quantity;
+
+    // 출하예정일자
+    @Column(nullable = false)
+    private LocalDate shippingDate;
 
     // 일자 - 출하지시서 입력 일자
     @Column(nullable = false)

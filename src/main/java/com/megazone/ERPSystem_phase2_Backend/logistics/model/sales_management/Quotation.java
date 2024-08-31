@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.quotation_registration;
+package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,8 +13,8 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Quotation {
 
     // 고유 식별자
@@ -23,10 +23,16 @@ public class Quotation {
     private Long id;
 
     // 거래처_id - N : 1
+    @Column(nullable = false)
+    private Long clientId;
 
     // 사원_id - N : 1
+    @Column(nullable = false)
+    private Long employeeId;
 
     // 창고_id - N : 1
+    @Column(nullable = false)
+    private Long warehouseId;
 
     // 통화_id - N : 1
 //    @ManyToOne(fetch = FetchType.LAZY)
@@ -34,10 +40,11 @@ public class Quotation {
     private Long currencyId;
 
     // 품목_id - 1 : N
+    @Column
     private Long productId;
 
     // 수량
-    @Column(nullable = false )
+    @Column(nullable = false)
     private Integer quantity;
 
     // 공급가액 - 수량 * 단가

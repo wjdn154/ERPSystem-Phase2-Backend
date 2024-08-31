@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.Product;
+package com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.product;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.ProductGroup;
@@ -6,13 +6,12 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registratio
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductSaveRequestDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductSaveResponseDto;
-import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.Product.ProductRepository;
-import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.ProductGroup.ProductGroupRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product_group.ProductGroupRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProductionRouting;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.routing_management.ProductionRouting.ProductionRoutingRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,12 +30,22 @@ public class ProductServiceImpl implements ProductService{
     /**
      * 품목등록 리스트 조회
      * @return 등록된 모든 품목을 반환
+     * 리펙토링 해야함
      */
     @Override
     public List<ProductDto> findAllProducts() {
 
         return productRepository.findAll().stream()
-                .map(ProductDto::createProductDto)
+                .map(product -> ProductDto.builder()
+                        .code(product.getCode())
+                        .name(product.getName())
+                        .productGroupName(product.getProductGroup() != null ? product.getProductGroup().getName() : null)
+                        .standard(product.getStandard())
+                        .purchasePrice(product.getPurchasePrice())
+                        .salesPrice(product.getSalesPrice())
+                        .productType(product.getProductType())
+                        .productRoutingName(product.getProductionRouting() != null ? product.getProductionRouting().getName() : null)
+                        .build())
                 .collect(Collectors.toList());
     }
 
@@ -59,9 +68,9 @@ public class ProductServiceImpl implements ProductService{
      */
     @Override
     public Optional<ProductSaveResponseDto> saveProduct(ProductSaveRequestDto productSaveRequestDto) {
-        // 코드 중복 검사
+        // code 중복 검사
         if (productRepository.existsByCode(productSaveRequestDto.getCode())){
-            throw new IllegalArgumentException("입력하신 코드로 등록된 품목이 이미 존재합니다.");
+            throw new IllegalArgumentException("해당 코드로 등록된 품목이 이미 존재합니다.");
         }
 
         // 품목 그룹 조회
@@ -88,7 +97,7 @@ public class ProductServiceImpl implements ProductService{
      *  등록된 품목 수정하기
      * @param id
      * @param productSaveRequestDto
-     * @return
+     * @return 수정된 품목의 DTO를 반환
      */
     @Override
     public Optional<ProductSaveResponseDto> updateProduct(Long id, ProductSaveRequestDto productSaveRequestDto) {
@@ -139,6 +148,11 @@ public class ProductServiceImpl implements ProductService{
 
     }
 
+    /**
+     * 품목 삭제
+     * @param id
+     * @return 삭제 완료 유무 문자열 반환
+     */
     @Override
     public String deleteProduct(Long id) {
 
@@ -151,6 +165,7 @@ public class ProductServiceImpl implements ProductService{
 
     }
 
+    // Entity -> DTO 변환 메소드
     private ProductSaveResponseDto toDto(Product product) {
         return ProductSaveResponseDto.builder()
                 .code(product.getCode())

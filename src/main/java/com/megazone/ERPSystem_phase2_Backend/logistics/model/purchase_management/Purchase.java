@@ -1,7 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.Currency;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,24 +7,30 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 
 /**
- * 발주요청 테이블
- * 발주요청서에 대한 정보가 있는 테이블
- * 각 부서 담당자는 구매 관리 부서에 발주를 요청하기 위해 발주 요청을 한다.
+ * 구매서 테이블
+ * 구매서에 대한 정보가 있는 테이블
  */
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PurchaseRequest {
+public class Purchase {
 
     // 고유 식별자
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // 발주서_id
+    @Column
+    private Long purchaseRequestId;
+
+    // 주문서_id
+    @Column
+    private Long ordersId;
 
     // 거래처_id - N : 1
     @Column(nullable = false)
@@ -37,13 +41,13 @@ public class PurchaseRequest {
     private Long employeeId;
 
     // 창고_id - 입고될 창고
-    @ManyToOne
-    @JoinColumn(name = "warehouse_id")
-    private Warehouse warehouse;
+    @Column(nullable = false)
+    private Long warehouseId;
 
-    @ManyToOne
-    @JoinColumn(name = "currency_id")
-    private Currency currency;
+    // 통화_id - N : 1
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "currency_id", nullable = false)
+    private Long currencyId;
 
     // 품목_id
     @Column
@@ -68,10 +72,6 @@ public class PurchaseRequest {
     // 일자
     @Column(nullable = false)
     private LocalDate date;
-
-    // 납기 일자
-    @Column(nullable = false)
-    private LocalDate deliveryDate;
 
     // 비고
     @Column
