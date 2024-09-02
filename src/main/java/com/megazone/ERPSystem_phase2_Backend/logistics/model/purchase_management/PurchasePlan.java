@@ -32,10 +32,12 @@ public class PurchasePlan {
 
     // 발주 계획과 발주 요청 간의 중간 엔티티와의 일대다 관계
     @OneToMany(mappedBy = "purchasePlan")
+    @Builder.Default
     private List<PurchasePlanRequest> purchasePlanRequests = new ArrayList<>();
 
     // 발주 계획과 발주서 간의 일대다 관계
     @OneToMany(mappedBy = "purchasePlan")
+    @Builder.Default
     private List<PurchaseOrder> purchaseOrders = new ArrayList<>();
 
     // 거래처_id - N : 1

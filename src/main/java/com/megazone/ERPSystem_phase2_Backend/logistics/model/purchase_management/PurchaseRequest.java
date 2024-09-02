@@ -31,6 +31,7 @@ public class PurchaseRequest {
 
     // 발주 요청과 발주 계획 간의 중간 엔티티와의 일대다 관계
     @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<PurchasePlanRequest> purchasePlanRequests = new ArrayList<>();
 
     // 거래처_id - N : 1
