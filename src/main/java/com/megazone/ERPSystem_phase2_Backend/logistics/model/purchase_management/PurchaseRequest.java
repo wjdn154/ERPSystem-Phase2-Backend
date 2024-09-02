@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +29,10 @@ public class PurchaseRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 발주 요청과 발주 계획 간의 중간 엔티티와의 일대다 관계
+    @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PurchasePlanRequest> purchasePlanRequests = new ArrayList<>();
+
     // 거래처_id - N : 1
     @Column(nullable = false)
     private Long clientId;
@@ -41,6 +46,7 @@ public class PurchaseRequest {
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
 
+    // 통화_id
     @ManyToOne
     @JoinColumn(name = "currency_id")
     private Currency currency;
