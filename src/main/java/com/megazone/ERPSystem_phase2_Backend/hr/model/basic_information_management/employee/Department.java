@@ -39,4 +39,5 @@ public class Department {
 
     @Column(name ="mangerId", nullable = false)
     private String managerId;
+
 }

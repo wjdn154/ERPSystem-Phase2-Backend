@@ -21,15 +21,15 @@ public class EmployeeShowDTO {
     private String employeeNumber;
     private String firstName;
     private String lastName;
-    private LocalDate dateOfBirth;
-    private String phoneNumber;
+//    private LocalDate dateOfBirth;
+//    private String phoneNumber;
     private EmploymentStatus employmentStatus;
     private EmploymentType employmentType;
-    private String email;
-    private String address;
-    private LocalDate hireDate;
-    private boolean isHouseholdHead;
-    private String profilePicture;
+//    private String email;
+//    private String address;
+//    private LocalDate hireDate;
+//    private boolean isHouseholdHead;
+//    private String profilePicture;
 
 
 
@@ -38,6 +38,5 @@ public class EmployeeShowDTO {
     private String jobTitleName; // 직책 이름
     private String bankAccountNumber; // 계좌 번호
 
-    public EmployeeShowDTO(Long id, String employeeNumber, String firstName, String lastName, LocalDate dateOfBirth, String phoneNumber, EmploymentStatus employmentStatus, EmploymentType employmentType, String email, String address, LocalDate hireDate, boolean householdHead, String profilePicture, Long aLong, Long aLong1, Long aLong2, Long aLong3) {
-    }
+
 }
