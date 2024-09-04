@@ -15,5 +15,9 @@ public class Deduction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private String name;
 
+    @Column(precision = 9)
+    private BigDecimal amount;
 }

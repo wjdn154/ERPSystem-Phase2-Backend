@@ -6,12 +6,12 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 public enum AllowanceType {
+    LongService, // 근속수당
     overtime, // 연장수당
     nighttime, // 야간수당
     holiday, // 휴일근로수당
     annual, // 연차수당
     paidholiday,// 주휴수당
-    longservice, // 근속수당
 
     /*** 비법정수당 ***/
     fulltime, // 만근수당
@@ -21,8 +21,6 @@ public enum AllowanceType {
     family, // 가족수당
     bonus, // 상여금
     performance, // 성과급
-    foodexpenses, // 식비
-    transportationexpenses, // 교통비
     holidays, // 명절상여금
     ETC // 기타
     }

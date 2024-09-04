@@ -1,7 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.payment;
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.EmploymentStatus;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.payment.enums.AllowanceType;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.payment.enums.TaxType;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,16 +16,14 @@ public class Allowance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TaxType taxType; // 과세 비과세 구분
+
     @Column
     private String name; // 수당 이름
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-
-    private AllowanceType allowanceType; // 수당 유형
-
+    @Column(precision = 9)
     private BigDecimal amount; // 수당 금액
-
-
 
 }
