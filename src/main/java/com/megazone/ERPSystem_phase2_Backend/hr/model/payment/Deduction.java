@@ -15,16 +15,5 @@ public class Deduction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String name; // 공제 이름
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private DeductionType deductionType; // 공제 유형
-
-//    @Enumerated(EnumType.STRING)
-//    @Column
-//    private InsuranceType insurance; // 4대보험 유형
-
-    private BigDecimal amount; // 공제 금액
 }

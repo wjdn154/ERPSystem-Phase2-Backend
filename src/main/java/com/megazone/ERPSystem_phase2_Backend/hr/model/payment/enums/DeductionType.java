@@ -6,11 +6,6 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 public enum DeductionType {
-        /* 4대 보험 */
-        national, // 국민연금
-        health, // 건강보험
-        employment, // 고용보험
-        workerscompensation, // 산재보험
 
         /* 세금 관련 */
         incometax, // 소득세

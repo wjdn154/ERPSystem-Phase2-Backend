@@ -22,6 +22,7 @@ public class Allowance {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+
     private AllowanceType allowanceType; // 수당 유형
 
     private BigDecimal amount; // 수당 금액
