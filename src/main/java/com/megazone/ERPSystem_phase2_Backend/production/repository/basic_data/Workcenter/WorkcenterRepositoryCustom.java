@@ -12,6 +12,12 @@ import java.util.Optional;
 public interface WorkcenterRepositoryCustom {
 
     /**
+     * 전체 조회할 때 여러 엔티티 정보 한번에 담기
+     * @return
+     */
+    List<Workcenter> findAllWithDetails();
+
+    /**
      * 공장명으로 소속 작업장 조회 메서드
      * @param factoryName 물류 창고 엔티티의 공장명
      * @return 입력한 공장명이 포함된 Workcenter 리스트

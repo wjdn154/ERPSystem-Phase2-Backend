@@ -19,16 +19,15 @@ SELECT 'WC009', 'HEAT_TREATMENT', '열처리 구역 1', 'First heat treatment ar
 UNION ALL
 SELECT 'WC010', 'PLASTIC_MOLDING', '플라스틱 성형 구역 1', 'First plastic molding area', TRUE, w.id FROM warehouse w WHERE w.warehouse_type = 'FACTORY';
 
-
--- workcenter 테이블에 process_id 필드를 통해 연결
+-- Workcenter에 프로세스 ID 업데이트
 UPDATE basic_data_workcenter
 SET process_id = (SELECT process_id FROM routing_management_process_details WHERE process_code = 'PRC001')
-WHERE id = 2;
+WHERE code = 'WC001';
 
 UPDATE basic_data_workcenter
 SET process_id = (SELECT process_id FROM routing_management_process_details WHERE process_code = 'PRC002')
-WHERE id = 8;
+WHERE code = 'WC003';
 
 UPDATE basic_data_workcenter
 SET process_id = (SELECT process_id FROM routing_management_process_details WHERE process_code = 'PRC003')
-WHERE id = 10;
+WHERE code = 'WC005';

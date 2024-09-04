@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.workcenter;
 
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.enums.WarehouseType;
@@ -96,7 +97,6 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                         .map(id -> workerAssignmentsRepository.findById(id)
                                 .orElseThrow(() -> new RuntimeException("작업자배정이력ID를 찾을 수 없습니다: " + id)))
                         .collect(Collectors.toList()))
-
                 .build();
     }
 
@@ -125,7 +125,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
             // 업데이트된 작업장 저장
             Workcenter updatedWorkcenter = workcenterRepository.save(existingWorkcenter);
 
-            return convertToDTO(updatedWorkcenter); // Optional을 중첩하지 않음
+            return convertToDTO(updatedWorkcenter);
         });
     }
 
@@ -143,40 +143,31 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 
     @Override
     public List<WorkcenterDTO> findAll() {
-        // 오늘 날짜 가져오기
-        LocalDate today = LocalDate.now();
 
-        // 모든 작업장 조회
-        List<Workcenter> workcenters = workcenterRepository.findAll();
+        LocalDate today = LocalDate.now();
+        List<Workcenter> workcenters = workcenterRepository.findAllWithDetails();
 
         // 작업장 DTO로 변환하면서 오늘의 작업자를 포함
         return workcenters.stream().map(workcenter -> {
             WorkcenterDTO workcenterDTO = convertToDTO(workcenter);
 
-            // 오늘의 작업자 배정 이력 조회 (Repository에서 제공하는 메서드 활용)
+            // 오늘의 작업자 배정 이력 조회
             List<WorkerAssignment> todayAssignments = workcenterRepository.findTodayWorkerAssignmentsByWorkcenterId(workcenter.getId(), today);
 
-            // 작업자 정보 추가: 배정된 작업자가 없으면 "배정없음" 표시
-            if (!todayAssignments.isEmpty()) {
-                workcenterDTO.setTodayWorkers(
-                        todayAssignments.stream()
-                                .map(assignment -> {
-                                    String firstName = assignment.getWorker().getEmployee().getFirstName();
-                                    String lastName = assignment.getWorker().getEmployee().getLastName();
-                                    String employeeNumber = assignment.getWorker().getEmployee().getEmployeeNumber();
+            // 배정된 작업자가 있으면 해당 정보를 DTO에 추가, 없으면 DTO의 setTodayWorkers가 기본값을 처리
+            List<String> todayWorkers = todayAssignments.stream()
+                    .map(assignment -> {
+                        Employee employee = assignment.getWorker().getEmployee();
+                        return employee.getLastName() + employee.getFirstName() + " (" + employee.getEmployeeNumber() + ")";
+                    })
+                    .collect(Collectors.toList());
 
-                                    // "성 이름 (사원번호)" 형식으로 반환
-                                    return lastName + firstName + " (" + employeeNumber + ")";
-                                })
-                                .collect(Collectors.toList())
-                );
-            } else {
-                workcenterDTO.setTodayWorkers(Collections.singletonList("배정없음"));
-            }
+            workcenterDTO.setTodayWorkers(todayWorkers); // 기본값은 DTO에서 처리
 
             return workcenterDTO;
         }).collect(Collectors.toList());
     }
+
 
 
     @Override
@@ -221,10 +212,19 @@ public class WorkcenterServiceImpl implements WorkcenterService {
         Workcenter workcenter = workcenterRepository.findByCode(workcenterCode)
                 .orElseThrow(() -> new EntityNotFoundException("작업장 코드를 찾을 수 없습니다: " + workcenterCode));
 
-        return workcenter.getEquipmentList().stream()
+        // 설비 목록이 null일 경우 빈 리스트로 처리
+        List<EquipmentData> equipmentList = Optional.ofNullable(workcenter.getEquipmentList()).orElse(Collections.emptyList());
+
+        if (equipmentList.isEmpty()) {
+            throw new EntityNotFoundException("해당 작업장에 설치된 설비가 없습니다: " + workcenterCode);
+        }
+
+        // 설비 목록을 DTO로 변환하여 반환
+        return equipmentList.stream()
                 .map(this::convertEquipmentToDTO)
                 .collect(Collectors.toList());
     }
+
 
     private EquipmentDataDTO convertEquipmentToDTO(EquipmentData equipmentData) {
         return new EquipmentDataDTO(

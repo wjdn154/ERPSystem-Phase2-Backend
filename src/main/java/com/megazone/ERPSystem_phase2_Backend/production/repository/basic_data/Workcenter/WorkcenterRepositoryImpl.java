@@ -23,6 +23,21 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
+    public List<Workcenter> findAllWithDetails() {
+        QWarehouse warehouse = QWarehouse.warehouse;
+        QProcessDetails processDetails = QProcessDetails.processDetails;
+//        QEquipmentData equipmentData = QEquipmentData.equipmentData;
+//        QWorkerAssignment workerAssignment = QWorkerAssignment.workerAssignment;
+
+        return queryFactory.selectFrom(workcenter)
+                .leftJoin(workcenter.factory, warehouse).fetchJoin()                  // 공장명 가져오기
+                .leftJoin(workcenter.processDetails, processDetails).fetchJoin()       // 생산 공정명 가져오기
+//                .leftJoin(workcenter.equipmentList, equipmentData).fetchJoin()         // 설비명 가져오기
+//                .leftJoin(workcenter.workerAssignments, workerAssignment).fetchJoin()  // 작업자 배정 이력 가져오기
+                .fetch();
+    }
+
+    @Override
     public List<Workcenter> findByFactoryNameContaining(String factoryName) {
         QWarehouse factory = QWarehouse.warehouse;
         return queryFactory
@@ -100,6 +115,12 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
     }
 
 
+    /**
+     * 오늘의 작업자
+     * @param workcenterId 작업장 ID
+     * @param today 오늘 날짜
+     * @return
+     */
     @Override
     public List<WorkerAssignment> findTodayWorkerAssignmentsByWorkcenterId(Long workcenterId, LocalDate today) {
         QWorkerAssignment workerAssignment = QWorkerAssignment.workerAssignment;
