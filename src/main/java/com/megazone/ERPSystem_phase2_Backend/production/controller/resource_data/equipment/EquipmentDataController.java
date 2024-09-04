@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.controller.resource_dat
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataUpdateDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.ListEquipmentDataDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.resource_data.equipment.EquipmentDataRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.equipment.EquipmentDataService;
@@ -58,10 +59,10 @@ public class EquipmentDataController {
 
     //설비 정보 수정
     @PutMapping("/equipmentData/updateEquipment/{id}")
-    public ResponseEntity<EquipmentDataShowDTO> updateEquipmentDataById(@PathVariable("id") Long id, @RequestBody EquipmentDataDTO dto){
+    public ResponseEntity<EquipmentDataUpdateDTO> updateEquipmentDataById(@PathVariable("id") Long id, @RequestBody EquipmentDataDTO dto){
 
         //서비스에서 해당 아이디의 설비 상세 정보를 수정함.
-        Optional<EquipmentDataShowDTO> result = equipmentDataService.updateEquipment(id,dto);
+        Optional<EquipmentDataUpdateDTO> result = equipmentDataService.updateEquipment(id,dto);
 
         return result.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
