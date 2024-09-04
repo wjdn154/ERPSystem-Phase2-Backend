@@ -22,7 +22,9 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -74,21 +76,27 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                 .workcenterType(workcenterDTO.getWorkcenterType())
                 .description(workcenterDTO.getDescription())
                 .isActive(workcenterDTO.getIsActive())
+
                 .factory(workcenterDTO.getFactoryCode() != null ?
                         warehouseRepository.findByCode(workcenterDTO.getFactoryCode())
                                 .orElseThrow(() -> new RuntimeException("해당 공장코드를 찾을 수 없습니다 : " + workcenterDTO.getFactoryCode())) : null)
+
                 .processDetails(workcenterDTO.getProcessCode() != null ?
                         processDetailsRepository.findByCode(workcenterDTO.getProcessCode())
                                 .orElseThrow(() -> new RuntimeException("해당 생산공정코드를 찾을 수 없습니다: " + workcenterDTO.getProcessCode())) : null)
-                .equipmentList(workcenterDTO.getEquipmentIds().stream()
+
+                .equipmentList(Optional.ofNullable(workcenterDTO.getEquipmentIds())
+                        .orElseGet(ArrayList::new).stream()
                         .map(id -> equipmentDataRepository.findById(id)
                                 .orElseThrow(() -> new RuntimeException("해당 설비ID를 찾을 수 없습니다: " + id)))
                         .collect(Collectors.toList()))
-                .workerAssignments(workcenterDTO.getWorkerAssignmentIds() != null ?
-                        workcenterDTO.getWorkerAssignmentIds().stream()
-                                .map(id -> workerAssignmentsRepository.findById(id)
-                                        .orElseThrow(() -> new RuntimeException("작업자배정이력ID를 찾을 수 없습니다: " + id)))
-                                .collect(Collectors.toList()) : new ArrayList<>()) // 빈 리스트 처리
+
+                .workerAssignments(Optional.ofNullable(workcenterDTO.getWorkerAssignmentIds())
+                        .orElseGet(ArrayList::new).stream()
+                        .map(id -> workerAssignmentsRepository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("작업자배정이력ID를 찾을 수 없습니다: " + id)))
+                        .collect(Collectors.toList()))
+
                 .build();
     }
 
@@ -123,16 +131,53 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 
     @Override
     public Workcenter save(WorkcenterDTO workcenterDTO) {
+        // 작업장 코드 중복 확인
+        if (workcenterRepository.findByCode(workcenterDTO.getCode()).isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 코드입니다: " + workcenterDTO.getCode());
+        }
+
         Workcenter workcenter = convertToEntity(workcenterDTO);
         return workcenterRepository.save(workcenter);
     }
 
+
     @Override
     public List<WorkcenterDTO> findAll() {
-        return workcenterRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+        // 오늘 날짜 가져오기
+        LocalDate today = LocalDate.now();
+
+        // 모든 작업장 조회
+        List<Workcenter> workcenters = workcenterRepository.findAll();
+
+        // 작업장 DTO로 변환하면서 오늘의 작업자를 포함
+        return workcenters.stream().map(workcenter -> {
+            WorkcenterDTO workcenterDTO = convertToDTO(workcenter);
+
+            // 오늘의 작업자 배정 이력 조회 (Repository에서 제공하는 메서드 활용)
+            List<WorkerAssignment> todayAssignments = workcenterRepository.findTodayWorkerAssignmentsByWorkcenterId(workcenter.getId(), today);
+
+            // 작업자 정보 추가: 배정된 작업자가 없으면 "배정없음" 표시
+            if (!todayAssignments.isEmpty()) {
+                workcenterDTO.setTodayWorkers(
+                        todayAssignments.stream()
+                                .map(assignment -> {
+                                    String firstName = assignment.getWorker().getEmployee().getFirstName();
+                                    String lastName = assignment.getWorker().getEmployee().getLastName();
+                                    String employeeNumber = assignment.getWorker().getEmployee().getEmployeeNumber();
+
+                                    // "성 이름 (사원번호)" 형식으로 반환
+                                    return lastName + firstName + " (" + employeeNumber + ")";
+                                })
+                                .collect(Collectors.toList())
+                );
+            } else {
+                workcenterDTO.setTodayWorkers(Collections.singletonList("배정없음"));
+            }
+
+            return workcenterDTO;
+        }).collect(Collectors.toList());
     }
+
 
     @Override
     public List<WorkcenterDTO> findByNameContaining(String name) {

@@ -52,12 +52,18 @@ public class WorkcenterController {
         return workcenterDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    // 4. 새로운 작업장 생성
     @PostMapping("/create")
-    public ResponseEntity<Workcenter> saveWorkcenter(@RequestBody WorkcenterDTO workcenterDTO) {
-        Workcenter savedWorkcenter = workcenterService.save(workcenterDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedWorkcenter);
+    public ResponseEntity<String> saveWorkcenter(@RequestBody WorkcenterDTO workcenterDTO) {
+        try {
+            workcenterService.save(workcenterDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body("작업장이 성공적으로 생성되었습니다.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());             // 중복 코드 발생 시 메시지 반환
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("작업장을 생성하는 중 오류가 발생했습니다.");
+        }
     }
+
 
     // 5. 코드로 수정
     @PostMapping("/update/{code}")
@@ -100,6 +106,17 @@ public class WorkcenterController {
         return ResponseEntity.ok(factoryDTOs);
     }
 
+    /**
+     * Client에서 각 별도 API로 호출해서 처리 시, 아래 삭제
+     */
+
+    // 8-1. 생산 공정 전체 조회
+    @PostMapping("/processes")
+    public ResponseEntity<List<ProcessDetailsDTO>> getAllProcessDetails() {
+        List<ProcessDetailsDTO> processDetailsDTOs = processDetailsService.getAllProcessDetails();
+        return ResponseEntity.ok(processDetailsDTOs);
+    }
+
     // 8. 생산 공정 정보 조회
     @PostMapping("/processes/{processCode}")
     public ResponseEntity<ProcessDetailsDTO> getProcessByCode(@PathVariable String processCode) {
@@ -120,6 +137,5 @@ public class WorkcenterController {
         List<WorkerAssignmentDTO> workerAssignmentDTOs = workcenterService.findWorkerAssignmentsByWorkcenterCode(workcenterCode);
         return ResponseEntity.ok(workerAssignmentDTOs);
     }
-
 }
 

@@ -24,8 +24,9 @@ public class WorkcenterDTO {
 
     private WarehouseType warehouseType; // TYPE: FACTORY OR OUTSOURCING_FACTORY
     private String factoryCode; // 공장 Code만 포함 (Warehouse)
-    private String processCode; // 공정 Code만 포함 (ProcessDetails)
+    private String processCode; // 생산공정 Code만 포함 (ProcessDetails)
     private List<Long> equipmentIds; // 설비 ID 리스트만 포함 (EquipmentData)
     private List<Long> workerAssignmentIds; // 작업자 배치 ID 리스트만 포함 (WorkerAssignment)
+    private List<String> todayWorkers;  // 작업자 이름 리스트 (WorkerAssignment)
 }
 

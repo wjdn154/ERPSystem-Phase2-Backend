@@ -99,16 +99,20 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
                 .fetch();
     }
 
+
     @Override
     public List<WorkerAssignment> findTodayWorkerAssignmentsByWorkcenterId(Long workcenterId, LocalDate today) {
         QWorkerAssignment workerAssignment = QWorkerAssignment.workerAssignment;
+
         return queryFactory
                 .selectFrom(workerAssignment)
-                .join(workcenter.workerAssignments, workerAssignment).fetchJoin() // JOIN FETCH
+                .join(workerAssignment.workcenter, workcenter) // 작업장과 WorkerAssignment를 연결하는 Join
+                .fetchJoin() // 데이터 함께 가져오기
                 .where(workerAssignment.workcenter.id.eq(workcenterId)
                         .and(workerAssignment.assignmentDate.eq(today)))
                 .fetch();
     }
+
 
     @Override
     public List<WorkerAssignment> findWorkerAssignmentsByWorkcenterId(Long workcenterId) {
