@@ -7,12 +7,14 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
 public class AccountSubjectDTO {
     private Long id; // 계정과목 ID (저장할 때는 필요 없지만, 조회 및 반환 시 필요)
     private String structureCode; // 계정체계 코드

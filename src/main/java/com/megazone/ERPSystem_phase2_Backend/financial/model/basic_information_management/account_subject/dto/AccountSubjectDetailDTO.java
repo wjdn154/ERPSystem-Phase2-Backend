@@ -33,4 +33,5 @@ public class AccountSubjectDetailDTO {
     private List<CashMemoDTO> cashMemos; // 현금 적요 리스트
     private List<TransferMemoDTO> transferMemos; // 대체 적요 리스트
     private List<FixedMemoDTO> fixedMemos; // 고정 적요 리스트
+    private List<NatureDTO> natures; // 성격 리스트
 }
