@@ -41,7 +41,7 @@ public class WarehouseController {
      * @return 창고 상세 정보를 담은 WarehouseDetailDTO 객체를 반환함.
      */
     @PostMapping("/warehouse/{id}")
-    public ResponseEntity<WarehouseDetailDTO> getWarehouseDetail(@PathVariable Long id) {
+    public ResponseEntity<WarehouseDetailDTO> getWarehouseDetail(@PathVariable("id") Long id) {
         WarehouseDetailDTO warehouseDetail = warehouseService.getWarehouseDetail(id);
 
         return ResponseEntity.ok(warehouseDetail);
@@ -54,7 +54,7 @@ public class WarehouseController {
     }
 
     @PutMapping("/warehouse/updateWarehouse/{id}")
-    public ResponseEntity<UpdateWarehouseDTO> updateWarehouse(@PathVariable Long id, @RequestBody UpdateWarehouseDTO dto) {
+    public ResponseEntity<UpdateWarehouseDTO> updateWarehouse(@PathVariable("id") Long id, @RequestBody UpdateWarehouseDTO dto) {
         Optional<UpdateWarehouseDTO> updateWarehouse = warehouseService.updateWarehouse(id, dto);
         return updateWarehouse
                 .map(ResponseEntity::ok)
@@ -85,7 +85,7 @@ public class WarehouseController {
     }
 
     @PutMapping("/hierarchyGroup/updateHierarchyGroup/{id}")
-    public ResponseEntity<HierarchyGroupResponseDTO> updateHierarchyGroup(@PathVariable Long id, @RequestBody UpdateHierarchyGroupDTO dto) {
+    public ResponseEntity<HierarchyGroupResponseDTO> updateHierarchyGroup(@PathVariable("id") Long id, @RequestBody UpdateHierarchyGroupDTO dto) {
         Optional<HierarchyGroupResponseDTO> updateHierarchyGroup = hierarchyGroupService.updateHierarchyGroup(id, dto);
 
         return updateHierarchyGroup.map(ResponseEntity::ok)
@@ -93,7 +93,7 @@ public class WarehouseController {
     }
 
     @PostMapping("/hierarchyGroup/deleteHierarchyGroup/{id}")
-    public ResponseEntity<Void> deleteHierarchyGroup(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteHierarchyGroup(@PathVariable("id") Long id) {
         hierarchyGroupService.deleteHierarchyGroup(id);
         return ResponseEntity.noContent().build();
     }
