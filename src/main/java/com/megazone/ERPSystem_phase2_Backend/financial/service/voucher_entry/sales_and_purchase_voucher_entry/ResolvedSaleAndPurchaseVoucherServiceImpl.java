@@ -112,11 +112,13 @@ public class ResolvedSaleAndPurchaseVoucherServiceImpl implements ResolvedSaleAn
                         .debitAmount(voucher.getDebitAmount())
                         .creditAmount(voucher.getCreditAmount())
                         .voucherDate(voucher.getVoucherDate())
+                        .client(unresolvedVoucher.getClient())
                         .voucherApprovalTime(nowTime)
                         .voucherKind(VoucherKind.SALE_AND_PURCHASE)
                         .build();}).toList();
 
         return ResolvedSaleAndPurchaseVoucher.builder()
+                .client(unresolvedVoucher.getClient())
                 .vatType(unresolvedVoucher.getVatType())
                 .journalEntry(unresolvedVoucher.getJournalEntry())
                 .resolvedVouchers(ResolvedVouchers)

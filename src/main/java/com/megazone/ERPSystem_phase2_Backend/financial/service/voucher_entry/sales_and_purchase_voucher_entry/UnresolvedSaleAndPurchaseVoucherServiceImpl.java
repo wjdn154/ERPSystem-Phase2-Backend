@@ -333,7 +333,6 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
     public List<UnresolvedSaleAndPurchaseVoucher> ApprovalProcessing(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto) {
 
         List<UnresolvedSaleAndPurchaseVoucher> unresolvedVoucherList = unresolvedSaleAndPurchaseVoucherRepository.findApprovalTypeVoucher(dto);
-
         try {
             if(dto.getApprovalStatus().equals(ApprovalStatus.PENDING)) {
                 throw new IllegalArgumentException("승인 대기 상태로는 변경할 수 없습니다.");
@@ -345,7 +344,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                         unresolvedVoucher -> {
                             unresolvedVoucher.setApprovalStatus(dto.getApprovalStatus());
                             unresolvedVoucher.getUnresolvedVouchers().forEach(
-                                    unresolvedVoucher1 -> unresolvedVoucher1.setApprovalStatus(dto.getApprovalStatus())
+                                    unresolvedVouchers -> unresolvedVouchers.setApprovalStatus(dto.getApprovalStatus())
                             );
                         });
                 // 연관된 매출매입전표 모두 생성

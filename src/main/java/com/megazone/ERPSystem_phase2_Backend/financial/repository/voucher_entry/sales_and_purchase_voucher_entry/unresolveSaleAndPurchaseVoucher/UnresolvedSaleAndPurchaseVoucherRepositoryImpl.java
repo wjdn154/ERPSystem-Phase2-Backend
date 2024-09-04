@@ -28,12 +28,20 @@ public class UnresolvedSaleAndPurchaseVoucherRepositoryImpl implements Unresolve
     public List<UnresolvedSaleAndPurchaseVoucher> findApprovalTypeVoucher(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto) {
         QUnresolvedSaleAndPurchaseVoucher qUnresolvedVoucher = QUnresolvedSaleAndPurchaseVoucher.unresolvedSaleAndPurchaseVoucher;
 
-        return dto.getSearchVoucherNumList().stream()
-                .flatMap(voucherNum -> queryFactory.selectFrom(qUnresolvedVoucher)
-                        .where(qUnresolvedVoucher.voucherDate.eq(dto.getSearchDate())
-                                .and(qUnresolvedVoucher.voucherNumber.eq(voucherNum))
-                                .and(qUnresolvedVoucher.approvalStatus.eq(ApprovalStatus.PENDING)))
-                        .fetch().stream())
-                .collect(Collectors.toList());
+//        return queryFactory.selectFrom(qUnresolvedVoucher)
+//                .where(qUnresolvedVoucher.voucherDate.eq(dto.getSearchDate())
+//                        .and(qUnresolvedVoucher.voucherNumber.in(dto.getSearchVoucherNumList()))
+//                        .and(qUnresolvedVoucher.approvalStatus.eq(ApprovalStatus.PENDING)))
+//                .fetch();
+
+
+        List<UnresolvedSaleAndPurchaseVoucher> results = queryFactory.selectFrom(qUnresolvedVoucher)
+                .where(qUnresolvedVoucher.voucherDate.eq(dto.getSearchDate())
+                        .and(qUnresolvedVoucher.voucherNumber.in(dto.getSearchVoucherNumList()))
+                        .and(qUnresolvedVoucher.approvalStatus.eq(ApprovalStatus.PENDING)))
+                .fetch();
+        results.forEach(result -> System.out.println("Query Check : " + result.toString()));
+
+        return results;
     }
 }

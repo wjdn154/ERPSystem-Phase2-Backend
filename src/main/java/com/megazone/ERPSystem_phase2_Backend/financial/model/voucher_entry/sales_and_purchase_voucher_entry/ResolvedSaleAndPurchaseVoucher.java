@@ -35,9 +35,9 @@ public class ResolvedSaleAndPurchaseVoucher {
     @JoinColumn(name = "vatType_id",nullable = false)
     private VatType vatType; // 부가세 유형
 
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "client_code",referencedColumnName = "code", nullable = false)
-//    private Client client; // 거래처 참조
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client; // 거래처 참조
 //
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "journalEntry_id", nullable = false)
