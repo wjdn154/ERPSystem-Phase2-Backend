@@ -45,6 +45,7 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
         QWarehouse factory = QWarehouse.warehouse;
         Workcenter result = queryFactory
                 .selectFrom(workcenter)
+                .join(workcenter.factory, factory).fetchJoin() // JOIN FETCH
                 .where(workcenter.factory.code.eq(factoryCode))
                 .fetchOne();
         return Optional.ofNullable(result);
@@ -73,6 +74,7 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
         QProcessDetails processDetails = QProcessDetails.processDetails;
         Workcenter result = queryFactory
                 .selectFrom(workcenter)
+                .join(workcenter.processDetails, processDetails).fetchJoin() // JOIN FETCH
                 .where(workcenter.processDetails.code.eq(processCode))
                 .fetchOne();
         return Optional.ofNullable(result);
@@ -83,7 +85,7 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
         QEquipmentData equipmentData = QEquipmentData.equipmentData;
         return queryFactory
                 .selectFrom(workcenter)
-                .join(workcenter.equipmentList, equipmentData)
+                .join(workcenter.equipmentList, equipmentData).fetchJoin() // JOIN FETCH
                 .where(equipmentData.equipmentName.containsIgnoreCase(equipmentName))
                 .fetch();
     }
@@ -93,7 +95,6 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
         QEquipmentData equipmentData = QEquipmentData.equipmentData;
         return queryFactory
                 .selectFrom(workcenter)
-                .join(workcenter.equipmentList, equipmentData)
                 .where(equipmentData.modelName.containsIgnoreCase(equipmentModelNumber))
                 .fetch();
     }
@@ -103,6 +104,7 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
         QWorkerAssignment workerAssignment = QWorkerAssignment.workerAssignment;
         return queryFactory
                 .selectFrom(workerAssignment)
+                .join(workcenter.workerAssignments, workerAssignment).fetchJoin() // JOIN FETCH
                 .where(workerAssignment.workcenter.id.eq(workcenterId)
                         .and(workerAssignment.assignmentDate.eq(today)))
                 .fetch();

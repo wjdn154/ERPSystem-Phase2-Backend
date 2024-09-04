@@ -1,8 +1,16 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.basic_data;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseResponseDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.service.warehouse_management.WarehouseService;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.WorkcenterDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.WorkerAssignmentDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.dto.ProcessDetailsDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.workcenter.WorkcenterService;
+import com.megazone.ERPSystem_phase2_Backend.production.service.routing_management.ProcessDetails.ProcessDetailsService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +25,7 @@ import java.util.Optional;
 public class WorkcenterController {
 
     private final WorkcenterService workcenterService;
+    private final ProcessDetailsService processDetailsService;
 
     // 1. 전체 작업장 조회
     @PostMapping
@@ -26,7 +35,7 @@ public class WorkcenterController {
     }
 
 
-    // 3. 이름으로 작업장 리스트 검색 조회
+    // 2. 이름으로 작업장 리스트 검색 조회
     @PostMapping("/search")
     public ResponseEntity<List<WorkcenterDTO>> getWorkcentersByName(
             @RequestParam("name") String name) {
@@ -34,7 +43,7 @@ public class WorkcenterController {
         return ResponseEntity.ok(workcenterDTOs);
     }
 
-    // 코드로 작업장 세부 정보 조회
+    // 3. 코드로 작업장 세부 정보 조회
     @PostMapping("/details/{code}")
     public ResponseEntity<WorkcenterDTO> getWorkcenterDetailByCode(
             @PathVariable("code") String code) {
@@ -43,13 +52,14 @@ public class WorkcenterController {
         return workcenterDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    // 새로운 작업장 생성
+    // 4. 새로운 작업장 생성
     @PostMapping("/create")
     public ResponseEntity<Workcenter> saveWorkcenter(@RequestBody WorkcenterDTO workcenterDTO) {
         Workcenter savedWorkcenter = workcenterService.save(workcenterDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedWorkcenter);
     }
 
+    // 5. 코드로 수정
     @PostMapping("/update/{code}")
     public ResponseEntity<WorkcenterDTO> updateWorkcenter(
             @PathVariable("code") String code,
@@ -67,54 +77,49 @@ public class WorkcenterController {
         }
     }
 
+    // 6. 코드 매칭 삭제
     @PostMapping("/delete")
-    public Optional<WorkcenterDTO> deleteWorkcenter(@RequestParam("code") String code) {
+    public ResponseEntity<String> deleteWorkcenter(@RequestParam("code") String code) {
         try {
-            return workcenterService.deleteByCode(code);
+            workcenterService.deleteByCode(code);
+            return ResponseEntity.ok("작업장이 성공적으로 삭제되었습니다.");
         } catch (IllegalArgumentException e) {
-            // 코드가 없거나 사용 중인 경우에 대한 예외 처리
-            throw new IllegalArgumentException("삭제할 수 없습니다. 이유: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("삭제할 수 없습니다: " + e.getMessage());
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("작업장을 찾을 수 없습니다: " + e.getMessage());
         } catch (Exception e) {
-            // 기타 예외에 대한 처리
-            throw new RuntimeException("작업장을 삭제하는 중에 예상치 못한 오류가 발생했습니다. 상세 정보: " + e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예상치 못한 오류가 발생했습니다.");
         }
     }
 
+    // 7. 작업장 관리 내에서 공장 리스트 조회
+    @PostMapping("/factories")
+    public ResponseEntity<List<WarehouseResponseDTO>> getWorkcenterFactories() {
 
+        List<WarehouseResponseDTO> factoryDTOs = workcenterService.findAllFactories();
+        return ResponseEntity.ok(factoryDTOs);
+    }
 
-//    @PostMapping("/delete/{code}")
-//    public ResponseEntity<WorkcenterDTO> deleteWorkcenter(@PathVariable("code") String code) {
-//        try {
-//            Optional<WorkcenterDTO> deletedWorkcenterDTO = workcenterService.deleteByCode(code);
-//
-//            if (deletedWorkcenterDTO.isPresent()) {
-//                // 삭제된 DTO 정보 로그 출력
-//                System.out.println("Deleted Workcenter: " + deletedWorkcenterDTO.get());
-//                return ResponseEntity.ok(deletedWorkcenterDTO.get());
-//            } else {
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 코드로 찾은 작업장이 없으면 404 응답
-//            }
-//        } catch (EntityNotFoundException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 코드로 찾은 작업장이 없으면 404 응답
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 기타 오류 발생 시 500 응답
-//        }
-//    }
+    // 8. 생산 공정 정보 조회
+    @PostMapping("/processes/{processCode}")
+    public ResponseEntity<ProcessDetailsDTO> getProcessByCode(@PathVariable String processCode) {
+        Optional<ProcessDetailsDTO> processDetailsDTO = processDetailsService.getProcessDetailsByCode(processCode);
+        return processDetailsDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    // 9. 설비 코드로 작업장 설비 정보 조회
+    @PostMapping("/equipments/{equipmentCode}")
+    public ResponseEntity<List<EquipmentDataDTO>> getEquipmentsByWorkcenterCode(@PathVariable("equipmentCode") String equipmentCode) {
+        List<EquipmentDataDTO> equipmentDataDTOs = workcenterService.findEquipmentByWorkcenterCode(equipmentCode);
+        return ResponseEntity.ok(equipmentDataDTOs);
+    }
+
+    // 10. 작업자 배정 이력 조회
+    @PostMapping("/workerAssignments/{workcenterCode}")
+    public ResponseEntity<List<WorkerAssignmentDTO>> getWorkerAssignmentsByWorkcenterCode(@PathVariable("workcenterCode") String workcenterCode) {
+        List<WorkerAssignmentDTO> workerAssignmentDTOs = workcenterService.findWorkerAssignmentsByWorkcenterCode(workcenterCode);
+        return ResponseEntity.ok(workerAssignmentDTOs);
+    }
+
 }
-
-//    @PostMapping("/delete/{code}")
-//    public ResponseEntity<Void> deleteWorkcenter(@PathVariable("code") String code) {
-//        try {
-//            workcenterService.deleteByCode(code);
-//            return ResponseEntity.noContent().build(); // 삭제 후 204 No Content 응답
-//        } catch (EntityNotFoundException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 코드로 찾은 작업장이 없으면 404 응답
-//        }
-//    }
-
-//    @DeleteMapping
-//    public ResponseEntity<List<Workcenter>> deleteWorkcenters(@RequestBody List<Long> ids) {
-//        List<Workcenter> deletedWorkcenters = workcenterService.deleteByIds(ids);
-//        return ResponseEntity.ok(deletedWorkcenters);
-//    }
 
