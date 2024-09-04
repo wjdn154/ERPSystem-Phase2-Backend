@@ -25,6 +25,7 @@ public class ClientDTO {
     private BankAccountDTO bankAccount; // 은행 계좌 정보
     private CategoryDTO category; // 거래처 분류 정보
 
+    private String code; // 거래처 코드
     private String departmentEmployee; // 담당 부서 사원 코드
     private String transactionType; // 거래 유형
     private String businessRegistrationNumber; // 사업자등록번호

@@ -19,10 +19,9 @@ public class ResolvedVoucherShowDTO {
     private VoucherType voucherType;
     private String accountSubjectCode;
     private String accountSubjectName;
-    //    private String vendorCode;
-//    private String vendorName;
-//    private String descriptionCode;
-//    private String descriptionName;
+    private String clientCode;
+    private String clientName;
+    private String transactionDescription;
     private BigDecimal debitAmount;
     private BigDecimal creditAmount;
     private VoucherKind voucherKind;
@@ -34,10 +33,9 @@ public class ResolvedVoucherShowDTO {
                 resolvedVoucher.getVoucherType(),
                 resolvedVoucher.getAccountSubject().getCode(),
                 resolvedVoucher.getAccountSubject().getName(),
-//                resolvedVoucher.getVendor().getCode(),
-//                resolvedVoucher.getVendor().getName(),
-//                resolvedVoucher.getDescription().getCode(),
-//                resolvedVoucher.getDescription().getName(),
+                resolvedVoucher.getClient().getCode(),
+                resolvedVoucher.getClient().getPrintClientName(),
+                resolvedVoucher.getTransactionDescription(),
                 resolvedVoucher.getDebitAmount(),
                 resolvedVoucher.getCreditAmount(),
                 resolvedVoucher.getVoucherKind()

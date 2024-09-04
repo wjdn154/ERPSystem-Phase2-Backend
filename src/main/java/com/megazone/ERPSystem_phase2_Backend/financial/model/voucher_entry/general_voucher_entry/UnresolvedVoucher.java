@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubject;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherKind;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
@@ -42,17 +43,13 @@ public class UnresolvedVoucher {
     @JoinColumn(name = "account_id", nullable = false)
     private AccountSubject accountSubject; // 계정과목 참조
 
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "vendor_id", nullable = false)
-//    private String vendor; // 거래처 참조
-//
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client; // 거래처 참조
+
 //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
 //    @JoinColumn(name = "voucherManager_id", nullable = false)
 //    private String voucherManager; // 전표 담당자
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "description_id")
-//    private String description; // 적요
 
     private String transactionDescription; // 거래 설명
 

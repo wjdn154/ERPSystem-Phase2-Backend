@@ -48,9 +48,8 @@ public class ResolvedVoucherServiceImpl implements ResolvedVoucherService {
     public ResolvedVoucher createResolvedVoucher(UnresolvedVoucher unresolvedVoucher, LocalDateTime approvalTime) {
         return ResolvedVoucher.builder()
                 .accountSubject(unresolvedVoucher.getAccountSubject())
-//                .vendor(unresolvedVoucher.getVendor())
+                .client(unresolvedVoucher.getClient())
 //                .voucherManager(unresolvedVoucher.getVoucherManager())
-//                .description(unresolvedVoucher.getdescription())
                 .transactionDescription(unresolvedVoucher.getTransactionDescription())
                 .voucherNumber(unresolvedVoucher.getVoucherNumber())
                 .voucherType(unresolvedVoucher.getVoucherType())
