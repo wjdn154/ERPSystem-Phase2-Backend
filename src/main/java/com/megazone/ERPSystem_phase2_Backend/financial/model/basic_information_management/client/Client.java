@@ -42,7 +42,7 @@ public class Client {
 
 //    @ManyToOne
 //    @JoinColumn(name = "department_employee_id")
-//    private DepartmentEmployee departmentEmployee; // 담당 부서 사원 코드 참조
+//    private DepartmentEmployee departmentEmployee; // 담당 부서 사원 코드 참조 <- 이거 사원만 참조하면 사원에 부서 있으니까 괜찮음
     private String departmentEmployee; // 담당 부서 사원 코드 참조
 
     @ManyToOne
