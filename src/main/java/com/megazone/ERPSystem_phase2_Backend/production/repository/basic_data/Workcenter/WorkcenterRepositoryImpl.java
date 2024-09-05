@@ -23,6 +23,21 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
+    public List<Workcenter> findAllWithDetails() {
+        QWarehouse warehouse = QWarehouse.warehouse;
+        QProcessDetails processDetails = QProcessDetails.processDetails;
+//        QEquipmentData equipmentData = QEquipmentData.equipmentData;
+//        QWorkerAssignment workerAssignment = QWorkerAssignment.workerAssignment;
+
+        return queryFactory.selectFrom(workcenter)
+                .leftJoin(workcenter.factory, warehouse).fetchJoin()                  // 공장명 가져오기
+                .leftJoin(workcenter.processDetails, processDetails).fetchJoin()       // 생산 공정명 가져오기
+//                .leftJoin(workcenter.equipmentList, equipmentData).fetchJoin()         // 설비명 가져오기
+//                .leftJoin(workcenter.workerAssignments, workerAssignment).fetchJoin()  // 작업자 배정 이력 가져오기
+                .fetch();
+    }
+
+    @Override
     public List<Workcenter> findByFactoryNameContaining(String factoryName) {
         QWarehouse factory = QWarehouse.warehouse;
         return queryFactory
@@ -45,6 +60,7 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
         QWarehouse factory = QWarehouse.warehouse;
         Workcenter result = queryFactory
                 .selectFrom(workcenter)
+                .join(workcenter.factory, factory).fetchJoin() // JOIN FETCH
                 .where(workcenter.factory.code.eq(factoryCode))
                 .fetchOne();
         return Optional.ofNullable(result);
@@ -73,6 +89,7 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
         QProcessDetails processDetails = QProcessDetails.processDetails;
         Workcenter result = queryFactory
                 .selectFrom(workcenter)
+                .join(workcenter.processDetails, processDetails).fetchJoin() // JOIN FETCH
                 .where(workcenter.processDetails.code.eq(processCode))
                 .fetchOne();
         return Optional.ofNullable(result);
@@ -83,7 +100,7 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
         QEquipmentData equipmentData = QEquipmentData.equipmentData;
         return queryFactory
                 .selectFrom(workcenter)
-                .join(workcenter.equipmentList, equipmentData)
+                .join(workcenter.equipmentList, equipmentData).fetchJoin() // JOIN FETCH
                 .where(equipmentData.equipmentName.containsIgnoreCase(equipmentName))
                 .fetch();
     }
@@ -93,20 +110,30 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
         QEquipmentData equipmentData = QEquipmentData.equipmentData;
         return queryFactory
                 .selectFrom(workcenter)
-                .join(workcenter.equipmentList, equipmentData)
                 .where(equipmentData.modelName.containsIgnoreCase(equipmentModelNumber))
                 .fetch();
     }
 
+
+    /**
+     * 오늘의 작업자
+     * @param workcenterId 작업장 ID
+     * @param today 오늘 날짜
+     * @return
+     */
     @Override
     public List<WorkerAssignment> findTodayWorkerAssignmentsByWorkcenterId(Long workcenterId, LocalDate today) {
         QWorkerAssignment workerAssignment = QWorkerAssignment.workerAssignment;
+
         return queryFactory
                 .selectFrom(workerAssignment)
+                .join(workerAssignment.workcenter, workcenter) // 작업장과 WorkerAssignment를 연결하는 Join
+                .fetchJoin() // 데이터 함께 가져오기
                 .where(workerAssignment.workcenter.id.eq(workcenterId)
                         .and(workerAssignment.assignmentDate.eq(today)))
                 .fetch();
     }
+
 
     @Override
     public List<WorkerAssignment> findWorkerAssignmentsByWorkcenterId(Long workcenterId) {
