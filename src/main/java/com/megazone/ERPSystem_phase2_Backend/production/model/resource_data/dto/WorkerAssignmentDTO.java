@@ -1,10 +1,21 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto;
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.WorkcenterDTO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class WorkerAssignmentDTO {
-    private WorkerDTO worker;
-    private WorkcenterDTO workcenters; // 작업장 리스트
-    private String assignmentDate;
-    private String shift;
+    private Long id;
+    private Long workerId; // 작업자
+    private String workcenterCode; // 작업장
+    private LocalDate assignmentDate; // 배정일
+    private String shift; // 교대
+    private Long workOrderId; // 연관 작업지시
 }

@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.enums;
 // 작업장 유형을 나타내는 enum class
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.Arrays;
 
