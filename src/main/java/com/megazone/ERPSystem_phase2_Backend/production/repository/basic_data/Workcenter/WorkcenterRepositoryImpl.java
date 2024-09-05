@@ -26,14 +26,14 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
     public List<Workcenter> findAllWithDetails() {
         QWarehouse warehouse = QWarehouse.warehouse;
         QProcessDetails processDetails = QProcessDetails.processDetails;
-//        QEquipmentData equipmentData = QEquipmentData.equipmentData;
-//        QWorkerAssignment workerAssignment = QWorkerAssignment.workerAssignment;
+        QEquipmentData equipmentData = QEquipmentData.equipmentData;
+        QWorkerAssignment workerAssignment = QWorkerAssignment.workerAssignment;
 
         return queryFactory.selectFrom(workcenter)
                 .leftJoin(workcenter.factory, warehouse).fetchJoin()                  // 공장명 가져오기
                 .leftJoin(workcenter.processDetails, processDetails).fetchJoin()       // 생산 공정명 가져오기
-//                .leftJoin(workcenter.equipmentList, equipmentData).fetchJoin()         // 설비명 가져오기
-//                .leftJoin(workcenter.workerAssignments, workerAssignment).fetchJoin()  // 작업자 배정 이력 가져오기
+                .leftJoin(workcenter.equipmentList, equipmentData).fetchJoin()         // 설비명 가져오기
+                .leftJoin(workcenter.workerAssignments, workerAssignment).fetchJoin()  // 작업자 배정 이력 가져오기
                 .fetch();
     }
 
@@ -110,6 +110,7 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
         QEquipmentData equipmentData = QEquipmentData.equipmentData;
         return queryFactory
                 .selectFrom(workcenter)
+                .join(workcenter.equipmentList, equipmentData).fetchJoin() // JOIN FETCH
                 .where(equipmentData.modelName.containsIgnoreCase(equipmentModelNumber))
                 .fetch();
     }
