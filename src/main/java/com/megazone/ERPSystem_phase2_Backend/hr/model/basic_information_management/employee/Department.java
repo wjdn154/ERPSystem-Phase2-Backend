@@ -36,8 +36,4 @@ public class Department {
 
     @Column(name="location", nullable = false)
     private String location; // 부서 위치
-
-    @Column(name ="mangerId", nullable = false)
-    private String managerId;
-
 }
