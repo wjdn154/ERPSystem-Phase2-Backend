@@ -1,7 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.equipment;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.MaintenanceHistory;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.ListMaintenanceHistoryDTO;
@@ -78,7 +77,7 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService{
 
     //유지보수 이력 상세 수정
     @Override
-    public Optional<MaintenanceHistoryDetailShowDTO> updateMaintenanceHistory(Long id, MaintenanceHistoryDetailDTO dto) {
+    public Optional<MaintenanceHistoryDetailShowDTO> updateMaintenanceHistory(Long id, MaintenanceHistoryDetailShowDTO dto) {
 
         //id에 해당하는 엔티티 데이터 조회
         MaintenanceHistory maintenanceHistory = maintenanceHistoryRepository.findById(id)
@@ -102,9 +101,9 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService{
         MaintenanceHistory updateMaintenanceHistory = maintenanceHistoryRepository.save(maintenanceHistory);
 
         //저장된 엔티티 dto로 변환
-        MaintenanceHistoryDetailShowDTO maintenanceHistoryDetailShowDTO = maintenanceToShowDTO(updateMaintenanceHistory);
+        MaintenanceHistoryDetailShowDTO MaintenanceHistoryUpdateDetailDTO = maintenanceToShowDTO(updateMaintenanceHistory);
 
-        return Optional.of(maintenanceHistoryDetailShowDTO);
+        return Optional.of(MaintenanceHistoryUpdateDetailDTO);
     }
 
 
@@ -119,7 +118,6 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService{
         maintenanceHistoryRepository.delete(maintenanceHistory);
     }
 
-    
 
     //maintenanceHistory 엔티티를 maintenanceHistoryShowDTO로 변환
     private MaintenanceHistoryDetailShowDTO maintenanceToShowDTO(MaintenanceHistory maintenanceHistory) {
@@ -135,8 +133,10 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService{
         maintenanceHistoryDetailShowDTO.setMaintenanceStatus(maintenanceHistory.getMaintenanceStatus());
         maintenanceHistoryDetailShowDTO.setMaintenanceDate(maintenanceHistory.getMaintenanceDate());
         maintenanceHistoryDetailShowDTO.setNextScheduleDate(maintenanceHistory.getNextMaintenanceDate());
+        maintenanceHistoryDetailShowDTO.setWorkcenterCode(maintenanceHistory.getEquipment().getWorkcenter().getCode());
         maintenanceHistoryDetailShowDTO.setWorkcenterName(maintenanceHistory.getEquipment().getWorkcenter().getName());
-        maintenanceHistoryDetailShowDTO.setFactoryCodeName(maintenanceHistory.getEquipment().getFactory().getName());
+        maintenanceHistoryDetailShowDTO.setFactoryCode(maintenanceHistory.getEquipment().getFactory().getCode());
+        maintenanceHistoryDetailShowDTO.setFactoryName(maintenanceHistory.getEquipment().getFactory().getName());
         maintenanceHistoryDetailShowDTO.setTitle(maintenanceHistory.getTitle());
         maintenanceHistoryDetailShowDTO.setMaintenanceDetail(maintenanceHistory.getMaintenanceDetail());
 

@@ -57,7 +57,7 @@ public class MaintenanceHistoryController {
 
     //유지보수 이력 상세 수정
     @PutMapping("/maintenanceHistory/updateMaintenance/{id}")
-    public ResponseEntity<MaintenanceHistoryDetailShowDTO> updateMaintenanceHistory(@PathVariable("id") Long id, @RequestBody MaintenanceHistoryDetailDTO dto){
+    public ResponseEntity<MaintenanceHistoryDetailShowDTO> updateMaintenanceHistory(@PathVariable("id") Long id, @RequestBody MaintenanceHistoryDetailShowDTO dto){
 
         //서비스에서 해당 아이디의 유지보수 이력 상세정보를 수정함
         Optional<MaintenanceHistoryDetailShowDTO> result = maintenanceHistoryService.updateMaintenanceHistory(id, dto);

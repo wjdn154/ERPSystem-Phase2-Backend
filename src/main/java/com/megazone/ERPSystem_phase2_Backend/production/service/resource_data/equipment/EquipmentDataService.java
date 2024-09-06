@@ -16,7 +16,7 @@ public interface EquipmentDataService {
     Optional<EquipmentDataShowDTO> saveEquipment(EquipmentDataDTO dto);
 
     //설비 수정
-    Optional<EquipmentDataUpdateDTO> updateEquipment(Long id, EquipmentDataDTO dto);
+    Optional<EquipmentDataUpdateDTO> updateEquipment(Long id, EquipmentDataUpdateDTO dto);
 
     //설비 삭제
     void deleteEquipment(Long id);

@@ -51,7 +51,7 @@ public class EquipmentDataServiceImpl implements EquipmentDataService{
 
     //설비 수정
     @Override
-    public Optional<EquipmentDataUpdateDTO> updateEquipment(Long id, EquipmentDataDTO dto) {
+    public Optional<EquipmentDataUpdateDTO> updateEquipment(Long id, EquipmentDataUpdateDTO dto) {
 
         //id에 해당하는 엔티티 데이터 조회
         EquipmentData equipmentData = equipmentDataRepository.findById(id)

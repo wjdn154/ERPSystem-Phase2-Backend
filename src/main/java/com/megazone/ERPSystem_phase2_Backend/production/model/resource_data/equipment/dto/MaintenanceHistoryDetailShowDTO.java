@@ -23,8 +23,10 @@ public class MaintenanceHistoryDetailShowDTO {
     private Boolean maintenanceStatus;            //유지보수 진행 상태 (진행중/완료)
     private LocalDate maintenanceDate;            //유지보수 일자
     private LocalDate nextScheduleDate;           //다음 유지보수 예정일
-    private String workcenterName;                //설비엔티티의 작업장 코드.
-    private String factoryCodeName;               //설비엔티티의 공장 코드.
+    private String workcenterCode;                //작업장 코드
+    private String workcenterName;                //설비엔티티의 작업장 이름
+    private String factoryCode;                   //설비엔티티의 공장 코드.
+    private String factoryName;                   //공장 이름
     private String title;                         //유지보수 제목
     private String maintenanceDetail;             //유지보수 상세내용
 

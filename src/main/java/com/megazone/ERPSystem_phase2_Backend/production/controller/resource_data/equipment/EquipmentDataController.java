@@ -59,7 +59,7 @@ public class EquipmentDataController {
 
     //설비 정보 수정
     @PutMapping("/equipmentData/updateEquipment/{id}")
-    public ResponseEntity<EquipmentDataUpdateDTO> updateEquipmentDataById(@PathVariable("id") Long id, @RequestBody EquipmentDataDTO dto){
+    public ResponseEntity<EquipmentDataUpdateDTO> updateEquipmentDataById(@PathVariable("id") Long id, @RequestBody EquipmentDataUpdateDTO dto){
 
         //서비스에서 해당 아이디의 설비 상세 정보를 수정함.
         Optional<EquipmentDataUpdateDTO> result = equipmentDataService.updateEquipment(id,dto);
