@@ -52,7 +52,7 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
     @Override
     public Optional<ProcessDetailsDTO> getProcessDetailsByCode(String code) {
         ProcessDetails processDetails = processDetailsRepository.findByCode(code)
-                .orElseThrow(() -> new EntityNotFoundException("Process with code " + code + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("해당 생산공정 " + code + "을 찾을 수 없습니다."));
 
         // 품질 검사와 작업 실적 기록에 따라 표준 소요 시간, 공정 수행 비용, 평균 불량률 계산
         double calculatedDuration = calculateDuration(processDetails);
