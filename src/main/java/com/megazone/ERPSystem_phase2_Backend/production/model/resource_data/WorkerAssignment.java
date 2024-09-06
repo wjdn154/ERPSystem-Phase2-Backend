@@ -36,8 +36,9 @@ public class WorkerAssignment {
     @Column(nullable = false)
     private LocalDate assignmentDate; // 배치 날짜
 
-    @Column(nullable = false)
-    private String shift; // 배치된 작업자의 근무 교대조 (예: 주간, 야간)
+    @ManyToOne
+    @JoinColumn(name = "shift_type_id", nullable = false)
+    private ShiftType shiftType;  // 교대 근무 유형을 엔티티로 참조
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "work_order_id", nullable = false)

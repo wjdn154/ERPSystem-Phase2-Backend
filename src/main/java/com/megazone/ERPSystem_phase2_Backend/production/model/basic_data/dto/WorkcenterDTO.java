@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.enums.WarehouseType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.enums.WorkcenterType;
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.WorkerAssignmentDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,13 +32,28 @@ public class WorkcenterDTO {
     private List<String> todayWorkers;  // 오늘의 작업자 이름 리스트 (WorkerAssignment)
 
     // 항상 불러오는 오늘의 작업자 정보 설정 메서드
-    public void setTodayWorkers(List<String> todayWorkers) {
+    public void setTodayWorkers(List<WorkerAssignmentDTO> todayWorkers) {
         // null 이거나 비어있을 경우 "배정없음" 기본 값 설정
         if (todayWorkers == null || todayWorkers.isEmpty()) {
-            this.todayWorkers = Collections.singletonList("배정없음");
+            this.todayWorkers = new ArrayList<>();
+            WorkerAssignmentDTO unassigned = WorkerAssignmentDTO.builder()
+//                        .workerName("배정없음")
+                    .build();
+            this.todayWorkers.add(unassigned);
         } else {
             this.todayWorkers = todayWorkers;
         }
     }
 }
+
+
+//    public void setTodayWorkers(List<WorkerAssignmentDTO> todayWorkers) {
+//        // null 이거나 비어있을 경우 "배정없음" 기본 값 설정
+//        if (todayWorkers == null || todayWorkers.isEmpty()) {
+//            this.todayWorkers = Collections.singletonList("배정없음");
+//        } else {
+//            this.todayWorkers = todayWorkers;
+//        }
+//    }
+
 

@@ -55,6 +55,7 @@ spring:
         - classpath:initial-database/production/basic_data/workcenter.sql
         - classpath:initial-database/production/production_routing/productionRouting.sql
         - classpath:initial-database/production/production_schedule/workOrder.sql
+        - classpath:initial-database/production/resource_data/shiftType.sql.sql
 
         - classpath:initial-database/logistics/product.sql
 

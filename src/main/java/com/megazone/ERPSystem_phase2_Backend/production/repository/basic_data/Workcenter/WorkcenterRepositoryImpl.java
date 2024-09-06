@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.QWorkcenter.workcenter;
+import static com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.QWorkOrder.workOrder;
+import static com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.QWorker.worker;
+import static com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.QProcessDetails.processDetails;
 
 @Repository
 @RequiredArgsConstructor
@@ -144,6 +147,21 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
                     .fetch();
         }
     }
+
+    public List<WorkerAssignment> findWorkerAssignmentsByWorkcenterIdAndDate(Long workcenterId, LocalDate date) {
+        QWorkerAssignment workerAssignment = QWorkerAssignment.workerAssignment;
+
+        return queryFactory
+                .selectFrom(workerAssignment)
+                .join(workerAssignment.worker, worker)
+                .join(workerAssignment.workOrder, workOrder)
+                .join(workcenter.processDetails, processDetails)
+                .fetchJoin()
+                .where(workerAssignment.workcenter.id.eq(workcenterId)
+                        .and(workerAssignment.assignmentDate.eq(date)))
+                .fetch();
+    }
+
 
 
 

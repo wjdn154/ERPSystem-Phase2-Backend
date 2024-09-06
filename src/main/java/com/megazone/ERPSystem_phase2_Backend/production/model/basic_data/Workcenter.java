@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 작업장 정보 테이블
+ 작업장은 CRUD 작업을 관리하고, 연관된 생산공정, 소속 공장, 설비와의 연관 관계를 처리합니다.
+ 작업장은 연관된 엔티티(생산공정, 공장, 설비)를 CRUD할 수 있고,
+ 작업장 자체에서 배정된 작업자 명단을 조회하지만, 작업자 배정 관련 로직은 직접 수정하지 않습니다.
  */
 
 @Entity(name="basic_data_workcenter")

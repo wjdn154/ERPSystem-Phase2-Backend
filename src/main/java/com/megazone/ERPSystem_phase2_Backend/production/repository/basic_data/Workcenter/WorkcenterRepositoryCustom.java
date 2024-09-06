@@ -63,7 +63,9 @@ public interface WorkcenterRepositoryCustom {
      */
     List<Workcenter> findByEquipmentModelNumberContaining(String equipmentModelNumber);
 
-    List<WorkerAssignment> getWorkerAssignments(Long workcenterId, Optional<LocalDate> optionalDate);
+    List<WorkerAssignment> getWorkerAssignments(String workcenterCode, Optional<LocalDate> optionalDate);
+
+    List<WorkerAssignment> findWorkerAssignmentsByWorkcenterCodeAndDate(String workcenterCode, LocalDate date);
 
 //    /**
 //     * 특정 작업장의 오늘 작업자 목록 조회 메서드
