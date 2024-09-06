@@ -28,9 +28,14 @@ public enum WorkcenterType {
     @JsonCreator
     public static WorkcenterType of(String type) {
         return Arrays.stream(WorkcenterType.values())
-                .filter(i -> i.name.equals(type))
+                .filter(i -> i.name.equalsIgnoreCase(type))  // 대소문자 구분 없이 매칭
                 .findAny()
                 .orElse(null);
+    }
+
+    @JsonValue
+    public String getName() {
+        return this.name;
     }
 
 }

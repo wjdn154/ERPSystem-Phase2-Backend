@@ -11,6 +11,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,12 +58,12 @@ public class Workcenter {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "workcenter")
     @BatchSize(size = 10) // 컬렉션을 한 번에 최대 10개 로딩
-    @Builder.Default
+    @Builder.Default @Fetch(FetchMode.SUBSELECT)
     private List<EquipmentData> equipmentList = new ArrayList<>(); // 설비 목록
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "workcenter")
     @BatchSize(size = 10) // 컬렉션을 한 번에 최대 10개 로딩
-    @Builder.Default
+    @Builder.Default @Fetch(FetchMode.SUBSELECT)
     private List<WorkerAssignment> workerAssignments = new ArrayList<>(); // 작업자 배치 이력
 
     @ManyToOne(fetch = FetchType.LAZY)
