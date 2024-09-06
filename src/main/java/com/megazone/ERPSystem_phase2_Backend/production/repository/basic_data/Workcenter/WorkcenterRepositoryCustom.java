@@ -63,18 +63,20 @@ public interface WorkcenterRepositoryCustom {
      */
     List<Workcenter> findByEquipmentModelNumberContaining(String equipmentModelNumber);
 
-    /**
-     * 특정 작업장의 오늘 작업자 목록 조회 메서드
-     * @param workcenterId 작업장 ID
-     * @param today 오늘 날짜
-     * @return 오늘 날짜에 해당 작업장에 배치된 WorkerAssignment 리스트
-     */
-    List<WorkerAssignment> findTodayWorkerAssignmentsByWorkcenterId(Long workcenterId, LocalDate today);
+    List<WorkerAssignment> getWorkerAssignments(Long workcenterId, Optional<LocalDate> optionalDate);
 
-    /**
-     * 특정 작업장의 작업자 배치 이력 조회 메서드
-     * @param workcenterId 작업장 ID
-     * @return 해당 작업장의 모든 작업자 배치 이력 (WorkerAssignment 리스트)
-     */
-    List<WorkerAssignment> findWorkerAssignmentsByWorkcenterId(Long workcenterId);
+//    /**
+//     * 특정 작업장의 오늘 작업자 목록 조회 메서드
+//     * @param workcenterId 작업장 ID
+//     * @param today 오늘 날짜
+//     * @return 오늘 날짜에 해당 작업장에 배치된 WorkerAssignment 리스트
+//     */
+//    List<WorkerAssignment> findTodayWorkerAssignmentsByWorkcenterId(Long workcenterId, LocalDate today);
+//
+//    /**
+//     * 특정 작업장의 작업자 배치 이력 조회 메서드
+//     * @param workcenterId 작업장 ID
+//     * @return 해당 작업장의 모든 작업자 배치 이력 (WorkerAssignment 리스트)
+//     */
+//    List<WorkerAssignment> findWorkerAssignmentsByWorkcenterId(Long workcenterId);
 }

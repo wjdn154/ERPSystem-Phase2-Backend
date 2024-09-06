@@ -54,6 +54,18 @@ public class WorkcenterController {
 
     @PostMapping("/create")
     public ResponseEntity<String> saveWorkcenter(@RequestBody WorkcenterDTO workcenterDTO) {
+
+        // DTO의 입력값을 출력해 확인
+        System.out.println("Received DTO for creation:");
+        System.out.println("Workcenter Code: " + workcenterDTO.getCode());
+        System.out.println("Workcenter Name: " + workcenterDTO.getName());
+        System.out.println("Workcenter Type: " + workcenterDTO.getWorkcenterType()); // 여기도 확인
+        System.out.println("Process Code: " + workcenterDTO.getProcessCode());
+        System.out.println("Factory Code: " + workcenterDTO.getFactoryCode());
+        System.out.println("Equipment Ids: " + workcenterDTO.getEquipmentIds());
+        System.out.println("WorkerAssignment Ids: " + workcenterDTO.getWorkerAssignmentIds());
+        System.out.println("TodayWorkers: " + workcenterDTO.getTodayWorkers());
+
         try {
             workcenterService.save(workcenterDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body("작업장이 성공적으로 생성되었습니다.");
