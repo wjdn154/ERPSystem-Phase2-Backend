@@ -21,6 +21,8 @@ import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.unresolveSaleAndPurchaseVoucher.UnresolvedSaleAndPurchaseVoucherRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.vatType.VatTypeRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry.UnresolvedVoucherEntryService;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +48,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
     private final UnresolvedSaleAndPurchaseVoucherRepository unresolvedSaleAndPurchaseVoucherRepository;
     private final UnresolvedVoucherEntryService unresolvedVoucherEntryService;
     private final ResolvedSaleAndPurchaseVoucherService resolvedSaleAndPurchaseVoucherService;
+    private final EmployeeRepository employeeRepository;
     private final ClientRepository clientRepository;
 
     @Override
@@ -60,11 +63,14 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
         JournalEntry journalEntry = journalEntryRepository.findByCodeAndTransactionType(dto.getJournalEntryCode(),vatType.getTransactionType());
         Client client = clientRepository.findByCode(dto.getClientCode()).orElseThrow(
                 () -> new RuntimeException("해당하는 코드의 거래처가 없습니다."));
+        Employee employee = employeeRepository.findById(dto.getVoucherManagerId()).orElseThrow(
+                () -> new RuntimeException("해당하는 사원이 없습니다."));
 
         UnresolvedSaleAndPurchaseVoucher unresolvedSaleAndPurchaseVoucher = UnresolvedSaleAndPurchaseVoucher.builder()
                 .vatType(vatType)
                 .journalEntry(journalEntry)
                 .client(client)
+                .voucherManager(employee)
                 .voucherDate(dto.getVoucherDate())
                 .itemName(dto.getItemName())
                 .quantity(dto.getQuantity())
@@ -101,13 +107,14 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
     }
 
     public UnresolvedVoucher createAutoUnresolvedVoucher(AccountSubject accountSubject, VoucherType voucherType,
-                                                         Client client,
+                                                         Employee employee, Client client,
                                                          String transactionDescription, BigDecimal debitAmount, BigDecimal creditAmount,
                                                          LocalDate voucherDate) {
         return UnresolvedVoucher.builder()
                 .accountSubject(accountSubject)
                 .client(client)
                 .voucherType(voucherType)
+                .voucherManager(employee)
                 .transactionDescription(transactionDescription)
                 .debitAmount(debitAmount)
                 .creditAmount(creditAmount)
@@ -143,6 +150,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
         AccountSubject journalEntryAccountSubject = voucher.getJournalEntry().getJournalEntryTypeSetup().getAccountSubject();
         AccountSubject vatTypeAccountSubject = voucher.getVatType().getAccountSubject();
         Client client = voucher.getClient();
+        Employee employee = voucher.getVoucherManager();
         BigDecimal supplyAmount = createSupplyAmount(voucher.getQuantity(), voucher.getUnitPrice());
         BigDecimal vatAmount = createVatAmount(supplyAmount,voucher.getVatType().getTaxRate());
         String itemName = voucher.getItemName();
@@ -156,6 +164,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                 if (transactionType == TransactionType.SALES) {
                     unresolvedVoucherList.add(createAutoUnresolvedVoucher(journalEntryAccountSubject,
                             VoucherType.DEPOSIT,
+                            employee,
                             client,
                             createTransactionDescription(itemName, quantity,unitPrice),
                             BigDecimal.ZERO,
@@ -165,6 +174,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                     if (vatAmount.compareTo(BigDecimal.ZERO) > 0) {
                         unresolvedVoucherList.add(createAutoUnresolvedVoucher(vatTypeAccountSubject,
                                 VoucherType.DEPOSIT,
+                                employee,
                                 client,
                                 createTransactionDescription(itemName, quantity,unitPrice),
                                 BigDecimal.ZERO,
@@ -174,6 +184,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                 } else if (transactionType == TransactionType.PURCHASE) {
                     unresolvedVoucherList.add(createAutoUnresolvedVoucher(journalEntryAccountSubject,
                             VoucherType.WITHDRAWAL,
+                            employee,
                             client,
                             createTransactionDescription(itemName, quantity,unitPrice),
                             supplyAmount,
@@ -184,6 +195,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                         unresolvedVoucherList.add(createAutoUnresolvedVoucher(
                                 vatTypeAccountSubject,
                                 VoucherType.WITHDRAWAL,
+                                employee,
                                 client,
                                 createTransactionDescription(itemName, quantity,unitPrice),
                                 vatAmount,
@@ -199,6 +211,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                     unresolvedVoucherList.add(createAutoUnresolvedVoucher(
                             journalEntryAccountSubject,
                             VoucherType.DEBIT,
+                            employee,
                             client,
                             createTransactionDescription(itemName, quantity,unitPrice),
                             supplyAmount.add(vatAmount),
@@ -211,6 +224,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                                     journalEntryRepository.findByCodeAndTransactionType("1", transactionType)
                                             .getJournalEntryTypeSetup().getAccountSubject(),
                                     VoucherType.CREDIT,
+                                    employee,
                                     client,
                                     createTransactionDescription(itemName, quantity,unitPrice),
                                     BigDecimal.ZERO,
@@ -222,6 +236,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                         unresolvedVoucherList.add(createAutoUnresolvedVoucher(
                                 vatTypeAccountSubject,
                                 VoucherType.CREDIT,
+                                employee,
                                 client,
                                 createTransactionDescription(itemName, quantity,unitPrice),
                                 BigDecimal.ZERO,
@@ -232,6 +247,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
 
                         unresolvedVoucherList.add(createAutoUnresolvedVoucher(journalEntryAccountSubject,
                                 VoucherType.CREDIT,
+                                employee,
                                 client,
                                 createTransactionDescription(itemName, quantity,unitPrice),
                                 BigDecimal.ZERO,
@@ -244,6 +260,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                                         journalEntryRepository.findByCodeAndTransactionType("1", transactionType)
                                                 .getJournalEntryTypeSetup().getAccountSubject(),
                                         VoucherType.DEBIT,
+                                        employee,
                                         client,
                                         createTransactionDescription(itemName, quantity,unitPrice),
                                         supplyAmount,
@@ -254,6 +271,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                             unresolvedVoucherList.add(createAutoUnresolvedVoucher(
                                     vatTypeAccountSubject,
                                     VoucherType.DEBIT,
+                                    employee,
                                     client,
                                     createTransactionDescription(itemName, quantity,unitPrice),
                                     vatAmount,

@@ -49,7 +49,7 @@ public class ResolvedVoucherServiceImpl implements ResolvedVoucherService {
         return ResolvedVoucher.builder()
                 .accountSubject(unresolvedVoucher.getAccountSubject())
                 .client(unresolvedVoucher.getClient())
-//                .voucherManager(unresolvedVoucher.getVoucherManager())
+                .voucherManager(unresolvedVoucher.getVoucherManager())
                 .transactionDescription(unresolvedVoucher.getTransactionDescription())
                 .voucherNumber(unresolvedVoucher.getVoucherNumber())
                 .voucherType(unresolvedVoucher.getVoucherType())
@@ -66,7 +66,6 @@ public class ResolvedVoucherServiceImpl implements ResolvedVoucherService {
         List<ResolvedVoucher> resolvedVoucherList = new ArrayList<ResolvedVoucher>();
         try {
             resolvedVoucherList = resolvedVoucherRepository.findByVoucherDateOrderByVoucherNumberAsc(date);
-            System.out.println(resolvedVoucherList.toString());
             if(resolvedVoucherList.isEmpty()) {
                 throw new NoSuchElementException("해당 날짜에 등록된 전표가 없습니다.");
             }

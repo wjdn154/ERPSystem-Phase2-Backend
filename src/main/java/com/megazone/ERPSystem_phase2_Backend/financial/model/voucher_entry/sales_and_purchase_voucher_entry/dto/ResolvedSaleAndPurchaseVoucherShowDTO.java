@@ -24,6 +24,7 @@ public class ResolvedSaleAndPurchaseVoucherShowDTO {
     private BigDecimal vatAmount;
     private String clientCode;
     private String clientName;
+    private String voucherManagerId;
     private ElectronicTaxInvoiceStatus invoiceStatus;
     private String journalEntryName;
 
@@ -39,6 +40,7 @@ public class ResolvedSaleAndPurchaseVoucherShowDTO {
                 voucher.getVatAmount(),
                 voucher.getClient().getCode(),
                 voucher.getClient().getPrintClientName(),
+                voucher.getVoucherManager().getFirstName() + voucher.getVoucherManager().getLastName(),
                 voucher.getElectronicTaxInvoiceStatus(),
                 voucher.getJournalEntry().getName()
         );

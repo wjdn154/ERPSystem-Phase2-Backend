@@ -17,7 +17,7 @@ public class UnresolvedSaleAndPurchaseVoucherEntryDTO {
     private String vatTypeCode;
     private String clientCode;
     private String journalEntryCode;
-//    private Long voucherManager;
+    private Long voucherManagerId;
     private LocalDate voucherDate;
     private String itemName;
     private BigDecimal quantity;

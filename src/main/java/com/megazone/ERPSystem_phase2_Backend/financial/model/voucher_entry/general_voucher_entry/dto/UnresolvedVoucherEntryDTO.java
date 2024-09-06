@@ -21,7 +21,7 @@ public class UnresolvedVoucherEntryDTO implements Cloneable {
 
     private String clientCode; // 거래처 참조
 
-//    private String voucherManagerCode; // 전표 담당자
+    private Long voucherManagerId; // 전표 담당자
 
     private String transactionDescription; // 거래 설명
 
@@ -46,7 +46,7 @@ public class UnresolvedVoucherEntryDTO implements Cloneable {
 //                unresolvedVoucher.getCompanyId()
                 unresolvedVoucher.getAccountSubject().getCode(),
                 unresolvedVoucher.getClient().getCode(),
-//                unresolvedVoucher.getVoucherManager().getCode(),
+                unresolvedVoucher.getVoucherManager().getId(),
                 unresolvedVoucher.getTransactionDescription(),
                 unresolvedVoucher.getVoucherType(),
                 unresolvedVoucher.getDebitAmount(),

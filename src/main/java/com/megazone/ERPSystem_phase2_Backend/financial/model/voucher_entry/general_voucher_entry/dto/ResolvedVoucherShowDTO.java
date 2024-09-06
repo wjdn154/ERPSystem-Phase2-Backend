@@ -19,6 +19,7 @@ public class ResolvedVoucherShowDTO {
     private VoucherType voucherType;
     private String accountSubjectCode;
     private String accountSubjectName;
+    private String voucherManagerName;
     private String clientCode;
     private String clientName;
     private String transactionDescription;
@@ -33,6 +34,8 @@ public class ResolvedVoucherShowDTO {
                 resolvedVoucher.getVoucherType(),
                 resolvedVoucher.getAccountSubject().getCode(),
                 resolvedVoucher.getAccountSubject().getName(),
+                resolvedVoucher.getVoucherManager().getFirstName() +
+                        resolvedVoucher.getVoucherManager().getLastName(),
                 resolvedVoucher.getClient().getCode(),
                 resolvedVoucher.getClient().getPrintClientName(),
                 resolvedVoucher.getTransactionDescription(),

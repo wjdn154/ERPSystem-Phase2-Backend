@@ -40,7 +40,6 @@ public class UnresolvedSaleAndPurchaseVoucherRepositoryImpl implements Unresolve
                         .and(qUnresolvedVoucher.voucherNumber.in(dto.getSearchVoucherNumList()))
                         .and(qUnresolvedVoucher.approvalStatus.eq(ApprovalStatus.PENDING)))
                 .fetch();
-        results.forEach(result -> System.out.println("Query Check : " + result.toString()));
 
         return results;
     }
