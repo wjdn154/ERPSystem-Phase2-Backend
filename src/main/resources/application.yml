@@ -59,14 +59,15 @@ spring:
         - classpath:initial-database/production/production_routing/processDetails.sql
         - classpath:initial-database/production/basic_data/workcenter.sql
         - classpath:initial-database/production/production_routing/productionRouting.sql
-        - classpath:initial-database/production/production_schedule/workOrder.sql
+#        - classpath:initial-database/production/production_schedule/work_order_assign/workOrder.sql
+#        - classpath:initial-database/production/production_schedule/work_order_assign/shiftType.sql
 
         - classpath:initial-database/logistics/product.sql
 
         - classpath:initial-database/production/resource_data/equipmentData.sql
         - classpath:initial-database/production/resource_data/maintenanceHistory.sql
         - classpath:initial-database/production/resource_data/worker.sql
-        - classpath:initial-database/production/resource_data/worker_assignment.sql
+#        - classpath:initial-database/production/production_schedule/work_order_assign/workerAssignment.sql
 
 logging:
   level:

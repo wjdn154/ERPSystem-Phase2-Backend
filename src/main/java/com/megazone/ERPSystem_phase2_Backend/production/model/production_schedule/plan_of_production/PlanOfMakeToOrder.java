@@ -1,10 +1,10 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule;
+package com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.plan_of_production;
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkOrder;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.antlr.v4.runtime.misc.NotNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
