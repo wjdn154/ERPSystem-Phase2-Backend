@@ -1,10 +1,12 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule;
+package com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign;
 
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.WorkerAssignment;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.plan_of_production.PlanOfMakeToOrder;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.plan_of_production.PlanOfMakeToStock;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +21,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class WorkOrder {
 
     @Id

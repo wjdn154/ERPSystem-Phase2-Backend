@@ -9,5 +9,5 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales
 import java.util.List;
 
 public interface UnresolvedSaleAndPurchaseVoucherRepositoryCustom {
-    List<UnresolvedSaleAndPurchaseVoucher> findApprovalTypeVoucher(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto);
+    List<UnresolvedSaleAndPurchaseVoucher> findApprovalTypeVoucher(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto, Long companyId);
 }

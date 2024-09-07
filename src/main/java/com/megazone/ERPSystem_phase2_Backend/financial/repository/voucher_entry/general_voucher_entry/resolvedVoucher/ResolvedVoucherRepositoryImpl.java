@@ -16,13 +16,14 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Long> deleteVoucherByManager(ResolvedVoucherDeleteDTO dto) {
+    public List<Long> deleteVoucherByManager(ResolvedVoucherDeleteDTO dto,Long companyId) {
         QResolvedVoucher qResolvedVoucher = QResolvedVoucher.resolvedVoucher;
 
         List<Long> deletedVoucher = dto.getSearchVoucherNumList().stream()
                 .flatMap(voucherNum -> queryFactory.select(qResolvedVoucher.id)
                         .from(qResolvedVoucher)
                         .where(qResolvedVoucher.voucherDate.eq(dto.getSearchDate())
+                                .and(qResolvedVoucher.company.id.eq(companyId))
                                         .and(qResolvedVoucher.voucherNumber.eq(voucherNum))
 //                                .and(qUnresolvedVoucher.voucherManager.id.eq(managerId)))
                         ).fetch().stream())
