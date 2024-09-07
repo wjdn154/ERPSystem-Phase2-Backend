@@ -56,31 +56,6 @@ public class WorkerAssignmentServiceImpl implements WorkerAssignmentService {
         return workerAssignmentRepository.existsByWorkerIdAndAssignmentDate(workerId, date);
     }
 
-    // 작업자 배정 로직
-    public WorkerAssignment assignWorkerToShift(Long workerId, String workcenterCode, Long shiftTypeId, LocalDate assignmentDate) {
-        // 중복 배정 체크
-        if (isWorkerAlreadyAssigned(workerId, assignmentDate)) {
-            throw new IllegalArgumentException("해당 작업자는 이미 동일한 날짜에 배정되었습니다.");
-        }
-
-        // 작업자, 작업장, 교대근무유형을 조회하고 예외처리
-        Worker worker = workerRepository.findById(workerId)
-                .orElseThrow(() -> new EntityNotFoundException("작업자를 찾을 수 없습니다."));
-        Workcenter workcenter = workcenterRepository.findByCode(workcenterCode)
-                .orElseThrow(() -> new EntityNotFoundException("작업장을 찾을 수 없습니다."));
-        ShiftType shiftType = shiftTypeRepository.findById(shiftTypeId)
-                .orElseThrow(() -> new EntityNotFoundException("교대근무유형을 찾을 수 없습니다."));
-
-        // 작업자 배정 엔티티 생성 및 저장
-        WorkerAssignment workerAssignment = new WorkerAssignment();
-        workerAssignment.setWorker(worker);
-        workerAssignment.setWorkcenter(workcenter);
-        workerAssignment.setShiftType(shiftType);
-        workerAssignment.setAssignmentDate(assignmentDate);
-
-        return workerAssignment;
-    }
-
     // DTO 변환 메서드 (WorkerAssignment -> WorkerAssignmentDTO)
     private WorkerAssignmentDTO convertToDTO(WorkerAssignment assignment) {
         return WorkerAssignmentDTO.builder()

@@ -1,8 +1,11 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.work_order_assign.work_order;
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.ShiftType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkOrder;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkOrderDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkerAssignment;
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.Worker;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.work_order_assign.work_order.WorkOrderRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.work_order_assign.worker_assignment.WorkerAssignmentRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -10,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -44,6 +48,31 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     public void deleteWorkOrder(Long workOrderId) {
 
     }
+
+//    // 작업자 배정 로직
+//    public WorkerAssignment assignWorkerToShift(Long workerId, String workcenterCode, Long shiftTypeId, LocalDate assignmentDate) {
+//        // 중복 배정 체크
+//        if (isWorkerAlreadyAssigned(workerId, assignmentDate)) {
+//            throw new IllegalArgumentException("해당 작업자는 이미 동일한 날짜에 배정되었습니다.");
+//        }
+//
+//        // 작업자, 작업장, 교대근무유형을 조회하고 예외처리
+//        Worker worker = workerRepository.findById(workerId)
+//                .orElseThrow(() -> new EntityNotFoundException("작업자를 찾을 수 없습니다."));
+//        Workcenter workcenter = workcenterRepository.findByCode(workcenterCode)
+//                .orElseThrow(() -> new EntityNotFoundException("작업장을 찾을 수 없습니다."));
+//        ShiftType shiftType = shiftTypeRepository.findById(shiftTypeId)
+//                .orElseThrow(() -> new EntityNotFoundException("교대근무유형을 찾을 수 없습니다."));
+//
+//        // 작업자 배정 엔티티 생성 및 저장
+//        WorkerAssignment workerAssignment = new WorkerAssignment();
+//        workerAssignment.setWorker(worker);
+//        workerAssignment.setWorkcenter(workcenter);
+//        workerAssignment.setShiftType(shiftType);
+//        workerAssignment.setAssignmentDate(assignmentDate);
+//
+//        return workerAssignment;
+//    }
 
     public void assignWorkersToWorkcenter(WorkOrderDTO workOrderDTO) {
         WorkOrder workOrder = workOrderRepository.findById(workOrderDTO.getId())
