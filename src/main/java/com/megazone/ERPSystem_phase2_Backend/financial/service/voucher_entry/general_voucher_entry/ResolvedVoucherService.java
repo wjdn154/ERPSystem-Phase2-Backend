@@ -14,9 +14,16 @@ public interface ResolvedVoucherService {
     void resolvedVoucherEntry(List<UnresolvedVoucher> unresolvedVoucherList);
 
     ResolvedVoucher createResolvedVoucher(UnresolvedVoucher unresolvedVoucher, LocalDateTime approvalTime);
-    List<ResolvedVoucher> resolvedVoucherAllSearch(LocalDate date);
-    BigDecimal calculateTotalAmount(LocalDate date, Function<ResolvedVoucher, BigDecimal> amount);
-    BigDecimal totalDebit(LocalDate date);
-    BigDecimal totalCredit(LocalDate date);
-    List<Long> deleteResolvedVoucher(ResolvedVoucherDeleteDTO dto);
+    List<ResolvedVoucher> resolvedVoucherAllSearch(Long companyId, LocalDate date);
+//    BigDecimal calculateTotalAmount(LocalDate date, Function<ResolvedVoucher, BigDecimal> amount);
+//    BigDecimal totalDebit(LocalDate date);
+//    BigDecimal totalCredit(LocalDate date);
+
+    BigDecimal calculateTotalAmount(Long companyId, LocalDate date, Function<ResolvedVoucher, BigDecimal> amount);
+
+    BigDecimal totalDebit(LocalDate date, Long companyId);
+
+    BigDecimal totalCredit(LocalDate date, Long companyId);
+
+    List<Long> deleteResolvedVoucher(ResolvedVoucherDeleteDTO dto, Long companyId);
 }

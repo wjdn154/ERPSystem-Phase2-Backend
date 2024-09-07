@@ -5,5 +5,5 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.gener
 import java.util.List;
 
 public interface ResolvedVoucherRepositoryCustom {
-    List<Long> deleteVoucherByManager(ResolvedVoucherDeleteDTO dto);
+    List<Long> deleteVoucherByManager(ResolvedVoucherDeleteDTO dto,Long companyId);
 }
