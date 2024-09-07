@@ -1,15 +1,13 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.mrp;
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.mrp.bom.StandardBom;
-import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.PlanOfMakeToStock;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.plan_of_production.PlanOfMakeToStock;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProcessDetails;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**

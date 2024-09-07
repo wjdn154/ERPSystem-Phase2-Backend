@@ -5,7 +5,7 @@
 //import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.WorkcenterDTO;
 //import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.enums.WorkcenterType;
 //import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.EquipmentDataDTO;
-//import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.WorkerAssignmentDTO;
+//import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentDTO;
 //import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProcessDetails;
 //import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
 //import com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.workcenter.WorkcenterRegistrationServiceImpl;

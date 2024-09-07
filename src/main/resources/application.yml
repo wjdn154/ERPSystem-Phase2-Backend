@@ -29,15 +29,20 @@ spring:
         - classpath:initial-database/financial/account_subject/account_subject_cash_memo.sql
         - classpath:initial-database/financial/account_subject/account_subject_fixed_memo.sql
         - classpath:initial-database/financial/account_subject/account_subject_transfer_memo.sql
-        - classpath:initial-database/financial/company/company_tax_office.sql
-        - classpath:initial-database/financial/company/company_main_business.sql
         - classpath:initial-database/financial/common/financial_bank.sql
         - classpath:initial-database/financial/client/client_liquor.sql
         - classpath:initial-database/financial/client/client_category.sql
         - classpath:initial-database/financial/bank_account/bank_account_type.sql
         - classpath:initial-database/financial/bank_account/financial_address.sql
-        - classpath:initial-database/financial/bank_account/financial_contact.sql
+        - classpath:initial-database/financial/common/financial_contact.sql
         - classpath:initial-database/financial/bank_account/financial_bank_account.sql
+        - classpath:initial-database/financial/company/company_tax_office.sql
+        - classpath:initial-database/financial/company/company_main_business.sql
+        - classpath:initial-database/financial/company/company_address.sql
+        - classpath:initial-database/financial/company/company_corporate_kind.sql
+        - classpath:initial-database/financial/company/company_corporate_type.sql
+        - classpath:initial-database/financial/company/company_representative.sql
+        - classpath:initial-database/financial/company/company.sql
 #        - classpath:initial-database/financial/credit_card/credit_card.sql
 #        - classpath:initial-database/financial/unresolved_voucher.sql
         - classpath:initial-database/financial/vat_type.sql
@@ -54,14 +59,15 @@ spring:
         - classpath:initial-database/production/production_routing/processDetails.sql
         - classpath:initial-database/production/basic_data/workcenter.sql
         - classpath:initial-database/production/production_routing/productionRouting.sql
-        - classpath:initial-database/production/production_schedule/workOrder.sql
+#        - classpath:initial-database/production/production_schedule/work_order_assign/workOrder.sql
+#        - classpath:initial-database/production/production_schedule/work_order_assign/shiftType.sql
 
         - classpath:initial-database/logistics/product.sql
 
         - classpath:initial-database/production/resource_data/equipmentData.sql
         - classpath:initial-database/production/resource_data/maintenanceHistory.sql
         - classpath:initial-database/production/resource_data/worker.sql
-        - classpath:initial-database/production/resource_data/worker_assignment.sql
+#        - classpath:initial-database/production/production_schedule/work_order_assign/workerAssignment.sql
 
 logging:
   level:
