@@ -15,8 +15,6 @@ import java.util.function.Function;
 public interface UnresolvedSaleAndPurchaseVoucherService {
     UnresolvedSaleAndPurchaseVoucher save(UnresolvedSaleAndPurchaseVoucherEntryDTO dto);
 
-//    String CreateVoucherNumber(LocalDate voucherDate);
-
     List<UnresolvedSaleAndPurchaseVoucher> searchAllVoucher(LocalDate date);
 
     String deleteVoucher(UnresolvedSaleAndPurchaseVoucherDeleteDTO dto);
