@@ -22,6 +22,14 @@ spring:
     init:
       mode: always # 항상 SQL 초기화 모드를 사용하도록 설정
       data-locations:
+        - classpath:initial-database/financial/common/financial_contact.sql
+        - classpath:initial-database/financial/company/company_tax_office.sql
+        - classpath:initial-database/financial/company/company_main_business.sql
+        - classpath:initial-database/financial/company/company_address.sql
+        - classpath:initial-database/financial/company/company_corporate_kind.sql
+        - classpath:initial-database/financial/company/company_corporate_type.sql
+        - classpath:initial-database/financial/company/company_representative.sql
+        - classpath:initial-database/financial/company/company.sql
         - classpath:initial-database/financial/account_subject/account_subject_structure.sql
         - classpath:initial-database/financial/account_subject/account_subject_nature.sql
         - classpath:initial-database/financial/account_subject/account_subject_Standard_financial_statement.sql
@@ -34,15 +42,7 @@ spring:
         - classpath:initial-database/financial/client/client_category.sql
         - classpath:initial-database/financial/bank_account/bank_account_type.sql
         - classpath:initial-database/financial/bank_account/financial_address.sql
-        - classpath:initial-database/financial/common/financial_contact.sql
         - classpath:initial-database/financial/bank_account/financial_bank_account.sql
-        - classpath:initial-database/financial/company/company_tax_office.sql
-        - classpath:initial-database/financial/company/company_main_business.sql
-        - classpath:initial-database/financial/company/company_address.sql
-        - classpath:initial-database/financial/company/company_corporate_kind.sql
-        - classpath:initial-database/financial/company/company_corporate_type.sql
-        - classpath:initial-database/financial/company/company_representative.sql
-        - classpath:initial-database/financial/company/company.sql
 #        - classpath:initial-database/financial/credit_card/credit_card.sql
 #        - classpath:initial-database/financial/unresolved_voucher.sql
         - classpath:initial-database/financial/vat_type.sql
