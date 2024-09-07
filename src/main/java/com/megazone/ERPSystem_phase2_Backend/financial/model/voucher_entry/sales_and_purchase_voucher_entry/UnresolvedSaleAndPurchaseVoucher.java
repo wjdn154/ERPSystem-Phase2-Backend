@@ -1,8 +1,10 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,17 +36,17 @@ public class UnresolvedSaleAndPurchaseVoucher {
     @JoinColumn(name = "vatType_id",nullable = false)
     private VatType vatType; // 부가세 유형
 //
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "vendor_code",referencedColumnName = "code", nullable = false)
-//    private Long vendor; // 거래처 참조
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "client_code", nullable = false)
+    private Client client; // 거래처 참조
 //
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "journalEntry_id", nullable = false)
     private JournalEntry journalEntry; // 분개 유형 참조
-//
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "voucherManager_code",referencedColumnName = "code", nullable = false)
-//    private Long voucherManager; // 담당자 참조
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "voucherManager_code", nullable = false)
+    private Employee voucherManager; // 담당자 참조
 
     @OneToMany(cascade = CascadeType.ALL,  orphanRemoval = true)
     @JoinColumn(name = "unresolved_vouchers_id")

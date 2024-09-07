@@ -139,6 +139,7 @@ public class ClientServiceImpl implements ClientService {
         client.setTransactionEndDate(clientDTO.getTransactionEndDate());
         client.setRemarks(clientDTO.getRemarks());
         client.setIsActive(clientDTO.getIsActive());
+        getClientCode(clientDTO,client);
 
         return clientRepository.save(client);
     }
@@ -213,6 +214,17 @@ public class ClientServiceImpl implements ClientService {
     private void getLiquor(ClientDTO clientDTO, Client client) {
         client.setLiquor(liquorRepository.findById(clientDTO.getLiquor().getId()).orElseThrow(
                 () -> new RuntimeException("해당 주류 코드가 존재하지 않습니다.")));
+    }
+
+    private void getClientCode(ClientDTO clientDTO, Client client) {
+        Client oldClient = clientRepository.findByCode(clientDTO.getCode()).orElse(null);
+
+        if(oldClient == null) {
+            client.setCode(clientDTO.getCode());
+        }
+        else {
+            throw new RuntimeException("해당 거래처 코드가 이미 존재 합니다.");
+        }
     }
 
 }

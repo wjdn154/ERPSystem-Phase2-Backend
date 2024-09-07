@@ -18,10 +18,10 @@ public class UnresolvedVoucherShowDTO {
     private VoucherType voucherType;
     private String accountSubjectCode;
     private String accountSubjectName;
-//    private String vendorCode;
-//    private String vendorName;
-//    private String descriptionCode;
-//    private String descriptionName;
+    private String voucherManagerName;
+    private String clientCode;
+    private String clientName;
+    private String transactionDescription;
     private BigDecimal debitAmount;
     private BigDecimal creditAmount;
 
@@ -32,10 +32,11 @@ public class UnresolvedVoucherShowDTO {
                 unresolvedVoucher.getVoucherType(),
                 unresolvedVoucher.getAccountSubject().getCode(),
                 unresolvedVoucher.getAccountSubject().getName(),
-//                unresolvedVoucher.getVendor().getCode(),
-//                unresolvedVoucher.getVendor().getName(),
-//                unresolvedVoucher.getDescription().getCode(),
-//                unresolvedVoucher.getDescription().getName(),
+                unresolvedVoucher.getVoucherManager().getFirstName() +
+                        unresolvedVoucher.getVoucherManager().getLastName(),
+                unresolvedVoucher.getClient().getCode(),
+                unresolvedVoucher.getClient().getPrintClientName(),
+                unresolvedVoucher.getTransactionDescription(),
                 unresolvedVoucher.getDebitAmount(),
                 unresolvedVoucher.getCreditAmount()
         );
