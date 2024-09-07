@@ -138,7 +138,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
                                                      Long companyId) {
         UnresolvedVoucher unresolvedVoucher = UnresolvedVoucher.builder()
 //                .userCompanyId(dto.getUserCompany())
-                .accountSubject(accountSubjectRepository.findByCode(dto.getAccountSubjectCode()).orElseThrow(
+                .accountSubject(accountSubjectRepository.findByCompanyIdAndCode(companyId, dto.getAccountSubjectCode()).orElseThrow(
                         () -> new IllegalArgumentException("해당하는 코드의 계정과목이 없습니다.")))
                 .client(clientRepository.findByCode(dto.getClientCode()).orElseThrow(
                         () -> new IllegalArgumentException("해당하는 코드의 거래처가 없습니다.")))

@@ -58,7 +58,7 @@ public class AccountSubjectController {
      * @param memoRequestDTO 적요 정보를 담은 DTO
      * @return 성공 시 HTTP 200, 실패 시 에러 메시지를 포함한 HTTP 상태 반환.
      */
-    @PostMapping("/saveMemo/{code}")
+    @PostMapping("/{company_id}/saveMemo/{code}")
     public ResponseEntity<Object> addMemoToAccountSubject(@PathVariable("company_id") Long company_id, @PathVariable("code") String accountSubjectCode, @RequestBody MemoRequestDTO memoRequestDTO) {
         Optional<Object> savedMemo = accountSubjectService.addMemoToAccountSubject(company_id, accountSubjectCode, memoRequestDTO);
         return savedMemo
@@ -72,7 +72,7 @@ public class AccountSubjectController {
      * @param accountSubjectDTO 저장할 계정과목 정보
      * @return 저장된 계정과목 DTO를 반환함.
      */
-    @PostMapping("/save")
+    @PostMapping("/{company_id}/save")
     public ResponseEntity<AccountSubjectDTO> saveAccountSubject(@PathVariable("company_id") Long company_id, @RequestBody AccountSubjectDTO accountSubjectDTO) {
         Optional<AccountSubjectDTO> savedAccount = accountSubjectService.saveAccountSubject(company_id, accountSubjectDTO);
         return savedAccount
@@ -85,7 +85,7 @@ public class AccountSubjectController {
      * @param accountSubjectDTO 업데이트할 계정과목 정보
      * @return 업데이트된 계정과목을 반환함.
      */
-    @PutMapping("/update/{company_id}/{code}")
+    @PutMapping("/{company_id}/update/{code}")
     public ResponseEntity<AccountSubjectDTO> updateAccount(@PathVariable("company_id") Long company_id, @PathVariable("code") String code, @RequestBody AccountSubjectDTO accountSubjectDTO) {
         Optional<AccountSubjectDTO> updatedAccount = accountSubjectService.updateAccountSubject(company_id, code, accountSubjectDTO);
 
@@ -100,7 +100,7 @@ public class AccountSubjectController {
      * @param code 삭제할 계정과목의 ID
      * @return 성공적으로 삭제된 경우, 삭제된 계정과목을 반환함.
      */
-    @DeleteMapping("/delete/{code}")
+    @DeleteMapping("/{company_id}/delete/{code}")
     public ResponseEntity<String> deleteAccount(@PathVariable("company_id") Long company_id, @PathVariable("code") String code) {
         try {
             accountSubjectService.deleteAccount(company_id, code);
