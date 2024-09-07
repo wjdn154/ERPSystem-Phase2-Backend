@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report;
 
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.WorkOrder;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkOrder;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule;
+package com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.plan_of_production;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
