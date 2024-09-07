@@ -4,6 +4,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.e
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataUpdateDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.ListEquipmentDataDTO;
 
 import java.util.List;
@@ -15,13 +16,13 @@ public interface EquipmentDataService {
     Optional<EquipmentDataShowDTO> saveEquipment(EquipmentDataDTO dto);
 
     //설비 수정
-    Optional<EquipmentDataShowDTO> updateEquipment(Long id, EquipmentDataDTO dto);
+    Optional<EquipmentDataUpdateDTO> updateEquipment(Long id, EquipmentDataUpdateDTO dto);
 
     //설비 삭제
     void deleteEquipment(Long id);
 
     //설비 리스트 조회
-    List<ListEquipmentDataDTO> findAllEquipmentDataDetails();
+    List<ListEquipmentDataDTO> findAllEquipmentDataDetails(Long id);
 
     //개별 설비 조회
     Optional<EquipmentDataShowDTO> findEquipmentDataDetailById(Long id);

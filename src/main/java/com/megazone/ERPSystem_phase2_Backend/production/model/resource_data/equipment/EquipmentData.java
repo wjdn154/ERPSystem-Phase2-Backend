@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.EquipmentType;
@@ -70,4 +71,8 @@ public class EquipmentData {
 
     @OneToMany(mappedBy = "equipment", cascade = CascadeType.ALL)
     private List<MaintenanceHistory> maintenanceHistory = new ArrayList<>();  //설비의 유지보수 관리 이력
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "company_id")
+    private Company company;                            //회사 테이블 참조 (회사 아이디)
 }

@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equ
 
 //유지보수 관리 이력
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.MaintenanceType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -49,5 +50,10 @@ public class MaintenanceHistory {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "equimentData_id")
     private EquipmentData equipment;      //유지보수 관리하는 설비정보 테이블 참조.(설비명, 작업장이름, 공장이름)
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "company_id")
+    private Company company;           //회사 테이블 참조
+
 
 }
