@@ -21,8 +21,9 @@ public class UnresolvedSaleAndPurchaseVoucherShowDTO {
     private BigDecimal unitPrice;
     private BigDecimal supplyAmount;
     private BigDecimal vatAmount;
-//    private String vendorCode;
-//    private String vendorName;
+    private String clientCode;
+    private String clientName;
+    private String voucherManagerName;
     private ElectronicTaxInvoiceStatus invoiceStatus;
     private String journalEntryName;
 
@@ -36,8 +37,9 @@ public class UnresolvedSaleAndPurchaseVoucherShowDTO {
                 voucher.getUnitPrice(),
                 voucher.getSupplyAmount(),
                 voucher.getVatAmount(),
-//                vendorCode,
-//                vendorName,
+                voucher.getClient().getCode(),
+                voucher.getClient().getPrintClientName(),
+                voucher.getVoucherManager().getFirstName() + voucher.getVoucherManager().getLastName(),
                 voucher.getElectronicTaxInvoiceStatus(),
                 voucher.getJournalEntry().getName()
         );

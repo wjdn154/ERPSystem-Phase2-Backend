@@ -48,9 +48,8 @@ public class ResolvedVoucherServiceImpl implements ResolvedVoucherService {
     public ResolvedVoucher createResolvedVoucher(UnresolvedVoucher unresolvedVoucher, LocalDateTime approvalTime) {
         return ResolvedVoucher.builder()
                 .accountSubject(unresolvedVoucher.getAccountSubject())
-//                .vendor(unresolvedVoucher.getVendor())
-//                .voucherManager(unresolvedVoucher.getVoucherManager())
-//                .description(unresolvedVoucher.getdescription())
+                .client(unresolvedVoucher.getClient())
+                .voucherManager(unresolvedVoucher.getVoucherManager())
                 .transactionDescription(unresolvedVoucher.getTransactionDescription())
                 .voucherNumber(unresolvedVoucher.getVoucherNumber())
                 .voucherType(unresolvedVoucher.getVoucherType())
@@ -67,7 +66,6 @@ public class ResolvedVoucherServiceImpl implements ResolvedVoucherService {
         List<ResolvedVoucher> resolvedVoucherList = new ArrayList<ResolvedVoucher>();
         try {
             resolvedVoucherList = resolvedVoucherRepository.findByVoucherDateOrderByVoucherNumberAsc(date);
-            System.out.println(resolvedVoucherList.toString());
             if(resolvedVoucherList.isEmpty()) {
                 throw new NoSuchElementException("해당 날짜에 등록된 전표가 없습니다.");
             }

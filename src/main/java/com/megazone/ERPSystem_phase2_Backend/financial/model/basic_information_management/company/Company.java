@@ -42,15 +42,15 @@ public class Company {
     private Contact contact;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "main_business_code", referencedColumnName = "code", nullable = false) // 주업종 코드
+    @JoinColumn(name = "main_business_id", nullable = false) // 주업종 코드
     private MainBusiness mainBusiness;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "business_tax_office_code", referencedColumnName = "code", nullable = false) // 사업장 관할 세무서
+    @JoinColumn(name = "business_tax_office_id", nullable = false) // 사업장 관할 세무서
     private TaxOffice businessTaxOffice;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "headquarter_tax_office_code", referencedColumnName = "code", nullable = false) // 본점 관할 세무서
+    @JoinColumn(name = "headquarter_tax_office_id", nullable = false) // 본점 관할 세무서
     private TaxOffice headquarterTaxOffice;
 
     @Column(nullable = false) // 지방소득세납세지
