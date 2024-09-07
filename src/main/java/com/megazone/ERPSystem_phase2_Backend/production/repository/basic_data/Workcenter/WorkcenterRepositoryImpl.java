@@ -2,22 +2,15 @@ package com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.W
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.QWarehouse;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
-import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.QWorkerAssignment;
-import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.WorkerAssignment;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.QEquipmentData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.QProcessDetails;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import static com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.QWorkcenter.workcenter;
-import static com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.QWorkOrder.workOrder;
-import static com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.QWorker.worker;
-import static com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.QProcessDetails.processDetails;
 
 @Repository
 @RequiredArgsConstructor

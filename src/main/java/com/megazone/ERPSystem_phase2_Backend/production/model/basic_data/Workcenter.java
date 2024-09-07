@@ -2,7 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.enums.WorkcenterType;
-import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.WorkerAssignment;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkerAssignment;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProcessDetails;
 import jakarta.persistence.*;

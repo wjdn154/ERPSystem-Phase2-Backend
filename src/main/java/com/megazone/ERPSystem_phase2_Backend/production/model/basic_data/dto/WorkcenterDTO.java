@@ -1,9 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto;
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.enums.WarehouseType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.enums.WorkcenterType;
-import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.WorkerAssignmentDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

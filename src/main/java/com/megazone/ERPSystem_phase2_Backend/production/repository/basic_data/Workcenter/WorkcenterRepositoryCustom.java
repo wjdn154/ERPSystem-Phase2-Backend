@@ -1,13 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter;
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.enums.WorkcenterType;
-import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.WorkerAssignment;
-import io.micrometer.observation.ObservationFilter;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 public interface WorkcenterRepositoryCustom {
 

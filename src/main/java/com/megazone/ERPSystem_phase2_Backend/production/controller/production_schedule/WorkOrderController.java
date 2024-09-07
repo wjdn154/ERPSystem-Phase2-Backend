@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.production_schedule;
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.WorkOrderDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.work_order.WorkOrderService;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkOrderDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.work_order_assign.work_order.WorkOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

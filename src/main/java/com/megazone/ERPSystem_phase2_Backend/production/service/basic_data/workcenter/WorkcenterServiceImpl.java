@@ -7,13 +7,13 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_managemen
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.WorkcenterDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.WorkerAssignment;
-import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.WorkerAssignmentDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkerAssignment;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.resource_data.equipment.EquipmentDataRepository;
-import com.megazone.ERPSystem_phase2_Backend.production.repository.resource_data.worker_assignments.WorkerAssignmentRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.work_order_assign.worker_assignment.WorkerAssignmentRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.routing_management.ProcessDetails.ProcessDetailsRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
