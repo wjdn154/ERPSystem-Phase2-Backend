@@ -21,27 +21,16 @@ public class ProductGroupServiceImpl implements ProductGroupService{
     private final ProductRepository productRepository;
 
     /**
-     * 모든 품목 그룹 조회
-     * @return 모든 품목 그룹 DTO를 List로 반환
+     * 특정 회사에 속한 품목 그룹 조회 (검색어 필터 적용)
+     * @param companyId 회사 ID
+     * @param searchTerm 검색어
+     * @return 해당 회사의 품목 그룹 리스트
      */
-    @Override
-    public List<ProductGroupDto> findAllProductGroups() {
-
-        return productGroupRepository.findAll().stream()
-                                            .map(this::toDto)
-                                            .collect(Collectors.toList());
-    }
-
-    /**
-     * 특정 id로 품목 그룹 조회
-     * @param id
-     * @return 특정 id를 가진 폼목 그룹 DTO 반환
-     */
-    @Override
-    public ProductGroupDto getProductGroupById(Long id) {
-        return productGroupRepository.findById(id)
-                                        .map(this::toDto)
-                                        .orElseThrow(() -> new IllegalArgumentException("해당 ID의 품목 그룹을 찾을 수가 없습니다." + id));
+    public List<ProductGroupDto> findAllProductGroups(Long companyId, String searchTerm) {
+        return productGroupRepository.findProductGroupsByCompanyAndSearchTerm(companyId, searchTerm)
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     /**

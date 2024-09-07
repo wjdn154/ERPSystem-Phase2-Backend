@@ -18,24 +18,17 @@ public class ProductGroupController {
     private final ProductGroupService productGroupService;
 
     /**
-     * 품목 그룹 리스트 조회
-     * @return 등록된 모든 품목 그룹을 반환
+     * 특정 회사에 등록된 품목 그룹 리스트 조회 (검색어 포함)
+     * @param companyId 회사 ID
+     * @param searchTerm 검색어
+     * @return 해당 회사의 모든 품목 그룹 리스트를 반환
      */
-    @PostMapping
-    public ResponseEntity<List<ProductGroupDto>> getAllProductGroups() {
-        List<ProductGroupDto> response =  productGroupService.findAllProductGroups();
+    @PostMapping("/{company_id}")
+    public ResponseEntity<List<ProductGroupDto>> getAllProductGroups(
+            @PathVariable("company_id") Long companyId,
+            @RequestParam(value = "search", required = false) String searchTerm) {
 
-        return ResponseEntity.ok(response);
-    }
-
-    /**
-     * 등록된 각 품목 그룹 정보 조회
-     * @param id 품목 그룹 ID
-     * @return 특정 id에 해당하는 품목 그룹 정보 조회
-     */
-    @PostMapping("/{id}")
-    public ResponseEntity<ProductGroupDto> getProductGroupById(@PathVariable("id") Long id) {
-        ProductGroupDto response = productGroupService.getProductGroupById(id);
+        List<ProductGroupDto> response = productGroupService.findAllProductGroups(companyId, searchTerm);
         return ResponseEntity.ok(response);
     }
 
