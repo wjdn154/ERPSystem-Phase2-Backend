@@ -47,7 +47,7 @@ public class EquipmentDataController {
     }
 
     //설비 상세 정보 등록
-    @PostMapping("/equipmentData/createEquipment")
+    @PostMapping("/equipmentData/createEquipment/{companyId}")
     public ResponseEntity<EquipmentDataShowDTO> saveEquipmentData(@RequestBody EquipmentDataDTO dto){
 
         //서비스에 해당 아이디의 설비 상세 정보를 등록함.
