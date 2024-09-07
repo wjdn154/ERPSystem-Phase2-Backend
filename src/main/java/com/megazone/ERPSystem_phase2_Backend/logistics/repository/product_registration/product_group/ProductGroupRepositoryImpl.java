@@ -18,7 +18,6 @@ public class ProductGroupRepositoryImpl implements ProductGroupRepositoryCustom{
     public List<ProductGroup> findByCodeAndName(String code, String name) {
         QProductGroup productGroup = QProductGroup.productGroup;
 
-        //QueryDSL에서 조건을 동적으로 추가할 수 있도록 도와주는 클래스 이 객체에 조건을 추가하면서 쿼리를 구성
         BooleanBuilder builder = new BooleanBuilder();
 
         if (code != null && !code.isEmpty()) {

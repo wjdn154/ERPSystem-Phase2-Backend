@@ -61,4 +61,16 @@ public class Product {
     @Column(nullable = false)
     private String unit;
 
+    // 폼목 사용 여부
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean isActive = true;
+
+    public void deactivate() {
+        this.isActive = false;
+    }
+
+    public void reactivate() {
+        this.isActive = true;
+    }
 }

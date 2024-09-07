@@ -116,6 +116,13 @@ public class ProductGroupServiceImpl implements ProductGroupService{
         return productGroup.getName() + " 품목 그룹이 삭제되었습니다.";
     }
 
+    /**
+     * 주어진 ID를 기준으로 품목 그룹을 사용중단.
+     *
+     * @param id 사용중단할 품목 그룹의 ID.
+     * @return 품목 그룹의 사용중단 상태를 나타내는 메시지.
+     * @throws IllegalArgumentException 주어진 ID로 품목 그룹을 찾을 수 없는 경우.
+     */
     @Override
     public String deactivateProductGroup(Long id) {
         ProductGroup productGroup = productGroupRepository.findById(id)
@@ -125,12 +132,16 @@ public class ProductGroupServiceImpl implements ProductGroupService{
         productGroup.deactivate();
         productGroupRepository.save(productGroup);
 
-        // Product 의 productGroup 필드를 null로 설정
-        productRepository.nullifyProductGroupId(id);
-
         return productGroup.getName() + " 품목 그룹이 사용 중단되었습니다.";
     }
 
+    /**
+     * 주어진 ID를 기준으로 품목 그룹을 재사용.
+     *
+     * @param id 재사용할 품목 그룹의 ID.
+     * @return 품목 그룹의 재사용 상태를 나타내는 메시지.
+     * @throws IllegalArgumentException 주어진 ID로 품목 그룹을 찾을 수 없는 경우.
+     */
     @Override
     public String reactivateProductGroup(Long id) {
         ProductGroup productGroup = productGroupRepository.findById(id)
@@ -140,9 +151,7 @@ public class ProductGroupServiceImpl implements ProductGroupService{
         productGroup.reactivate();
         productGroupRepository.save(productGroup);
 
-        // Product의 productGroup 필드를 다시 id 로 설정
-//        productRepository.updateStatusByProductGroupId(id);
-        return null;
+        return productGroup.getName() + "품목 그룹을 재사용합니다.";
     }
 
     // code와 name에 대한 유효성 검증 메소드
@@ -161,6 +170,7 @@ public class ProductGroupServiceImpl implements ProductGroupService{
                 .id(productGroup.getId())
                 .code(productGroup.getCode())
                 .name(productGroup.getName())
+                .isActive(productGroup.isActive())
                 .build();
     }
 

@@ -26,7 +26,6 @@ public class ProductGroupController {
         List<ProductGroupDto> response =  productGroupService.findAllProductGroups();
 
         return ResponseEntity.ok(response);
-
     }
 
     /**
@@ -90,10 +89,10 @@ public class ProductGroupController {
     }
 
     /**
-     * ID를 통해 제품 그룹 비활성화.
+     * ID를 통해 품목 그룹 사용중단.
      *
-     * @param id 비활성화할 제품 그룹의 ID
-     * @return 비활성화 처리 결과를 담은 응답 엔티티
+     * @param id 사용중단할 품목 그룹의 ID
+     * @return 사용중단 처리 결과를 담은 응답 엔티티
      */
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<String> deactivateProductGroup(@PathVariable("id") Long id) {
@@ -101,6 +100,12 @@ public class ProductGroupController {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * ID를 통해 품목 그룹을 재사용
+     *
+     * @param id 다시 재사용할 품목 그룹의 ID
+     * @return 재사용할 처리 결과를 담은 응답 엔티티
+     */
     @PutMapping("/{id}/reactivate")
     public ResponseEntity<String> reactivateProductGroup(@PathVariable("id") Long id) {
         String result = productGroupService.reactivateProductGroup(id);

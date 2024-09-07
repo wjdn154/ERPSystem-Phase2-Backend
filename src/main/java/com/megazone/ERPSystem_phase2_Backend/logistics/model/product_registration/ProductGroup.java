@@ -35,7 +35,7 @@ public class ProductGroup {
     @Column(nullable = false)
     private String name;
 
-    // 폼목 그룹 활성화 여부
+    // 폼목 그룹 사용 여부
     @Column(nullable = false)
     @Builder.Default
     private boolean isActive = true;

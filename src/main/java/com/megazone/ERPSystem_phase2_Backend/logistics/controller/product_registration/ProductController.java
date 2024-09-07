@@ -2,8 +2,8 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.controller.product_regis
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDto;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductSaveRequestDto;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductSaveResponseDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductRequestDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductResponseDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.product.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -49,13 +49,13 @@ public class ProductController {
 
     /**
      * 품목을 등록함
-     * @param productSaveRequestDto
+     * @param productRequestDto
      * @return 등록된 품목의 DTO를 반환
      */
     @PostMapping("/save-product")
-    public ResponseEntity<ProductSaveResponseDto> saveProduct(@RequestBody ProductSaveRequestDto productSaveRequestDto) {
+    public ResponseEntity<ProductResponseDto> saveProduct(@RequestBody ProductRequestDto productRequestDto) {
         try {
-            return productService.saveProduct(productSaveRequestDto)
+            return productService.saveProduct(productRequestDto)
                     .map(ResponseEntity::ok)
                     .orElseGet(() -> ResponseEntity.badRequest().build());
         } catch (IllegalArgumentException e) {
@@ -68,14 +68,14 @@ public class ProductController {
     /**
      * 품목 업데이트
      * @param id 업데이트하려는 품목의 id
-     * @param productSaveRequestDto 업데이트할 품목 정보
+     * @param productRequestDto 업데이트할 품목 정보
      * @return 업데이트된 품목 정보를 반환함
      */
     @PutMapping("/update-product/{id}")
-    public ResponseEntity<ProductSaveResponseDto> updateProduct(@PathVariable("id") Long id,
-                                                                @RequestBody ProductSaveRequestDto productSaveRequestDto){
+    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable("id") Long id,
+                                                            @RequestBody ProductRequestDto productRequestDto){
         try{
-            return productService.updateProduct(id, productSaveRequestDto)
+            return productService.updateProduct(id, productRequestDto)
                     .map(ResponseEntity::ok)
                     .orElseGet(() -> ResponseEntity.notFound().build());
         } catch (IllegalArgumentException e) {
@@ -86,9 +86,9 @@ public class ProductController {
     }
 
     /**
-     * 지정된 ID의 제품 삭제
+     * 지정된 ID의 품목 삭제
      *
-     * @param id 삭제할 제품의 ID
+     * @param id 삭제할 품목의 ID
      * @return 결과 메시지를 포함하는 응답 엔티티
      */
     @DeleteMapping("/delete-product/{id}")
@@ -102,6 +102,27 @@ public class ProductController {
         }
     }
 
+    /**
+     * ID를 통해 품목 사용중단.
+     *
+     * @param id 사용중단할 품목 그룹의 ID
+     * @return 사용중단 처리 결과를 담은 응답 엔티티
+     */
+    @PutMapping("/{id}/deactivate-product")
+    public ResponseEntity<String> deactivateProduct(@PathVariable("id") Long id) {
+        String result = productService.deactivateProduct(id);
+        return ResponseEntity.ok(result);
+    }
 
-
+    /**
+     * ID를 통해 품목을 재사용
+     *
+     * @param id 다시 재사용할 품목의 ID
+     * @return 재사용할 처리 결과를 담은 응답 엔티티
+     */
+    @PutMapping("/{id}/reactivate")
+    public ResponseEntity<String> reactivateProductGroup(@PathVariable("id") Long id) {
+        String result = productService.reactivateProduct(id);
+        return ResponseEntity.ok(result);
+    }
 }
