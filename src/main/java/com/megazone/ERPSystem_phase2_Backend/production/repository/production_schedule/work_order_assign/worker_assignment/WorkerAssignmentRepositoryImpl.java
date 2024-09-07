@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.work_order_assign.worker_assignment;
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.QWorkerAssignment;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkerAssignment;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.QWorkerAssignment;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.QWorkcenter.workcenter;
-import static com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.QWorkOrder.workOrder;
+import static com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.QWorkOrder.workOrder;
 import static com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.QWorker.worker;
 import static com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.QProcessDetails.processDetails;
 
@@ -69,7 +69,8 @@ public class WorkerAssignmentRepositoryImpl implements WorkerAssignmentRepositor
         }
     }
 
-    public List<WorkerAssignment> findWorkerAssignmentsByWorkcenterIdAndDate(String workcenterCode, LocalDate date) {
+    @Override
+    public List<WorkerAssignment> findWorkerAssignmentsByWorkcenterCodeAndDate(String workcenterCode, LocalDate date) {
         return queryFactory
                 .selectFrom(workerAssignment)
                 .join(workerAssignment.worker, worker)

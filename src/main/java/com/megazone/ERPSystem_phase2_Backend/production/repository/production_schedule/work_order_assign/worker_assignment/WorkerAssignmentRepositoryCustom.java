@@ -16,6 +16,6 @@ public interface WorkerAssignmentRepositoryCustom {
     boolean existsByWorkerIdAndAssignmentDate(Long workerId, LocalDate date);
 
     List<WorkerAssignment> getWorkerAssignments(String workcenterCode, Optional<LocalDate> optionalDate);
-    List<WorkerAssignment> findWorkerAssignmentsByWorkcenterIdAndDate(String workcenterCode, LocalDate date);
+    List<WorkerAssignment> findWorkerAssignmentsByWorkcenterCodeAndDate(String workcenterCode, LocalDate date);
 
 }
