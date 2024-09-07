@@ -43,7 +43,6 @@ public class UnresolvedVoucherEntryDTO implements Cloneable {
 
     public static UnresolvedVoucherEntryDTO create(UnresolvedVoucher unresolvedVoucher) {
         return new UnresolvedVoucherEntryDTO(
-//                unresolvedVoucher.getCompanyId()
                 unresolvedVoucher.getAccountSubject().getCode(),
                 unresolvedVoucher.getClient().getCode(),
                 unresolvedVoucher.getVoucherManager().getId(),

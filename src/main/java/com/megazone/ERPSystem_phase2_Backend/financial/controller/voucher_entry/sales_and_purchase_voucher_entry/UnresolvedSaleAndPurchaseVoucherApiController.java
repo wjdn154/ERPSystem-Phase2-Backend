@@ -30,10 +30,11 @@ public class UnresolvedSaleAndPurchaseVoucherApiController {
      * @param dto
      * @return
      */
-    @PostMapping("/api/financial/sale-and-purchase-unresolved-voucher/entry")
-    public ResponseEntity<String> Entry(@RequestBody UnresolvedSaleAndPurchaseVoucherEntryDTO dto) {
+    @PostMapping("/api/financial/sale-and-purchase-unresolved-voucher/entry/{companyId}")
+    public ResponseEntity<String> Entry(@PathVariable("companyId") Long companyId,
+                                        @RequestBody UnresolvedSaleAndPurchaseVoucherEntryDTO dto) {
         UnresolvedSaleAndPurchaseVoucher unresolvedSaleAndPurchaseVoucher =
-                unresolvedSaleAndPurchaseVoucherService.save(dto);
+                unresolvedSaleAndPurchaseVoucherService.save(dto,companyId);
         return unresolvedSaleAndPurchaseVoucher != null ?
                 ResponseEntity.status(HttpStatus.OK).body("등록이 완료되었습니다.") :
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -44,10 +45,11 @@ public class UnresolvedSaleAndPurchaseVoucherApiController {
      * @param requestData
      * @return
      */
-    @PostMapping("/api/financial/sale-end-purchase-unresolved-voucher/shows")
-    public ResponseEntity<UnresolvedSaleAndPurchaseVoucherShowAllDTO> showAll(@RequestBody Map<String, LocalDate> requestData) {
+    @PostMapping("/api/financial/sale-end-purchase-unresolved-voucher/shows/{companyId}")
+    public ResponseEntity<UnresolvedSaleAndPurchaseVoucherShowAllDTO> showAll(@PathVariable("companyId") Long companyId,
+                                                                              @RequestBody Map<String, LocalDate> requestData) {
         LocalDate date = requestData.get("searchDate");
-        List<UnresolvedSaleAndPurchaseVoucher> voucherList = unresolvedSaleAndPurchaseVoucherService.searchAllVoucher(date);
+        List<UnresolvedSaleAndPurchaseVoucher> voucherList = unresolvedSaleAndPurchaseVoucherService.searchAllVoucher(date,companyId);
 
         if(voucherList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -67,10 +69,11 @@ public class UnresolvedSaleAndPurchaseVoucherApiController {
      * @param dto
      * @return
      */
-    @PostMapping("/api/financial/sale-end-purchase-unresolved-voucher/deletes")
-    public ResponseEntity<String> deleteVoucher(@RequestBody UnresolvedSaleAndPurchaseVoucherDeleteDTO dto) {
+    @PostMapping("/api/financial/sale-end-purchase-unresolved-voucher/deletes/{companyId}")
+    public ResponseEntity<String> deleteVoucher(@PathVariable("companyId") Long companyId,
+                                                @RequestBody UnresolvedSaleAndPurchaseVoucherDeleteDTO dto) {
 
-        String message = unresolvedSaleAndPurchaseVoucherService.deleteVoucher(dto);
+        String message = unresolvedSaleAndPurchaseVoucherService.deleteVoucher(dto,companyId);
 
         return (message != null) ?
                 ResponseEntity.status(HttpStatus.OK).body("삭제가 완료되었습니다.") :
@@ -82,10 +85,11 @@ public class UnresolvedSaleAndPurchaseVoucherApiController {
      * @param voucherNumber
      * @return
      */
-    @PostMapping("/api/financial/sale-end-purchase-unresolved-voucher/show/{voucherNumber}")
-    public ResponseEntity<Object> showOne(@PathVariable("voucherNumber") String voucherNumber) {
+    @PostMapping("/api/financial/sale-end-purchase-unresolved-voucher/show/{companyId}/{voucherNumber}")
+    public ResponseEntity<Object> showOne(@PathVariable("companyId") Long companyId,
+                                          @PathVariable("voucherNumber") String voucherNumber) {
         try {
-            List<UnresolvedVoucher> vouchers = unresolvedSaleAndPurchaseVoucherService.searchVoucher(voucherNumber);
+            List<UnresolvedVoucher> vouchers = unresolvedSaleAndPurchaseVoucherService.searchVoucher(voucherNumber,companyId);
 
             if (vouchers == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("등록된 전표가 없습니다.");
@@ -115,10 +119,11 @@ public class UnresolvedSaleAndPurchaseVoucherApiController {
      * @param dto
      * @return
      */
-    @PostMapping("/api/financial/sale-end-purchase-unresolved-voucher/approve")
-    public ResponseEntity<String> voucherApprovalProcessing(@RequestBody UnresolvedSaleAndPurchaseVoucherApprovalDTO dto) {
+    @PostMapping("/api/financial/sale-end-purchase-unresolved-voucher/approve/{companyId}")
+    public ResponseEntity<String> voucherApprovalProcessing(@PathVariable("companyId") Long companyId,
+                                                            @RequestBody UnresolvedSaleAndPurchaseVoucherApprovalDTO dto) {
 
-        List<UnresolvedSaleAndPurchaseVoucher> unresolvedVoucherList = unresolvedSaleAndPurchaseVoucherService.ApprovalProcessing(dto);
+        List<UnresolvedSaleAndPurchaseVoucher> unresolvedVoucherList = unresolvedSaleAndPurchaseVoucherService.ApprovalProcessing(dto,companyId);
 
 
         return (unresolvedVoucherList != null && !unresolvedVoucherList.isEmpty()) ?
