@@ -89,6 +89,12 @@ public class ProductGroupController {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * ID를 통해 제품 그룹 비활성화.
+     *
+     * @param id 비활성화할 제품 그룹의 ID
+     * @return 비활성화 처리 결과를 담은 응답 엔티티
+     */
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<String> deactivateProductGroup(@PathVariable("id") Long id) {
         String result = productGroupService.deactivateProductGroup(id);

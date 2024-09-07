@@ -37,6 +37,7 @@ public class ProductServiceImpl implements ProductService{
 
         return productRepository.findAll().stream()
                 .map(product -> ProductDto.builder()
+                        .id(product.getId())
                         .code(product.getCode())
                         .name(product.getName())
                         .productGroupName(product.getProductGroup() != null ? product.getProductGroup().getName() : null)
@@ -170,7 +171,9 @@ public class ProductServiceImpl implements ProductService{
         return ProductSaveResponseDto.builder()
                 .code(product.getCode())
                 .name(product.getName())
+                .productGroupCode(product.getProductGroup().getCode())
                 .productGroupName(product.getProductGroup().getName())
+                .productionRoutingCode(product.getProductionRouting().getCode())
                 .productionRoutingName(product.getProductionRouting().getName())
                 .standard(product.getStandard())
                 .unit(product.getUnit())

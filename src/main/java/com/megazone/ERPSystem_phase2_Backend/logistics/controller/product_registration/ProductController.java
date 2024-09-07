@@ -85,6 +85,12 @@ public class ProductController {
         }
     }
 
+    /**
+     * 지정된 ID의 제품 삭제
+     *
+     * @param id 삭제할 제품의 ID
+     * @return 결과 메시지를 포함하는 응답 엔티티
+     */
     @DeleteMapping("/delete-product/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Long id){
         try {
@@ -95,5 +101,7 @@ public class ProductController {
                     .body("품목 상제 중 오류가 발생했습니다.");
         }
     }
+
+
 
 }
