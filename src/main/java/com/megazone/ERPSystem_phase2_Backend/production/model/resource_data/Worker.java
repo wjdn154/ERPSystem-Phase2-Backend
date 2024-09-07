@@ -21,17 +21,13 @@ public class Worker {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "workcenter_id")
-    private Workcenter workcenter;       //작업장 테이블 참조 . 작업 배치 (작업 배치 미정이 있을수도 있음)
-
     @Column(nullable = true)
     private String trainingStatue;       //교육이수 여부. (이수/미이수)
 
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "employee_id")
-    private Employee employee;           //인사 기본정보 참조
+    private Employee employee;    //인사 기본정보 참조 (사원번호,작업자 성,이름, 부서, 직위, 직책, 생년월일, 전화번호,고용상태,고용유형,고용일)
     
 
     @OneToOne(fetch = FetchType.LAZY)
