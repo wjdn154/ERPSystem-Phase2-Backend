@@ -24,10 +24,10 @@ public class EquipmentDataController {
     private final EquipmentDataRepository equipmentDataRepository;
 
     //설비 리스트 조회
-    @PostMapping("/equipmentDatas")
-    public ResponseEntity<List<ListEquipmentDataDTO>> getAllEquipmentDataDetails(){
+    @PostMapping("/equipmentDatas/{companyId}")
+    public ResponseEntity<List<ListEquipmentDataDTO>> getAllEquipmentDataDetails(@PathVariable("companyId") Long companyId){
         //서비스에서 모든 설비정보를 가져옴
-        List<ListEquipmentDataDTO> result = equipmentDataService.findAllEquipmentDataDetails();
+        List<ListEquipmentDataDTO> result = equipmentDataService.findAllEquipmentDataDetails(companyId);
 
         return (result != null) ?
                 ResponseEntity.status(HttpStatus.OK).body(result):

@@ -22,7 +22,7 @@ public interface EquipmentDataService {
     void deleteEquipment(Long id);
 
     //설비 리스트 조회
-    List<ListEquipmentDataDTO> findAllEquipmentDataDetails();
+    List<ListEquipmentDataDTO> findAllEquipmentDataDetails(Long id);
 
     //개별 설비 조회
     Optional<EquipmentDataShowDTO> findEquipmentDataDetailById(Long id);

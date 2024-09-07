@@ -29,6 +29,7 @@ public class EquipmentDataShowDTO {
     private String factoryCode;
     private String factoryName;               //설비가 설치된 공장 . 창고 테이블에 있는 공장코드 참조
     private String equipmentImg;                //설비 이미지
+    private Long companyId;
 
     //private LocalDate maintenanceDate;        //마지막 유지보수 날짜
     //private List<MaintenanceHistoryDetailDTO> maintenanceHistoryList;  //해당 설비 유지보수 이력 리스트

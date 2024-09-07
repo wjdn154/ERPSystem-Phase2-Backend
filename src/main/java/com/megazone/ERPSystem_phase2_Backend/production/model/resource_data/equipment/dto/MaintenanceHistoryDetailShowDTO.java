@@ -30,5 +30,4 @@ public class MaintenanceHistoryDetailShowDTO {
     private String title;                         //유지보수 제목
     private String maintenanceDetail;             //유지보수 상세내용
 
-
 }

@@ -28,9 +28,9 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService{
     private final WarehouseRepository warehouseRepository;
     //유지보수 이력 리스트 조회
     @Override
-    public List<ListMaintenanceHistoryDTO> findAllMaintenanceHistory() {
+    public List<ListMaintenanceHistoryDTO> findAllMaintenanceHistory(Long companyId) {
 
-        return maintenanceHistoryRepository.findAll().stream()
+        return maintenanceHistoryRepository.findAllByCompanyIdOrderByMaintenanceDateDesc(companyId).stream()
                 .map(maintenanceHistory -> new ListMaintenanceHistoryDTO(
                         maintenanceHistory.getId(),
                         maintenanceHistory.getEquipment().getEquipmentName(),

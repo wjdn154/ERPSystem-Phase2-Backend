@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface MaintenanceHistoryService {
 
     //유지보수 이력 리스트 조회
-    List<ListMaintenanceHistoryDTO> findAllMaintenanceHistory();
+    List<ListMaintenanceHistoryDTO> findAllMaintenanceHistory(Long companyId);
 
     //유지보수 이력 상세 조회
     Optional<MaintenanceHistoryDetailShowDTO> findMaintenanceHistoryById(Long id);

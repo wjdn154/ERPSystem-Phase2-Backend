@@ -87,11 +87,10 @@ public class EquipmentDataServiceImpl implements EquipmentDataService{
 
     //설비 리스트 조회
     @Override
-    public List<ListEquipmentDataDTO> findAllEquipmentDataDetails() {
+    public List<ListEquipmentDataDTO> findAllEquipmentDataDetails(Long companyId) {
 
-        return equipmentDataRepository.findAll().stream()
-                .map(equipmentData ->
-                        new ListEquipmentDataDTO(
+        return equipmentDataRepository.findAllByCompanyIdOrderByPurchaseDateDesc(companyId).stream()
+                .map(equipmentData -> new ListEquipmentDataDTO(
                                     equipmentData.getId(),
                                     equipmentData.getEquipmentNum(),
                                     equipmentData.getEquipmentName(),
@@ -99,7 +98,8 @@ public class EquipmentDataServiceImpl implements EquipmentDataService{
                                     equipmentData.getEquipmentType(),
                                     equipmentData.getOperationStatus(),
                                     equipmentData.getFactory().getName(),
-                                    equipmentData.getWorkcenter().getName()
+                                    equipmentData.getWorkcenter().getName(),
+                                    equipmentData.getCompany().getId()
                             )
                 ).collect(Collectors.toList());
         }
