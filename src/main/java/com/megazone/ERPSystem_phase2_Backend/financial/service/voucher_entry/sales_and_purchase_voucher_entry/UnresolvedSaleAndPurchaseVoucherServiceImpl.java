@@ -2,13 +2,13 @@ package com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.sa
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubject;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.UnresolvedVoucherEntryDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherKind;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.JournalEntry;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.ResolvedSaleAndPurchaseVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.VatType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.UnresolvedSaleAndPurchaseVoucherApprovalDTO;
@@ -17,6 +17,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.TransactionType;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.journalEntry.JournalEntryRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.unresolveSaleAndPurchaseVoucher.UnresolvedSaleAndPurchaseVoucherRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.vatType.VatTypeRepository;
@@ -32,7 +33,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
@@ -50,25 +50,30 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
     private final ResolvedSaleAndPurchaseVoucherService resolvedSaleAndPurchaseVoucherService;
     private final EmployeeRepository employeeRepository;
     private final ClientRepository clientRepository;
+    private final CompanyRepository companyRepository;
 
     @Override
-    public UnresolvedSaleAndPurchaseVoucher save(UnresolvedSaleAndPurchaseVoucherEntryDTO dto) {
-        return unresolvedSaleAndPurchaseVoucherRepository.save(create(dto));
+    public UnresolvedSaleAndPurchaseVoucher save(UnresolvedSaleAndPurchaseVoucherEntryDTO dto,Long companyId) {
+        return unresolvedSaleAndPurchaseVoucherRepository.save(create(dto,companyId));
     }
 
-    public UnresolvedSaleAndPurchaseVoucher create(UnresolvedSaleAndPurchaseVoucherEntryDTO dto) {
+    public UnresolvedSaleAndPurchaseVoucher create(UnresolvedSaleAndPurchaseVoucherEntryDTO dto,Long companyId) {
         BigDecimal supplyAmount = createSupplyAmount(dto.getQuantity(),dto.getUnitPrice());
 
         VatType vatType = vatTypeRepository.findByCode(dto.getVatTypeCode());
+        // 분개유형설정 회사별로 달라야함
         JournalEntry journalEntry = journalEntryRepository.findByCodeAndTransactionType(dto.getJournalEntryCode(),vatType.getTransactionType());
         Client client = clientRepository.findByCode(dto.getClientCode()).orElseThrow(
                 () -> new RuntimeException("해당하는 코드의 거래처가 없습니다."));
         Employee employee = employeeRepository.findById(dto.getVoucherManagerId()).orElseThrow(
                 () -> new RuntimeException("해당하는 사원이 없습니다."));
+        Company company = companyRepository.findById(companyId).orElseThrow(
+                () -> new RuntimeException("해당하는 회사가 없습니다."));
 
         UnresolvedSaleAndPurchaseVoucher unresolvedSaleAndPurchaseVoucher = UnresolvedSaleAndPurchaseVoucher.builder()
                 .vatType(vatType)
                 .journalEntry(journalEntry)
+                .company(company)
                 .client(client)
                 .voucherManager(employee)
                 .voucherDate(dto.getVoucherDate())
@@ -106,11 +111,13 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
 
     }
 
-    public UnresolvedVoucher createAutoUnresolvedVoucher(AccountSubject accountSubject, VoucherType voucherType,
+    public UnresolvedVoucher createAutoUnresolvedVoucher(Company company,
+                                                         AccountSubject accountSubject, VoucherType voucherType,
                                                          Employee employee, Client client,
                                                          String transactionDescription, BigDecimal debitAmount, BigDecimal creditAmount,
                                                          LocalDate voucherDate) {
         return UnresolvedVoucher.builder()
+                .company(company)
                 .accountSubject(accountSubject)
                 .client(client)
                 .voucherType(voucherType)
@@ -151,6 +158,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
         AccountSubject vatTypeAccountSubject = voucher.getVatType().getAccountSubject();
         Client client = voucher.getClient();
         Employee employee = voucher.getVoucherManager();
+        Company company = voucher.getCompany();
         BigDecimal supplyAmount = createSupplyAmount(voucher.getQuantity(), voucher.getUnitPrice());
         BigDecimal vatAmount = createVatAmount(supplyAmount,voucher.getVatType().getTaxRate());
         String itemName = voucher.getItemName();
@@ -162,7 +170,9 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
         switch (voucher.getJournalEntry().getCode()) {
             case "1":
                 if (transactionType == TransactionType.SALES) {
-                    unresolvedVoucherList.add(createAutoUnresolvedVoucher(journalEntryAccountSubject,
+                    unresolvedVoucherList.add(createAutoUnresolvedVoucher(
+                            company,
+                            journalEntryAccountSubject,
                             VoucherType.DEPOSIT,
                             employee,
                             client,
@@ -172,7 +182,9 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                             date));
 
                     if (vatAmount.compareTo(BigDecimal.ZERO) > 0) {
-                        unresolvedVoucherList.add(createAutoUnresolvedVoucher(vatTypeAccountSubject,
+                        unresolvedVoucherList.add(createAutoUnresolvedVoucher(
+                                company,
+                                vatTypeAccountSubject,
                                 VoucherType.DEPOSIT,
                                 employee,
                                 client,
@@ -182,7 +194,9 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                                 date));
                     }
                 } else if (transactionType == TransactionType.PURCHASE) {
-                    unresolvedVoucherList.add(createAutoUnresolvedVoucher(journalEntryAccountSubject,
+                    unresolvedVoucherList.add(createAutoUnresolvedVoucher(
+                            company,
+                            journalEntryAccountSubject,
                             VoucherType.WITHDRAWAL,
                             employee,
                             client,
@@ -193,6 +207,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
 
                     if (vatAmount.compareTo(BigDecimal.ZERO) > 0) {
                         unresolvedVoucherList.add(createAutoUnresolvedVoucher(
+                                company,
                                 vatTypeAccountSubject,
                                 VoucherType.WITHDRAWAL,
                                 employee,
@@ -209,6 +224,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                 // 분개유형 처리
                 if (transactionType == TransactionType.SALES) {
                     unresolvedVoucherList.add(createAutoUnresolvedVoucher(
+                            company,
                             journalEntryAccountSubject,
                             VoucherType.DEBIT,
                             employee,
@@ -221,6 +237,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                     // 매출or매입 + 필수분개유형 처리
                     unresolvedVoucherList.add(
                             createAutoUnresolvedVoucher(
+                                    company,
                                     journalEntryRepository.findByCodeAndTransactionType("1", transactionType)
                                             .getJournalEntryTypeSetup().getAccountSubject(),
                                     VoucherType.CREDIT,
@@ -234,6 +251,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                     // 부가세 분개처리
                     if (vatAmount.compareTo(BigDecimal.ZERO) > 0) {
                         unresolvedVoucherList.add(createAutoUnresolvedVoucher(
+                                company,
                                 vatTypeAccountSubject,
                                 VoucherType.CREDIT,
                                 employee,
@@ -245,7 +263,9 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                     }
                 } else if (transactionType == TransactionType.PURCHASE) {
 
-                        unresolvedVoucherList.add(createAutoUnresolvedVoucher(journalEntryAccountSubject,
+                        unresolvedVoucherList.add(createAutoUnresolvedVoucher(
+                                company,
+                                journalEntryAccountSubject,
                                 VoucherType.CREDIT,
                                 employee,
                                 client,
@@ -257,6 +277,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
 
                         unresolvedVoucherList.add(
                                 createAutoUnresolvedVoucher(
+                                        company,
                                         journalEntryRepository.findByCodeAndTransactionType("1", transactionType)
                                                 .getJournalEntryTypeSetup().getAccountSubject(),
                                         VoucherType.DEBIT,
@@ -269,6 +290,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
 
                         if (vatAmount.compareTo(BigDecimal.ZERO) > 0) {
                             unresolvedVoucherList.add(createAutoUnresolvedVoucher(
+                                    company,
                                     vatTypeAccountSubject,
                                     VoucherType.DEBIT,
                                     employee,
@@ -284,16 +306,16 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
 
         unresolvedVoucherEntryDTOS = unresolvedVoucherList.stream().map((changeVoucher) -> { return UnresolvedVoucherEntryDTO.create(changeVoucher);})
                 .toList();
-        return unresolvedVoucherEntryService.unresolvedVoucherEntry(unresolvedVoucherEntryDTOS);
+        return unresolvedVoucherEntryService.unresolvedVoucherEntry(company.getId(),unresolvedVoucherEntryDTOS);
     }
 
     @Override
-    public List<UnresolvedSaleAndPurchaseVoucher> searchAllVoucher(LocalDate date) {
+    public List<UnresolvedSaleAndPurchaseVoucher> searchAllVoucher(LocalDate date, Long companyId) {
 
         List<UnresolvedSaleAndPurchaseVoucher> voucherList = new ArrayList<UnresolvedSaleAndPurchaseVoucher>();
 
         try {
-            voucherList = unresolvedSaleAndPurchaseVoucherRepository.findByVoucherDateOrderByVoucherNumberAsc(date);
+            voucherList = unresolvedSaleAndPurchaseVoucherRepository.findByVoucherDateAndCompany_IdOrderByVoucherNumberAsc(date,companyId);
             if(voucherList.isEmpty()) {
                 throw new NoSuchElementException("해당 날짜에 등록된 미결전표가 없습니다.");
             }
@@ -305,12 +327,12 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
     }
 
     @Override
-    public String deleteVoucher(UnresolvedSaleAndPurchaseVoucherDeleteDTO dto) {
+    public String deleteVoucher(UnresolvedSaleAndPurchaseVoucherDeleteDTO dto,Long companyId) {
         try {
             if(true) { // 전표의 담당자 이거나, 승인권자면 삭제가능 << 기능구현 필요
                 dto.getSearchVoucherNumList().forEach((voucherNumber) -> {
-                                    unresolvedSaleAndPurchaseVoucherRepository.deleteByVoucherNumberAndVoucherDate(
-                                            voucherNumber, dto.getSearchDate());});
+                                    unresolvedSaleAndPurchaseVoucherRepository.deleteByVoucherNumberAndVoucherDateAndCompany_id(
+                                            voucherNumber, dto.getSearchDate(),companyId);});
             }
         }
         catch (Exception e) {
@@ -343,14 +365,14 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
     }
 
     @Override
-    public List<UnresolvedVoucher> searchVoucher(String voucherNumber) {
-        return unresolvedSaleAndPurchaseVoucherRepository.findByVoucherNumber(voucherNumber).getUnresolvedVouchers();
+    public List<UnresolvedVoucher> searchVoucher(String voucherNumber, Long companyId) {
+        return unresolvedSaleAndPurchaseVoucherRepository.findByCompany_idAndVoucherNumber(companyId,voucherNumber).getUnresolvedVouchers();
     }
 
     @Override
-    public List<UnresolvedSaleAndPurchaseVoucher> ApprovalProcessing(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto) {
+    public List<UnresolvedSaleAndPurchaseVoucher> ApprovalProcessing(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto, Long companyId) {
 
-        List<UnresolvedSaleAndPurchaseVoucher> unresolvedVoucherList = unresolvedSaleAndPurchaseVoucherRepository.findApprovalTypeVoucher(dto);
+        List<UnresolvedSaleAndPurchaseVoucher> unresolvedVoucherList = unresolvedSaleAndPurchaseVoucherRepository.findApprovalTypeVoucher(dto,companyId);
         try {
             if(dto.getApprovalStatus().equals(ApprovalStatus.PENDING)) {
                 throw new IllegalArgumentException("승인 대기 상태로는 변경할 수 없습니다.");

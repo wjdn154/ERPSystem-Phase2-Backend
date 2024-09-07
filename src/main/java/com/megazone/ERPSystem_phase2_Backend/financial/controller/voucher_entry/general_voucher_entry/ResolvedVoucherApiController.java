@@ -8,6 +8,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.gen
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,11 +28,12 @@ public class ResolvedVoucherApiController {
      * @param requestData
      * @return
      */
-    @PostMapping("/api/financial/general-voucher-entry/showResolvedVoucherEntry")
-    public ResponseEntity<ResolvedVoucherShowAllDTO> showAllResolvedVoucher(@RequestBody Map<String, LocalDate> requestData) {
+    @PostMapping("/api/financial/general-voucher-entry/showResolvedVoucherEntry/{companyId}")
+    public ResponseEntity<ResolvedVoucherShowAllDTO> showAllResolvedVoucher(@PathVariable("companyId") Long companyId,
+                                                                            @RequestBody Map<String, LocalDate> requestData) {
         LocalDate date = requestData.get("searchDate");
 
-        List<ResolvedVoucher> resolvedVoucherList = resolvedVoucherService.resolvedVoucherAllSearch(date);
+        List<ResolvedVoucher> resolvedVoucherList = resolvedVoucherService.resolvedVoucherAllSearch(companyId, date);
 
         List<ResolvedVoucherShowDTO> showDtos = resolvedVoucherList.stream().map(
                 (voucher) -> { return ResolvedVoucherShowDTO.create(voucher); }).toList();
@@ -40,8 +42,8 @@ public class ResolvedVoucherApiController {
                 date,
                 showDtos,
                 BigDecimal.ZERO,  // 현재잔액 기능 구현필요 <<<<
-                resolvedVoucherService.totalDebit(date),
-                resolvedVoucherService.totalCredit(date)
+                resolvedVoucherService.totalDebit(date,companyId),
+                resolvedVoucherService.totalCredit(date,companyId)
         );
 
         return (!resolvedVoucherList.isEmpty()) ?
@@ -54,10 +56,11 @@ public class ResolvedVoucherApiController {
      * @param dto
      * @return
      */
-    @PostMapping("api/financial/general-voucher-entry/deleteResolvedVoucher")
-    public ResponseEntity<String> deleteResolvedVoucher(@RequestBody ResolvedVoucherDeleteDTO dto) {
+    @PostMapping("api/financial/general-voucher-entry/deleteResolvedVoucher/{companyId}")
+    public ResponseEntity<String> deleteResolvedVoucher(@PathVariable("companyId") Long companyId,
+                                                        @RequestBody ResolvedVoucherDeleteDTO dto) {
 
-        List<Long> resolvedVoucherList = resolvedVoucherService.deleteResolvedVoucher(dto);
+        List<Long> resolvedVoucherList = resolvedVoucherService.deleteResolvedVoucher(dto,companyId);
 
         return (!resolvedVoucherList.isEmpty()) ?
                 ResponseEntity.status(HttpStatus.OK).body("삭제가 완료되었습니다.") :

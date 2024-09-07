@@ -25,10 +25,10 @@ public class UnresolvedVoucherApiController {
      * @param dto 사용자가 인터페이스에서 등록한 dataList객체
      * @return 정상적으로 등록되었으면, 저장된 객체 dto로 변환해 반환, 저장되지 않았으면 BAD_REQUEST 반환
      */
-    @PostMapping("/api/financial/general-voucher-entry/unresolvedVoucherEntry")
-    public ResponseEntity<List<UnresolvedVoucherEntryDTO>> unresolvedVoucherEntry(@RequestBody List<UnresolvedVoucherEntryDTO> dto) {
+    @PostMapping("/api/financial/general-voucher-entry/unresolvedVoucherEntry/{companyId}")
+    public ResponseEntity<List<UnresolvedVoucherEntryDTO>> unresolvedVoucherEntry(@PathVariable("companyId") Long companyId, @RequestBody List<UnresolvedVoucherEntryDTO> dto) {
 
-        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.unresolvedVoucherEntry(dto);
+        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.unresolvedVoucherEntry(companyId,dto);
 
         List<UnresolvedVoucherEntryDTO> entryDtoList = new ArrayList<UnresolvedVoucherEntryDTO>();
 
@@ -46,27 +46,31 @@ public class UnresolvedVoucherApiController {
      * @param requestData 사용자가 조회할 날짜 정보
      * @return 해당 날짜조건에 만족하는 DTO 생성후 반환 ( 차변,대변 합계 / 미결전표List / 조건날짜 )
      */
-    @PostMapping("api/financial/general-voucher-entry/showUnresolvedVoucher")
-    public ResponseEntity<UnresolvedVoucherShowAllDTO> showUnresolvedVoucher(@RequestBody Map<String,LocalDate> requestData) {
-        LocalDate date = requestData.get("searchDate");
+    @PostMapping("api/financial/general-voucher-entry/showUnresolvedVoucher/{companyId}")
+    public ResponseEntity<Object> showUnresolvedVoucher(@PathVariable("companyId") Long companyId,
+                                                        @RequestBody Map<String,LocalDate> requestData) {
 
-        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.unresolvedVoucherAllSearch(date);
+        try{
+            LocalDate date = requestData.get("searchDate");
 
-        List<UnresolvedVoucherShowDTO> showDtos = unresolvedVoucherList.stream().map(
-                (voucher) -> { return UnresolvedVoucherShowDTO.create(voucher); }).toList();
+            List<UnresolvedVoucher> vouchers = unresolvedVoucherEntryService.unresolvedVoucherAllSearch(companyId,date);
 
-        UnresolvedVoucherShowAllDTO showAllDto = UnresolvedVoucherShowAllDTO.create(
-                date,
-                showDtos,
-                BigDecimal.ZERO,  // 현재잔액 기능 구현필요 <<<<
-                unresolvedVoucherEntryService.totalDebit(date),
-                unresolvedVoucherEntryService.totalCredit(date)
-                );
+            List<UnresolvedVoucherShowDTO> showDtos = vouchers.stream().map(
+                    UnresolvedVoucherShowDTO::create).toList();
 
+            UnresolvedVoucherShowAllDTO showAllDto = UnresolvedVoucherShowAllDTO.create(
+                    date,
+                    showDtos,
+                    BigDecimal.ZERO,  // 현재잔액 기능 구현필요 <<<<
+                    unresolvedVoucherEntryService.totalDebit(vouchers),
+                    unresolvedVoucherEntryService.totalCredit(vouchers)
+            );
+            return ResponseEntity.status(HttpStatus.OK).body(showAllDto);
+        }
+        catch(Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("등록된 전표가 없습니다.");
+        }
 
-        return (!unresolvedVoucherList.isEmpty()) ?
-                ResponseEntity.status(HttpStatus.OK).body(showAllDto) :
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
 
@@ -75,10 +79,11 @@ public class UnresolvedVoucherApiController {
      * @param dto  사용자가 입력한 날짜, 체크한 전표번호, 담당자Id 전송객체
      * @return 삭제 완료, 미완료 정보 출력
      */
-    @PostMapping("api/financial/general-voucher-entry/deleteUnresolvedVoucher")
-    public ResponseEntity<String> deleteUnresolvedVoucher(@RequestBody UnresolvedVoucherDeleteDTO dto) {
+    @PostMapping("api/financial/general-voucher-entry/deleteUnresolvedVoucher/{companyId}")
+    public ResponseEntity<String> deleteUnresolvedVoucher(@PathVariable("companyId") Long companyId,
+                                                          @RequestBody UnresolvedVoucherDeleteDTO dto) {
 
-        List<Long> unresolvedVoucherList = unresolvedVoucherEntryService.deleteUnresolvedVoucher(dto);
+        List<Long> unresolvedVoucherList = unresolvedVoucherEntryService.deleteUnresolvedVoucher(companyId,dto);
 
         return (!unresolvedVoucherList.isEmpty()) ?
                 ResponseEntity.status(HttpStatus.OK).body("삭제가 완료되었습니다.") :
@@ -90,10 +95,11 @@ public class UnresolvedVoucherApiController {
      * @param dto
      * @return
      */
-    @PostMapping("api/financial/general-voucher-entry/approvalUnresolvedVoucher")
-    public ResponseEntity<String> voucherApprovalProcessing(@RequestBody UnresolvedVoucherApprovalDTO dto) {
+    @PostMapping("api/financial/general-voucher-entry/approvalUnresolvedVoucher/{companyId}")
+    public ResponseEntity<String> voucherApprovalProcessing(@PathVariable("companyId") Long companyId,
+                                                            @RequestBody UnresolvedVoucherApprovalDTO dto) {
 
-        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.voucherApprovalProcessing(dto);
+        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.voucherApprovalProcessing(companyId,dto);
 
 
         return (unresolvedVoucherList != null && !unresolvedVoucherList.isEmpty()) ?
