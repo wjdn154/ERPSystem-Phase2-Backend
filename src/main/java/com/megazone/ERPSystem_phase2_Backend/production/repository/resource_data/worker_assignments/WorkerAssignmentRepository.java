@@ -5,8 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Optional;
 
 public interface WorkerAssignmentRepository extends JpaRepository<WorkerAssignment, Long>, WorkerAssignmentRepositoryCustom {
-    Collection<Object> findByAssignmentDate(LocalDate currentDate);
+    Optional<WorkerAssignment> findByAssignmentDate(LocalDate currentDate);
 
 }

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table
 @NoArgsConstructor
@@ -25,7 +27,10 @@ public class ShiftType {
     private String description;  // 교대 근무에 대한 설명
 
     @Column(nullable = false)
-    private Long duration;  // 근무 시간 (시간 단위)
+    private Double duration;  // 근무 시간 (시간 단위)
+
+    @OneToMany(mappedBy = "shiftType")
+    private List<WorkerAssignment> workerAssignments;
 }
 
 /**

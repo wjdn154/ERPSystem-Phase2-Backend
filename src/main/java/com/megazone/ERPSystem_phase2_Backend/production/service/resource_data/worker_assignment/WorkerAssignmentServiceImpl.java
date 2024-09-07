@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class WorkerAssignmentServiceImpl {
+public class WorkerAssignmentServiceImpl implements WorkerAssignmentService {
 
     private final WorkerAssignmentRepository workerAssignmentRepository;
     private final ShiftTypeRepository shiftTypeRepository;
@@ -33,7 +33,7 @@ public class WorkerAssignmentServiceImpl {
     // 전체 작업장별 배정된 인원수 조회
     public List<WorkerAssignmentDTO> getAllWorkcentersWorkerCount() {
         return workerAssignmentRepository.findWorkerCountByWorkcenter().stream()
-                .map(this::convertToDTO)
+                .map(this::convertToDTO)  // convertToDTO를 WorkerAssignment에 대해 적용
                 .collect(Collectors.toList());
     }
 
@@ -86,6 +86,8 @@ public class WorkerAssignmentServiceImpl {
         return WorkerAssignmentDTO.builder()
                 .id(assignment.getId())
                 .workerId(assignment.getWorker().getId())
+                .workerName(assignment.getWorker().getEmployee().getLastName() + " " + assignment.getWorker().getEmployee().getFirstName())
+                .employeeNumber(assignment.getWorker().getEmployee().getEmployeeNumber())
                 .workcenterCode(assignment.getWorkcenter().getCode())
                 .assignmentDate(assignment.getAssignmentDate())
                 .shift(assignment.getShiftType().getName())

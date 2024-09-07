@@ -113,6 +113,11 @@ public class WorkcenterServiceImpl implements WorkcenterService {
     }
 
     @Override
+    public Optional<WorkcenterDTO> findById(Long id) {
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<WorkcenterDTO> deleteByCode(String code) {
         Workcenter workcenter = workcenterRepository.findByCode(code)
                 .orElseThrow(() -> new EntityNotFoundException("해당 작업장코드를 찾을 수 없습니다: " + code));
@@ -143,7 +148,6 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 
     @Override
     public Workcenter save(WorkcenterDTO workcenterDTO) {
-        // DTO의 값들을 출력해 확인
         System.out.println("save WorkcenterDTO");
         System.out.println("Workcenter Code: " + workcenterDTO.getCode());
         System.out.println("Workcenter Name: " + workcenterDTO.getName());
@@ -187,12 +191,12 @@ public class WorkcenterServiceImpl implements WorkcenterService {
     }
 
     public int getTodayWorkerCount(String workcenterCode, LocalDate currentDate) {
-        List<WorkerAssignment> todayAssignments = workcenterRepository.getWorkerAssignments(workcenterCode, Optional.of(currentDate));
+        List<WorkerAssignment> todayAssignments = workerAssignmentRepository.getWorkerAssignments(workcenterCode, Optional.of(currentDate));
         return todayAssignments.size(); // 작업자 수 반환
     }
 
     public List<WorkerAssignmentDTO> getTodayWorkers(String workcenterCode, LocalDate currentDate) {
-        List<WorkerAssignment> todayAssignments = workcenterRepository.getWorkerAssignments(workcenterCode, Optional.of(currentDate));
+        List<WorkerAssignment> todayAssignments = workerAssignmentRepository.getWorkerAssignments(workcenterCode, Optional.of(currentDate));
         return todayAssignments.stream()
                 .map(assignment -> {
                     Employee employee = assignment.getWorker().getEmployee();
@@ -200,7 +204,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                             .workerId(employee.getId())
                             .workerName(employee.getLastName() + employee.getFirstName()) // 이름
                             .employeeNumber(employee.getEmployeeNumber())  // 사원번호
-                            .shift(assignment.getShift())  // 교대 정보
+                            .shift(assignment.getShiftType().getName())  // 교대 정보에서 getName() 호출
                             .assignmentDate(assignment.getAssignmentDate())  // 배정 날짜
                             .workcenterCode(assignment.getWorkcenter().getCode())  // 작업장 코드
                             .build();
@@ -210,9 +214,9 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 
 
 
-//    public List<String> getTodayWorkers(Long workcenterId, LocalDate date) {
+//    public List<String> getTodayWorkers(String workcenterCode, LocalDate date) {
 //        // 오늘의 작업자 배정 이력 조회
-//        List<WorkerAssignment> todayAssignments = workcenterRepository.getWorkerAssignments(workcenterId, Optional.of(LocalDate.now()));
+//        List<WorkerAssignment> todayAssignments = workcenterRepository.getWorkerAssignments(workcenterCode, Optional.of(LocalDate.now()));
 //
 //        // 배정된 작업자가 있으면 해당 정보를 리스트로 반환, 없으면 빈 리스트 반환
 //        return todayAssignments.stream()
@@ -231,7 +235,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
             WorkcenterDTO workcenterDTO = convertToDTO(workcenter);
 
             LocalDate today = LocalDate.now();
-            List<String> todayWorkers = getTodayWorkers(workcenter.getCode(), today);
+            List<WorkerAssignmentDTO> todayWorkers = getTodayWorkers(workcenter.getCode(), today);
             workcenterDTO.setTodayWorkers(todayWorkers);
 
             return workcenterDTO;
@@ -331,7 +335,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                 .workerId(workerAssignment.getWorker().getId())  // 작업자 ID
                 .workcenterCode(workerAssignment.getWorkcenter().getCode()) // 작업장 CODE
                 .assignmentDate(workerAssignment.getAssignmentDate())  // 배정 날짜
-                .shift(workerAssignment.getShift())  // 교대조 정보
+                .shift(workerAssignment.getShiftType().toString())  // 교대조 정보
                 .build();
     }
 }

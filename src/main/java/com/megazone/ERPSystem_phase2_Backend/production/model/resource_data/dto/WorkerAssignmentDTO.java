@@ -14,6 +14,8 @@ import java.time.LocalDate;
 public class WorkerAssignmentDTO {
     private Long id;
     private Long workerId; // 작업자
+    private String workerName;
+    private String employeeNumber;
     private String workcenterCode; // 작업장
     private LocalDate assignmentDate; // 배정일
     private String shift; // 교대
