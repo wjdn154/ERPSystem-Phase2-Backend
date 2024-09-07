@@ -18,12 +18,12 @@ public class JournalEntryTypeSetupServiceImpl implements JournalEntryTypeSetupSe
 
 
     @Override
-    public String updateEntryTypeSetup(JournalEntryTypeSetupUpdateDTO dto) {
+    public String updateEntryTypeSetup(Long company_id, JournalEntryTypeSetupUpdateDTO dto) {
         JournalEntryTypeSetup journalEntryTypeSetup = journalEntryTypeSetupRepository.findById(
                 dto.getJournalEntryTypeId()).orElse(null);
 
 
-        AccountSubject accountSubject = accountSubjectRepository.findByCode(
+        AccountSubject accountSubject = accountSubjectRepository.findByCompanyIdAndCode(company_id,
                 dto.getAccountSubjectCode()).orElse(null);
 
         if (journalEntryTypeSetup != null && accountSubject != null) {
