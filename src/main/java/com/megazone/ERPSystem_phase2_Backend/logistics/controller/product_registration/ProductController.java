@@ -25,10 +25,10 @@ public class ProductController {
      * 품목등록 리스트 조회
      * @return 등록된 모든 품목을 반환
      */
-    @PostMapping("/product-list")
-    public ResponseEntity<List<ProductDto>> getAllProductList() {
+    @PostMapping("/product-list/{company_id}")
+    public ResponseEntity<List<ProductDto>> getAllProductList(@PathVariable("company_id") Long company_id) {
         // 서비스에서 등록된 모든 품목 리스트를 가져옴
-        List<ProductDto> response = productService.findAllProducts();
+        List<ProductDto> response = productService.findAllProducts(company_id);
         // HTTP 200 상태로 응답 반환
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -120,7 +120,7 @@ public class ProductController {
      * @param id 다시 재사용할 품목의 ID
      * @return 재사용할 처리 결과를 담은 응답 엔티티
      */
-    @PutMapping("/{id}/reactivate")
+    @PutMapping("/{id}/reactivate-product")
     public ResponseEntity<String> reactivateProductGroup(@PathVariable("id") Long id) {
         String result = productService.reactivateProduct(id);
         return ResponseEntity.ok(result);

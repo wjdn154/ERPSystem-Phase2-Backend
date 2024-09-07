@@ -33,9 +33,9 @@ public class ProductServiceImpl implements ProductService{
      * 리펙토링 해야함
      */
     @Override
-    public List<ProductDto> findAllProducts() {
+    public List<ProductDto> findAllProducts(Long company_id) {
 
-        return productRepository.findAll().stream()
+        return productRepository.findAllByCompany_id(company_id).stream()
                 .map(product -> ProductDto.builder()
                         .id(product.getId())
                         .code(product.getCode())

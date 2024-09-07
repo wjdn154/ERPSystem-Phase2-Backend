@@ -1,26 +1,35 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProductionRouting;
 import jakarta.persistence.*;
 import lombok.*;
-
 
 /**
  * 품목 테이블
  * 품목에 대한 정보가 있는 테이블 - 품목 등록 시 사용
  */
 @Entity(name = "product")
-@Table(name = "product")
+@Table(
+        name = "product",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"company_id", "code"})
+        }
+)
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
-
     // 고유 식별자
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // 회사 참조
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
 
     // 품목 코드
     @Column(nullable = false)
@@ -28,7 +37,7 @@ public class Product {
 
     // 품목 그룹 코드 참조
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_group_id", referencedColumnName = "id")
+    @JoinColumn(name = "product_group_id")
     private ProductGroup productGroup;
 
     // 생산 라우팅 매핑
