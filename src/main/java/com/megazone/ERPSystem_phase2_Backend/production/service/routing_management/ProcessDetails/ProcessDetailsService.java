@@ -19,5 +19,5 @@ public interface ProcessDetailsService {
     Optional<ProcessDetailsDTO> getProcessDetailsByCode(String code);
 
     List<ProcessDetailsDTO> findByNameContaining(String name);
-    
+
 }

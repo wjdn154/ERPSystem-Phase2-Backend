@@ -32,6 +32,7 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
      */
     @Override
     public List<AccountSubjectDTO> findAllAccountSubject() {
+
         return queryFactory
                 .select(Projections.fields(AccountSubjectDTO.class,
                         accountSubject.id.as("id"), // ID 필드 추가
@@ -41,23 +42,26 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
                         accountSubject.name.as("name"), // 계정과목 이름
                         accountSubject.englishName.as("englishName"), // 영문명
                         accountSubject.natureCode.as("natureCode"), // 성격 코드
-                        QNature.nature.name.max().as("natureName"), // 성격명
                         accountSubject.entryType.as("entryType"), // 차대구분 (enum)
                         accountSubject.increaseDecreaseType.as("increaseDecreaseType"), // 증감구분 (enum)
                         accountSubject.isActive.as("isActive"), // 활성화 여부
                         accountSubject.modificationType.as("modificationType"), // 수정 가능 여부
                         accountSubject.isForeignCurrency.as("isForeignCurrency"), // 외화 사용 여부
-                        accountSubject.isBusinessCar.as("isBusinessCar") // 업무용 차량 여부
+                        accountSubject.isBusinessCar.as("isBusinessCar"), // 업무용 차량 여부
+                        QNature.nature.name.as("natureName") // 성격명
                 ))
                 .from(accountSubject)
-                .leftJoin(QNature.nature).on(accountSubject.natureCode.eq(QNature.nature.code))
+                .leftJoin(QNature.nature).on(accountSubject.natureCode.eq(QNature.nature.code)
+                        .and(QNature.nature.structure.eq(accountSubject.structure)))
                 .groupBy(accountSubject.id, accountSubject.structure.code, accountSubject.parent.code, accountSubject.code,
                         accountSubject.name, accountSubject.englishName, accountSubject.natureCode,
                         accountSubject.entryType, accountSubject.increaseDecreaseType, accountSubject.isActive,
-                        accountSubject.modificationType, accountSubject.isForeignCurrency, accountSubject.isBusinessCar)
+                        accountSubject.modificationType, accountSubject.isForeignCurrency, accountSubject.isBusinessCar,
+                        QNature.nature.name)
                 .orderBy(Expressions.stringTemplate("LENGTH({0})", accountSubject.code).asc(),
                         accountSubject.code.asc())
                 .fetch();
+
     }
 
     /**
@@ -120,6 +124,21 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
                 ))
                 .fetch();
 
+        List<NatureDTO> natures = queryFactory.
+                select(Projections.fields(NatureDTO.class,
+                        nature.id, // ID
+                        nature.code, // 성격 코드
+                        nature.name // 성격명
+                ))
+                .from(nature)
+                .where(nature.structure.id.eq(
+                        queryFactory.select(accountSubject.structure.id)
+                                .from(accountSubject)
+                                .where(accountSubject.code.eq(code))
+                                .fetchOne()
+                ))
+                .fetch();
+
         // 계정과목 상세 정보 조회
         AccountSubjectDetailDTO result = queryFactory
                 .select(Projections.fields(AccountSubjectDetailDTO.class,
@@ -149,6 +168,7 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
         if (result != null) {
             // 조회된 적요들과 표준 재무제표, 성격을 DTO에 설정함
             result.setStandardFinancialStatement(standardFinancialStatements);
+            result.setNatures(natures);
             result.setCashMemos(cashMemos);
             result.setTransferMemos(transferMemos);
             result.setFixedMemos(fixedMemos);

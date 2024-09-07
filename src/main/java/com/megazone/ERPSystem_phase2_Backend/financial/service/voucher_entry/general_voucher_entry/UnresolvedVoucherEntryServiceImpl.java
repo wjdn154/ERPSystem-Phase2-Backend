@@ -9,9 +9,11 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.gener
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.unresolvedVoucher.UnresolvedVoucherRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.unresolveSaleAndPurchaseVoucher.UnresolvedSaleAndPurchaseVoucherRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucherService;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,10 +35,12 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
     private final ResolvedVoucherService resolvedVoucherService;
     private final UnresolvedVoucherRepository unresolvedVoucherRepository;
     private final AccountSubjectRepository accountSubjectRepository;
-    
+    private final EmployeeRepository employeeRepository;
+    private final UnresolvedSaleAndPurchaseVoucherRepository unresolvedSaleAndPurchaseVoucherRepository;
+    private final ClientRepository clientRepository;
+
     // 현금 자동분개 시 필요한 계정과목 코드
     private final String cashAccountCode = "101";
-    private final UnresolvedSaleAndPurchaseVoucherRepository unresolvedSaleAndPurchaseVoucherRepository;
 
     // 거래처 레포지토리
     // 적요 레포지토리
@@ -134,9 +138,10 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
 //                .userCompanyId(dto.getUserCompany())
                 .accountSubject(accountSubjectRepository.findByCode(dto.getAccountSubjectCode()).orElseThrow(
                         () -> new IllegalArgumentException("해당하는 코드의 계정과목이 없습니다.")))
-//                .vendor(dto.getVendor())
-//                .description(dto.getDescription())
-//                .voucherManager(dto.getVoucherManager())
+                .client(clientRepository.findByCode(dto.getClientCode()).orElseThrow(
+                        () -> new IllegalArgumentException("해당하는 코드의 거래처가 없습니다.")))
+                .voucherManager(employeeRepository.findById(dto.getVoucherManagerId()).orElseThrow(
+                        () -> new IllegalArgumentException("해당하는 사원이 없습니다.")))
                 .transactionDescription(dto.getTransactionDescription())
                 .voucherNumber(voucherNum)
                 .voucherType(dto.getVoucherType())
