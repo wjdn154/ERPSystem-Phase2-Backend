@@ -52,7 +52,7 @@ public class JwtUtil {
     // 사용자 이름을 포함한 JWT 토큰 생성
     public String generateToken(String username, String userNickname) {
         Map<String, Object> claims = new HashMap<>();  // 기본 클레임 설정 (비어 있음)
-        claims.put("userNickName", userNickname);
+        claims.put("userNickname", userNickname);
         return createToken(claims, username);  // 토큰 생성
     }
 
