@@ -44,11 +44,11 @@ public class MaintenanceHistoryController {
     }
 
     //유지보수 이력 상세 등록
-    @PostMapping("/maintenanceHistory/createMaintenance")
-    public ResponseEntity<MaintenanceHistoryDetailShowDTO> saveMaintenanceHistory(@RequestBody MaintenanceHistoryDetailDTO dto){
+    @PostMapping("/maintenanceHistory/createMaintenance/{companyId}")
+    public ResponseEntity<MaintenanceHistoryDetailShowDTO> saveMaintenanceHistory(@PathVariable Long companyId, @RequestBody MaintenanceHistoryDetailDTO dto){
 
         //서비스에서 유지보수 이력 상세정보를 등록함.
-        Optional<MaintenanceHistoryDetailShowDTO> result = maintenanceHistoryService.saveMaintenanceHistory(dto);
+        Optional<MaintenanceHistoryDetailShowDTO> result = maintenanceHistoryService.saveMaintenanceHistory(companyId,dto);
 
         //등록 실패시 500 상태 반환
         return result.map(ResponseEntity :: ok)

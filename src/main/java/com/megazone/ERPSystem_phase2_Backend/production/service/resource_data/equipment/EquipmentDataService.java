@@ -1,7 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.equipment;
 
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataUpdateDTO;
@@ -13,7 +12,7 @@ import java.util.Optional;
 public interface EquipmentDataService {
 
     //설비 생성
-    Optional<EquipmentDataShowDTO> saveEquipment(EquipmentDataDTO dto);
+    Optional<EquipmentDataShowDTO> saveEquipment(Long companyId, EquipmentDataDTO dto);
 
     //설비 수정
     Optional<EquipmentDataUpdateDTO> updateEquipment(Long id, EquipmentDataUpdateDTO dto);
