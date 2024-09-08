@@ -1,10 +1,9 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users;
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersShowDTO;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,7 +20,7 @@ public class UsersRepositoryImpl implements UsersRepositoryCustom{
     }
 
     @Override
-    public List<UsersDTO> findAllUsers() {
+    public List<UsersShowDTO> findAllUsers() {
         return List.of();
     }
 

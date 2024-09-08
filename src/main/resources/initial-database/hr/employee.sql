@@ -1,7 +1,7 @@
-INSERT INTO employee_department (department_code, department_name, location, manger_id) VALUES
-('0002','영업부','1층','1'),
-('0003','생산부','2층','2'),
-('0004','물류부','3층','3');
+INSERT INTO employee_department (department_code, department_name, location) VALUES
+('0002','영업부','1층'),
+('0003','생산부','2층'),
+('0004','물류부','3층');
 
 INSERT INTO employee_position (description, position_name) VALUES
 ('Responsible for managing team and overseeing projects.', 'Manager'),
@@ -9,9 +9,9 @@ INSERT INTO employee_position (description, position_name) VALUES
 ('Develops and maintains software applications.', 'Senior Developer');
 
 INSERT INTO employee_job_title (description, title_name) VALUES
-('1','1'),
-('2','2'),
-('3','3');
+('1','강사 개발자'),
+('2','백엔드 개발자'),
+('3','프론트 개발자');
 
 -- INSERT INTO employee (date_of_birth, hire_date, is_household_head, department_id, job_title_id, position_id, address, email, employee_number, first_name, last_name, phone_number, profile_picture, employment_status, employment_type) VALUES
 -- ('2000-07-20','2024-08-20',TRUE,1, 1,  1,'부산','ckacl2512@naver.com','0001','김', '민성','010-2512-9361','x','ACTIVE', 'INTERN'),
