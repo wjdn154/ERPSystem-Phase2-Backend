@@ -4,10 +4,10 @@ INSERT INTO equipment_data (cost,install_date,purchase_date,factory_id,workcente
     (100,'2022-02-02','2022-02-03',1,1,'설비 사진1','조립설비1','PRD-EM-001','삼성','MZ1','ASSEMBLY','BEFORE_OPERATION',1);
 
 INSERT INTO equipment_data (cost,install_date,purchase_date,factory_id,workcenter_id,equipment_img,equipment_name,equipment_num,manufacturer,model_name,equipment_type,operation_status,company_id) VALUES
-    (1000,'2022-02-02','2022-02-04',2,1,'설비 사진2','제조설비2','PRD-EM-002','LG','MZ','ASSEMBLY','BEFORE_OPERATION',1);
+    (1000,'2022-02-02','2022-02-04',2,1,'설비 사진2','제조설비2','PRD-EM1-002','LG','MZ','ASSEMBLY','BEFORE_OPERATION',1);
 
 INSERT INTO equipment_data (cost,install_date,purchase_date,factory_id,workcenter_id,equipment_img,equipment_name,equipment_num,manufacturer,model_name,equipment_type,operation_status,company_id) VALUES
-    (1000,'2022-02-02','2022-02-04',1,1,'설비 사진3','제조설비3','PRD-EM-003','YG','MZ','ASSEMBLY','BEFORE_OPERATION',1);
+    (1000,'2022-02-02','2022-02-04',1,1,'설비 사진3','제조설비3','PRD-EM1-003','YG','MZ','ASSEMBLY','BEFORE_OPERATION',1);
 
 INSERT INTO equipment_data (cost,install_date,purchase_date,factory_id,workcenter_id,equipment_img,equipment_name,equipment_num,manufacturer,model_name,equipment_type,operation_status,company_id) VALUES
     (100000,'2022-02-02','2022-02-04',1,1,'설비 사진4','제조설비4','PRD-EM1-004','현대','MZ','ASSEMBLY','BEFORE_OPERATION',1);
