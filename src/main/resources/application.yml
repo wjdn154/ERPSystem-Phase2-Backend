@@ -52,6 +52,7 @@ spring:
 
         - classpath:initial-database/logistics/warehouse.sql
         - classpath:initial-database/hr/employee.sql
+        #- classpath:initial-database/hr/role.sql
         - classpath:initial-database/hr/users.sql
         - classpath:initial-database/logistics/product_group.sql
 #        - classpath:initial-database/logistics/product.sql

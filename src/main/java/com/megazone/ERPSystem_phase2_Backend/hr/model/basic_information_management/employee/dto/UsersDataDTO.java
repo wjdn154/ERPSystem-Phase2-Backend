@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class RolePermissionDTO {
+@AllArgsConstructor
+public class UsersDataDTO {
     private Long id;
-    private RoleDTO role;
-    private PermissionDTO permission;
+    private String username;
+    private String email;
 }

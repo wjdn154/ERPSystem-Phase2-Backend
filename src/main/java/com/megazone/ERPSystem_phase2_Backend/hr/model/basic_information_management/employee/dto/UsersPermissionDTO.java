@@ -7,10 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsersDTO {
+public class UsersPermissionDTO {
     private Long id;
-    private RoleDTO role;
-    private Long employeeId;
+    private String usersId;
     private String userName;
-    private String password;
+    private Long employeeId;
+    private String employeeNumber;
+    private String employeeName;
+    private Long permissionId;
 }

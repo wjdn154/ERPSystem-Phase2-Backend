@@ -4,17 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeCertificateDTO {
+@AllArgsConstructor
+public class UsersShowDTO {
+    private Long id;
+    private String usersId;
+    private String userName;
+    private String employeeNumber;
     private String firstName;
     private String lastName;
-    private String positionName;
-    private Date hireDate;
-    private Date issueDate;
-    private boolean isCurrentlyEmployed;
-
+    private String password;
+    private String permissionId;
 }
