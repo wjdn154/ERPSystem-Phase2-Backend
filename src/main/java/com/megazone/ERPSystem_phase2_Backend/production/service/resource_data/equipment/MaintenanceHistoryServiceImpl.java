@@ -1,5 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.equipment;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.MaintenanceHistory;
@@ -24,8 +26,7 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService{
 
     private final MaintenanceHistoryRepository maintenanceHistoryRepository;
     private final EquipmentDataRepository equipmentDataRepository;
-    private final WorkcenterRepository workcenterRepository;
-    private final WarehouseRepository warehouseRepository;
+    private final CompanyRepository companyRepository;
     //유지보수 이력 리스트 조회
     @Override
     public List<ListMaintenanceHistoryDTO> findAllMaintenanceHistory(Long companyId) {
@@ -33,6 +34,7 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService{
         return maintenanceHistoryRepository.findAllByCompanyIdOrderByMaintenanceDateDesc(companyId).stream()
                 .map(maintenanceHistory -> new ListMaintenanceHistoryDTO(
                         maintenanceHistory.getId(),
+                        maintenanceHistory.getEquipment().getEquipmentNum(),
                         maintenanceHistory.getEquipment().getEquipmentName(),
                         maintenanceHistory.getMaintenanceManager(),
                         maintenanceHistory.getMaintenanceType(),
@@ -60,10 +62,10 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService{
 
     //유지보수 이력 상세 등록
     @Override
-    public Optional<MaintenanceHistoryDetailShowDTO> saveMaintenanceHistory(MaintenanceHistoryDetailDTO dto) {
+    public Optional<MaintenanceHistoryDetailShowDTO> saveMaintenanceHistory(Long companyId, MaintenanceHistoryDetailDTO dto) {
 
         //dto를 엔티티로 변환
-        MaintenanceHistory maintenanceHistory = maintenanceHistoryToEntity(dto);
+        MaintenanceHistory maintenanceHistory = maintenanceHistoryToEntity(companyId, dto);
 
         //엔티티 저장
         MaintenanceHistory savedMaintenanceHistory = maintenanceHistoryRepository.save(maintenanceHistory);
@@ -144,7 +146,7 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService{
     }
 
     //maintenanceHistoryDetailDTO를 maintenanceHistory 엔티티로 변환
-    private MaintenanceHistory maintenanceHistoryToEntity(MaintenanceHistoryDetailDTO dto) {
+    private MaintenanceHistory maintenanceHistoryToEntity(Long companyId, MaintenanceHistoryDetailDTO dto) {
         MaintenanceHistory maintenanceHistory = new MaintenanceHistory();
 
         maintenanceHistory.setMaintenanceManager(dto.getMaintenanceManager());
@@ -160,6 +162,10 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService{
         EquipmentData equipmentData = equipmentDataRepository.findByEquipmentNum(dto.getEquipmentNum())
                 .orElseThrow(() -> new IllegalArgumentException("해당 설비번호를 조회할 수 없습니다."));
         maintenanceHistory.setEquipment(equipmentData);
+
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException(companyId +"에 해당하는 회사 아이디를 찾을 수 없습니다."));
+        maintenanceHistory.setCompany(company);
 
         return maintenanceHistory;
     }

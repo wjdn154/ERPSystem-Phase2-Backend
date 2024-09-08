@@ -47,11 +47,11 @@ public class EquipmentDataController {
     }
 
     //설비 상세 정보 등록
-    @PostMapping("/equipmentData/createEquipment")
-    public ResponseEntity<EquipmentDataShowDTO> saveEquipmentData(@RequestBody EquipmentDataDTO dto){
+    @PostMapping("/equipmentData/createEquipment/{companyId}")
+    public ResponseEntity<EquipmentDataShowDTO> saveEquipmentData(@PathVariable("companyId") Long companyId, @RequestBody EquipmentDataDTO dto){
 
         //서비스에 해당 아이디의 설비 상세 정보를 등록함.
-        Optional<EquipmentDataShowDTO> result = equipmentDataService.saveEquipment(dto);
+        Optional<EquipmentDataShowDTO> result = equipmentDataService.saveEquipment(companyId,dto);
 
         return result.map(ResponseEntity::ok)
                 .orElseGet( () -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
