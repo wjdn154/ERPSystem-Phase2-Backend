@@ -8,5 +8,6 @@ import java.util.List;
 public interface WarehouseRepositoryCustom {
     List<WarehouseResponseDTO> findAllWarehouse();
 
+
     WarehouseDetailDTO getWarehouseDetail(Long id);
 }
