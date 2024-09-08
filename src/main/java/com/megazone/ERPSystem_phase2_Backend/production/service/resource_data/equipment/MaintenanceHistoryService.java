@@ -19,7 +19,7 @@ public interface MaintenanceHistoryService {
     void deleteMaintenanceHistory(Long id);
 
     //유지보수 이력 상세 등록
-    Optional<MaintenanceHistoryDetailShowDTO> saveMaintenanceHistory(MaintenanceHistoryDetailDTO dto);
+    Optional<MaintenanceHistoryDetailShowDTO> saveMaintenanceHistory(Long companyId, MaintenanceHistoryDetailDTO dto);
 
     //유지보수 이력 상세 수정
     Optional<MaintenanceHistoryDetailShowDTO> updateMaintenanceHistory(Long id, MaintenanceHistoryDetailShowDTO dto);

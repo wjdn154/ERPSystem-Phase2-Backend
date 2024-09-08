@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,6 +20,10 @@ public class HierarchyGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
 
     @Column(name = "hierarchy_group_code", nullable = false)
     private String hierarchyGroupCode;

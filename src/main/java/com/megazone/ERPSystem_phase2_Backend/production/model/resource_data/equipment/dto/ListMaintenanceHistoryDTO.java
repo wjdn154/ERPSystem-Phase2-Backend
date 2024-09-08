@@ -13,7 +13,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ListMaintenanceHistoryDTO {
 
-    private Long id;                              //pk
+    private Long id;//pk
+    private String equipmentNum;                  //설비 번호
     private String equipmentDataName;             //설비명
     private String maintenanceManager;            //담당자
     private MaintenanceType maintenanceType;      //유지보수 유형

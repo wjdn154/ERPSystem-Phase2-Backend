@@ -12,8 +12,7 @@ public class DepartmentCreateDTO {
     private String departmentCode;
     private String departmentName;
     private String departmentLocation;
-    private String managerId;
 
-    public DepartmentCreateDTO(Long id) {
-    }
+
+
 }

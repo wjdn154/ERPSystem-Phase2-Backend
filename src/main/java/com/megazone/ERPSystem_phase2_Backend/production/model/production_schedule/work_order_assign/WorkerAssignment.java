@@ -43,4 +43,5 @@ public class WorkerAssignment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "work_order_id", nullable = false)
     private WorkOrder workOrder;
+
 }
