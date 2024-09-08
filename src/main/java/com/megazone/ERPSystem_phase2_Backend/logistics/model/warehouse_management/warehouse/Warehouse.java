@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.enums.WarehouseType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
@@ -23,6 +24,10 @@ public class Warehouse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false) // 고유식별자
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
 
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", nullable = true) // 주소정보
