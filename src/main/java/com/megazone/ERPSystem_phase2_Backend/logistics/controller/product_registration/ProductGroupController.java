@@ -24,9 +24,8 @@ public class ProductGroupController {
      * @return 해당 회사의 모든 품목 그룹 리스트를 반환
      */
     @PostMapping("/{company_id}")
-    public ResponseEntity<List<ProductGroupDto>> getAllProductGroups(
-            @PathVariable("company_id") Long companyId,
-            @RequestParam(value = "search", required = false) String searchTerm) {
+    public ResponseEntity<List<ProductGroupDto>> getAllProductGroups(@PathVariable("company_id") Long companyId,
+                                                                     @RequestParam(value = "search", required = false) String searchTerm) {
 
         List<ProductGroupDto> response = productGroupService.findAllProductGroups(companyId, searchTerm);
         return ResponseEntity.ok(response);
@@ -37,10 +36,12 @@ public class ProductGroupController {
      * @param productGroupDto
      * @return 등록된 품목 그룹의 DTO를 반환
      */
-    @PostMapping("/save")
-    public ResponseEntity<ProductGroupDto> saveProductGroup(@RequestBody ProductGroupDto productGroupDto) {
+    @PostMapping("/{company_id}/save")
+    public ResponseEntity<ProductGroupDto> saveProductGroup(@PathVariable("company_id") Long companyId,
+                                                            @RequestBody ProductGroupDto productGroupDto) {
+
         try {
-            return productGroupService.saveProductGroup(productGroupDto)
+            return productGroupService.saveProductGroup(companyId, productGroupDto)
                     .map(ResponseEntity::ok)
                     .orElseGet(() -> ResponseEntity.badRequest().build());
         } catch (IllegalArgumentException e) {
@@ -56,11 +57,12 @@ public class ProductGroupController {
      * @param productGroupDto 업데이트할 품목 그룹 정보
      * @return 업데이트된 품목 그룹의 DTO를 반환
      */
-    @PutMapping("/update/{id}")
-    public ResponseEntity<ProductGroupDto> updateProductGroup(@PathVariable("id") Long id,
+    @PutMapping("/{company_id}/update/{id}")
+    public ResponseEntity<ProductGroupDto> updateProductGroup(@PathVariable("company_id") Long companyId,
+                                                              @PathVariable("id") Long id,
                                                               @RequestBody ProductGroupDto productGroupDto) {
         try{
-            return productGroupService.updateProduct(id, productGroupDto)
+            return productGroupService.updateProduct(companyId, id, productGroupDto)
                     .map(ResponseEntity::ok)
                     .orElseGet(() -> ResponseEntity.notFound().build());
         } catch (IllegalArgumentException e) {
@@ -75,9 +77,10 @@ public class ProductGroupController {
      * @param id 삭제할 품목 그룹의 id
      * @return 품목 그룹 삭제 성공 여부를 문자열로 반환
      */
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteProductGroup(@PathVariable("id") Long id) {
-        String result = productGroupService.deleteProductGroup(id);
+    @DeleteMapping("/{company_id}/delete/{id}")
+    public ResponseEntity<String> deleteProductGroup(@PathVariable("company_id") Long companyId,
+                                                     @PathVariable("id") Long id) {
+        String result = productGroupService.deleteProductGroup(companyId, id);
         return ResponseEntity.ok(result);
     }
 
@@ -87,9 +90,10 @@ public class ProductGroupController {
      * @param id 사용중단할 품목 그룹의 ID
      * @return 사용중단 처리 결과를 담은 응답 엔티티
      */
-    @PutMapping("/{id}/deactivate")
-    public ResponseEntity<String> deactivateProductGroup(@PathVariable("id") Long id) {
-        String result = productGroupService.deactivateProductGroup(id);
+    @PutMapping("/{company_id}/{id}/deactivate")
+    public ResponseEntity<String> deactivateProductGroup(@PathVariable("company_id") Long companyId,
+                                                         @PathVariable("id") Long id) {
+        String result = productGroupService.deactivateProductGroup(companyId, id);
         return ResponseEntity.ok(result);
     }
 
@@ -99,9 +103,10 @@ public class ProductGroupController {
      * @param id 다시 재사용할 품목 그룹의 ID
      * @return 재사용할 처리 결과를 담은 응답 엔티티
      */
-    @PutMapping("/{id}/reactivate")
-    public ResponseEntity<String> reactivateProductGroup(@PathVariable("id") Long id) {
-        String result = productGroupService.reactivateProductGroup(id);
+    @PutMapping("/{company_id}/{id}/reactivate")
+    public ResponseEntity<String> reactivateProductGroup(@PathVariable("company_id") Long companyId,
+                                                         @PathVariable("id") Long id) {
+        String result = productGroupService.reactivateProductGroup(companyId, id);
         return ResponseEntity.ok(result);
     }
 
