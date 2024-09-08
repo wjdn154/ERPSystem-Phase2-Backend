@@ -15,12 +15,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UnresolvedSaleAndPurchaseVoucherRepository extends JpaRepository<UnresolvedSaleAndPurchaseVoucher, Long>,UnresolvedSaleAndPurchaseVoucherRepositoryCustom {
-    Optional<UnresolvedSaleAndPurchaseVoucher> findFirstByVoucherDateOrderByIdDesc(LocalDate date);
+    Optional<UnresolvedSaleAndPurchaseVoucher> findFirstByVoucherDateAndCompany_idOrderByIdDesc(LocalDate date,Long companyId);
 
-    List<UnresolvedSaleAndPurchaseVoucher> findByVoucherDateOrderByVoucherNumberAsc(LocalDate date);
+    List<UnresolvedSaleAndPurchaseVoucher> findByVoucherDateAndCompany_IdOrderByVoucherNumberAsc(LocalDate date, Long companyId);
 
-    UnresolvedSaleAndPurchaseVoucher findByVoucherNumber(String voucherNumber);
+    UnresolvedSaleAndPurchaseVoucher findByCompany_idAndVoucherNumber(Long companyId, String voucherNumber);
 
     // 담당자 ID 추가필요.
-    void deleteByVoucherNumberAndVoucherDate(String voucherNumber, LocalDate searchDate);
+    void deleteByVoucherNumberAndVoucherDateAndCompany_id(String voucherNumber, LocalDate searchDate,Long companyId);
 }

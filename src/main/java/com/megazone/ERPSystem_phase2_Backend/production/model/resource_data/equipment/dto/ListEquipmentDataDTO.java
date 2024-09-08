@@ -20,6 +20,6 @@ public class ListEquipmentDataDTO {
     private OperationStatus operationStatus;    //가동 상태
     private String factoryName;           //공장이름
     private String workcenterName;        //작업장 이름
-
+    private Long companyId;
 
 }

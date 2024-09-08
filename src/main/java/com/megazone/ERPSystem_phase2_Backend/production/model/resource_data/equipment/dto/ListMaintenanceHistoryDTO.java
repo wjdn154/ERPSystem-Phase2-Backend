@@ -22,5 +22,4 @@ public class ListMaintenanceHistoryDTO {
     private String workcenterName;                //설비엔티티의 작업장 이름
     private String factoryName;                   //설비엔티티의 공장 이름
 
-
 }

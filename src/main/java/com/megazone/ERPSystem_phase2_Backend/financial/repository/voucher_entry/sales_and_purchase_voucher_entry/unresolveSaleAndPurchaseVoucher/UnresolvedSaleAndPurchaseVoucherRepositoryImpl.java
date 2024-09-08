@@ -25,15 +25,18 @@ public class UnresolvedSaleAndPurchaseVoucherRepositoryImpl implements Unresolve
 
 
     @Override
-    public List<UnresolvedSaleAndPurchaseVoucher> findApprovalTypeVoucher(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto) {
+    public List<UnresolvedSaleAndPurchaseVoucher> findApprovalTypeVoucher(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto,
+                                                                          Long companyId) {
         QUnresolvedSaleAndPurchaseVoucher qUnresolvedVoucher = QUnresolvedSaleAndPurchaseVoucher.unresolvedSaleAndPurchaseVoucher;
 
-        return dto.getSearchVoucherNumList().stream()
-                .flatMap(voucherNum -> queryFactory.selectFrom(qUnresolvedVoucher)
-                        .where(qUnresolvedVoucher.voucherDate.eq(dto.getSearchDate())
-                                .and(qUnresolvedVoucher.voucherNumber.eq(voucherNum))
-                                .and(qUnresolvedVoucher.approvalStatus.eq(ApprovalStatus.PENDING)))
-                        .fetch().stream())
-                .collect(Collectors.toList());
+        List<UnresolvedSaleAndPurchaseVoucher> results = queryFactory.selectFrom(qUnresolvedVoucher)
+                .where(qUnresolvedVoucher.voucherDate.eq(dto.getSearchDate())
+                        .and(qUnresolvedVoucher.voucherNumber.in(dto.getSearchVoucherNumList()))
+                        .and(qUnresolvedVoucher.company.id.eq(companyId))
+                        .and(qUnresolvedVoucher.approvalStatus.eq(ApprovalStatus.PENDING)))
+
+                .fetch();
+
+        return results;
     }
 }

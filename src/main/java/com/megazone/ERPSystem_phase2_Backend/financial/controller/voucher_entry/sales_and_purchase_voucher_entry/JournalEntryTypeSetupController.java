@@ -35,9 +35,9 @@ public class JournalEntryTypeSetupController {
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
 
-    @PostMapping("api/financial/journal_entry_type_setup/update")
-    public ResponseEntity<String> updateEntrySetup(@RequestBody JournalEntryTypeSetupUpdateDTO dto) {
-        String message = journalEntryTypeSetupService.updateEntryTypeSetup(dto);
+    @PostMapping("/api/financial/journal_entry_type_setup/update")
+    public ResponseEntity<String> updateEntrySetup(Long company_id, @RequestBody JournalEntryTypeSetupUpdateDTO dto) {
+        String message = journalEntryTypeSetupService.updateEntryTypeSetup(company_id, dto);
 
         return message != null ?
                 ResponseEntity.status(HttpStatus.OK).body(message) :

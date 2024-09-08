@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
 @Table(name = "employee")
 @NoArgsConstructor
 @AllArgsConstructor
-//@ToString(exclude = "department, position, jobTitle")
+@ToString(exclude = {"department", "position", "jobTitle", "performance", "transfer", "users", "bankAccount", "leaves", "attendance"})
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

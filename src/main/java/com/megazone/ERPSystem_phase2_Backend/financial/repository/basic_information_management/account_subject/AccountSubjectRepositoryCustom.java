@@ -12,11 +12,11 @@ public interface AccountSubjectRepositoryCustom {
      * @param code 계정과목 코드
      * @return 해당 코드의 계정과목 상세 정보를 Optional로 반환함.
      */
-    Optional<AccountSubjectDetailDTO> findAccountSubjectDetailByCode(String code);
+    Optional<AccountSubjectDetailDTO> findAccountSubjectDetailByCode(Long company_id, String code);
 
     /**
      * 모든 계정과목을 조회함.
      * @return 모든 계정과목의 정보를 리스트로 반환함.
      */
-    List<AccountSubjectDTO> findAllAccountSubject();
+    List<AccountSubjectDTO> findAllAccountSubject(Long company_id);
 }

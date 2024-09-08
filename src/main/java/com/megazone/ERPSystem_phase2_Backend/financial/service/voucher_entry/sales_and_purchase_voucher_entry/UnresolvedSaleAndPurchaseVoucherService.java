@@ -13,21 +13,21 @@ import java.util.List;
 import java.util.function.Function;
 
 public interface UnresolvedSaleAndPurchaseVoucherService {
-    UnresolvedSaleAndPurchaseVoucher save(UnresolvedSaleAndPurchaseVoucherEntryDTO dto);
+    UnresolvedSaleAndPurchaseVoucher save(UnresolvedSaleAndPurchaseVoucherEntryDTO dto, Long companyId);
 
-//    String CreateVoucherNumber(LocalDate voucherDate);
+    List<UnresolvedSaleAndPurchaseVoucher> searchAllVoucher(LocalDate date,Long companyId);
 
-    List<UnresolvedSaleAndPurchaseVoucher> searchAllVoucher(LocalDate date);
-
-    String deleteVoucher(UnresolvedSaleAndPurchaseVoucherDeleteDTO dto);
+    String deleteVoucher(UnresolvedSaleAndPurchaseVoucherDeleteDTO dto,Long companyId);
 
     BigDecimal totalDebit(List<UnresolvedVoucher> vouchers);
 
     BigDecimal totalCredit(List<UnresolvedVoucher> vouchers);
 
-    List<UnresolvedVoucher> searchVoucher(String voucherNumber);
-
     BigDecimal calculateTotalAmount(List<UnresolvedVoucher> vouchers, Function<UnresolvedVoucher, BigDecimal> amount);
 
-    List<UnresolvedSaleAndPurchaseVoucher> ApprovalProcessing(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto);
+//    List<UnresolvedVoucher> searchVoucher(String voucherNumber);
+
+    List<UnresolvedVoucher> searchVoucher(String voucherNumber, Long companyId);
+
+    List<UnresolvedSaleAndPurchaseVoucher> ApprovalProcessing(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto,Long companyId);
 }

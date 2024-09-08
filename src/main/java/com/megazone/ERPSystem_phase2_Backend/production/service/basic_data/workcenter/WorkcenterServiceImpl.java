@@ -7,15 +7,13 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_managemen
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.WorkcenterDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.WorkerAssignment;
-import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.WorkerAssignmentDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkerAssignment;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProcessDetails;
-import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.dto.ProcessDetailsDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.resource_data.equipment.EquipmentDataRepository;
-import com.megazone.ERPSystem_phase2_Backend.production.repository.resource_data.worker_assignments.WorkerAssignmentsRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.work_order_assign.worker_assignment.WorkerAssignmentRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.routing_management.ProcessDetails.ProcessDetailsRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +37,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
     private final WarehouseRepository warehouseRepository;
     private final ProcessDetailsRepository processDetailsRepository;
     private final EquipmentDataRepository equipmentDataRepository;
-    private final WorkerAssignmentsRepository workerAssignmentsRepository;
+    private final WorkerAssignmentRepository workerAssignmentRepository;
 
     // DTO로 변환하는 메서드
     private WorkcenterDTO convertToDTO(Workcenter workcenter) {
@@ -71,6 +69,19 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 
     // Entity로 변환하는 메서드
     private Workcenter convertToEntity(WorkcenterDTO workcenterDTO) {
+
+//        // DTO의 값들을 출력해 확인
+//        System.out.println("Converting DTO to Entity");
+//        System.out.println("Workcenter Code: " + workcenterDTO.getCode());
+//        System.out.println("Workcenter Name: " + workcenterDTO.getName());
+//        System.out.println("Workcenter Type: " + workcenterDTO.getWorkcenterType()); // 문제의 필드 확인
+//        System.out.println("Process Code: " + workcenterDTO.getProcessCode());
+//        System.out.println("Factory Code: " + workcenterDTO.getFactoryCode());
+//
+//        System.out.println("Equipment Ids: " + workcenterDTO.getEquipmentIds());
+//        System.out.println("WorkerAssignment Ids: " + workcenterDTO.getWorkerAssignmentIds());
+//        System.out.println("TodayWorkers: " + workcenterDTO.getTodayWorkers());
+
         return Workcenter.builder()
                 .code(workcenterDTO.getCode())
                 .name(workcenterDTO.getName())
@@ -94,10 +105,16 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 
                 .workerAssignments(Optional.ofNullable(workcenterDTO.getWorkerAssignmentIds())
                         .orElseGet(ArrayList::new).stream()
-                        .map(id -> workerAssignmentsRepository.findById(id)
+                        .map(id -> workerAssignmentRepository.findById(id)
                                 .orElseThrow(() -> new RuntimeException("작업자배정이력ID를 찾을 수 없습니다: " + id)))
                         .collect(Collectors.toList()))
+
                 .build();
+    }
+
+    @Override
+    public Optional<WorkcenterDTO> findById(Long id) {
+        return Optional.empty();
     }
 
     @Override
@@ -131,6 +148,18 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 
     @Override
     public Workcenter save(WorkcenterDTO workcenterDTO) {
+        System.out.println("save WorkcenterDTO");
+        System.out.println("Workcenter Code: " + workcenterDTO.getCode());
+        System.out.println("Workcenter Name: " + workcenterDTO.getName());
+        System.out.println("Workcenter Type: " + workcenterDTO.getWorkcenterType()); // 문제의 필드 확인
+        System.out.println("Process Code: " + workcenterDTO.getProcessCode());
+        System.out.println("Factory Code: " + workcenterDTO.getFactoryCode());
+
+        System.out.println("Equipment Ids: " + workcenterDTO.getEquipmentIds());
+        System.out.println("WorkerAssignment Ids: " + workcenterDTO.getWorkerAssignmentIds());
+        System.out.println("TodayWorkers: " + workcenterDTO.getTodayWorkers());
+
+
         // 작업장 코드 중복 확인
         if (workcenterRepository.findByCode(workcenterDTO.getCode()).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 코드입니다: " + workcenterDTO.getCode());
@@ -143,7 +172,6 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 
     @Override
     public List<WorkcenterDTO> findAll() {
-
         LocalDate today = LocalDate.now();
         List<Workcenter> workcenters = workcenterRepository.findAllWithDetails();
 
@@ -151,40 +179,88 @@ public class WorkcenterServiceImpl implements WorkcenterService {
         return workcenters.stream().map(workcenter -> {
             WorkcenterDTO workcenterDTO = convertToDTO(workcenter);
 
-            // 오늘의 작업자 배정 이력 조회
-            List<WorkerAssignment> todayAssignments = workcenterRepository.findTodayWorkerAssignmentsByWorkcenterId(workcenter.getId(), today);
+            // 오늘의 작업자 명단 가져오기
+            List<WorkerAssignmentDTO> todayWorkers = getTodayWorkers(workcenter.getCode(), today);
 
-            // 배정된 작업자가 있으면 해당 정보를 DTO에 추가, 없으면 DTO의 setTodayWorkers가 기본값을 처리
-            List<String> todayWorkers = todayAssignments.stream()
-                    .map(assignment -> {
-                        Employee employee = assignment.getWorker().getEmployee();
-                        return employee.getLastName() + employee.getFirstName() + " (" + employee.getEmployeeNumber() + ")";
-                    })
-                    .collect(Collectors.toList());
-
-            workcenterDTO.setTodayWorkers(todayWorkers); // 기본값은 DTO에서 처리
+            // 오늘의 작업자 수 가져오기
+            int todayWorkerCount = getTodayWorkerCount(workcenter.getCode(), today);
+            workcenterDTO.setTodayWorkers(todayWorkers); // 오늘의 작업자 리스트 설정
 
             return workcenterDTO;
         }).collect(Collectors.toList());
     }
 
+    public int getTodayWorkerCount(String workcenterCode, LocalDate currentDate) {
+        List<WorkerAssignment> todayAssignments = workerAssignmentRepository.getWorkerAssignments(workcenterCode, Optional.of(currentDate));
+        return todayAssignments.size(); // 작업자 수 반환
+    }
 
+    public List<WorkerAssignmentDTO> getTodayWorkers(String workcenterCode, LocalDate currentDate) {
+        List<WorkerAssignment> todayAssignments = workerAssignmentRepository.getWorkerAssignments(workcenterCode, Optional.of(currentDate));
+        return todayAssignments.stream()
+                .map(assignment -> {
+                    Employee employee = assignment.getWorker().getEmployee();
+                    return WorkerAssignmentDTO.builder()
+                            .workerId(employee.getId())
+                            .workerName(employee.getLastName() + employee.getFirstName()) // 이름
+                            .employeeNumber(employee.getEmployeeNumber())  // 사원번호
+                            .shift(assignment.getShiftType().getName())  // 교대 정보에서 getName() 호출
+                            .assignmentDate(assignment.getAssignmentDate())  // 배정 날짜
+                            .workcenterCode(assignment.getWorkcenter().getCode())  // 작업장 코드
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+
+
+
+//    public List<String> getTodayWorkers(String workcenterCode, LocalDate date) {
+//        // 오늘의 작업자 배정 이력 조회
+//        List<WorkerAssignment> todayAssignments = workcenterRepository.getWorkerAssignments(workcenterCode, Optional.of(LocalDate.now()));
+//
+//        // 배정된 작업자가 있으면 해당 정보를 리스트로 반환, 없으면 빈 리스트 반환
+//        return todayAssignments.stream()
+//                .map(assignment -> {
+//                    Employee employee = assignment.getWorker().getEmployee();
+//                    return employee.getLastName() + employee.getFirstName() + " (" + employee.getEmployeeNumber() + ")";
+//                })
+//                .collect(Collectors.toList());
+//    }
+
+
+
+    @Override
+    public Optional<WorkcenterDTO> findByCode(String code) {
+        return workcenterRepository.findByCode(code).map(workcenter -> {
+            WorkcenterDTO workcenterDTO = convertToDTO(workcenter);
+
+            LocalDate today = LocalDate.now();
+            List<WorkerAssignmentDTO> todayWorkers = getTodayWorkers(workcenter.getCode(), today);
+            workcenterDTO.setTodayWorkers(todayWorkers);
+
+            return workcenterDTO;
+        });
+    }
+
+
+//    @Override
+//    public Optional<WorkcenterDTO> findById(Long id) {
+//        return workcenterRepository.findById(id).map(workcenter -> {
+//            WorkcenterDTO workcenterDTO = convertToDTO(workcenter);
+//
+//            LocalDate today = LocalDate.now();
+//            List<String> todayWorkers = getTodayWorkers(workcenter.getId(), today);
+//            workcenterDTO.setTodayWorkers(todayWorkers);
+//
+//            return workcenterDTO;
+//        });
+//    }
 
     @Override
     public List<WorkcenterDTO> findByNameContaining(String name) {
         return workcenterRepository.findByNameContaining(name).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public Optional<WorkcenterDTO> findByCode(String code) {
-        return workcenterRepository.findByCode(code).map(this::convertToDTO);
-    }
-
-    @Override
-    public Optional<WorkcenterDTO> findById(Long id) {
-        return workcenterRepository.findById(id).map(this::convertToDTO);
     }
 
     @Override
@@ -239,7 +315,8 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                 equipmentData.getCost(),                  // 비용
                 equipmentData.getWorkcenter() != null ? equipmentData.getWorkcenter().getCode() : null, // 작업장 코드
                 equipmentData.getFactory() != null ? equipmentData.getFactory().getCode() : null,       // 공장 코드
-                equipmentData.getEquipmentImg()           // 설비 이미지
+                equipmentData.getEquipmentImg(),           // 설비 이미지
+                equipmentData.getCompany() != null ? equipmentData.getCompany().getId() : null
         );
     }
 
@@ -259,7 +336,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                 .workerId(workerAssignment.getWorker().getId())  // 작업자 ID
                 .workcenterCode(workerAssignment.getWorkcenter().getCode()) // 작업장 CODE
                 .assignmentDate(workerAssignment.getAssignmentDate())  // 배정 날짜
-                .shift(workerAssignment.getShift())  // 교대조 정보
+                .shift(workerAssignment.getShiftType().toString())  // 교대조 정보
                 .build();
     }
 }

@@ -9,9 +9,11 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.gener
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.unresolvedVoucher.UnresolvedVoucherRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.unresolveSaleAndPurchaseVoucher.UnresolvedSaleAndPurchaseVoucherRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucherService;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,10 +35,13 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
     private final ResolvedVoucherService resolvedVoucherService;
     private final UnresolvedVoucherRepository unresolvedVoucherRepository;
     private final AccountSubjectRepository accountSubjectRepository;
-    
+    private final EmployeeRepository employeeRepository;
+    private final UnresolvedSaleAndPurchaseVoucherRepository unresolvedSaleAndPurchaseVoucherRepository;
+    private final ClientRepository clientRepository;
+    private final CompanyRepository companyRepository;
+
     // 현금 자동분개 시 필요한 계정과목 코드
     private final String cashAccountCode = "101";
-    private final UnresolvedSaleAndPurchaseVoucherRepository unresolvedSaleAndPurchaseVoucherRepository;
 
     // 거래처 레포지토리
     // 적요 레포지토리
@@ -58,7 +63,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
 
 
     @Override
-    public List<UnresolvedVoucher> unresolvedVoucherEntry(List<UnresolvedVoucherEntryDTO> dtoList) {
+    public List<UnresolvedVoucher> unresolvedVoucherEntry(Long companyId, List<UnresolvedVoucherEntryDTO> dtoList) {
 
         List<UnresolvedVoucher> unresolvedVoucherList = new ArrayList<UnresolvedVoucher>();
         List<UnresolvedVoucher> savedVoucherList = new ArrayList<UnresolvedVoucher>();
@@ -71,7 +76,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
             LocalDateTime nowTime = LocalDateTime.now();
 
 
-            newVoucherNum = CreateUnresolvedVoucherNumber(currentDate,dtoList.get(0).getVoucherKind());
+            newVoucherNum = CreateUnresolvedVoucherNumber(currentDate,dtoList.get(0).getVoucherKind(),companyId);
 
             if(depositAndWithdrawalUnresolvedVoucherTypeCheck(dtoList.get(0))) {
 
@@ -80,12 +85,12 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
                         throw new IllegalArgumentException("입금 출금 전표는 현금계정과목을 사용할 수 없습니다.");
                     }
 
-                    UnresolvedVoucher savedVoucher = createUnresolvedVoucher(dto,newVoucherNum,nowTime);
+                    UnresolvedVoucher savedVoucher = createUnresolvedVoucher(dto,newVoucherNum,nowTime,companyId);
                     unresolvedVoucherList.add(savedVoucher);
                     // 입금,출금 전표인 경우 현금 계정과목 자동분개 처리
                     if(depositAndWithdrawalUnresolvedVoucherTypeCheck(dto)) {
                         unresolvedVoucherList.add(createUnresolvedVoucher(autoCreateUnresolvedVoucherDto(dto)
-                                ,newVoucherNum,nowTime));
+                                ,newVoucherNum,nowTime,companyId));
                     }
                 }
             }
@@ -105,7 +110,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
 
                 // 한 거래에 같은 전표 번호 부여.
                 for (UnresolvedVoucherEntryDTO dto : dtoList) {
-                    UnresolvedVoucher savedVoucher = createUnresolvedVoucher(dto,newVoucherNum,nowTime);
+                    UnresolvedVoucher savedVoucher = createUnresolvedVoucher(dto,newVoucherNum,nowTime,companyId);
                     unresolvedVoucherList.add(savedVoucher);
                 }
             }
@@ -129,14 +134,18 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
      * @return 생성된 미결전표
      */
     @Override
-    public UnresolvedVoucher createUnresolvedVoucher(UnresolvedVoucherEntryDTO dto, String voucherNum, LocalDateTime nowTime) {
+    public UnresolvedVoucher createUnresolvedVoucher(UnresolvedVoucherEntryDTO dto, String voucherNum, LocalDateTime nowTime,
+                                                     Long companyId) {
         UnresolvedVoucher unresolvedVoucher = UnresolvedVoucher.builder()
 //                .userCompanyId(dto.getUserCompany())
-                .accountSubject(accountSubjectRepository.findByCode(dto.getAccountSubjectCode()).orElseThrow(
+                .accountSubject(accountSubjectRepository.findByCompanyIdAndCode(companyId, dto.getAccountSubjectCode()).orElseThrow(
                         () -> new IllegalArgumentException("해당하는 코드의 계정과목이 없습니다.")))
-//                .vendor(dto.getVendor())
-//                .description(dto.getDescription())
-//                .voucherManager(dto.getVoucherManager())
+                .client(clientRepository.findByCode(dto.getClientCode()).orElseThrow(
+                        () -> new IllegalArgumentException("해당하는 코드의 거래처가 없습니다.")))
+                .voucherManager(employeeRepository.findById(dto.getVoucherManagerId()).orElseThrow(
+                        () -> new IllegalArgumentException("해당하는 사원이 없습니다.")))
+                .company(companyRepository.findById(companyId).orElseThrow(
+                        () -> new IllegalArgumentException("해당하는 회사가 없습니다.")))
                 .transactionDescription(dto.getTransactionDescription())
                 .voucherNumber(voucherNum)
                 .voucherType(dto.getVoucherType())
@@ -170,7 +179,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
      * @return 입금,출금,차변,대변 조건에 맞게 번호 부여
      */
     @Override
-    public String CreateUnresolvedVoucherNumber(LocalDate voucherDate,VoucherKind voucherKind) {
+    public String CreateUnresolvedVoucherNumber(LocalDate voucherDate, VoucherKind voucherKind, Long companyId) {
         // 해당 조건의 날짜에 해당하는 마지막 미결전표 Entity 가져오기
 
         String lastVoucherNumber = "";
@@ -180,11 +189,11 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
 
         switch (voucherKind) {
             case GENERAL:
-                voucherBox = unresolvedVoucherRepository.findFirstByVoucherDateOrderByIdDesc(voucherDate);
+                voucherBox = unresolvedVoucherRepository.findFirstByVoucherDateAndCompany_idOrderByIdDesc(voucherDate,companyId);
                 StartNumber = "1";
                 break;
             case SALE_AND_PURCHASE:
-                voucherBox = unresolvedSaleAndPurchaseVoucherRepository.findFirstByVoucherDateOrderByIdDesc(voucherDate);
+                voucherBox = unresolvedSaleAndPurchaseVoucherRepository.findFirstByVoucherDateAndCompany_idOrderByIdDesc(voucherDate,companyId);
                 StartNumber = "50000";
                 break;
         }
@@ -236,10 +245,10 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
      * @return 해당 날짜의 모든 전표 반환
      */
     @Override
-    public List<UnresolvedVoucher> unresolvedVoucherAllSearch(LocalDate date) {
+    public List<UnresolvedVoucher> unresolvedVoucherAllSearch(Long companyId, LocalDate date) {
         List<UnresolvedVoucher> unresolvedVoucherList = new ArrayList<UnresolvedVoucher>();
         try {
-            unresolvedVoucherList = unresolvedVoucherRepository.findByVoucherDateOrderByVoucherNumberAsc(date);
+            unresolvedVoucherList = unresolvedVoucherRepository.findByVoucherDateAndCompany_idOrderByVoucherNumberAsc(date,companyId);
             if(unresolvedVoucherList.isEmpty()) {
                 throw new NoSuchElementException("해당 날짜에 등록된 미결전표가 없습니다.");
             }
@@ -255,14 +264,14 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
      * @dto 삭제할 전표의 날짜, 전표번호List, 당당자 정보 객체
      */
     @Override
-    public List<Long> deleteUnresolvedVoucher(UnresolvedVoucherDeleteDTO dto) {
+    public List<Long> deleteUnresolvedVoucher(Long companyId, UnresolvedVoucherDeleteDTO dto) {
 
         // 전표에 담당자 이거나, 승인권자면 삭제가능 << 기능구현 필요
 
         List<Long> deleteVouchers = new ArrayList<>();
         try {
             if(true) { // 전표의 담당자 이거나, 승인권자면 삭제가능 << 기능구현 필요
-                deleteVouchers.addAll(unresolvedVoucherRepository.deleteVoucherByManager(dto));
+                deleteVouchers.addAll(unresolvedVoucherRepository.deleteVoucherByManager(companyId, dto));
                 if(deleteVouchers.isEmpty()) {
                     throw new NoSuchElementException("검색조건에 해당하는 미결전표가 없습니다.");
                 }
@@ -278,30 +287,27 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
      * 차변, 대변 합계 공통 로직
      */
     @Override
-    public BigDecimal calculateTotalAmount(LocalDate date, Function<UnresolvedVoucher, BigDecimal> amount) {
+    public BigDecimal calculateTotalAmount(List<UnresolvedVoucher> vouchers, Function<UnresolvedVoucher, BigDecimal> amount) {
         BigDecimal totalAmount = BigDecimal.ZERO;
 
-        List<UnresolvedVoucher> unresolvedvoucherList =
-                unresolvedVoucherRepository.findByVoucherDateOrderByVoucherNumberAsc(date);
-
-        for (UnresolvedVoucher voucher : unresolvedvoucherList) {
+        for (UnresolvedVoucher voucher : vouchers) {
             totalAmount = totalAmount.add(amount.apply(voucher));
         }
 
         return totalAmount;
     }
     @Override
-    public BigDecimal totalDebit(LocalDate date) {
-        return calculateTotalAmount(date, UnresolvedVoucher::getDebitAmount);
+    public BigDecimal totalDebit(List<UnresolvedVoucher> vouchers) {
+        return calculateTotalAmount(vouchers, UnresolvedVoucher::getDebitAmount);
     }
     @Override
-    public BigDecimal totalCredit(LocalDate date) {
-        return calculateTotalAmount(date, UnresolvedVoucher::getCreditAmount);
+    public BigDecimal totalCredit(List<UnresolvedVoucher> vouchers) {
+        return calculateTotalAmount(vouchers, UnresolvedVoucher::getCreditAmount);
     }
 
     @Override
-    public List<UnresolvedVoucher> voucherApprovalProcessing(UnresolvedVoucherApprovalDTO dto) {
-        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherRepository.findApprovalTypeVoucher(dto);
+    public List<UnresolvedVoucher> voucherApprovalProcessing(Long companyId, UnresolvedVoucherApprovalDTO dto) {
+        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherRepository.findApprovalTypeVoucher(companyId,dto);
 
         try {
             if(dto.getApprovalStatus().equals(ApprovalStatus.PENDING)) {

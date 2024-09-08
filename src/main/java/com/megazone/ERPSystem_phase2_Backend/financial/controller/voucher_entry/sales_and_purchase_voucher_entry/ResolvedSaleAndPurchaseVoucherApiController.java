@@ -33,11 +33,12 @@ public class ResolvedSaleAndPurchaseVoucherApiController {
      * @param requestData
      * @return
      */
-    @PostMapping("/api/financial/sale-end-purchase-resolved-voucher/shows")
-    public ResponseEntity<ResolvedSaleAndPurchaseVoucherShowAllDTO> showAll(@RequestBody Map<String, LocalDate> requestData) {
+    @PostMapping("/api/financial/sale-end-purchase-resolved-voucher/shows/{companyId}")
+    public ResponseEntity<ResolvedSaleAndPurchaseVoucherShowAllDTO> showAll(@PathVariable("companyId") Long companyId,
+                                                                            @RequestBody Map<String, LocalDate> requestData) {
         LocalDate date = requestData.get("searchDate");
 
-        List<ResolvedSaleAndPurchaseVoucher> voucherList = resolvedSaleAndPurchaseVoucherService.searchAllVoucher(date);
+        List<ResolvedSaleAndPurchaseVoucher> voucherList = resolvedSaleAndPurchaseVoucherService.searchAllVoucher(date,companyId);
 
         if(voucherList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -55,10 +56,11 @@ public class ResolvedSaleAndPurchaseVoucherApiController {
      * @param voucherNumber
      * @return
      */
-    @PostMapping("/api/financial/sale-end-purchase-resolved-voucher/show/{voucherNumber}")
-    public ResponseEntity<Object> showOne(@PathVariable("voucherNumber") String voucherNumber) {
+    @PostMapping("/api/financial/sale-end-purchase-resolved-voucher/show/{companyId}/{voucherNumber}")
+    public ResponseEntity<Object> showOne(@PathVariable("companyId") Long companyId,
+                                          @PathVariable("voucherNumber") String voucherNumber) {
         try {
-            List<ResolvedVoucher> vouchers = resolvedSaleAndPurchaseVoucherService.searchEntryVoucher(voucherNumber);
+            List<ResolvedVoucher> vouchers = resolvedSaleAndPurchaseVoucherService.searchEntryVoucher(voucherNumber,companyId);
 
             if (vouchers == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("등록된 전표가 없습니다.");
@@ -90,10 +92,11 @@ public class ResolvedSaleAndPurchaseVoucherApiController {
      * @param dto
      * @return
      */
-    @PostMapping("/api/financial/sale-end-purchase-resolved-voucher/deletes")
-    public ResponseEntity<String> deleteVoucher(@RequestBody ResolvedSaleAndPurchaseVoucherDeleteDTO dto) {
+    @PostMapping("/api/financial/sale-end-purchase-resolved-voucher/deletes/{companyId}")
+    public ResponseEntity<String> deleteVoucher(@PathVariable("companyId") Long companyId,
+                                                @RequestBody ResolvedSaleAndPurchaseVoucherDeleteDTO dto) {
 
-        String message = resolvedSaleAndPurchaseVoucherService.deleteVoucher(dto);
+        String message = resolvedSaleAndPurchaseVoucherService.deleteVoucher(dto,companyId);
 
         return (message != null) ?
                 ResponseEntity.status(HttpStatus.OK).body("삭제가 완료되었습니다.") :

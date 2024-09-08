@@ -30,11 +30,11 @@ public class ResolvedSaleAndPurchaseVoucherServiceImpl implements ResolvedSaleAn
 
 
     @Override
-    public List<ResolvedSaleAndPurchaseVoucher> searchAllVoucher(LocalDate date) {
+    public List<ResolvedSaleAndPurchaseVoucher> searchAllVoucher(LocalDate date,Long companyId) {
         List<ResolvedSaleAndPurchaseVoucher> voucherList = new ArrayList<ResolvedSaleAndPurchaseVoucher>();
 
         try {
-            voucherList = resolvedSaleAndPurchaseVoucherRepository.findByVoucherDateOrderByVoucherNumberAsc(date);
+            voucherList = resolvedSaleAndPurchaseVoucherRepository.findByVoucherDateAndCompany_idOrderByVoucherNumberAsc(date,companyId);
             if(voucherList.isEmpty()) {
                 throw new NoSuchElementException("해당 날짜에 등록된 미결전표가 없습니다.");
             }
@@ -62,8 +62,8 @@ public class ResolvedSaleAndPurchaseVoucherServiceImpl implements ResolvedSaleAn
     }
 
     @Override
-    public List<ResolvedVoucher> searchEntryVoucher(String voucherNumber) {
-        return resolvedSaleAndPurchaseVoucherRepository.findByVoucherNumber(voucherNumber).getResolvedVouchers();
+    public List<ResolvedVoucher> searchEntryVoucher(String voucherNumber,Long companyId) {
+        return resolvedSaleAndPurchaseVoucherRepository.findByVoucherNumberAndCompany_id(voucherNumber,companyId).getResolvedVouchers();
     }
 
     @Override
@@ -87,12 +87,12 @@ public class ResolvedSaleAndPurchaseVoucherServiceImpl implements ResolvedSaleAn
     }
 
     @Override
-    public String deleteVoucher(ResolvedSaleAndPurchaseVoucherDeleteDTO dto) {
+    public String deleteVoucher(ResolvedSaleAndPurchaseVoucherDeleteDTO dto,Long companyId) {
         try {
             if(true) { // 전표의 담당자 이거나, 승인권자면 삭제가능 << 기능구현 필요
                 dto.getSearchVoucherNumList().forEach((voucherNumber) -> {
-                    resolvedSaleAndPurchaseVoucherRepository.deleteByVoucherNumberAndVoucherDate(
-                            voucherNumber, dto.getSearchDate());});
+                    resolvedSaleAndPurchaseVoucherRepository.deleteByVoucherNumberAndVoucherDateAndCompany_id(
+                            voucherNumber, dto.getSearchDate(),companyId);});
             }
         }
         catch (Exception e) {
@@ -105,19 +105,25 @@ public class ResolvedSaleAndPurchaseVoucherServiceImpl implements ResolvedSaleAn
     private ResolvedSaleAndPurchaseVoucher createResolvedVoucher(UnresolvedSaleAndPurchaseVoucher unresolvedVoucher, LocalDateTime nowTime) {
         List<ResolvedVoucher> ResolvedVouchers = unresolvedVoucher.getUnresolvedVouchers().stream()
                 .map(voucher -> {return ResolvedVoucher.builder()
+                        .company(voucher.getCompany())
                         .accountSubject(voucher.getAccountSubject())
                         .transactionDescription(voucher.getTransactionDescription())
                         .voucherNumber(voucher.getVoucherNumber())
+                        .voucherManager(voucher.getVoucherManager())
                         .voucherType(voucher.getVoucherType())
                         .debitAmount(voucher.getDebitAmount())
                         .creditAmount(voucher.getCreditAmount())
                         .voucherDate(voucher.getVoucherDate())
+                        .client(unresolvedVoucher.getClient())
                         .voucherApprovalTime(nowTime)
                         .voucherKind(VoucherKind.SALE_AND_PURCHASE)
                         .build();}).toList();
 
         return ResolvedSaleAndPurchaseVoucher.builder()
+                .company(unresolvedVoucher.getCompany())
+                .client(unresolvedVoucher.getClient())
                 .vatType(unresolvedVoucher.getVatType())
+                .voucherManager(unresolvedVoucher.getVoucherManager())
                 .journalEntry(unresolvedVoucher.getJournalEntry())
                 .resolvedVouchers(ResolvedVouchers)
                 .voucherNumber(unresolvedVoucher.getVoucherNumber())
