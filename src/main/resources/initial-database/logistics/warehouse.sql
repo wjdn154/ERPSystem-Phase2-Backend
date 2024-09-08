@@ -25,7 +25,3 @@ VALUES (1, 1, 1, 1),
        (5, 2, 3, 5),
        (6, 2, 4, 6);
 
-# drop DATABASE erp;
-# create DATABASE erp;
-# drop DATABASE erp_test;
-# create DATABASE erp_test;

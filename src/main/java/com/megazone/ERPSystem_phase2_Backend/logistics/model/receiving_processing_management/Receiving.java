@@ -26,7 +26,6 @@ public class Receiving {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
@@ -61,10 +60,8 @@ public class Receiving {
     private String comments;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private LocalDateTime updatedAt;
 }
