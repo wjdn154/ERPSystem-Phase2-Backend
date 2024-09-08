@@ -72,7 +72,7 @@ public class EmployeeController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
-    // 사원 삭제
+     //사원 삭제
     @DeleteMapping("/employee/del/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable("id") Long id) {
         try {
@@ -82,4 +82,11 @@ public class EmployeeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+//    @DeleteMapping("employee/del/{id}")
+//    public ResponseEntity<Void> deleteEmployee(@PathVariable("id") Long id) {
+//        employeeService.deleteEmployeeById(id);
+//        return ResponseEntity.noContent().build(); // 성공적으로 삭제 시 204 No Content 응답
+//    }
+
+
 }

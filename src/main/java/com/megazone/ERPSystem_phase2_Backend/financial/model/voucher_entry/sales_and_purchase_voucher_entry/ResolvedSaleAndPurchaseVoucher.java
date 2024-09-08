@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.ResolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
@@ -28,9 +29,9 @@ public class ResolvedSaleAndPurchaseVoucher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @Column(name = "company_id", nullable = false)
-//    private Long companyId; // 사용회사 ID
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company; // 사용회사 ID
 //
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "vatType_id",nullable = false)

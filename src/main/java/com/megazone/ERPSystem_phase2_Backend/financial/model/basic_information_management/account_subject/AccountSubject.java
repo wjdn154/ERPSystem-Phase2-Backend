@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.enums.EntryType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.enums.IncreaseDecreaseType;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,13 +13,29 @@ import java.util.List;
  * 계정과목 테이블
  */
 @Entity(name = "account_subject")
-@Table(name = "account_subject")
+@Table(name = "account_subject",
+        uniqueConstraints= {
+                @UniqueConstraint(
+                        columnNames = {
+                                "company_id",
+                                "code"
+                        }
+                )
+        },
+        indexes = {
+                @Index(name = "idx_account_subject_code", columnList = "code")
+        }
+)
 @Getter
 @Setter
 public class AccountSubject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "company_id")
+    private Company company; // 회사 참조
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "structure_code", referencedColumnName = "code")
@@ -44,6 +61,7 @@ public class AccountSubject {
 
     private String standardFinancialStatementCode; // 표준재무제표 코드
 
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private EntryType entryType;  // 차대구분
@@ -52,7 +70,7 @@ public class AccountSubject {
     @Column(nullable = false)
     private IncreaseDecreaseType increaseDecreaseType;  // 증감구분
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String code; // 계정과목 코드
     @Column(nullable = false)
     private String name; // 계정과목명

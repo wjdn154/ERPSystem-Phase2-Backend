@@ -24,9 +24,12 @@ public class EquipmentDataShowDTO {
     private LocalDate installDate;              //설비 설치날짜
     private OperationStatus operationStatus;    //설비 상태 (가동중/유지보수중/고장/수리중)
     private BigDecimal cost;                    //설비 구매 비용
+    private String workcenterCode;
     private String workcenterName;                //설비가 설치된 위치 or 구역 (작업장). 작업장 테이블 작업장 코드 참조
+    private String factoryCode;
     private String factoryName;               //설비가 설치된 공장 . 창고 테이블에 있는 공장코드 참조
     private String equipmentImg;                //설비 이미지
+    private Long companyId;
 
     //private LocalDate maintenanceDate;        //마지막 유지보수 날짜
     //private List<MaintenanceHistoryDetailDTO> maintenanceHistoryList;  //해당 설비 유지보수 이력 리스트

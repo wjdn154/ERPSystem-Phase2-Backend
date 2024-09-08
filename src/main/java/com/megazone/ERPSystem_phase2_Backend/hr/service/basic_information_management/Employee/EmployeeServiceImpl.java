@@ -42,6 +42,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         //엔티티 dto로 변환
         return employeeRepository.findAll().stream()
                 .map(employee -> new EmployeeShowDTO(
+                        employee.getId(),
                         employee.getEmployeeNumber(),
                         employee.getFirstName(),
                         employee.getLastName(),
@@ -49,11 +50,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 //                        employee.getPhoneNumber(),
                         employee.getEmploymentStatus(),
                         employee.getEmploymentType(),
-//                        employee.getEmail(),
+                        employee.getEmail(),
 //                        employee.getAddress(),
-//                        employee.getHireDate(),
+                        employee.getHireDate(),
 //                        employee.isHouseholdHead(),
 //                        employee.getProfilePicture(),
+                        employee.getDepartment().getDepartmentCode(),
                         employee.getDepartment().getDepartmentName(),
                         employee.getPosition().getPositionName(),
                         employee.getJobTitle().getTitleName(),
@@ -138,6 +140,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         dto.setBankAccountId(employee.getBankAccount().getId());
         return dto;
     }
+//    public void deleteEmployeeById(Long id) {
+//        employeeRepository.deleteById(id); // DB에서 사원을 삭제
+//    }
 
     @Override
     public Optional<EmployeeDTO> updateEmployee(Long id, EmployeeDataDTO dto) {
