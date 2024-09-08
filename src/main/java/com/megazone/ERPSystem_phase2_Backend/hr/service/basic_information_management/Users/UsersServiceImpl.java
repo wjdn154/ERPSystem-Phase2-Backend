@@ -34,8 +34,8 @@ public class UsersServiceImpl implements UsersService{
         return usersRepository.findById(id);
     }
 
-    public Users getUserByUsersId(String usersId) {
-        return usersRepository.findByUsersId(usersId);
+    public Optional<Users> getUserByUsersName(String usersName) {
+        return usersRepository.findByUserName(usersName);
     }
 
     public Users updateUser(Long id, Users user) {
@@ -68,8 +68,8 @@ public class UsersServiceImpl implements UsersService{
     private UsersPermissionDTO convertTodDTO(Users user) {
         UsersPermissionDTO dto = new UsersPermissionDTO();
         dto.setId(user.getId());
-        dto.setUserName(user.getUserName());
-        dto.setUsersId(user.getUsersId());
+        dto.setUserName(user.getUserNickname());
+        dto.setUsersId(user.getUserName());
 
         // Check if Employee is not null
         if (user.getEmployee() != null) {
@@ -104,8 +104,8 @@ public class UsersServiceImpl implements UsersService{
     private UsersShowDTO convertToDTO(Users users) {
         UsersShowDTO dto = new UsersShowDTO();
         dto.setId(users.getId());
-        dto.setUsersId(users.getUsersId());
-        dto.setUserName(users.getUserName());
+        dto.setUsersId(users.getUserName());
+        dto.setUserName(users.getUserNickname());
         dto.setEmployeeNumber(users.getEmployee().getEmployeeNumber());
         dto.setFirstName(users.getEmployee().getFirstName());
         dto.setLastName(users.getEmployee().getLastName());

@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,11 +33,15 @@ public class Users {
     private Employee employee;
 
     @Column(nullable = false)
-    private String userName;  // 사용자 이름
+    private String userNickname;  // 사용자 이름
 
-    @Column(nullable = false, name = "users_id")
-    private String usersId;
+    @Column(nullable = false, name = "user_name")
+    private String userName;
 
     @Column(nullable = false)
     private String password; // 비밀번호
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company; // 회사 정보
 }
