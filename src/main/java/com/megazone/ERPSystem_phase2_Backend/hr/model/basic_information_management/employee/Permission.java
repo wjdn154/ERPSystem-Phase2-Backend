@@ -20,6 +20,8 @@ public class Permission  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 회사관리 권한
+    @Enumerated(EnumType.STRING) private UserPermission adminPermission = UserPermission.Admin;  // 관리자 권한
 
     // 재무회계 권한
     // 기초정보관리 관련 권한
