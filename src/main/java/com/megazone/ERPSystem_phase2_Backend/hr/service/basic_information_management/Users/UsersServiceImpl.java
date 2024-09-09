@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_manag
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Permission;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersPermissionDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Permission.PermissionRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
@@ -33,8 +34,8 @@ public class UsersServiceImpl implements UsersService{
         return usersRepository.findById(id);
     }
 
-    public Users getUserByUsersId(String usersId) {
-        return usersRepository.findByUsersId(usersId);
+    public Optional<Users> getUserByUsersName(String usersName) {
+        return usersRepository.findByUserName(usersName);
     }
 
     public Users updateUser(Long id, Users user) {
@@ -67,9 +68,8 @@ public class UsersServiceImpl implements UsersService{
     private UsersPermissionDTO convertTodDTO(Users user) {
         UsersPermissionDTO dto = new UsersPermissionDTO();
         dto.setId(user.getId());
-        dto.setUsersId(user.getUsersId());
-        dto.setUserName(user.getUserName());
-        dto.setUsersId(user.getUsersId());
+        dto.setUserName(user.getUserNickname());
+        dto.setUsersId(user.getUserName());
 
         // Check if Employee is not null
         if (user.getEmployee() != null) {
@@ -104,8 +104,8 @@ public class UsersServiceImpl implements UsersService{
     private UsersShowDTO convertToDTO(Users users) {
         UsersShowDTO dto = new UsersShowDTO();
         dto.setId(users.getId());
-        dto.setUsersId(users.getUsersId());
-        dto.setUserName(users.getUserName());
+        dto.setUsersId(users.getUserName());
+        dto.setUserName(users.getUserNickname());
         dto.setEmployeeNumber(users.getEmployee().getEmployeeNumber());
         dto.setFirstName(users.getEmployee().getFirstName());
         dto.setLastName(users.getEmployee().getLastName());
@@ -132,14 +132,14 @@ public class UsersServiceImpl implements UsersService{
     @Override
     public UsersShowDTO findUserById(Long id) {
         Users user = usersRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         return convertToDTO(user);
     }
 
     @Override
     public UsersShowDTO updateUser(Long id, UsersShowDTO usersDTO) {
         Users user = usersRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         user.setUserName(usersDTO.getUserName());
         Users updatedUser = usersRepository.save(user);
         return convertToDTO(updatedUser);
@@ -149,30 +149,30 @@ public class UsersServiceImpl implements UsersService{
     @Override
     public void deleteUsers(Long id) {
         Users user = usersRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         usersRepository.delete(user);
     }
 
 
 
 
-//    @Override
-//    public UsersResponseDTO assignRoleToUser(Long userId, Long roleId) {
-//        // 사용자와 역할을 조회
-//        Users user = usersRepository.findById(userId).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-//
-//        UsersResponseDTO responseDTO = new UsersResponseDTO();
-//        responseDTO.setId(user.getId());
-//        responseDTO.setUsername(user.getUserName());
-//        // 사용자의 역할 목록에
-//        // 새로운 역할 추가
-//
-//
-//        // 사용자 정보를 업데이트
-//        usersRepository.save(user);
-//
-//        return responseDTO;
-//    }
+    @Override
+    public UsersResponseDTO assignRoleToUser(Long userId, Long roleId) {
+        // 사용자와 역할을 조회
+        Users user = usersRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        UsersResponseDTO responseDTO = new UsersResponseDTO();
+        responseDTO.setId(user.getId());
+        responseDTO.setUsername(user.getUserName());
+        // 사용자의 역할 목록에
+        // 새로운 역할 추가
+
+
+        // 사용자 정보를 업데이트
+        usersRepository.save(user);
+
+        return responseDTO;
+    }
 
 
 

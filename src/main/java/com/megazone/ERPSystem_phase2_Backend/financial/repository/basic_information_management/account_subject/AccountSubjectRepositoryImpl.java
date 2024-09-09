@@ -178,7 +178,7 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
                 result.setParentName(queryFactory
                         .select(accountSubject.name)
                         .from(accountSubject)
-                        .where(accountSubject.code.eq(result.getParentCode()))
+                        .where(accountSubject.code.eq(result.getParentCode()).and(accountSubject.company.id.eq(company_id)))
                         .fetchOne());
             }
         }

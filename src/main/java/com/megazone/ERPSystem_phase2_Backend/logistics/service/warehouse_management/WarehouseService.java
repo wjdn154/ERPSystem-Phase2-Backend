@@ -10,7 +10,8 @@ import java.util.Optional;
 
 public interface WarehouseService {
 
-    List<WarehouseResponseDTO> findAllWarehouses();
+
+    List<WarehouseResponseDTO> findAllWarehouses(Long companyId);
 
     WarehouseDetailDTO getWarehouseDetail(Long id);
 

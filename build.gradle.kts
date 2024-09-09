@@ -32,8 +32,17 @@ repositories {
 // 의존성 설정: 프로젝트에서 사용할 라이브러리와 도구들
 dependencies {
 	// 스프링 부트의 JPA 및 웹 스타터 패키지
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa") // JPA 스타터
 	implementation("org.springframework.boot:spring-boot-starter-web") // 웹 스타터
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa") // JPA 스타터
+	implementation("org.springframework.boot:spring-boot-starter-validation") // Validation 스타터
+
+	// 스프링 부트의 보안 및 JWT 스타터 패키지
+	implementation("org.springframework.boot:spring-boot-starter-security") // Spring Security 스타터
+	implementation("io.jsonwebtoken:jjwt-api:0.11.2") // JWT API
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2") // JWT 구현체
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2") // JWT Jackson
+	implementation("jakarta.servlet:jakarta.servlet-api:5.0.0")
+
 	// Querydsl 관련 라이브러리
 	implementation("com.querydsl:querydsl-apt:5.0.0") // Querydsl APT
 	implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta") // Querydsl JPA Jakarta

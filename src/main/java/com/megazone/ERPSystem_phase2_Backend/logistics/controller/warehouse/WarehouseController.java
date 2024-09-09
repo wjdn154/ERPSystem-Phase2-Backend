@@ -28,10 +28,10 @@ public class WarehouseController {
      * 모든 창고리스트들을 가져옴.
      * @return 모든 창고 정보를 담은 WarehouseResponseDTO 객체를 반환함
      */
-    @PostMapping("/warehouse")
-    public ResponseEntity<List<WarehouseResponseDTO>> getAllWarehouse() {
+    @PostMapping("/warehouse/showall/{companyId}")
+    public ResponseEntity<List<WarehouseResponseDTO>> getAllWarehouse(@PathVariable("companyId") Long companyId) {
         // 리포지토리에서 모든 창고리스트들을 가져옴
-        List<WarehouseResponseDTO> response = warehouseService.findAllWarehouses();
+        List<WarehouseResponseDTO> response = warehouseService.findAllWarehouses(companyId);
         return ResponseEntity.ok(response);
     }
 
@@ -40,13 +40,18 @@ public class WarehouseController {
      * @param id
      * @return 창고 상세 정보를 담은 WarehouseDetailDTO 객체를 반환함.
      */
-    @PostMapping("/warehouse/{id}")
+    @PostMapping("/warehouse/show/{id}")
     public ResponseEntity<WarehouseDetailDTO> getWarehouseDetail(@PathVariable("id") Long id) {
         WarehouseDetailDTO warehouseDetail = warehouseService.getWarehouseDetail(id);
 
         return ResponseEntity.ok(warehouseDetail);
     }
 
+    /**
+     *
+     * @param warehouseDetailDTO
+     * @return
+     */
     @PostMapping("/warehouse/saveWarehouse")
     public ResponseEntity<WarehouseDetailDTO> saveWarehouse(@RequestBody WarehouseDetailDTO warehouseDetailDTO) {
         Optional<WarehouseDetailDTO> savedWarehouse = warehouseService.saveWarehouse(warehouseDetailDTO);

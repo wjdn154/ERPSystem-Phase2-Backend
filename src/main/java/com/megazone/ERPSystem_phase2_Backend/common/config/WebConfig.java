@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend;
+package com.megazone.ERPSystem_phase2_Backend.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

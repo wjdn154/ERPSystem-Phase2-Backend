@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend;
+package com.megazone.ERPSystem_phase2_Backend.common.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
