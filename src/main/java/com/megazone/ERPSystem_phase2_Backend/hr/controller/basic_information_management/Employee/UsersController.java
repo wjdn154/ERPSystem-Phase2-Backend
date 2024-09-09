@@ -7,12 +7,10 @@ import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_informat
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Permission;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersPermissionDTO;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Users.UsersService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -145,10 +143,10 @@ public class UsersController {
     }
 
 
-    @PostMapping("/{userId}/assignRole/{roleId}")
-    public ResponseEntity<UsersResponseDTO> assignRoleToUser(@PathVariable Long userId, @PathVariable Long roleId) {
-        UsersResponseDTO usersResponseDTO = usersService.assignRoleToUser(userId, roleId);
-        return ResponseEntity.ok(usersResponseDTO);
-    }
+//    @PostMapping("/{userId}/assignRole/{roleId}")
+//    public ResponseEntity<UsersResponseDTO> assignRoleToUser(@PathVariable Long userId, @PathVariable Long roleId) {
+//        UsersResponseDTO usersResponseDTO = usersService.assignRoleToUser(userId, roleId);
+//        return ResponseEntity.ok(usersResponseDTO);
+//    }
 }
 
