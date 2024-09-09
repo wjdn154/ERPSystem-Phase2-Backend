@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend;
+package com.megazone.ERPSystem_phase2_Backend.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,11 +22,11 @@ public class WebConfig {
              */
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**") // "/api/**" 패턴에 대해 CORS 허용
-                        .allowedOrigins("http://127.0.0.1:3000") // 허용할 도메인을 "http://localhost:3000"으로 제한함
-                        .allowedMethods("GET", "POST", "PUT", "DELETE") // 허용할 HTTP 메서드를 지정함
-                        .allowedHeaders("*") // 모든 헤더를 허용함
-                        .allowCredentials(true); // 자격 증명을 허용함 (쿠키 등을 허용함)
+                registry.addMapping("/api/**")
+                        .allowedOrigins("http://127.0.0.1:3000", "http://localhost:3000")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
     }

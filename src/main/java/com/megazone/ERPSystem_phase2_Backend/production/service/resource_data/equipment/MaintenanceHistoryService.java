@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface MaintenanceHistoryService {
 
     //유지보수 이력 리스트 조회
-    List<ListMaintenanceHistoryDTO> findAllMaintenanceHistory();
+    List<ListMaintenanceHistoryDTO> findAllMaintenanceHistory(Long companyId);
 
     //유지보수 이력 상세 조회
     Optional<MaintenanceHistoryDetailShowDTO> findMaintenanceHistoryById(Long id);
@@ -19,8 +19,8 @@ public interface MaintenanceHistoryService {
     void deleteMaintenanceHistory(Long id);
 
     //유지보수 이력 상세 등록
-    Optional<MaintenanceHistoryDetailShowDTO> saveMaintenanceHistory(MaintenanceHistoryDetailDTO dto);
+    Optional<MaintenanceHistoryDetailShowDTO> saveMaintenanceHistory(Long companyId, MaintenanceHistoryDetailDTO dto);
 
     //유지보수 이력 상세 수정
-    Optional<MaintenanceHistoryDetailShowDTO> updateMaintenanceHistory(Long id, MaintenanceHistoryDetailDTO dto);
+    Optional<MaintenanceHistoryDetailShowDTO> updateMaintenanceHistory(Long id, MaintenanceHistoryDetailShowDTO dto);
 }

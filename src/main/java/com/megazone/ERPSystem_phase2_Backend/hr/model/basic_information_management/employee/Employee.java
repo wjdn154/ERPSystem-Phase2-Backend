@@ -93,7 +93,7 @@ public class Employee {
     private String address; // 주소
 
     @Column(nullable = false)
-    private LocalDate hireDate; // 고용일
+    private LocalDate hireDate; // 입사일자
 
     @Column(nullable = false)
     private boolean isHouseholdHead; // 세대주 여부

@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.repository.resource_dat
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface EquipmentDataRepository extends JpaRepository<EquipmentData, Long> , EquipmentDataRepositoryCustom{
@@ -11,7 +12,7 @@ public interface EquipmentDataRepository extends JpaRepository<EquipmentData, Lo
 
     Optional<EquipmentData> findByEquipmentNum(String equipmentNum);
 
-    //Optional<EquipmentData> findByCode(String equipmentCode);
+    List<EquipmentData> findAllByCompanyIdOrderByPurchaseDateDesc(Long companyId);
 
 
 }

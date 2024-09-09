@@ -12,5 +12,4 @@ public class DepartmentDTO {
     private String departmentCode;
     private String departmentName;
     private String departmentLocation;
-    private String managerId;
 }

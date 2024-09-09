@@ -1,25 +1,15 @@
-//package com.megazone.ERPSystem_phase2_Backend.hr.controller.basic_information_management.Employee;
-//
-//import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.RoleDTO;
-//import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.RolePermission.RolePermissionService;
-//import lombok.AllArgsConstructor;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.RequestBody;
-//
-//@Controller
-//@AllArgsConstructor
-//public class RoleController {
-//
-//    @Autowired
-//    private RolePermissionService rolePermissionService;
-//
-//    @PostMapping("api/hr/role/create")
-//    public ResponseEntity<RoleDTO> createRole(@RequestBody RoleDTO roleDTO) {
-//        RoleDTO savedRoleDTo= rolePermissionService.createRole(roleDTO);
-//        return ResponseEntity.ok(savedRoleDTo);
+package com.megazone.ERPSystem_phase2_Backend.hr.controller.basic_information_management.Employee;
+
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Controller;
+
+@Controller
+@AllArgsConstructor
+public class RoleController {
+
+//    @PostMapping("/{roleId}/permissions/{permissionId}")
+//    public ResponseEntity<RoleDTO> addPermissionToRole(@PathVariable Long roleId, @PathVariable Long permissionId) {
+//        RoleDTO updatedRole = roleService.addPermissionToRole(roleId, permissionId);
+//        return ResponseEntity.ok(updatedRole);
 //    }
-//
-//}
+}

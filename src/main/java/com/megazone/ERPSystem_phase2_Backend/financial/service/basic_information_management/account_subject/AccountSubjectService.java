@@ -9,14 +9,14 @@ import java.util.Objects;
 import java.util.Optional;
 
 public interface AccountSubjectService {
-    Optional<AccountSubjectsAndMemosDTO> findAllAccountSubjectDetails();
+    Optional<AccountSubjectsAndMemosDTO> findAllAccountSubjectDetails(Long company_id);
 
-    Optional<Object> addMemoToAccountSubject (String accountSubjectCode, MemoRequestDTO memoRequestDTO);
+    Optional<Object> addMemoToAccountSubject (Long company_id, String accountSubjectCode, MemoRequestDTO memoRequestDTO);
 
-    Optional<AccountSubjectDTO> updateAccountSubject(String code, AccountSubjectDTO dto);
+    Optional<AccountSubjectDTO> updateAccountSubject(Long company_id, String code, AccountSubjectDTO dto);
 
-    Optional<AccountSubjectDTO> saveAccountSubject(AccountSubjectDTO dto);
+    Optional<AccountSubjectDTO> saveAccountSubject(Long company_id, AccountSubjectDTO dto);
 
-    void deleteAccount(String code);
+    void deleteAccount(Long company_id, String code);
 
 }

@@ -35,7 +35,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
      * @return 모든 계정과목과 적요 정보를 담은 AccountSubjectsAndMemosDTO 객체를 반환함.
      */
     @Override
-    public Optional<AccountSubjectsAndMemosDTO> findAllAccountSubjectDetails() {
+    public Optional<AccountSubjectsAndMemosDTO> findAllAccountSubjectDetails(Long company_id) {
 
         // 모든 계정과목 체계를 조회하고, DTO로 변환하여 리스트로 만듦
         List<StructureDTO> structures = structureRepository.findAll().stream()
@@ -47,14 +47,14 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
                 .toList();
 
         // 모든 계정과목을 조회하여 리스트로 만듦
-        List<AccountSubjectDTO> accountSubjects = accountSubjectRepository.findAllAccountSubject();
+        List<AccountSubjectDTO> accountSubjects = accountSubjectRepository.findAllAccountSubject(company_id);
 
         // 기본적으로 첫 번째 계정과목의 상세 정보를 가져오도록 설정
         String firstAccountCode = accountSubjects.isEmpty() ? null : accountSubjects.get(0).getCode();
 
         // 첫 번째 계정과목의 상세 정보를 조회하거나, 리스트가 비어 있으면 null 반환
         AccountSubjectDetailDTO accountSubjectDetail = firstAccountCode != null
-                ? accountSubjectRepository.findAccountSubjectDetailByCode(firstAccountCode).orElse(null)
+                ? accountSubjectRepository.findAccountSubjectDetailByCode(company_id, firstAccountCode).orElse(null)
                 : null;
 
         // 계정과목 체계, 계정과목, 첫 번째 계정과목의 상세 정보를 담은 DTO를 반환
@@ -70,9 +70,9 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
      * @throws IllegalArgumentException 잘못된 적요 타입이 입력된 경우 예외를 던짐
      */
     @Override
-    public Optional<Object> addMemoToAccountSubject(String accountSubjectCode, MemoRequestDTO memoRequestDTO) {
+    public Optional<Object> addMemoToAccountSubject(Long company_id, String accountSubjectCode, MemoRequestDTO memoRequestDTO) {
         // 계정과목을 코드로 조회하고, 없으면 예외를 던짐
-        AccountSubject accountSubject = accountSubjectRepository.findByCode(accountSubjectCode)
+        AccountSubject accountSubject = accountSubjectRepository.findByCompanyIdAndCode(company_id, accountSubjectCode)
                 .orElseThrow(() -> new RuntimeException("계정 코드로 계정을 찾을 수 없습니다: " + accountSubjectCode));
 
         // 메모 타입에 따라 적절한 메모 객체를 생성하고 저장함
@@ -103,12 +103,12 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
      * @throws RuntimeException 동일한 코드가 이미 존재하거나 계정과목 체계, 부모 코드가 유효하지 않은 경우 발생함.
      */
     @Override
-    public Optional<AccountSubjectDTO> saveAccountSubject(AccountSubjectDTO dto) {
+    public Optional<AccountSubjectDTO> saveAccountSubject(Long company_id, AccountSubjectDTO dto) {
         // DTO를 엔티티로 변환
         AccountSubject accountSubject = new AccountSubject();
 
         // 동일한 코드가 이미 존재하는지 확인
-        accountSubjectRepository.findByCode(dto.getCode())
+        accountSubjectRepository.findByCompanyIdAndCode(company_id, dto.getCode())
                 .ifPresent(account -> {
                     throw new RuntimeException("이미 존재하는 코드입니다: " + dto.getCode());
                 });
@@ -127,7 +127,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
 
         // 부모 계정과목 설정
         if (dto.getParentCode() != null) {
-            AccountSubject parent = accountSubjectRepository.findByCode(dto.getParentCode())
+            AccountSubject parent = accountSubjectRepository.findByCompanyIdAndCode(company_id, dto.getParentCode())
                     .orElseThrow(() -> new RuntimeException("부모 코드로 계정을 찾을 수 없습니다: " + dto.getParentCode()));
             accountSubject.setParent(parent);
         }
@@ -192,11 +192,11 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
      * @throws RuntimeException 계정과목 ID가 유효하지 않거나 부모 코드가 유효하지 않은 경우 발생함.
      */
     @Override
-    public Optional<AccountSubjectDTO> updateAccountSubject(String code, AccountSubjectDTO dto) {
+    public Optional<AccountSubjectDTO> updateAccountSubject(Long company_id, String code, AccountSubjectDTO dto) {
 
         // 기존 계정과목을 코드로 조회함
-        AccountSubject accountSubject = accountSubjectRepository.findByCode(code)
-                .orElseThrow(() -> new RuntimeException("해당 코드로 계정과목을 찾을 수 없습니다: " + code));
+        AccountSubject accountSubject = accountSubjectRepository.findByCompanyIdAndCode(company_id, code)
+                .orElseThrow(() -> new RuntimeException("해당 회사코드와 계정과목코드로 계정과목을 찾을 수 없습니다: " + company_id + ", " + code));
 
         if (!dto.getModificationType()) {
             throw new RuntimeException("수정할 수 없는 계정과목입니다. 코드번호 : " + code);
@@ -211,7 +211,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
 
         // 부모 계정과목이 변경된 경우, 새로운 부모로 업데이트
         if (dto.getParentCode() != null && (accountSubject.getParent() == null || !dto.getParentCode().equals(accountSubject.getParent().getCode()))) {
-            AccountSubject parent = accountSubjectRepository.findByCode(dto.getParentCode())
+            AccountSubject parent = accountSubjectRepository.findByCompanyIdAndCode(company_id, dto.getParentCode())
                     .orElseThrow(() -> new RuntimeException("부모 코드로 계정을 찾을 수 없습니다: " + dto.getParentCode()));
             accountSubject.setParent(parent);
         }
@@ -353,9 +353,9 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
      * @throws RuntimeException 지정된 코드의 계정과목을 찾을 수 없을 경우 발생
      */
     @Override
-    public void deleteAccount(String code) {
+    public void deleteAccount(Long company_id, String code) {
         // 삭제할 계정과목을 조회함
-        AccountSubject accountSubject = accountSubjectRepository.findByCode(code)
+        AccountSubject accountSubject = accountSubjectRepository.findByCompanyIdAndCode(company_id, code)
                 .orElseThrow(() -> new RuntimeException("해당 코드로 계정과목을 찾을 수 없습니다: " + code));
 
         if(!accountSubject.getModificationType()) {
