@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.Currency;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
@@ -40,9 +41,10 @@ public class PurchaseRequest {
     @Builder.Default
     private List<PurchasePlanRequest> purchasePlanRequests = new ArrayList<>();
 
-    // 거래처_id - N : 1
-    @Column(nullable = false)
-    private Long clientId;
+    // 거래처 - N : 1
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
 
     // 사원_id - N : 1
     @Column(nullable = false)

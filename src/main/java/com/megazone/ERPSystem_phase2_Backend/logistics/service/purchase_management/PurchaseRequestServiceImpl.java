@@ -41,7 +41,7 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
             PurchaseRequest updatedPurchaseRequest = PurchaseRequest.builder()
                     .id(purchaseRequest.getId())
                     .company(purchaseRequest.getCompany()) // 회사 정보는 업데이트 하지 않기 때문에 기존 값을 재사용합니다.
-                    .clientId(purchaseRequestDTO.getClientId())
+                    .client(purchaseRequest.getClient())
                     .employeeId(purchaseRequestDTO.getEmployeeId())
                     .productId(purchaseRequestDTO.getProductId())
                     .quantity(purchaseRequestDTO.getQuantity())
@@ -64,7 +64,7 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
 
         return PurchaseRequestDTO.builder()
                 .id(purchaseRequest.getId())
-                .clientId(purchaseRequest.getClientId())
+                .clientId(purchaseRequest.getClient().getId())
                 .employeeId(purchaseRequest.getEmployeeId())
                 .warehouseId(purchaseRequest.getWarehouse().getId())
                 .currencyId(purchaseRequest.getCurrency().getId())
@@ -82,7 +82,6 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
     private PurchaseRequest convertDTOToEntity(PurchaseRequestDTO purchaseRequestDTO) {
         return PurchaseRequest.builder()
                 .id(purchaseRequestDTO.getId())
-                .clientId(purchaseRequestDTO.getClientId())
                 .employeeId(purchaseRequestDTO.getEmployeeId())
                 .productId(purchaseRequestDTO.getProductId())
                 .quantity(purchaseRequestDTO.getQuantity())

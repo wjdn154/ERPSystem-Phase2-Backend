@@ -12,7 +12,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/purchase-requests")
+@RequestMapping("/api/logistics/purchase-requests")
 public class PurchaseRequestController {
 
     private final PurchaseRequestService purchaseRequestService;

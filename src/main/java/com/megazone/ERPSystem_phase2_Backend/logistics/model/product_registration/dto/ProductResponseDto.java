@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProductResponseDto {
 
+    private Long id; // 고유 식별자
     private String code; // 품목 코드
     private String name; // 품목명
     private String productGroupCode; // 품목 그룹 코드

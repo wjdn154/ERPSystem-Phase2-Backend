@@ -25,17 +25,4 @@ public class ProductRequestDto {
     private Double salesPrice; // 출고 단가
     private ProductType productType; // 품목 구분
 
-    public Product toEntity(ProductGroup productGroup, ProductionRouting productionRouting) {
-        return Product.builder()
-                .code(code)
-                .name(name)
-                .productGroup(productGroup)
-                .productionRouting(productionRouting)
-                .standard(standard)
-                .unit(unit)
-                .purchasePrice(purchasePrice)
-                .salesPrice(salesPrice)
-                .productType(productType)
-                .build();
-    }
 }

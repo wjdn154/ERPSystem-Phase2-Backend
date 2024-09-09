@@ -1,7 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.product;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductRequestDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductResponseDto;
 
@@ -10,17 +8,17 @@ import java.util.Optional;
 
 public interface ProductService {
 
-    List<ProductDto> findAllProducts(Long company_id);
+    List<ProductResponseDto> findAllProducts(Long company_id);
 
-    ProductDetailDto findProductDetailById(Long id);
+    Optional<ProductResponseDto> findProductDetailById(Long companyId, Long id);
 
-    Optional<ProductResponseDto> saveProduct(ProductRequestDto productRequestDto);
+    Optional<ProductResponseDto> saveProduct(Long companyId, ProductRequestDto productRequestDto);
 
-    Optional<ProductResponseDto> updateProduct(Long id, ProductRequestDto productRequestDto);
+    Optional<ProductResponseDto> updateProduct(Long companyId, Long id, ProductRequestDto productRequestDto);
 
-    String deleteProduct(Long id);
+    String deleteProduct(Long companyId, Long id);
 
-    String deactivateProduct(Long id);
+    String deactivateProduct(Long companyId, Long id);
 
-    String reactivateProduct(Long id);
+    String reactivateProduct(Long companyId, Long id);
 }
