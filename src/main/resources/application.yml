@@ -33,10 +33,10 @@ spring:
         - classpath:initial-database/financial/account_subject/account_subject_structure.sql
         - classpath:initial-database/financial/account_subject/account_subject_nature.sql
         - classpath:initial-database/financial/account_subject/account_subject_Standard_financial_statement.sql
+        - classpath:initial-database/financial/account_subject/account_subject.sql
         - classpath:initial-database/financial/account_subject/account_subject_cash_memo.sql
         - classpath:initial-database/financial/account_subject/account_subject_fixed_memo.sql
         - classpath:initial-database/financial/account_subject/account_subject_transfer_memo.sql
-        - classpath:initial-database/financial/account_subject/account_subject.sql
         - classpath:initial-database/financial/common/financial_bank.sql
         - classpath:initial-database/financial/client/client_liquor.sql
         - classpath:initial-database/financial/client/client_category.sql
