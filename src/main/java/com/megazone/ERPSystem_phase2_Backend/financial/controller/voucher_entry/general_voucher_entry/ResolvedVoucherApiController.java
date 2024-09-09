@@ -5,9 +5,12 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.gener
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherShowAllDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry.ResolvedVoucherService;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +25,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ResolvedVoucherApiController {
     private final ResolvedVoucherService resolvedVoucherService;
+    private final UsersRepository usersRepository;
 
     /**
      * 승인된 일반전표 조회
@@ -29,9 +33,12 @@ public class ResolvedVoucherApiController {
      * @return
      */
     @PostMapping("/api/financial/general-voucher-entry/showResolvedVoucherEntry/{companyId}")
-    public ResponseEntity<ResolvedVoucherShowAllDTO> showAllResolvedVoucher(@PathVariable("companyId") Long companyId,
-                                                                            @RequestBody Map<String, LocalDate> requestData) {
+    public ResponseEntity<ResolvedVoucherShowAllDTO> showAllResolvedVoucher(@RequestBody Map<String, LocalDate> requestData) {
         LocalDate date = requestData.get("searchDate");
+
+        Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
+                () -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Long companyId = users.getCompany().getId();
 
         List<ResolvedVoucher> resolvedVoucherList = resolvedVoucherService.resolvedVoucherAllSearch(companyId, date);
 
@@ -57,8 +64,11 @@ public class ResolvedVoucherApiController {
      * @return
      */
     @PostMapping("api/financial/general-voucher-entry/deleteResolvedVoucher/{companyId}")
-    public ResponseEntity<String> deleteResolvedVoucher(@PathVariable("companyId") Long companyId,
-                                                        @RequestBody ResolvedVoucherDeleteDTO dto) {
+    public ResponseEntity<String> deleteResolvedVoucher(@RequestBody ResolvedVoucherDeleteDTO dto) {
+
+        Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
+                () -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Long companyId = users.getCompany().getId();
 
         List<Long> resolvedVoucherList = resolvedVoucherService.deleteResolvedVoucher(dto,companyId);
 

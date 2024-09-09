@@ -1,6 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.common.config.security;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -10,6 +12,5 @@ public class AuthRequest {
     private String userName;  // 사용자 ID
     private String password;  // 사용자 비밀번호
     private String userNickname;  // 사용자 닉네임
-    private Long CompanyId;  // 회사 ID
-
+    private Long companyId;  // 회사 ID
 }

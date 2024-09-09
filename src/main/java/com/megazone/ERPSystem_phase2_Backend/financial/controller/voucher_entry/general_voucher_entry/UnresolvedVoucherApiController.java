@@ -3,9 +3,13 @@ package com.megazone.ERPSystem_phase2_Backend.financial.controller.voucher_entry
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry.UnresolvedVoucherEntryService;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
+import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Users.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -20,13 +24,18 @@ import java.util.Map;
 public class UnresolvedVoucherApiController {
 
     private final UnresolvedVoucherEntryService unresolvedVoucherEntryService;
+    private final UsersRepository usersRepository;
     /**
      * 미결전표 등록 기능 Api
      * @param dto 사용자가 인터페이스에서 등록한 dataList객체
      * @return 정상적으로 등록되었으면, 저장된 객체 dto로 변환해 반환, 저장되지 않았으면 BAD_REQUEST 반환
      */
-    @PostMapping("/api/financial/general-voucher-entry/unresolvedVoucherEntry/{companyId}")
-    public ResponseEntity<List<UnresolvedVoucherEntryDTO>> unresolvedVoucherEntry(@PathVariable("companyId") Long companyId, @RequestBody List<UnresolvedVoucherEntryDTO> dto) {
+    @PostMapping("/api/financial/general-voucher-entry/unresolvedVoucherEntry")
+    public ResponseEntity<List<UnresolvedVoucherEntryDTO>> unresolvedVoucherEntry(@RequestBody List<UnresolvedVoucherEntryDTO> dto) {
+        Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
+                () -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        Long companyId = users.getCompany().getId();
 
         List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.unresolvedVoucherEntry(companyId,dto);
 
@@ -46,11 +55,15 @@ public class UnresolvedVoucherApiController {
      * @param requestData 사용자가 조회할 날짜 정보
      * @return 해당 날짜조건에 만족하는 DTO 생성후 반환 ( 차변,대변 합계 / 미결전표List / 조건날짜 )
      */
-    @PostMapping("api/financial/general-voucher-entry/showUnresolvedVoucher/{companyId}")
-    public ResponseEntity<Object> showUnresolvedVoucher(@PathVariable("companyId") Long companyId,
-                                                        @RequestBody Map<String,LocalDate> requestData) {
+    @PostMapping("api/financial/general-voucher-entry/showUnresolvedVoucher")
+    public ResponseEntity<Object> showUnresolvedVoucher(@RequestBody Map<String,LocalDate> requestData) {
+
 
         try{
+            Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
+                    () -> new RuntimeException("사용자를 찾을 수 없습니다."));
+            Long companyId = users.getCompany().getId();
+
             LocalDate date = requestData.get("searchDate");
 
             List<UnresolvedVoucher> vouchers = unresolvedVoucherEntryService.unresolvedVoucherAllSearch(companyId,date);
@@ -95,9 +108,12 @@ public class UnresolvedVoucherApiController {
      * @param dto
      * @return
      */
-    @PostMapping("api/financial/general-voucher-entry/approvalUnresolvedVoucher/{companyId}")
-    public ResponseEntity<String> voucherApprovalProcessing(@PathVariable("companyId") Long companyId,
-                                                            @RequestBody UnresolvedVoucherApprovalDTO dto) {
+    @PostMapping("api/financial/general-voucher-entry/approvalUnresolvedVoucher")
+    public ResponseEntity<String> voucherApprovalProcessing(@RequestBody UnresolvedVoucherApprovalDTO dto) {
+
+        Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
+                () -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Long companyId = users.getCompany().getId();
 
         List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.voucherApprovalProcessing(companyId,dto);
 

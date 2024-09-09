@@ -60,7 +60,12 @@ public class UsersController {
     @PostMapping("/auth/register")
     public ResponseEntity<String> registerUser(@RequestBody AuthRequest authRequest) {
         // 비밀번호 암호화
+        System.out.println(authRequest.getCompanyId());
+        System.out.println(authRequest.getUserName());
+        System.out.println(authRequest.getUserNickname());
+        System.out.println(authRequest.getPassword());
         String encodedPassword = passwordEncoder.encode(authRequest.getPassword());
+
 
 
 
