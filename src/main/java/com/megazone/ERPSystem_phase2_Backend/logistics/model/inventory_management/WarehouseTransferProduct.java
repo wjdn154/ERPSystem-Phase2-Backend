@@ -1,22 +1,19 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse;
+package com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.enums.TransferStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WarehouseTransferItem {
+public class WarehouseTransferProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +24,7 @@ public class WarehouseTransferItem {
     private Company company;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "warehouse_transfer_id")
+    @JoinColumn(name = "warehouse_transfer_id", nullable = false)
     private WarehouseTransfer warehouseTransfer;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -37,17 +34,7 @@ public class WarehouseTransferItem {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @Column(name = "batch_number")
-    private String batchNumber;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private TransferStatus status;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(name = "comment")
+    private String comment;
 
 }
