@@ -28,5 +28,5 @@ public interface ResolvedVoucherRepository extends JpaRepository<ResolvedVoucher
             + "WHERE voucher_date BETWEEN :startDate AND :endDate "
             + "GROUP BY voucher_date, voucher_number) AS grouped_vouchers",
             nativeQuery = true)
-    BigDecimal testJournalTotalCount(@Param("startDate")LocalDate startDate, @Param("endDate")LocalDate endDate);
+    BigDecimal journalTotalCount(@Param("startDate")LocalDate startDate, @Param("endDate")LocalDate endDate);
 }
