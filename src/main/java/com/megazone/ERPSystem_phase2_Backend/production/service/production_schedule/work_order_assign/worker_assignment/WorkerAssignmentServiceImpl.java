@@ -65,7 +65,7 @@ public class WorkerAssignmentServiceImpl implements WorkerAssignmentService {
                 .employeeNumber(assignment.getWorker().getEmployee().getEmployeeNumber())
                 .workcenterCode(assignment.getWorkcenter().getCode())
                 .assignmentDate(assignment.getAssignmentDate())
-                .shift(assignment.getShiftType().getName())
+//                .shift(assignment.getShiftType().getName())
                 .build();
     }
 
@@ -75,13 +75,13 @@ public class WorkerAssignmentServiceImpl implements WorkerAssignmentService {
                 .orElseThrow(() -> new EntityNotFoundException("작업자를 찾을 수 없습니다."));
         Workcenter workcenter = workcenterRepository.findByCode(dto.getWorkcenterCode())
                 .orElseThrow(() -> new EntityNotFoundException("작업장을 찾을 수 없습니다."));
-        ShiftType shiftType = shiftTypeRepository.findByName(dto.getShift())
-                .orElseThrow(() -> new EntityNotFoundException("교대근무유형을 찾을 수 없습니다."));
+//        ShiftType shiftType = shiftTypeRepository.findByName(dto.getShift().getId())
+//                .orElseThrow(() -> new EntityNotFoundException("교대근무유형을 찾을 수 없습니다."));
 
         return WorkerAssignment.builder()
                 .worker(worker)
                 .workcenter(workcenter)
-                .shiftType(shiftType)
+//                .shiftType(shiftType)
                 .assignmentDate(dto.getAssignmentDate())
                 .build();
     }

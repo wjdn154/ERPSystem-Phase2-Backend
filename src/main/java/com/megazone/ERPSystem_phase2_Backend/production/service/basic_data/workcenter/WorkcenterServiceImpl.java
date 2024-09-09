@@ -1,6 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.workcenter;
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.enums.WarehouseType;
@@ -180,7 +179,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
             WorkcenterDTO workcenterDTO = convertToDTO(workcenter);
 
             // 오늘의 작업자 명단 가져오기
-            List<WorkerAssignmentDTO> todayWorkers = getTodayWorkers(workcenter.getCode(), today);
+            List<WorkerAssignmentDTO> todayWorkers = workerAssignmentRepository.findTodayWorkers(workcenter.getCode());
 
             // 오늘의 작업자 수 가져오기
             int todayWorkerCount = getTodayWorkerCount(workcenter.getCode(), today);
@@ -195,22 +194,22 @@ public class WorkcenterServiceImpl implements WorkcenterService {
         return todayAssignments.size(); // 작업자 수 반환
     }
 
-    public List<WorkerAssignmentDTO> getTodayWorkers(String workcenterCode, LocalDate currentDate) {
-        List<WorkerAssignment> todayAssignments = workerAssignmentRepository.getWorkerAssignments(workcenterCode, Optional.of(currentDate));
-        return todayAssignments.stream()
-                .map(assignment -> {
-                    Employee employee = assignment.getWorker().getEmployee();
-                    return WorkerAssignmentDTO.builder()
-                            .workerId(employee.getId())
-                            .workerName(employee.getLastName() + employee.getFirstName()) // 이름
-                            .employeeNumber(employee.getEmployeeNumber())  // 사원번호
-                            .shift(assignment.getShiftType().getName())  // 교대 정보에서 getName() 호출
-                            .assignmentDate(assignment.getAssignmentDate())  // 배정 날짜
-                            .workcenterCode(assignment.getWorkcenter().getCode())  // 작업장 코드
-                            .build();
-                })
-                .collect(Collectors.toList());
-    }
+//    public List<WorkerAssignmentDTO> getTodayWorkers(String workcenterCode, LocalDate currentDate) {
+//        List<WorkerAssignment> todayAssignments = workerAssignmentRepository.getWorkerAssignments(workcenterCode, Optional.of(currentDate));
+//        return todayAssignments.stream()
+//                .map(assignment -> {
+//                    Employee employee = assignment.getWorker().getEmployee();
+//                    return WorkerAssignmentDTO.builder()
+//                            .workerId(employee.getId())
+//                            .workerName(employee.getLastName() + employee.getFirstName()) // 이름
+//                            .employeeNumber(employee.getEmployeeNumber())  // 사원번호
+//                            .shift(assignment.getShiftType().getId())  // 교대 정보에서 getName() 호출
+//                            .assignmentDate(assignment.getAssignmentDate())  // 배정 날짜
+//                            .workcenterCode(assignment.getWorkcenter().getCode())  // 작업장 코드
+//                            .build();
+//                })
+//                .collect(Collectors.toList());
+//    }
 
 
 
@@ -235,7 +234,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
             WorkcenterDTO workcenterDTO = convertToDTO(workcenter);
 
             LocalDate today = LocalDate.now();
-            List<WorkerAssignmentDTO> todayWorkers = getTodayWorkers(workcenter.getCode(), today);
+            List<WorkerAssignmentDTO> todayWorkers = workerAssignmentRepository.findTodayWorkers(code);
             workcenterDTO.setTodayWorkers(todayWorkers);
 
             return workcenterDTO;
@@ -335,7 +334,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                 .workerId(workerAssignment.getWorker().getId())  // 작업자 ID
                 .workcenterCode(workerAssignment.getWorkcenter().getCode()) // 작업장 CODE
                 .assignmentDate(workerAssignment.getAssignmentDate())  // 배정 날짜
-                .shift(workerAssignment.getShiftType().toString())  // 교대조 정보
+//                .shift(workerAssignment.getShiftType().getId())  // 교대조 정보
                 .build();
     }
 }
