@@ -35,8 +35,8 @@ public class WarehouseServiceImpl implements WarehouseService {
      * @return 모든 창고 정보를 담은 WarehouseResponseDTO 객체를 반환
      */
     @Override
-    public List<WarehouseResponseDTO> findAllWarehouses() {
-        return warehouseRepository.findAll().stream()
+    public List<WarehouseResponseDTO> findAllWarehouses(Long companyId) {
+        return warehouseRepository.findAllByCompanyId(companyId).stream()
                 .map(warehouse -> new WarehouseResponseDTO(
                         warehouse.getId(),
                         warehouse.getCode(),

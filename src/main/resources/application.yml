@@ -33,10 +33,10 @@ spring:
         - classpath:initial-database/financial/account_subject/account_subject_structure.sql
         - classpath:initial-database/financial/account_subject/account_subject_nature.sql
         - classpath:initial-database/financial/account_subject/account_subject_Standard_financial_statement.sql
-        - classpath:initial-database/financial/account_subject/account_subject.sql
         - classpath:initial-database/financial/account_subject/account_subject_cash_memo.sql
         - classpath:initial-database/financial/account_subject/account_subject_fixed_memo.sql
         - classpath:initial-database/financial/account_subject/account_subject_transfer_memo.sql
+        - classpath:initial-database/financial/account_subject/account_subject.sql
         - classpath:initial-database/financial/common/financial_bank.sql
         - classpath:initial-database/financial/client/client_liquor.sql
         - classpath:initial-database/financial/client/client_category.sql
@@ -53,20 +53,20 @@ spring:
         - classpath:initial-database/logistics/warehouse.sql
         - classpath:initial-database/hr/employee.sql
         #- classpath:initial-database/hr/role.sql
-        - classpath:initial-database/hr/users.sql
+#        - classpath:initial-database/hr/users.sql
         - classpath:initial-database/logistics/product_group.sql
 #        - classpath:initial-database/logistics/product.sql
 
         - classpath:initial-database/production/production_routing/processDetails.sql
-        - classpath:initial-database/production/basic_data/workcenter.sql
+#        - classpath:initial-database/production/basic_data/workcenter.sql
         - classpath:initial-database/production/production_routing/productionRouting.sql
 #        - classpath:initial-database/production/production_schedule/work_order_assign/workOrder.sql
 #        - classpath:initial-database/production/production_schedule/work_order_assign/shiftType.sql
 
         - classpath:initial-database/logistics/product.sql
 
-        - classpath:initial-database/production/resource_data/equipmentData.sql
-        - classpath:initial-database/production/resource_data/maintenanceHistory.sql
+#        - classpath:initial-database/production/resource_data/equipmentData.sql
+#        - classpath:initial-database/production/resource_data/maintenanceHistory.sql
 #        - classpath:initial-database/production/resource_data/worker.sql
 #        - classpath:initial-database/production/production_schedule/work_order_assign/workerAssignment.sql
 
@@ -74,3 +74,7 @@ logging:
   level:
     org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE # Hibernate SQL 바인딩 로그 레벨 설정 (TRACE)
+
+jwt:
+  secret: dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234
+  expiration: 3600
