@@ -74,7 +74,7 @@ public class CreditCardServiceImpl implements CreditCardService {
             OwnershipDTO ownershipDTO = creditCardDTO.getOwnership();
             Ownership ownership = new Ownership();
 
-            ownership.setCreditCard(savedCreditCard); // 이제 CreditCard는 저장된 상태입니다.
+            ownership.setCreditCard(savedCreditCard);
 
             // Owner 설정
             if (ownershipDTO.getOwnerId() != null) {

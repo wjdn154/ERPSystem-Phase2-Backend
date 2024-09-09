@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.enums;
 // 작업장 유형을 나타내는 enum class
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.Arrays;
 
@@ -27,9 +28,14 @@ public enum WorkcenterType {
     @JsonCreator
     public static WorkcenterType of(String type) {
         return Arrays.stream(WorkcenterType.values())
-                .filter(i -> i.name.equals(type))
+                .filter(i -> i.name.equalsIgnoreCase(type))  // 대소문자 구분 없이 매칭
                 .findAny()
                 .orElse(null);
+    }
+
+    @JsonValue
+    public String getName() {
+        return this.name;
     }
 
 }

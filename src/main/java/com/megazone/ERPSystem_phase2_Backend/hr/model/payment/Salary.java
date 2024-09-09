@@ -7,6 +7,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
@@ -24,11 +25,11 @@ public class Salary {
 //    @JoinColumn(name = "severancepay_id")
 //    private SeverancePay severancePay; // 퇴직금 참조
 
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Deduction> deductions;  // 공제 리스트
-//
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Allowance> allowances;  // 수당 리스트
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Deduction> deductions;  // 공제 리스트
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Allowance> allowances;  // 수당 리스트
 
     // 기본 급여
     @Column

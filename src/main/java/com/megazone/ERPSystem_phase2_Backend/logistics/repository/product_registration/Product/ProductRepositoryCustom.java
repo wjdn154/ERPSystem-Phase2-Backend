@@ -1,9 +1,7 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.Product;
-
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDto;
-
-import java.util.List;
+package com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product;
 
 public interface ProductRepositoryCustom {
+    void nullifyProductGroupId(Long productGroupId);
 
+//    void updateStatusByProductGroupId(Long id);
 }

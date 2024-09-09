@@ -1,6 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.ResolvedVoucherDeleteDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.ResolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 
@@ -14,12 +14,16 @@ public interface ResolvedVoucherService {
     void resolvedVoucherEntry(List<UnresolvedVoucher> unresolvedVoucherList);
 
     ResolvedVoucher createResolvedVoucher(UnresolvedVoucher unresolvedVoucher, LocalDateTime approvalTime);
-    List<ResolvedVoucher> resolvedVoucherAllSearch(LocalDate date);
+    List<ResolvedVoucher> resolvedVoucherAllSearch(Long companyId, LocalDate date);
+//    BigDecimal calculateTotalAmount(LocalDate date, Function<ResolvedVoucher, BigDecimal> amount);
+//    BigDecimal totalDebit(LocalDate date);
+//    BigDecimal totalCredit(LocalDate date);
 
-    BigDecimal calculateTotalAmount(LocalDate date, Function<ResolvedVoucher, BigDecimal> amount);
+    BigDecimal calculateTotalAmount(Long companyId, LocalDate date, Function<ResolvedVoucher, BigDecimal> amount);
 
-    BigDecimal totalDebit(LocalDate date);
-    BigDecimal totalCredit(LocalDate date);
+    BigDecimal totalDebit(LocalDate date, Long companyId);
 
-    List<Long> deleteResolvedVoucher(ResolvedVoucherDeleteDTO dto);
+    BigDecimal totalCredit(LocalDate date, Long companyId);
+
+    List<Long> deleteResolvedVoucher(ResolvedVoucherDeleteDTO dto, Long companyId);
 }

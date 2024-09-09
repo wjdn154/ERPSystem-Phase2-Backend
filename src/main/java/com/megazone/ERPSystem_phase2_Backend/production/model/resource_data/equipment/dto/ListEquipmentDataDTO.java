@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.EquipmentType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.OperationStatus;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,6 @@ public class ListEquipmentDataDTO {
     private OperationStatus operationStatus;    //가동 상태
     private String factoryName;           //공장이름
     private String workcenterName;        //작업장 이름
-
+    private Long companyId;
 
 }

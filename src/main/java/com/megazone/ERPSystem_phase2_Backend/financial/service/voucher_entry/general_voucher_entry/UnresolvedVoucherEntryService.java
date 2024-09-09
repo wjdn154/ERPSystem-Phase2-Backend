@@ -1,9 +1,10 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherApprovalDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherEntryDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherDeleteDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.UnresolvedVoucherApprovalDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.UnresolvedVoucherEntryDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.UnresolvedVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherKind;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,25 +14,32 @@ import java.util.function.Function;
 
 public interface UnresolvedVoucherEntryService {
 
-    List<UnresolvedVoucher> unresolvedVoucherEntry(List<UnresolvedVoucherEntryDTO> dtoList);
+    List<UnresolvedVoucher> unresolvedVoucherEntry(Long companyId, List<UnresolvedVoucherEntryDTO> dtoList);
 
-    UnresolvedVoucher createUnresolvedVoucher(UnresolvedVoucherEntryDTO dto, String voucherNum, LocalDateTime nowTime);
+//    UnresolvedVoucher createUnresolvedVoucher(UnresolvedVoucherEntryDTO dto, String voucherNum, LocalDateTime nowTime);
+
+    UnresolvedVoucher createUnresolvedVoucher(UnresolvedVoucherEntryDTO dto, String voucherNum, LocalDateTime nowTime,
+                                              Long companyId);
 
     boolean depositAndWithdrawalUnresolvedVoucherTypeCheck(UnresolvedVoucherEntryDTO dto);
 
-    String CreateUnresolvedVoucherNumber(LocalDate voucherDate);
+//    String CreateUnresolvedVoucherNumber(LocalDate voucherDate, VoucherKind voucherKind);
+
+    String CreateUnresolvedVoucherNumber(LocalDate voucherDate, VoucherKind voucherKind, Long companyId);
 
     UnresolvedVoucherEntryDTO autoCreateUnresolvedVoucherDto(UnresolvedVoucherEntryDTO dto) throws CloneNotSupportedException;
 
-    List<UnresolvedVoucher> unresolvedVoucherAllSearch(LocalDate date);
+//    List<UnresolvedVoucher> unresolvedVoucherAllSearch(LocalDate date);
 
-    List<Long> deleteUnresolvedVoucher(UnresolvedVoucherDeleteDTO dto);
+    List<UnresolvedVoucher> unresolvedVoucherAllSearch(Long companyId, LocalDate date);
 
-    BigDecimal calculateTotalAmount(LocalDate date, Function<UnresolvedVoucher, BigDecimal> amount);
+    List<Long> deleteUnresolvedVoucher(Long companyId, UnresolvedVoucherDeleteDTO dto);
 
-    BigDecimal totalDebit(LocalDate date);
+    BigDecimal calculateTotalAmount(List<UnresolvedVoucher> vouchers, Function<UnresolvedVoucher, BigDecimal> amount);
 
-    BigDecimal totalCredit(LocalDate date);
+    BigDecimal totalDebit(List<UnresolvedVoucher> vouchers);
 
-    List<UnresolvedVoucher> voucherApprovalProcessing(UnresolvedVoucherApprovalDTO dto);
+    BigDecimal totalCredit(List<UnresolvedVoucher> vouchers);
+
+    List<UnresolvedVoucher> voucherApprovalProcessing(Long companyId, UnresolvedVoucherApprovalDTO dto);
 }

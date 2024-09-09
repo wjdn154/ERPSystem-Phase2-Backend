@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.unresolvedVoucher;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherApprovalDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.dto.UnresolvedVoucherDeleteDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.UnresolvedVoucherApprovalDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.UnresolvedVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.QUnresolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
@@ -20,7 +20,7 @@ public class UnresolvedVoucherRepositoryImpl implements UnresolvedVoucherReposit
 
 
     @Override
-    public List<Long> deleteVoucherByManager(UnresolvedVoucherDeleteDTO dto) {
+    public List<Long> deleteVoucherByManager(Long companyId, UnresolvedVoucherDeleteDTO dto) {
         QUnresolvedVoucher qUnresolvedVoucher = QUnresolvedVoucher.unresolvedVoucher;
 
         List<Long> deletedVoucher = dto.getSearchVoucherNumList().stream()
@@ -28,9 +28,9 @@ public class UnresolvedVoucherRepositoryImpl implements UnresolvedVoucherReposit
                         .from(qUnresolvedVoucher)
                         .where(qUnresolvedVoucher.voucherDate.eq(dto.getSearchDate())
                                 .and(qUnresolvedVoucher.voucherNumber.eq(voucherNum))
+                                        .and(qUnresolvedVoucher.company.id.eq(companyId))
 //                                .and(qUnresolvedVoucher.voucherManager.id.eq(managerId)))
-                        ).fetch().stream())
-                .collect(Collectors.toList());
+                        ).fetch().stream()).toList();
 
         if(!deletedVoucher.isEmpty()) {
             queryFactory.delete(qUnresolvedVoucher)
@@ -43,13 +43,14 @@ public class UnresolvedVoucherRepositoryImpl implements UnresolvedVoucherReposit
     }
 
     @Override
-    public List<UnresolvedVoucher> findApprovalTypeVoucher(UnresolvedVoucherApprovalDTO dto) {
+    public List<UnresolvedVoucher> findApprovalTypeVoucher(Long companyId, UnresolvedVoucherApprovalDTO dto) {
         QUnresolvedVoucher qUnresolvedVoucher = QUnresolvedVoucher.unresolvedVoucher;
 
         List<UnresolvedVoucher> pendingVoucherList = dto.getSearchVoucherNumList().stream()
                 .flatMap(voucherNum -> queryFactory.selectFrom(qUnresolvedVoucher)
                         .where(qUnresolvedVoucher.voucherDate.eq(dto.getSearchDate())
                                 .and(qUnresolvedVoucher.voucherNumber.eq(voucherNum))
+                                .and(qUnresolvedVoucher.company.id.eq(companyId))
                                 .and(qUnresolvedVoucher.approvalStatus.eq(ApprovalStatus.PENDING)))
                         .fetch().stream())
                 .collect(Collectors.toList());

@@ -1,6 +1,9 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto;
 
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.WorkcenterDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.EquipmentType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.OperationStatus;
 
@@ -29,6 +32,7 @@ public class EquipmentDataDTO {
     private String workcenterCode;                //설비가 설치된 위치 or 구역 (작업장). 작업장 테이블 작업장 코드 참조
     private String factoryCode;               //설비가 설치된 공장 . 창고 테이블에 있는 공장코드 참조
     private String equipmentImg;                //설비 이미지
+    private Long companyId;
 
 
 

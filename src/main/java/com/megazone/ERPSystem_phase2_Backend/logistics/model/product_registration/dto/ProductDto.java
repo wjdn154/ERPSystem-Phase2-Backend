@@ -4,10 +4,12 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registratio
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.ProductGroup;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.ProductType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDto {
@@ -21,16 +23,16 @@ public class ProductDto {
     private ProductType productType; // 품목 구분
     private String productRoutingName; // 생산 라우팅명
 
-    public static ProductDto createProductDto(Product product) {
-        return new ProductDto(
-                product.getCode(),
-                product.getName(),
-                product.getProductGroup().getName(),
-                product.getStandard(),
-                product.getPurchasePrice(),
-                product.getSalesPrice(),
-                product.getProductType(),
-                product.getProductionRouting().getName()
-        );
-    }
+//    public static ProductDto createProductDto(Product product) {
+//        return new ProductDto(
+//                product.getCode(),
+//                product.getName(),
+//                product.getProductGroup() != null ? product.getProductGroup().getName() : null,
+//                product.getStandard(),
+//                product.getPurchasePrice(),
+//                product.getSalesPrice(),
+//                product.getProductType(),
+//                product.getProductionRouting() != null ? product.getProductionRouting().getName() : null
+//        );
+//    }
 }

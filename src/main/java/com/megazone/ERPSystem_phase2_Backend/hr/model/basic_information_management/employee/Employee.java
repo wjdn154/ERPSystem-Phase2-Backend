@@ -4,11 +4,11 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Atte
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Leaves;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.EmploymentStatus;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.EmploymentType;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.payment.Salary;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.List;
 @Table(name = "employee")
 @NoArgsConstructor
 @AllArgsConstructor
-//@ToString(exclude = "department, position, jobTitle")
+@ToString(exclude = {"department", "position", "jobTitle", "performance", "transfer", "users", "bankAccount", "leaves", "attendance"})
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,8 +50,7 @@ public class Employee {
     @OneToOne(mappedBy = "employee",fetch = FetchType.LAZY, cascade = CascadeType.ALL , orphanRemoval = true) // Users 랑 1대1 참조
     private Users users;
 
-    @OneToOne(cascade = CascadeType.ALL) // 계좌번호랑 1대 1참조
-    @JoinColumn(name = "bankaccount_id")
+    @OneToOne(mappedBy = "employee",fetch = FetchType.LAZY) // 계좌번호랑 1대 1참조
     private BankAccount bankAccount;
 
     @OneToMany(mappedBy = "employee",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // 휴가 참조
@@ -60,8 +59,8 @@ public class Employee {
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // 근태 참조
     private List<Attendance> attendance;
 
-    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
-    private List<Salary> salaries;
+//    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
+//    private List<Salary> salaries;
 //
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "allowance_Id", nullable = false)
@@ -85,7 +84,7 @@ public class Employee {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EmploymentType employmentType; // 고용 유형
+    private EmploymentType employmentType; // 고용 유형 
 
     @Column(nullable = false)
     private String email; // 이메일
@@ -94,7 +93,7 @@ public class Employee {
     private String address; // 주소
 
     @Column(nullable = false)
-    private LocalDate hireDate; // 고용일
+    private LocalDate hireDate; // 입사일자
 
     @Column(nullable = false)
     private boolean isHouseholdHead; // 세대주 여부

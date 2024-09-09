@@ -2,7 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.enums.WorkcenterType;
-import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.WorkerAssignment;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkerAssignment;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProcessDetails;
 import jakarta.persistence.*;
@@ -10,12 +10,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 작업장 정보 테이블
+ 작업장은 CRUD 작업을 관리하고, 연관된 생산공정, 소속 공장, 설비와의 연관 관계를 처리합니다.
+ 작업장은 연관된 엔티티(생산공정, 공장, 설비)를 CRUD할 수 있고,
+ 작업장 자체에서 배정된 작업자 명단을 조회하지만, 작업자 배정 관련 로직은 직접 수정하지 않습니다.
  */
 
 @Entity(name="basic_data_workcenter")
@@ -53,12 +58,14 @@ public class Workcenter {
     @JoinColumn(name = "warehouse_id")
     private Warehouse factory;  // 공장 엔티티 from 물류 창고관리의 공장
 
-    @OneToMany(mappedBy = "workcenter")
-    @Builder.Default
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "workcenter")
+    @BatchSize(size = 10) // 컬렉션을 한 번에 최대 10개 로딩
+    @Builder.Default @Fetch(FetchMode.SUBSELECT)
     private List<EquipmentData> equipmentList = new ArrayList<>(); // 설비 목록
 
-    @OneToMany(mappedBy = "workcenter")
-    @Builder.Default
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "workcenter")
+    @BatchSize(size = 10) // 컬렉션을 한 번에 최대 10개 로딩
+    @Builder.Default @Fetch(FetchMode.SUBSELECT)
     private List<WorkerAssignment> workerAssignments = new ArrayList<>(); // 작업자 배치 이력
 
     @ManyToOne(fetch = FetchType.LAZY)

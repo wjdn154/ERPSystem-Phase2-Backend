@@ -22,4 +22,6 @@ public interface EmployeeService {
 
     // 사원 삭제
     void deleteEmployee(Long id);
+
+    //void deleteEmployeeById(Long id);
 }

@@ -10,7 +10,6 @@ import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_man
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,10 +34,10 @@ public class DepartmentServiceImpl implements DepartmentService {
     public List<DepartmentShowDTO> findAllDepartments() {
         return departmentRepository.findAll().stream()
                 .map(department -> new DepartmentShowDTO(
+                        department.getId(),
                         department.getDepartmentCode(),
                         department.getDepartmentName(),
-                        department.getLocation(),
-                        department.getManagerId()
+                        department.getLocation()
                 )).collect(Collectors.toList());
     }
 
@@ -55,10 +54,10 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     private DepartmentShowDTO convertToDTO(Department department) {
         DepartmentShowDTO dto = new DepartmentShowDTO();
+        dto.setId(department.getId());
         dto.setDepartmentCode(department.getDepartmentCode());
         dto.setDepartmentName(department.getDepartmentName());
-        dto.setDepartmentLocation(department.getLocation());
-        dto.setManagerId(department.getManagerId());
+        dto.setLocation(department.getLocation());
         return dto;
     }
 
@@ -71,12 +70,14 @@ public class DepartmentServiceImpl implements DepartmentService {
         department.setDepartmentCode(dto.getDepartmentCode());
         department.setDepartmentName(dto.getDepartmentName());
         department.setLocation(dto.getDepartmentLocation());
-        department.setManagerId(dto.getManagerId());
 
         // 엔티티를 저장
         Department savedDepartment = departmentRepository.save(department);
 
         // 저장된 엔티티의 ID를 포함한 DTO를 반환
-        return new DepartmentCreateDTO(savedDepartment.getId());
+        return new DepartmentCreateDTO(
+                savedDepartment.getDepartmentCode(),
+                savedDepartment.getDepartmentName(),
+                savedDepartment.getLocation());
     }
 }

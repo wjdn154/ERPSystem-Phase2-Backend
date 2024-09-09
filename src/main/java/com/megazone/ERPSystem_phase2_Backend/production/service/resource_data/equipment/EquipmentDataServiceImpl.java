@@ -1,16 +1,18 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.equipment;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataUpdateDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.ListEquipmentDataDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.resource_data.equipment.EquipmentDataRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,17 +28,18 @@ public class EquipmentDataServiceImpl implements EquipmentDataService{
     private final EquipmentDataRepository equipmentDataRepository;
     private final WorkcenterRepository workcenterRepository;
     private final WarehouseRepository warehouseRepository;
+    private final CompanyRepository companyRepository;
 
     //설비 등록.저장
     @Override
-    public Optional<EquipmentDataShowDTO> saveEquipment(EquipmentDataDTO dto) {
+    public Optional<EquipmentDataShowDTO> saveEquipment(Long companyId, EquipmentDataDTO dto) {
 
         //설비 아이디 중복 확인.
         if(equipmentDataRepository.existsByEquipmentNum(dto.getEquipmentNum())){
             throw new IllegalArgumentException(("이미 존재하는 설비번호입니다." + dto.getEquipmentNum()));
         }
        // dto를 엔티티로 변환함
-        EquipmentData equipmentData = equipmentToEntity(dto);
+        EquipmentData equipmentData = equipmentToEntity(companyId,dto);
 
        // 엔티티 저장
         EquipmentData saveEquipment = equipmentDataRepository.save(equipmentData);
@@ -50,7 +53,7 @@ public class EquipmentDataServiceImpl implements EquipmentDataService{
 
     //설비 수정
     @Override
-    public Optional<EquipmentDataShowDTO> updateEquipment(Long id, EquipmentDataDTO dto) {
+    public Optional<EquipmentDataUpdateDTO> updateEquipment(Long id, EquipmentDataUpdateDTO dto) {
 
         //id에 해당하는 엔티티 데이터 조회
         EquipmentData equipmentData = equipmentDataRepository.findById(id)
@@ -80,17 +83,16 @@ public class EquipmentDataServiceImpl implements EquipmentDataService{
         EquipmentData updatedEquipmentEntity =equipmentDataRepository.save(equipmentData);
 
         //저장된 엔티티 dto로 변환.
-        EquipmentDataShowDTO equipmentDataShowDTO = equipmentShowToDTO(updatedEquipmentEntity);
-        return Optional.of(equipmentDataShowDTO);
+        EquipmentDataUpdateDTO equipmentDataUpdateDTO = equipmentUpdateToDTO(updatedEquipmentEntity);
+        return Optional.of(equipmentDataUpdateDTO);
     }
 
     //설비 리스트 조회
     @Override
-    public List<ListEquipmentDataDTO> findAllEquipmentDataDetails() {
+    public List<ListEquipmentDataDTO> findAllEquipmentDataDetails(Long companyId) {
 
-        return equipmentDataRepository.findAll().stream()
-                .map(equipmentData ->
-                        new ListEquipmentDataDTO(
+        return equipmentDataRepository.findAllByCompanyIdOrderByPurchaseDateDesc(companyId).stream()
+                .map(equipmentData -> new ListEquipmentDataDTO(
                                     equipmentData.getId(),
                                     equipmentData.getEquipmentNum(),
                                     equipmentData.getEquipmentName(),
@@ -98,7 +100,8 @@ public class EquipmentDataServiceImpl implements EquipmentDataService{
                                     equipmentData.getEquipmentType(),
                                     equipmentData.getOperationStatus(),
                                     equipmentData.getFactory().getName(),
-                                    equipmentData.getWorkcenter().getName()
+                                    equipmentData.getWorkcenter().getName(),
+                                    equipmentData.getCompany().getId()
                             )
                 ).collect(Collectors.toList());
         }
@@ -129,7 +132,7 @@ public class EquipmentDataServiceImpl implements EquipmentDataService{
         equipmentDataRepository.delete(equipmentData);
     }
 
-    //equipmentData 엔티티를 equipmentDataDTO로 변환.
+    //equipmentData 엔티티를 equipmentDataUpdateDto로 변환
     private EquipmentDataShowDTO equipmentShowToDTO(EquipmentData equipmentDetail){
 
         EquipmentDataShowDTO equipmentDataShowDTO = new EquipmentDataShowDTO();
@@ -143,15 +146,37 @@ public class EquipmentDataServiceImpl implements EquipmentDataService{
         equipmentDataShowDTO.setInstallDate(equipmentDetail.getInstallDate());
         equipmentDataShowDTO.setOperationStatus(equipmentDetail.getOperationStatus());
         equipmentDataShowDTO.setCost(equipmentDetail.getCost());
+        equipmentDataShowDTO.setWorkcenterCode(equipmentDetail.getWorkcenter().getCode());
         equipmentDataShowDTO.setWorkcenterName(equipmentDetail.getWorkcenter().getName());
+        equipmentDataShowDTO.setFactoryCode(equipmentDetail.getFactory().getCode());
         equipmentDataShowDTO.setFactoryName(equipmentDetail.getFactory().getName());
         equipmentDataShowDTO.setEquipmentImg(equipmentDetail.getEquipmentImg());
 
         return equipmentDataShowDTO;
     }
+    //equipmentData 엔티티를 equipmentDataDTO로 변환.
+    private EquipmentDataUpdateDTO equipmentUpdateToDTO(EquipmentData equipmentDetail){
+
+        EquipmentDataUpdateDTO equipmentDataUpdateDTO = new EquipmentDataUpdateDTO();
+        equipmentDataUpdateDTO.setId(equipmentDetail.getId());
+        equipmentDataUpdateDTO.setEquipmentNum(equipmentDetail.getEquipmentNum());
+        equipmentDataUpdateDTO.setEquipmentName(equipmentDetail.getEquipmentName());
+        equipmentDataUpdateDTO.setEquipmentType(equipmentDetail.getEquipmentType());
+        equipmentDataUpdateDTO.setManufacturer(equipmentDetail.getManufacturer());
+        equipmentDataUpdateDTO.setModelName(equipmentDetail.getModelName());
+        equipmentDataUpdateDTO.setPurchaseDate(equipmentDetail.getPurchaseDate());
+        equipmentDataUpdateDTO.setInstallDate(equipmentDetail.getInstallDate());
+        equipmentDataUpdateDTO.setOperationStatus(equipmentDetail.getOperationStatus());
+        equipmentDataUpdateDTO.setCost(equipmentDetail.getCost());
+        equipmentDataUpdateDTO.setWorkcenterCode(equipmentDetail.getWorkcenter().getCode());
+        equipmentDataUpdateDTO.setFactoryCode(equipmentDetail.getFactory().getCode());
+        equipmentDataUpdateDTO.setEquipmentImg(equipmentDetail.getEquipmentImg());
+
+        return equipmentDataUpdateDTO;
+    }
 
     //equipmentDataDto를 엔티티로 변환하는 메서드
-    private EquipmentData equipmentToEntity(EquipmentDataDTO dto){
+    private EquipmentData equipmentToEntity(Long companyId, EquipmentDataDTO dto){
         EquipmentData equipmentData = new EquipmentData();
         equipmentData.setEquipmentNum(dto.getEquipmentNum());
         equipmentData.setEquipmentName(dto.getEquipmentName());
@@ -173,6 +198,10 @@ public class EquipmentDataServiceImpl implements EquipmentDataService{
         Warehouse warehouse = warehouseRepository.findByCode(dto.getFactoryCode())
                 .orElseThrow(() -> new RuntimeException(dto.getFactoryCode() + "에 해당하는 공장 코드를 찾을 수 없습니다."));
         equipmentData.setFactory(warehouse);
+
+        Company company = companyRepository.findById(companyId)
+                        .orElseThrow(() -> new RuntimeException(companyId +"에 해당하는 회사 아이디를 찾을 수 없습니다."));
+        equipmentData.setCompany(company);
 
         equipmentData.setEquipmentImg(dto.getEquipmentImg());
 
