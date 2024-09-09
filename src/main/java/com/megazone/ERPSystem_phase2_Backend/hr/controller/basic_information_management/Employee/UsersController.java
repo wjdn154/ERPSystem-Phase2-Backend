@@ -9,6 +9,7 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_manageme
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersPermissionDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.UserPermission;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Users.UsersService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,6 +43,14 @@ public class UsersController {
 
     @PostMapping("/auth/login")
     public String createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
+
+        // 이메일 형식 검증 정규식
+        Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+
+        // 이메일 형식 검증
+        if (!pattern.matcher(authRequest.getUserName()).matches()) throw new IllegalArgumentException("잘못된 이메일 형식입니다.");
+
+
         // 사용자 인증
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword())
@@ -59,10 +69,15 @@ public class UsersController {
 
     @PostMapping("/auth/register")
     public ResponseEntity<String> registerUser(@RequestBody AuthRequest authRequest) {
+
+        // 이메일 형식 검증 정규식
+        Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+
+        // 이메일 형식 검증
+        if (!pattern.matcher(authRequest.getUserName()).matches()) throw new IllegalArgumentException("잘못된 이메일 형식입니다.");
+
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(authRequest.getPassword());
-
-
 
         // 새 사용자 생성
         Users newUser = new Users();
@@ -71,7 +86,6 @@ public class UsersController {
         newUser.setPermission(new Permission()); // 권한 설정
         newUser.setCompany(companyRepository.findById(authRequest.getCompanyId()).orElseThrow(() -> new RuntimeException("회사 정보를 찾을 수 없습니다."))); // 회사 설정
         newUser.setUserNickname(authRequest.getUserNickname());
-
 
         usersRepository.save(newUser);
         return ResponseEntity.ok("사용자 등록 완료");

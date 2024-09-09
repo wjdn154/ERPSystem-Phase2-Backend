@@ -11,5 +11,4 @@ public class AuthRequest {
     private String password;  // 사용자 비밀번호
     private String userNickname;  // 사용자 닉네임
     private Long CompanyId;  // 회사 ID
-
 }
