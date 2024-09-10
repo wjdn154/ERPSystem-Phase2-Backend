@@ -1,5 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.basic_data;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.WorkcenterDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentDTO;
@@ -11,6 +14,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,10 +27,15 @@ public class WorkcenterController {
 
     private final WorkcenterService workcenterService;
     private final ProcessDetailsService processDetailsService;
+    private final CompanyRepository companyRepository;
+    private final UsersRepository usersRepository;
 
     // 1. 전체 작업장 조회
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<List<WorkcenterDTO>> getAllWorkcenters() {
+        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Long company_id = user.getCompany().getId();
+
         List<WorkcenterDTO> workcenterDTOs = workcenterService.findAll();
         return ResponseEntity.ok(workcenterDTOs);
     }
