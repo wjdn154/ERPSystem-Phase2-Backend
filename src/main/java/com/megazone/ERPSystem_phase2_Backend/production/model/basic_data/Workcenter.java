@@ -55,8 +55,8 @@ public class Workcenter {
     @Column(nullable = false)
     private Boolean isActive; // 사용 여부
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "warehouse_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "warehouse_id", nullable = true)
     private Warehouse factory;  // 공장 엔티티 from 물류 창고관리의 공장
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "workcenter")
@@ -73,8 +73,8 @@ public class Workcenter {
     @JoinColumn(name = "process_id")
     private ProcessDetails processDetails; // 작업장에서 이뤄지는 생산공정
 
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "company_id")
-//    private Company company;                            //회사 테이블 참조 (회사 아이디)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "company_id")
+    private Company company;                            //회사 테이블 참조 (회사 아이디)
 
 }
