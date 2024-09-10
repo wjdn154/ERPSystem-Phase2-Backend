@@ -50,7 +50,6 @@ spring:
         - classpath:initial-database/financial/journal_entry.sql
 
 
-        - classpath:initial-database/logistics/warehouse.sql
         - classpath:initial-database/hr/employee.sql
         - classpath:initial-database/hr/role.sql
 #        - classpath:initial-database/hr/users.sql
@@ -64,6 +63,7 @@ spring:
         - classpath:initial-database/production/production_schedule/work_order_assign/shiftType.sql
 
         - classpath:initial-database/logistics/product.sql
+        - classpath:initial-database/logistics/warehouse/warehouse.sql
 
         - classpath:initial-database/production/resource_data/equipmentData.sql
         - classpath:initial-database/production/resource_data/maintenanceHistory.sql

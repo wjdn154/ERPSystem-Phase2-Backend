@@ -3,7 +3,6 @@ package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_manag
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Permission;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersPermissionDTO;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Permission.PermissionRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
@@ -156,23 +155,23 @@ public class UsersServiceImpl implements UsersService{
 
 
 
-    @Override
-    public UsersResponseDTO assignRoleToUser(Long userId, Long roleId) {
-        // 사용자와 역할을 조회
-        Users user = usersRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-
-        UsersResponseDTO responseDTO = new UsersResponseDTO();
-        responseDTO.setId(user.getId());
-        responseDTO.setUsername(user.getUserName());
-        // 사용자의 역할 목록에
-        // 새로운 역할 추가
-
-
-        // 사용자 정보를 업데이트
-        usersRepository.save(user);
-
-        return responseDTO;
-    }
+//    @Override
+//    public UsersResponseDTO assignRoleToUser(Long userId, Long roleId) {
+//        // 사용자와 역할을 조회
+//        Users user = usersRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+//
+//        UsersResponseDTO responseDTO = new UsersResponseDTO();
+//        responseDTO.setId(user.getId());
+//        responseDTO.setUsername(user.getUserName());
+//        // 사용자의 역할 목록에
+//        // 새로운 역할 추가
+//
+//
+//        // 사용자 정보를 업데이트
+//        usersRepository.save(user);
+//
+//        return responseDTO;
+//    }
 
 
 
