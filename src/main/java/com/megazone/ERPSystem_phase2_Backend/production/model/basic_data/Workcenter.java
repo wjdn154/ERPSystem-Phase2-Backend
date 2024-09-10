@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.enums.WorkcenterType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkerAssignment;
@@ -55,7 +56,7 @@ public class Workcenter {
     private Boolean isActive; // 사용 여부
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "warehouse_id")
+    @JoinColumn(name = "warehouse_id", nullable = true)
     private Warehouse factory;  // 공장 엔티티 from 물류 창고관리의 공장
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "workcenter")
@@ -72,7 +73,8 @@ public class Workcenter {
     @JoinColumn(name = "process_id")
     private ProcessDetails processDetails; // 작업장에서 이뤄지는 생산공정
 
-    // 작업지시 onetomany (mappedby = "workorders")
-    // 작업자배치이력에서 연결되면 없어도됨
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "company_id")
+    private Company company;                            //회사 테이블 참조 (회사 아이디)
 
 }
