@@ -76,31 +76,4 @@ public class WarehouseController {
                     .body("창고 삭제 중 오류가 발생했습니다.");
         }
     }
-
-    @PostMapping("/hierarchyGroup")
-    public ResponseEntity<List<HierarchyGroupResponseDTO>> getAllHierarchyGroups() {
-        List<HierarchyGroupResponseDTO> response = hierarchyGroupService.findAllHierarchyGroup();
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/hierarchyGroup/saveHierarchyGroup")
-    public ResponseEntity<CreateHierarchyGroupDTO> saveHierarchyGroup(@RequestBody CreateHierarchyGroupDTO createHierarchyGroupDTO) {
-        Optional<CreateHierarchyGroupDTO> savedHierarchyGroup = hierarchyGroupService.saveHierarchyGroup(createHierarchyGroupDTO);
-        return savedHierarchyGroup.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
-    }
-
-    @PutMapping("/hierarchyGroup/updateHierarchyGroup/{id}")
-    public ResponseEntity<HierarchyGroupResponseDTO> updateHierarchyGroup(@PathVariable("id") Long id, @RequestBody UpdateHierarchyGroupDTO dto) {
-        Optional<HierarchyGroupResponseDTO> updateHierarchyGroup = hierarchyGroupService.updateHierarchyGroup(id, dto);
-
-        return updateHierarchyGroup.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
-    }
-
-    @PostMapping("/hierarchyGroup/deleteHierarchyGroup/{id}")
-    public ResponseEntity<Void> deleteHierarchyGroup(@PathVariable("id") Long id) {
-        hierarchyGroupService.deleteHierarchyGroup(id);
-        return ResponseEntity.noContent().build();
-    }
-
 }
