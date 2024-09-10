@@ -1,5 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.resource_data.equipment;
 
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataUpdateDTO;
@@ -9,6 +11,7 @@ import com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.eq
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,10 +24,15 @@ public class EquipmentDataController {
 
     private final EquipmentDataService equipmentDataService;
     private final EquipmentDataRepository equipmentDataRepository;
+    private final UsersRepository usersRepository;
 
     //설비 리스트 조회
-    @PostMapping("/equipmentDatas/{companyId}")
-    public ResponseEntity<List<ListEquipmentDataDTO>> getAllEquipmentDataDetails(@PathVariable("companyId") Long companyId){
+    @PostMapping("/equipmentDatas")
+    public ResponseEntity<List<ListEquipmentDataDTO>> getAllEquipmentDataDetails(){
+
+        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Long companyId = user.getCompany().getId();
+
         //서비스에서 모든 설비정보를 가져옴
         List<ListEquipmentDataDTO> result = equipmentDataService.findAllEquipmentDataDetails(companyId);
 
@@ -46,8 +54,12 @@ public class EquipmentDataController {
     }
 
     //설비 상세 정보 등록
-    @PostMapping("/equipmentData/createEquipment/{companyId}")
-    public ResponseEntity<EquipmentDataShowDTO> saveEquipmentData(@PathVariable("companyId") Long companyId, @RequestBody EquipmentDataDTO dto){
+    @PostMapping("/equipmentData/createEquipment")
+    public ResponseEntity<EquipmentDataShowDTO> saveEquipmentData(@RequestBody EquipmentDataDTO dto){
+
+        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Long companyId = user.getCompany().getId();
+
 
         //서비스에 해당 아이디의 설비 상세 정보를 등록함.
         Optional<EquipmentDataShowDTO> result = equipmentDataService.saveEquipment(companyId,dto);

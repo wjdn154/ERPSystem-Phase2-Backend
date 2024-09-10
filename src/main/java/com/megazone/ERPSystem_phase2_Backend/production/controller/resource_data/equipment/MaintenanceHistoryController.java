@@ -1,5 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.resource_data.equipment;
 
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.ListMaintenanceHistoryDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.MaintenanceHistoryDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.MaintenanceHistoryDetailShowDTO;
@@ -7,6 +9,7 @@ import com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.eq
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,10 +21,14 @@ import java.util.Optional;
 public class MaintenanceHistoryController {
 
     private final MaintenanceHistoryService maintenanceHistoryService;
+    private final UsersRepository usersRepository;
 
     //유지보수 이력 리스트 조회   url 변경함
-    @PostMapping("/maintenanceHistorys/{companyId}")
-    public ResponseEntity<List<ListMaintenanceHistoryDTO>> getAllMaintenanceHistory(@PathVariable("companyId") Long companyId){
+    @PostMapping("/maintenanceHistorys")
+    public ResponseEntity<List<ListMaintenanceHistoryDTO>> getAllMaintenanceHistory(){
+
+        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Long companyId = user.getCompany().getId();
 
         //서비스에서 모든 유지보수이력 정보를 가져옴
         List<ListMaintenanceHistoryDTO> result = maintenanceHistoryService.findAllMaintenanceHistory(companyId);
@@ -44,8 +51,11 @@ public class MaintenanceHistoryController {
     }
 
     //유지보수 이력 상세 등록
-    @PostMapping("/maintenanceHistory/createMaintenance/{companyId}")
-    public ResponseEntity<MaintenanceHistoryDetailShowDTO> saveMaintenanceHistory(@PathVariable Long companyId, @RequestBody MaintenanceHistoryDetailDTO dto){
+    @PostMapping("/maintenanceHistory/createMaintenance")
+    public ResponseEntity<MaintenanceHistoryDetailShowDTO> saveMaintenanceHistory(@RequestBody MaintenanceHistoryDetailDTO dto){
+
+        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Long companyId = user.getCompany().getId();
 
         //서비스에서 유지보수 이력 상세정보를 등록함.
         Optional<MaintenanceHistoryDetailShowDTO> result = maintenanceHistoryService.saveMaintenanceHistory(companyId,dto);

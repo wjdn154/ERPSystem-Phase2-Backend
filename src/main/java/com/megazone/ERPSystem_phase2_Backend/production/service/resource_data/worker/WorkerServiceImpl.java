@@ -88,10 +88,10 @@ public class WorkerServiceImpl implements WorkerService {
 
 
     //해당 작업자의 모든 작업 배치 이력 조회
-    @Override
-    public Optional<ListWorkerAttendanceDTO> findAllWorkerById(Long id) {
-        return Optional.empty();
-    }
+//    @Override
+//    public List<ListWorkerAttendanceDTO> findAllWorkerById(Long id) {
+//        return Optional.empty();
+//    }
 
     //worker 엔티티를 WorkerDetailShowDTO 로 변환
     private WorkerDetailShowDTO workerToDTO(Worker worker) {

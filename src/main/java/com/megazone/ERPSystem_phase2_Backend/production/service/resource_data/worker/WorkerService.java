@@ -27,6 +27,6 @@ public interface WorkerService {
     Optional<WorkerDetailShowDTO> findWorkerById(Long id);
 
     //작업자 근태내역 조회
-    Optional<ListWorkerAttendanceDTO> findAllWorkerById(Long id);
+    List<ListWorkerAttendanceDTO> findAllWorkerById(Long id);
 
 }

@@ -1,5 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.resource_data.equipment;
 
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.ListWorkerDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.WorkerAttendanceDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.WorkerDetailShowDTO;
@@ -7,6 +9,7 @@ import com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.wo
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,12 +21,16 @@ import java.util.Optional;
 public class WorkerController {
 
     private final WorkerService workerService;
+    private final UsersRepository usersRepository;
 
     //작업자 리스트 조회
-    @PostMapping("/workers/{companyId}")
-    public ResponseEntity<List<ListWorkerDTO>> allWorkers(@PathVariable("companyId") Long companyId) {
+    @PostMapping("/workers")
+    public ResponseEntity<List<ListWorkerDTO>> allWorkers() {
 
-    //서비스에서 회사아이디에 해당하는 부서가 생산인 모든 작업자 정보를 가져옴
+        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Long companyId = user.getCompany().getId();
+
+        //서비스에서 회사아이디에 해당하는 부서가 생산인 모든 작업자 정보를 가져옴
         List<ListWorkerDTO> result = workerService.findAllWorker(companyId);
 
         return (result != null)?
@@ -55,14 +62,14 @@ public class WorkerController {
     }
 
     //해당 작업자의 모든 작업배치 목록 조회
-//    @PostMapping("/worker/attendance/{id}")
-//    public ResponseEntity<WorkerAttendanceDTO> allWorkerAttendance(@PathVariable("id") Long id){
-//
-//        //서비스에서 해당 작업자의 근태,작업배치 목록을 가져옴
-//        List<WorkerAttendanceDTO> result = workerService.findAllWorkerById(id);
-//
-//        return (result != )
-//    }
+    @PostMapping("/worker/attendance/{id}")
+    public ResponseEntity<WorkerAttendanceDTO> allWorkerAttendance(@PathVariable("id") Long id){
+
+        //서비스에서 해당 작업자의 근태,작업배치 목록을 가져옴
+        List<WorkerAttendanceDTO> result = workerService.findAllWorkerById(id);
+
+        return (result != )
+    }
 
 
 }
