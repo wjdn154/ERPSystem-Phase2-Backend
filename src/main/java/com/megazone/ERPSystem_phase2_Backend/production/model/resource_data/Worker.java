@@ -26,7 +26,7 @@ public class Worker {
     private Long id;
 
     @Column(nullable = false)
-    private Boolean trainingStatue;       //교육이수 여부. (이수/미이수)
+    private Boolean trainingStatus;       //교육이수 여부. (이수/미이수)
 
     /**인사 기본정보 참조
      * (사원번호,작업자 성,이름, 부서, 직위, 직책, 생년월일, 전화번호,고용상태,고용유형,고용일,프로필 사진)

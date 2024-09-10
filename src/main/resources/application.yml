@@ -67,7 +67,7 @@ spring:
 
 #        - classpath:initial-database/production/resource_data/equipmentData.sql
 #        - classpath:initial-database/production/resource_data/maintenanceHistory.sql
-#        - classpath:initial-database/production/resource_data/worker.sql
+        - classpath:initial-database/production/resource_data/worker.sql
 #        - classpath:initial-database/production/production_schedule/work_order_assign/workerAssignment.sql
 
 logging:

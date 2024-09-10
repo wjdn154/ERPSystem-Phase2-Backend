@@ -51,7 +51,7 @@ public class WorkerController {
     }
 
     //작업자 상세 정보 수정(교육이수 여부만 수정 가능)
-    @PostMapping("/worker/updateWorker/{id}")
+    @PutMapping("/worker/updateWorker/{id}")
     public ResponseEntity<WorkerDetailShowDTO> updateWorkerDetail(@PathVariable("id") Long id, @RequestBody WorkerDetailShowDTO dto){
 
         //서비스에서 해당 작업자 상세 정보를 수정함

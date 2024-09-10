@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.repository.resource_data.worker;
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.Worker;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.ListWorkerDTO;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
@@ -24,18 +25,18 @@ public class WorkerRepositoryImpl implements WorkerRepositoryCustom{
         return queryFactory
                 .select(Projections.fields(ListWorkerDTO.class,
                         worker.id.as("id"),
-                        worker.trainingStatue.as("trainingStatus"),
+                        worker.trainingStatus.stringValue().as("trainingStatus"),
                         worker.employee.employeeNumber.as("employeeNumber"),
-                        worker.employee.firstName.as("firstName"),
-                        worker.employee.lastName.as("lastName"),
-                        worker.employee.employmentStatus.as("employeeStatus"),
-                        worker.employee.employmentType.as("employeeType"),
+                        worker.employee.firstName.as("employeeFirstName"),
+                        worker.employee.lastName.as("employeeLastName"),
+                        worker.employee.employmentStatus.stringValue().as("employmentStatus"),
+                        worker.employee.employmentType.stringValue().as("employmentType"),
                         worker.employee.department.departmentName.as("departmentName"),
                         worker.employee.position.positionName.as("positionName"),
                         worker.employee.jobTitle.titleName.as("jobTitleName")
                 ))
                 .from(worker)
-                .where(worker.employee.department.departmentName.startsWith("생산"),
+                .where(worker.employee.department.departmentName.contains("생산"),
                         worker.company.id.eq(companyId))
                 .fetch();
     }

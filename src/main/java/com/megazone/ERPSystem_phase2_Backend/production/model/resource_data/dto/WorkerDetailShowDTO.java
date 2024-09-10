@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class WorkerDetailShowDTO {
 
     private Long id;
-    private Boolean trainingStatue;     //안전교육 이수 여부(이수/미이수)
+    private Boolean trainingStatus;     //안전교육 이수 여부(이수/미이수)
     private String employeeNumber;     //employee 의 사원 번호
     private String employeeFirstName;  //employee 의 이름
     private String employeeLastName;   //employee 의 성

@@ -53,7 +53,7 @@ public class WorkerServiceImpl implements WorkerService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 아이디를 조회할 수 없습니다." + id));
 
         //새로 들어온 dto를 기존 엔티티에 업데이트. 교육이수여부만 업데이트 나머지는 기존값 그대로.
-        worker.setTrainingStatue(dto.getTrainingStatue());
+        worker.setTrainingStatus(dto.getTrainingStatus());
 
         Worker updateWorker = workerRepository.save(worker);
 
@@ -126,14 +126,14 @@ public class WorkerServiceImpl implements WorkerService {
 
         WorkerDetailShowDTO workerDetailShowDTO = new WorkerDetailShowDTO();
         workerDetailShowDTO.setId(worker.getId());
-        workerDetailShowDTO.setTrainingStatue(worker.getTrainingStatue());
+        workerDetailShowDTO.setTrainingStatus(worker.getTrainingStatus());
         workerDetailShowDTO.setEmployeeNumber(worker.getEmployee().getEmployeeNumber());
         workerDetailShowDTO.setEmployeeFirstName(worker.getEmployee().getFirstName());
         workerDetailShowDTO.setEmployeeLastName(worker.getEmployee().getLastName());
         workerDetailShowDTO.setDepartmentName(worker.getEmployee().getDepartment().getDepartmentName());
         workerDetailShowDTO.setPositionName(worker.getEmployee().getPosition().getPositionName());
         workerDetailShowDTO.setJobTitleName(worker.getEmployee().getJobTitle().getTitleName());
-        workerDetailShowDTO.setPositionName(worker.getEmployee().getPhoneNumber());
+        workerDetailShowDTO.setPhoneNumber(worker.getEmployee().getPhoneNumber());
         workerDetailShowDTO.setEmploymentStatus(worker.getEmployee().getEmploymentStatus());
         workerDetailShowDTO.setEmploymentType(worker.getEmployee().getEmploymentType());
         workerDetailShowDTO.setHireDate(worker.getEmployee().getHireDate());
