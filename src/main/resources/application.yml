@@ -9,6 +9,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+#    generate-ddl: true
     properties:
       hibernate:
         multi-tenancy: SCHEMA # 멀티 테넌시 설정 (스키마 기반)
@@ -25,6 +26,9 @@ spring:
         - 'classpath:/resources/' # 정적 리소스 위치 지정 (클래스패스 기준)
         - 'classpath:/META-INF/resources/' # 정적 리소스 위치 지정 (클래스패스 기준)
         - 'file:src/main/frontend/dist/' # 정적 리소스 위치 지정 (파일 시스템 기준)
+  flyway:
+    enabled: false
+
   sql:
     init:
       mode: always # 항상 SQL 초기화 모드를 사용하도록 설정

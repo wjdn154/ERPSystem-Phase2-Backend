@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.hr.controller.basic_information_ma
 
 import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.SchemaBasedTenantIdentifierResolver;
 import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.TenantContext;
+import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.TenantService;
 import com.megazone.ERPSystem_phase2_Backend.common.config.security.AuthRequest;
 import com.megazone.ERPSystem_phase2_Backend.common.config.security.CustomUserDetails;
 import com.megazone.ERPSystem_phase2_Backend.common.config.security.JwtUtil;
@@ -14,7 +15,19 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_manageme
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.UserPermission;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Users.UsersService;
+import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.boot.spi.MetadataImplementor;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+import org.hibernate.tool.schema.TargetType;
+import org.hibernate.tool.schema.spi.SchemaCreator;
+import org.hibernate.tool.schema.spi.SchemaManagementTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +37,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.hibernate.tool.schema.internal.SchemaCreatorImpl;
 
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @RestController
@@ -37,11 +53,12 @@ public class UsersController {
     private final UsersService usersService;
     private final UsersRepository usersRepository;
     private final CompanyRepository companyRepository;
-    private final SchemaBasedTenantIdentifierResolver tenantIdentifierResolver;
+
 
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final TenantService tenantService;
 
 
 
@@ -75,14 +92,19 @@ public class UsersController {
     public ResponseEntity<String> registerUser(@RequestHeader("X-Tenant-ID") String tenantId, @RequestBody AuthRequest authRequest) {
 
         // 1. 테넌트 식별자 설정
-        tenantIdentifierResolver.setCurrentTenant(tenantId);
-//        TenantContext.setCurrentTenant(tenantId);
-        System.out.println("현재 설정된 테넌트: " + tenantIdentifierResolver.resolveCurrentTenantIdentifier()); // 설정된 테넌트 확인
+//        tenantIdentifierResolver.setCurrentTenant(tenantId);
+        System.out.println("tenantId = " + tenantId);
+        TenantContext.setCurrentTenant(tenantId);
+
+
+        tenantService.exportSchema(tenantId);
+
+
 
         // 2. 이미 존재하는 사용자 검증
-//        if (usersRepository.findByUserName(authRequest.getUserName()).isPresent()) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 존재하는 사용자입니다.");
-//        }
+        if (usersRepository.findByUserName(authRequest.getUserName()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 존재하는 사용자입니다.");
+        }
 
         // 3. 이메일 형식 검증 정규식
         Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
@@ -98,8 +120,8 @@ public class UsersController {
         newUser.setUserName(authRequest.getUserName());
         newUser.setPassword(encodedPassword);
         newUser.setPermission(new Permission()); // 권한 설정
-//        newUser.setCompany(companyRepository.findById(authRequest.getCompanyId())
-//                .orElseThrow(() -> new RuntimeException("회사 정보를 찾을 수 없습니다."))); // 회사 설정
+        newUser.setCompany(companyRepository.findById(authRequest.getCompanyId())
+                .orElseThrow(() -> new RuntimeException("회사 정보를 찾을 수 없습니다."))); // 회사 설정
         newUser.setUserNickname(authRequest.getUserNickname());
 
         usersRepository.save(newUser);

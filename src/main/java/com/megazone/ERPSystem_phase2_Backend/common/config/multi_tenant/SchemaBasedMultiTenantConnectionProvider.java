@@ -33,12 +33,9 @@ public class SchemaBasedMultiTenantConnectionProvider implements MultiTenantConn
     // tenantIdentifier는 각 테넌트를 식별하는 ID임.
     @Override
     public Connection getConnection(Object tenantIdentifier) throws SQLException {
-//        if(TenantContext.getCurrentTenant() != null) {
-//            tenantIdentifier = TenantContext.getCurrentTenant();
-//        }
+        if(TenantContext.getCurrentTenant() != null) tenantIdentifier = TenantContext.getCurrentTenant();
 
         // 로그로 테넌트 식별자를 확인
-        System.out.println("연결용 테넌트 식별자: " + tenantIdentifier);
 
         final Connection connection = dataSource.getConnection(); // 기본 DataSource로부터 연결을 가져옴
 
