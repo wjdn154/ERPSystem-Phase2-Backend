@@ -88,10 +88,38 @@ public class WorkerServiceImpl implements WorkerService {
 
 
     //해당 작업자의 모든 작업 배치 이력 조회
-//    @Override
-//    public List<ListWorkerAttendanceDTO> findAllWorkerById(Long id) {
-//        return Optional.empty();
-//    }
+    @Override
+    public ListWorkerAttendanceDTO findAllWorkerById(Long id) {
+
+        //worker id로 worker 조회
+        Worker worker = workerRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(("작업자를 찾을 수 없습니다.") + id));
+
+        //근태 관리 리스트 생성
+        List<WorkerAttendanceDTO> attendanceList = worker.getEmployee().getAttendance().stream()
+                .map(attendance -> new WorkerAttendanceDTO(
+                        attendance.getAttendanceCode(),
+                        attendance.getDate().toString(),
+                        attendance.getCheckTime().toString(),
+                        attendance.getCheckoutTime().toString(),
+                        attendance.getStatus().toString()
+                )).toList();
+
+        //작업배치 관리 리스트 생성
+        List<WorkerAssignmentDTO> assignmentList = worker.getWorkerAssignments().stream()
+                .map(assignment -> new WorkerAssignmentDTO(
+                        assignment.getWorkcenter().getCode(),
+                        assignment.getWorkcenter().getName(),
+                        assignment.getAssignmentDate().toString()
+                        )).toList();
+        //최종 dto 생성 및 반환
+        return new ListWorkerAttendanceDTO(
+                worker.getId(),
+                worker.getEmployee().getEmployeeNumber(),
+                attendanceList,
+                assignmentList
+        );
+    }
 
     //worker 엔티티를 WorkerDetailShowDTO 로 변환
     private WorkerDetailShowDTO workerToDTO(Worker worker) {
