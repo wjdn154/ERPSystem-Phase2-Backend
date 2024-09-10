@@ -1,7 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.repository.routing_management.ProductionRouting;
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProductionRouting;
-import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.dto.ProductionRoutingDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -32,4 +31,5 @@ public interface ProductionRoutingRepository extends JpaRepository<ProductionRou
     List<ProductionRouting> findByIsActive(Boolean isActive);
 
 
+    Optional<ProductionRouting> findByCompanyIdAndId(Long companyId, Long productionRoutingId);
 }

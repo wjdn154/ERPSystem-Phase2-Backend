@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.product;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.ProductGroup;
@@ -57,8 +58,8 @@ public class ProductServiceImpl implements ProductService{
         // 회사 존재 여부 검사
         validateCompanyExistence(companyId);
 
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("품목을 찾을 수 없습니다."));
+        Product product = productRepository.findByCompanyIdAndId(companyId, id)
+                .orElseThrow(() -> new NoSuchElementException("사용자의 회사에 해당 품목을 찾을 수 없습니다."));
 
         return Optional.of(toDto(product));
     }
@@ -73,25 +74,23 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public Optional<ProductResponseDto> saveProduct(Long companyId, ProductRequestDto productRequestDto) {
 
-        // 회사 존재 여부 검사
-        validateCompanyExistence(companyId);
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new IllegalArgumentException("회사를 찾을 수 없습니다."));
+
         // 코드 중복 검사
         validateProductCodeUnique(productRequestDto.getCode());
 
         // 품목 그룹 조회
-        Optional<ProductGroup> productGroup = productGroupRepository.findById(productRequestDto.getProductGroupId());
-        if (productGroup.isEmpty()) {
-            return Optional.empty(); // 폼목 그룹 없으면 빈 Optional 반홤함
-        }
+        ProductGroup productGroup = productGroupRepository.findByCompanyIdAndId(companyId, productRequestDto.getProductGroupId())
+                .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 품목 그룹을 찾을 수 없습니다."));
+
 
         // 생산 라우팅 조회
-        Optional<ProductionRouting> productionRouting = productionRoutingRepository.findById(productRequestDto.getProductionRoutingId());
-        if (productionRouting.isEmpty()) {
-            return Optional.empty(); // 생산 라우팅 없으면 빈 Optional 반홤함
-        }
+        ProductionRouting productionRouting = productionRoutingRepository.findByCompanyIdAndId(companyId, productRequestDto.getProductionRoutingId())
+                .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 생산 라우팅을 찾을 수 없습니다."));
 
         // 엔티티로 변환 후 저장
-        Product product = toEntity(productRequestDto, productGroup.get(), productionRouting.get());
+        Product product = toEntity(productRequestDto, company, productGroup, productionRouting);
         Product savedProduct = productRepository.save(product);
 
         // 다시 DTO로 변환 후 반환
@@ -112,24 +111,22 @@ public class ProductServiceImpl implements ProductService{
         validateCompanyExistence(companyId);
 
         // 품목 조회 및 검증
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("품목을 찾을 수 없습니다."));
+        Product product = productRepository.findByCompanyIdAndId(companyId, id)
+                .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 품목 그룹을 찾을 수 없습니다."));
 
         // 코드 중복 검사, 업데이트 할 품목은 제외하고 검사
         if (productRepository.existsByCodeAndIdNot(productRequestDto.getCode(), id)) {
             throw new IllegalArgumentException("동일한 코드를 가진 품목이 이미 존재합니다.");
         }
 
-        // 품목 그룹 조회 및 업데이트
-        ProductGroup productGroup = productGroupRepository.findById(productRequestDto.getProductGroupId())
-                .orElseThrow(() -> new IllegalArgumentException("품목 그룹을 찾을 수 없습니다."));
-
+        // 품목 그룹 조회
+        ProductGroup productGroup = productGroupRepository.findByCompanyIdAndId(companyId, productRequestDto.getProductGroupId())
+                .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 품목 그룹을 찾을 수 없습니다."));
         product.setProductGroup(productGroup);
 
         // 생산 라우팅 조회 및 업데이트
-        ProductionRouting productionRouting = productionRoutingRepository.findById(productRequestDto.getProductionRoutingId())
-                .orElseThrow(() -> new IllegalArgumentException("생산 라우팅을 찾을 수 없습니다."));
-
+        ProductionRouting productionRouting = productionRoutingRepository.findByCompanyIdAndId(companyId, productRequestDto.getProductionRoutingId())
+                .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 생산 라우팅을 찾을 수 없습니다."));
         product.setProductionRouting(productionRouting);
 
         // 나머지 필드 업데이트
@@ -152,12 +149,12 @@ public class ProductServiceImpl implements ProductService{
         // 회사 존재 여부 검사
         validateCompanyExistence(companyId);
 
-        return productRepository.findById(id)
+        return productRepository.findByCompanyIdAndId(companyId, id)
                 .map(product -> {
                     productRepository.delete(product);
                     return product.getName() + " 품목이 삭제되었습니다.";
                 })
-                .orElse("삭제 실패 : 삭제하려는 품목의 ID를 찾을 수 없습니다.");
+                .orElse("삭제 실패 : 사용자의 회사에 삭제하려는 해당 품목을 찾을 수 없습니다.");
 
     }
 
@@ -175,8 +172,8 @@ public class ProductServiceImpl implements ProductService{
         // 회사 존재 여부 검사
         validateCompanyExistence(companyId);
 
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 품목을 찾을 수 없습니다."));
+        Product product = productRepository.findByCompanyIdAndId(companyId, id)
+                .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 품목을 찾을 수 없습니다."));
 
         product.deactivate();
         productRepository.save(product);
@@ -197,8 +194,8 @@ public class ProductServiceImpl implements ProductService{
         // 회사 존재 여부 검사
         validateCompanyExistence(companyId);
 
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 품목을 찾을 수 없습니다."));
+        Product product = productRepository.findByCompanyIdAndId(companyId, id)
+                .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 품목을 찾을 수 없습니다."));
 
         product.reactivate();
         productRepository.save(product);
@@ -252,10 +249,11 @@ public class ProductServiceImpl implements ProductService{
     }
 
     // DTO -> Entity 변환 메서드
-    public Product toEntity(ProductRequestDto productRequestDto, ProductGroup productGroup, ProductionRouting productionRouting) {
+    public Product toEntity(ProductRequestDto productRequestDto, Company company, ProductGroup productGroup, ProductionRouting productionRouting) {
         return Product.builder()
                 .code(productRequestDto.getCode())
                 .name(productRequestDto.getName())
+                .company(company)
                 .productGroup(productGroup)
                 .productionRouting(productionRouting)
                 .standard(productRequestDto.getStandard())

@@ -46,12 +46,12 @@ public class ProductGroupServiceImpl implements ProductGroupService {
      */
     @Override
     public Optional<ProductGroupDto> saveProductGroup(Long companyId, ProductGroupDto productGroupDto) {
-        // 회사 존재 여부 및 품목 그룹 유효성 검사
-        validateCompanyExistence(companyId);
-        validateProductGroup(productGroupDto.getCode(), productGroupDto.getName());
 
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new IllegalArgumentException("회사를 찾을 수 없습니다."));
+
+        // 품목 그룹의 code와 name에 대한 유효성 검증 메서드
+        validateProductGroup(productGroupDto.getCode(), productGroupDto.getName());
 
         ProductGroup productGroup = toEntity(productGroupDto, company);
         ProductGroup savedGroup = productGroupRepository.save(productGroup);
@@ -71,10 +71,12 @@ public class ProductGroupServiceImpl implements ProductGroupService {
     public Optional<ProductGroupDto> updateProduct(Long companyId, Long id, ProductGroupDto productGroupDto) {
         // 회사 존재 여부 및 품목 그룹 유효성 검사
         validateCompanyExistence(companyId);
-        validateProductGroup(productGroupDto.getCode(), productGroupDto.getName());
 
-        ProductGroup productGroup = productGroupRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("품목 그룹을 찾을 수 없습니다."));
+        ProductGroup productGroup = productGroupRepository.findByCompanyIdAndId(companyId, id)
+                .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 품목 그룹을 찾을 수 없습니다."));
+
+        // 품목 그룹의 code와 name에 대한 유효성 검증 메서드
+        validateProductGroup(productGroupDto.getCode(), productGroupDto.getName());
 
         if (productGroupRepository.existsByCodeAndIdNot(productGroupDto.getCode(), id)) {
             throw new IllegalArgumentException("해당 코드로 등록된 품목 그룹이 이미 존재합니다.");
@@ -99,8 +101,8 @@ public class ProductGroupServiceImpl implements ProductGroupService {
     public String deleteProductGroup(Long companyId, Long id) {
         validateCompanyExistence(companyId);
 
-        ProductGroup productGroup = productGroupRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("삭제 실패 : 삭제하려는 품목 그룹의 ID를 찾을 수 없습니다."));
+        ProductGroup productGroup = productGroupRepository.findByCompanyIdAndId(companyId, id)
+                .orElseThrow(() -> new IllegalArgumentException("삭제 실패 : 사용자의 회사에 삭제하려는 품목 그룹을 찾을 수 없습니다."));
 
         // 삭제 전 Product 의 productGroup 필드를 null 로 설정
         productRepository.nullifyProductGroupId(id);
@@ -120,8 +122,8 @@ public class ProductGroupServiceImpl implements ProductGroupService {
     public String deactivateProductGroup(Long companyId, Long id) {
         validateCompanyExistence(companyId);
 
-        ProductGroup productGroup = productGroupRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 Id의 품목 그룹을 찾을 수 없습니다."));
+        ProductGroup productGroup = productGroupRepository.findByCompanyIdAndId(companyId, id)
+                .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 품목 그룹을 찾을 수 없습니다."));
 
         productGroup.deactivate();
         productGroupRepository.save(productGroup);
@@ -139,8 +141,8 @@ public class ProductGroupServiceImpl implements ProductGroupService {
     public String reactivateProductGroup(Long companyId, Long id) {
         validateCompanyExistence(companyId);
 
-        ProductGroup productGroup = productGroupRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 Id의 품목 그룹을 찾을 수 없습니다."));
+        ProductGroup productGroup = productGroupRepository.findByCompanyIdAndId(companyId, id)
+                .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 품목 그룹을 찾을 수 없습니다."));
 
         productGroup.reactivate();
         productGroupRepository.save(productGroup);
