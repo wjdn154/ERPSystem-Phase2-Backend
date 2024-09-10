@@ -34,7 +34,7 @@ dependencies {
 	// 스프링 부트의 JPA 및 웹 스타터 패키지
 	implementation("org.springframework.boot:spring-boot-starter-web") // 웹 스타터
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa") // JPA 스타터
-	implementation("org.hibernate:hibernate-core:6.5.2.Final") // Hibernate Core
+//	implementation("org.hibernate:hibernate-core:6.5.2.Final") // Hibernate Core
 	implementation("org.springframework.boot:spring-boot-starter-validation") // Validation 스타터
 
 	// 스프링 부트의 보안 및 JWT 스타터 패키지

@@ -1,5 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.controller.basic_information_management.Employee;
 
+import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.SchemaBasedTenantIdentifierResolver;
+import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.TenantContext;
 import com.megazone.ERPSystem_phase2_Backend.common.config.security.AuthRequest;
 import com.megazone.ERPSystem_phase2_Backend.common.config.security.CustomUserDetails;
 import com.megazone.ERPSystem_phase2_Backend.common.config.security.JwtUtil;
@@ -14,6 +16,7 @@ import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_man
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Users.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,6 +37,7 @@ public class UsersController {
     private final UsersService usersService;
     private final UsersRepository usersRepository;
     private final CompanyRepository companyRepository;
+    private final SchemaBasedTenantIdentifierResolver tenantIdentifierResolver;
 
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
@@ -68,27 +72,38 @@ public class UsersController {
     }
 
     @PostMapping("/auth/register")
-    public ResponseEntity<String> registerUser(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<String> registerUser(@RequestHeader("X-Tenant-ID") String tenantId, @RequestBody AuthRequest authRequest) {
 
-        // 이메일 형식 검증 정규식
+        // 1. 테넌트 식별자 설정
+        tenantIdentifierResolver.setCurrentTenant(tenantId);
+//        TenantContext.setCurrentTenant(tenantId);
+        System.out.println("현재 설정된 테넌트: " + tenantIdentifierResolver.resolveCurrentTenantIdentifier()); // 설정된 테넌트 확인
+
+        // 2. 이미 존재하는 사용자 검증
+//        if (usersRepository.findByUserName(authRequest.getUserName()).isPresent()) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 존재하는 사용자입니다.");
+//        }
+
+        // 3. 이메일 형식 검증 정규식
         Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+        if (!pattern.matcher(authRequest.getUserName()).matches()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 이메일 형식입니다.");
+        }
 
-        // 이메일 형식 검증
-        if (!pattern.matcher(authRequest.getUserName()).matches()) throw new IllegalArgumentException("잘못된 이메일 형식입니다.");
-
-        // 비밀번호 암호화
+        // 4. 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(authRequest.getPassword());
 
-        // 새 사용자 생성
+        // 5. 새 사용자 생성 및 저장
         Users newUser = new Users();
         newUser.setUserName(authRequest.getUserName());
         newUser.setPassword(encodedPassword);
         newUser.setPermission(new Permission()); // 권한 설정
-        newUser.setCompany(companyRepository.findById(authRequest.getCompanyId()).orElseThrow(() -> new RuntimeException("회사 정보를 찾을 수 없습니다."))); // 회사 설정
+//        newUser.setCompany(companyRepository.findById(authRequest.getCompanyId())
+//                .orElseThrow(() -> new RuntimeException("회사 정보를 찾을 수 없습니다."))); // 회사 설정
         newUser.setUserNickname(authRequest.getUserNickname());
 
         usersRepository.save(newUser);
-        return ResponseEntity.ok("사용자 등록 완료");
+        return ResponseEntity.ok("사용자 등록 완료 - 테넌트: " + tenantId);
     }
 
 
