@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ShiftTypeServiceImpl {
+public class ShiftTypeServiceImpl implements ShiftTypeService {
 
     private final ShiftTypeRepository shiftTypeRepository;
 
