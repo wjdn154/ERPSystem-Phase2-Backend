@@ -8,7 +8,6 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_manageme
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersPermissionDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersShowDTO;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.UserPermission;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Users.UsersService;
 import lombok.RequiredArgsConstructor;
@@ -155,12 +154,5 @@ public class UsersController {
         usersService.deleteUsers(id);
         return ResponseEntity.ok("사용자 삭제되었습니다.");
     }
-
-
-//    @PostMapping("/{userId}/assignRole/{roleId}")
-//    public ResponseEntity<UsersResponseDTO> assignRoleToUser(@PathVariable Long userId, @PathVariable Long roleId) {
-//        UsersResponseDTO usersResponseDTO = usersService.assignRoleToUser(userId, roleId);
-//        return ResponseEntity.ok(usersResponseDTO);
-//    }
 }
 
