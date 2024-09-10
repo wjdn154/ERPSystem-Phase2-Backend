@@ -1,11 +1,16 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.resolvedVoucher;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.GeneralShowAllDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.GeneralShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.ResolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.QResolvedVoucher;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,5 +41,23 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
             return deletedVoucher;
         }
         return null;
+    }
+
+    @Override
+    public List<GeneralShowDTO> generalSearch(LocalDate startDate, LocalDate endDate, String startAccountCode, String endAccountCode) {
+        QResolvedVoucher qResolvedVoucher = QResolvedVoucher.resolvedVoucher;
+
+        return queryFactory
+                .select(Projections.constructor(GeneralShowDTO.class,
+                        qResolvedVoucher.accountSubject.code,
+                        qResolvedVoucher.voucherDate,
+                        qResolvedVoucher.debitAmount.sum(),
+                        qResolvedVoucher.creditAmount.sum()))
+                .from(qResolvedVoucher)
+                .where(qResolvedVoucher.voucherDate.between(startDate, endDate)
+                        .and(qResolvedVoucher.accountSubject.code.between(startAccountCode, endAccountCode)))
+                .groupBy(qResolvedVoucher.accountSubject.code, qResolvedVoucher.voucherDate)
+                .orderBy(qResolvedVoucher.voucherDate.asc(), qResolvedVoucher.accountSubject.code.asc())
+                .fetch();
     }
 }

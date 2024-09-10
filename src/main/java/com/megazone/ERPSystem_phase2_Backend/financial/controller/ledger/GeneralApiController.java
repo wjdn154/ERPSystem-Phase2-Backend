@@ -1,9 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.controller.ledger;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.GeneralDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.GeneralShowDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.JournalDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.JournalShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.UnresolvedVoucherShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.ledger.GeneralService;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
@@ -32,6 +29,7 @@ public class GeneralApiController {
         Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
                 () -> new RuntimeException("사용자를 찾을 수 없습니다."));
         Long companyId = users.getCompany().getId();
+        GeneralShowAllDTO generalShowAllDTO = generalService.getGeneralShow(dto);
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("개발진행중");
 
