@@ -14,8 +14,8 @@ VALUES (1, 1, 'HG001', '그룹 A'),
 INSERT INTO warehouse (id, company_id, address_id, warehouse_code, warehouse_type, name, production_process, is_active)
 VALUES (1, 1, 1, 'WH001', 'WAREHOUSE', '재고창고', '지혁몸통창고', TRUE),
        (2, 1, 1, 'WH002', 'FACTORY', '생산공장', '지혁이몸통생산', FALSE),
-       (3, 2, 1, 'WH002', 'FACTORY', '과일창고', '지혁이머리저장', FALSE),
-       (4, 2, 1, 'WH002', 'FACTORY', '부품공장', '지혁이머리생산', TRUE);
+       (3, 2, 1, 'WH003', 'FACTORY', '과일창고', '지혁이머리저장', FALSE),
+       (4, 2, 1, 'WH004', 'FACTORY', '부품공장', '지혁이머리생산', TRUE);
 
 INSERT INTO warehouse_hierarchy_group (id, company_id, warehouse_id, hierarchy_group_id)
 VALUES (1, 1, 1, 1),

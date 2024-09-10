@@ -41,7 +41,7 @@ public class Warehouse {
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     private List<WarehouseHierarchyGroup> warehouseHierarchyGroup = new ArrayList<>();
 
-    @Column(name = "warehouse_code", nullable = false) // 창고코드
+    @Column(name = "warehouse_code", nullable = false, unique = true) // 창고코드
     private String code;
 
     @Column(nullable = false) // 창고명

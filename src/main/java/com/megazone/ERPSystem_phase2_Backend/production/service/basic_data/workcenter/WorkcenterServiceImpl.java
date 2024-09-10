@@ -69,17 +69,17 @@ public class WorkcenterServiceImpl implements WorkcenterService {
     // Entity로 변환하는 메서드
     private Workcenter convertToEntity(WorkcenterDTO workcenterDTO) {
 
-//        // DTO의 값들을 출력해 확인
-//        System.out.println("Converting DTO to Entity");
-//        System.out.println("Workcenter Code: " + workcenterDTO.getCode());
-//        System.out.println("Workcenter Name: " + workcenterDTO.getName());
-//        System.out.println("Workcenter Type: " + workcenterDTO.getWorkcenterType()); // 문제의 필드 확인
-//        System.out.println("Process Code: " + workcenterDTO.getProcessCode());
-//        System.out.println("Factory Code: " + workcenterDTO.getFactoryCode());
-//
-//        System.out.println("Equipment Ids: " + workcenterDTO.getEquipmentIds());
-//        System.out.println("WorkerAssignment Ids: " + workcenterDTO.getWorkerAssignmentIds());
-//        System.out.println("TodayWorkers: " + workcenterDTO.getTodayWorkers());
+        // DTO의 값들을 출력해 확인
+        System.out.println("Converting DTO to Entity");
+        System.out.println("Workcenter Code: " + workcenterDTO.getCode());
+        System.out.println("Workcenter Name: " + workcenterDTO.getName());
+        System.out.println("Workcenter Type: " + workcenterDTO.getWorkcenterType()); // 문제의 필드 확인
+        System.out.println("Process Code: " + workcenterDTO.getProcessCode());
+        System.out.println("Factory Code: " + workcenterDTO.getFactoryCode());
+
+        System.out.println("Equipment Ids: " + workcenterDTO.getEquipmentIds());
+        System.out.println("WorkerAssignment Ids: " + workcenterDTO.getWorkerAssignmentIds());
+        System.out.println("TodayWorkers: " + workcenterDTO.getTodayWorkers());
 
         return Workcenter.builder()
                 .code(workcenterDTO.getCode())
@@ -112,12 +112,12 @@ public class WorkcenterServiceImpl implements WorkcenterService {
     }
 
     @Override
-    public Optional<WorkcenterDTO> findById(Long id) {
+    public Optional<WorkcenterDTO> findById(Long company_id, Long id) {
         return Optional.empty();
     }
 
     @Override
-    public Optional<WorkcenterDTO> deleteByCode(String code) {
+    public Optional<WorkcenterDTO> deleteByCode(Long company_id, String code) {
         Workcenter workcenter = workcenterRepository.findByCode(code)
                 .orElseThrow(() -> new EntityNotFoundException("해당 작업장코드를 찾을 수 없습니다: " + code));
 
@@ -130,7 +130,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
     }
 
     @Override
-    public Optional<WorkcenterDTO> updateByCode(String code, WorkcenterDTO workcenterDTO) {
+    public Optional<WorkcenterDTO> updateByCode(Long company_id, String code, WorkcenterDTO workcenterDTO) {
         return workcenterRepository.findByCode(code).map(existingWorkcenter -> {
             existingWorkcenter.setCode(workcenterDTO.getCode());
             existingWorkcenter.setName(workcenterDTO.getName());
@@ -146,7 +146,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
     }
 
     @Override
-    public Workcenter save(WorkcenterDTO workcenterDTO) {
+    public Workcenter save(Long company_id, WorkcenterDTO workcenterDTO) {
         System.out.println("save WorkcenterDTO");
         System.out.println("Workcenter Code: " + workcenterDTO.getCode());
         System.out.println("Workcenter Name: " + workcenterDTO.getName());
@@ -170,7 +170,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 
 
     @Override
-    public List<WorkcenterDTO> findAll() {
+    public List<WorkcenterDTO> findAll(Long company_id) {
         LocalDate today = LocalDate.now();
         List<Workcenter> workcenters = workcenterRepository.findAllWithDetails();
 
@@ -229,7 +229,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 
 
     @Override
-    public Optional<WorkcenterDTO> findByCode(String code) {
+    public Optional<WorkcenterDTO> findByCode(Long company_id, String code) {
         return workcenterRepository.findByCode(code).map(workcenter -> {
             WorkcenterDTO workcenterDTO = convertToDTO(workcenter);
 
@@ -256,14 +256,14 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 //    }
 
     @Override
-    public List<WorkcenterDTO> findByNameContaining(String name) {
+    public List<WorkcenterDTO> findByNameContaining(Long company_id, String name) {
         return workcenterRepository.findByNameContaining(name).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<WarehouseResponseDTO> findAllFactories() {
+    public List<WarehouseResponseDTO> findAllFactories(Long company_id) {
         return warehouseRepository.findAll().stream()
                 .filter(warehouse -> warehouse.getWarehouseType() == WarehouseType.FACTORY
                         || warehouse.getWarehouseType() == WarehouseType.OUTSOURCING_FACTORY)
@@ -283,7 +283,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
     }
 
     @Override
-    public List<EquipmentDataDTO> findEquipmentByWorkcenterCode(String workcenterCode) {
+    public List<EquipmentDataDTO> findEquipmentByWorkcenterCode(Long company_id, String workcenterCode) {
         Workcenter workcenter = workcenterRepository.findByCode(workcenterCode)
                 .orElseThrow(() -> new EntityNotFoundException("작업장 코드를 찾을 수 없습니다: " + workcenterCode));
 
@@ -320,7 +320,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
     }
 
     @Override
-    public List<WorkerAssignmentDTO> findWorkerAssignmentsByWorkcenterCode(String workcenterCode) {
+    public List<WorkerAssignmentDTO> findWorkerAssignmentsByWorkcenterCode(Long company_id, String workcenterCode) {
         Workcenter workcenter = workcenterRepository.findByCode(workcenterCode)
                 .orElseThrow(() -> new EntityNotFoundException("작업장 코드를 찾을 수 없습니다: " + workcenterCode));
 
