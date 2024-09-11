@@ -131,11 +131,11 @@ public class WorkOrderServiceImpl implements WorkOrderService {
                     WorkerAssignment newAssignment;
                     try {
                         // Shift가 null이 아닌지 체크 후 처리
-                        if (assignmentDTO.getShift() != null) {
+                        if (assignmentDTO.getShiftTypeId() != null) {
                             newAssignment = assignWorkerToShift(
                                     assignmentDTO.getWorkerId(),        // workerId
                                     assignmentDTO.getWorkcenterCode(),  // workcenterCode
-                                    assignmentDTO.getShift().getId(),   // shiftTypeId
+                                    assignmentDTO.getShiftTypeId(),   // shiftTypeId
                                     assignmentDTO.getAssignmentDate()   // assignmentDate
                             );
                             newAssignment.setWorkOrder(workOrder);

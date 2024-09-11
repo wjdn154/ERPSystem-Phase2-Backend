@@ -41,6 +41,7 @@ public interface WorkerAssignmentRepositoryCustom {
 
     /**
      * 작업장 코드와 날짜로 작업자 배정 정보 조회
+     * 날짜가 주어지지 않을 경우에도 호출이 가능하며, 이 경우 모든 작업자 배정 이력을 반환할 수 있습니다.
      * @param workcenterCode 작업장 코드
      * @param optionalDate 배정 날짜(Optional)
      * @return 작업자 배정 리스트
@@ -55,12 +56,12 @@ public interface WorkerAssignmentRepositoryCustom {
      */
     List<WorkerAssignment> findWorkerAssignmentsByWorkcenterCodeAndDate(String workcenterCode, LocalDate date);
 
-    /**
-     * 작업장 코드로 오늘의 작업자 조회
-     * @param code 작업장 코드
-     * @return 오늘의 작업자 리스트
-     */
-    List<WorkerAssignmentDTO> findTodayWorkers(String code);
+//    /**
+//     * 작업장 코드로 오늘의 작업자 조회
+//     * @param code 작업장 코드
+//     * @return 오늘의 작업자 리스트
+//     */
+//    List<WorkerAssignmentDTO> findTodayWorkers(String code);
 
     /**
      * 특정 작업자와 날짜로 작업자 배정 조회

@@ -174,25 +174,67 @@ public class WorkcenterServiceImpl implements WorkcenterService {
         LocalDate today = LocalDate.now();
         List<Workcenter> workcenters = workcenterRepository.findAllWithDetails();
 
-        // 작업장 DTO로 변환하면서 오늘의 작업자를 포함
         return workcenters.stream().map(workcenter -> {
             WorkcenterDTO workcenterDTO = convertToDTO(workcenter);
 
-            // 오늘의 작업자 명단 가져오기
-            List<WorkerAssignmentDTO> todayWorkers = workerAssignmentRepository.findTodayWorkers(workcenter.getCode());
-
             // 오늘의 작업자 수 가져오기
             int todayWorkerCount = getTodayWorkerCount(workcenter.getCode(), today);
-            workcenterDTO.setTodayWorkers(todayWorkers); // 오늘의 작업자 리스트 설정
+            workcenterDTO.setTodayWorkerCount((long) todayWorkerCount); // 오늘 작업자 수 설정
+
+            // 설치된 설비 수 가져오기
+            List<Long> equipmentIds = workcenter.getEquipmentList().stream()
+                    .map(EquipmentData::getId)
+                    .collect(Collectors.toList());
+            workcenterDTO.setEquipmentIds(equipmentIds); // 설비 ID 설정
+
+            // 소속 공장명 가져오기 (공장이 있으면 이름 설정, 없으면 null)
+            String factoryCode = workcenter.getFactory() != null ? workcenter.getFactory().getCode() : null;
+            workcenterDTO.setFactoryCode(factoryCode);
+
+            // 생산 공정명 가져오기 (공정이 있으면 이름 설정, 없으면 null)
+            String processCode = workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getCode() : null;
+            workcenterDTO.setProcessCode(processCode);
 
             return workcenterDTO;
         }).collect(Collectors.toList());
     }
 
-    public int getTodayWorkerCount(String workcenterCode, LocalDate currentDate) {
+    private int getTodayWorkerCount(String workcenterCode, LocalDate currentDate) {
         List<WorkerAssignment> todayAssignments = workerAssignmentRepository.getWorkerAssignments(workcenterCode, Optional.of(currentDate));
         return todayAssignments.size(); // 작업자 수 반환
     }
+
+
+    public int getTodayWorkerCount(Long company_id, String workcenterCode, LocalDate currentDate) {
+        List<WorkerAssignment> todayAssignments = workerAssignmentRepository.getWorkerAssignments(workcenterCode, Optional.of(currentDate));
+        return todayAssignments.size(); // 작업자 수 반환
+    }
+
+    @Override
+    public List<WorkerAssignmentDTO> findTodayWorkers(Long company_id, String workcenterCode) {
+        LocalDate today = LocalDate.now();
+
+        // repository에서 오늘의 작업자 배정 이력을 가져옴
+        List<WorkerAssignment> assignments = workerAssignmentRepository
+                .findWorkerAssignmentsByWorkcenterCodeAndDate(workcenterCode, today);
+
+        // DTO로 변환 (null 체크 추가)
+        return assignments.stream()
+                .map(assignment -> WorkerAssignmentDTO.builder()
+                        .workerId(assignment.getWorker().getId())  // 작업자 ID
+                        .workerName(assignment.getWorker().getEmployee() != null ?
+                                assignment.getWorker().getEmployee().getLastName() + " " + assignment.getWorker().getEmployee().getFirstName() : "Unknown")  // 작업자 이름
+                        .employeeNumber(assignment.getWorker().getEmployee() != null ?
+                                assignment.getWorker().getEmployee().getEmployeeNumber() : "Unknown")  // 사원 번호
+                        .workcenterCode(assignment.getWorkcenter().getCode())  // 작업장 코드
+                        .assignmentDate(assignment.getAssignmentDate())  // 배정 날짜
+                        .shiftTypeId(assignment.getShiftType() != null ? assignment.getShiftType().getId() : null)  // 교대조 ID
+                        .workOrderId(assignment.getWorkOrder() != null ? assignment.getWorkOrder().getId() : null)  // 작업지시 ID (null 체크)
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+
 
 //    public List<WorkerAssignmentDTO> getTodayWorkers(String workcenterCode, LocalDate currentDate) {
 //        List<WorkerAssignment> todayAssignments = workerAssignmentRepository.getWorkerAssignments(workcenterCode, Optional.of(currentDate));
@@ -234,7 +276,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
             WorkcenterDTO workcenterDTO = convertToDTO(workcenter);
 
             LocalDate today = LocalDate.now();
-            List<WorkerAssignmentDTO> todayWorkers = workerAssignmentRepository.findTodayWorkers(code);
+            List<WorkerAssignmentDTO> todayWorkers = findTodayWorkers(company_id, code);
             workcenterDTO.setTodayWorkers(todayWorkers);
 
             return workcenterDTO;

@@ -30,4 +30,6 @@ public interface WorkcenterService {
     List<EquipmentDataDTO> findEquipmentByWorkcenterCode(Long company_id, String equipmentCode);
 
     List<WorkerAssignmentDTO> findWorkerAssignmentsByWorkcenterCode(Long company_id, String workcenterCode);
+
+    List<WorkerAssignmentDTO> findTodayWorkers(Long company_id, String workcenterCode);
 }

@@ -19,6 +19,6 @@ public class WorkerAssignmentDTO {
     private String employeeNumber;
     private String workcenterCode; // 작업장
     private LocalDate assignmentDate; // 배정일
-    private ShiftType shift; // 교대
+    private Long shiftTypeId; // 교대 ID
     private Long workOrderId; // 연관 작업지시
 }
