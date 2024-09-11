@@ -85,13 +85,14 @@ public class JwtUtil {
     /**
      * 사용자 이름과 닉네임을 포함한 JWT 토큰 생성
      *
+     * @param tenantId 테넌트 ID
      * @param username 사용자 이름
      * @param userNickname 사용자 닉네임
      * @return 생성된 JWT 토큰
      */
-    public String generateToken(String username, String userNickname) {
+    public String generateToken(String tenantId, String username, String userNickname) {
         Map<String, Object> claims = new HashMap<>();  // 기본 클레임 설정
-        claims.put("X-Tenant-ID", "tenant_2");  // 테넌트 ID 추가
+        claims.put("X-Tenant-ID", tenantId);  // 테넌트 ID 추가
         claims.put("userNickname", userNickname);  // 사용자 닉네임 추가
         return createToken(claims, username);  // 토큰 생성
     }

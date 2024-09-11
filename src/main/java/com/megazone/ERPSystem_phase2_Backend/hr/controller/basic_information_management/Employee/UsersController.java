@@ -63,8 +63,9 @@ public class UsersController {
     @PostMapping("/auth/login")
     public String createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
 
+        String tenantId = "tenant_" + authRequest.getCompanyId();
         // 테넌트 식별자 설정
-        TenantContext.setCurrentTenant("tenant_" + authRequest.getCompanyId());
+        TenantContext.setCurrentTenant(tenantId);
 
         // 이메일 형식 검증 정규식
         Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
@@ -88,7 +89,7 @@ public class UsersController {
         TenantContext.clear();
 
         // JWT 토큰 생성
-        return jwtUtil.generateToken(userDetails.getUsername(), user.getUserNickname());
+        return jwtUtil.generateToken(tenantId, userDetails.getUsername(), user.getUserNickname());
     }
 
     @PostMapping("/auth/register")
