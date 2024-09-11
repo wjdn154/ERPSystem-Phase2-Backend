@@ -50,7 +50,8 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
         return queryFactory
                 .select(Projections.constructor(GeneralShowDTO.class,
                         qResolvedVoucher.accountSubject.code,
-                        qResolvedVoucher.voucherDate,
+                        qResolvedVoucher.accountSubject.name,
+                        qResolvedVoucher.voucherDate.month(),
                         qResolvedVoucher.debitAmount.sum(),
                         qResolvedVoucher.creditAmount.sum()))
                 .from(qResolvedVoucher)

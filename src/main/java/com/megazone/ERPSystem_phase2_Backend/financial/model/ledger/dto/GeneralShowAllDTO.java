@@ -10,7 +10,5 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GeneralShowAllDTO {
-    private String accountCode;
-    private String accountName;
     private Map<String,GeneralShowDTO> allShows;
 }

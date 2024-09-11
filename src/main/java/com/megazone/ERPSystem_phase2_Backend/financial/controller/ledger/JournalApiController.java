@@ -48,6 +48,5 @@ public class JournalApiController {
         return journalShowDTO != null ?
                 ResponseEntity.status(HttpStatus.OK).body(journalShowDTO) :
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-
     }
 }

@@ -29,9 +29,11 @@ public class GeneralApiController {
         Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
                 () -> new RuntimeException("사용자를 찾을 수 없습니다."));
         Long companyId = users.getCompany().getId();
-        GeneralShowAllDTO generalShowAllDTO = generalService.getGeneralShow(dto);
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("개발진행중");
+        List<GeneralShowDTO> generalShowDTOS = generalService.getGeneralShow(dto);
+
+        return generalShowDTOS.isEmpty() ? ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("조회가능한 전표가 없습니다.") :
+                ResponseEntity.status(HttpStatus.OK).body(generalShowDTOS);
 
     }
 

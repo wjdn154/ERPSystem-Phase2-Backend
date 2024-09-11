@@ -6,23 +6,23 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.Map;
 
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
 public class GeneralShowDTO {
-    private LocalDate date;
+    private String accountSubjectCode;
+    private String accountSubjectName;
+    private Month month;
     private BigDecimal totalDebit;
     private BigDecimal totalCredit;
     private BigDecimal totalCash;
 
-    public static GeneralShowDTO create(LocalDate date, BigDecimal totalDebit, BigDecimal totalCredit, BigDecimal totalCash) {
-        return new GeneralShowDTO(
-                date,
-                totalDebit,
-                totalCredit,
-                totalCash
-        );
+    public static GeneralShowDTO create(String accountSubjectCode, String accountSubjectName, Month month,
+                                        BigDecimal totalDebit, BigDecimal totalCredit, BigDecimal totalCash) {
+        return new GeneralShowDTO(accountSubjectCode, accountSubjectName, month, totalDebit, totalCredit, totalCash);
     }
+
 }
