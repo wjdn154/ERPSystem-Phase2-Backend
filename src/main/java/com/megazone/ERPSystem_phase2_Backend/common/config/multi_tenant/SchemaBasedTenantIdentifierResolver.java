@@ -10,33 +10,43 @@ import org.springframework.web.context.annotation.RequestScope;
 import java.sql.SQLException;
 import java.util.Map;
 
+/**
+ * 각 요청에 따라 현재 테넌트를 식별하고, 없을 경우 기본 스키마를 사용함.
+ */
 @Setter
 @Component
-//@RequestScope  // 각 요청마다 별도 스코프에서 동작하도록 설정
 public class SchemaBasedTenantIdentifierResolver implements CurrentTenantIdentifierResolver, HibernatePropertiesCustomizer {
 
-    // 기본 테넌트 식별자를 "unknown"으로 설정하되, 요청에 따라 변경될 수 있음.
-    private String currentTenant = "unknown";
-
-    // 외부에서 테넌트를 설정할 수 있도록 setter 메서드 제공.
-    public void setCurrentTenant(String tenantId) {
-        this.currentTenant = tenantId;
-        System.out.println("setCurrentTenant 호출됨: " + tenantId);
-    }
-
+    /**
+     * 현재 테넌트 식별자를 반환함.
+     * @return String 현재 테넌트 ID 또는 기본 스키마 "PUBLIC"
+     */
     @Override
     public String resolveCurrentTenantIdentifier() {
-        System.out.println("resolveCurrentTenantIdentifier 호출됨: currentTenant = " + currentTenant);
-        return currentTenant;
+        // TenantContext에 테넌트가 설정되어 있으면 해당 테넌트 반환
+        if (TenantContext.getCurrentTenant() != null) {
+            return TenantContext.getCurrentTenant();
+        }
+        // 기본 스키마 반환
+        return "PUBLIC";
     }
 
+    /**
+     * 기존 세션을 유지할지 여부를 결정함.
+     * @return boolean 항상 false 반환
+     */
     @Override
     public boolean validateExistingCurrentSessions() {
         return false;
     }
 
+    /**
+     * Hibernate 설정에 다중 테넌트 식별자 해결자를 등록함.
+     * @param hibernateProperties Hibernate 설정 맵
+     */
     @Override
     public void customize(Map<String, Object> hibernateProperties) {
+        // Hibernate 설정에 테넌트 식별자 해결자 등록
         hibernateProperties.put(AvailableSettings.MULTI_TENANT_IDENTIFIER_RESOLVER, this);
     }
 }

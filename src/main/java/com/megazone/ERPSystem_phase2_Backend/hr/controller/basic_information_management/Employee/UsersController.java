@@ -1,6 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.controller.basic_information_management.Employee;
 
-import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.SchemaBasedTenantIdentifierResolver;
 import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.TenantContext;
 import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.TenantService;
 import com.megazone.ERPSystem_phase2_Backend.common.config.security.AuthRequest;
@@ -58,7 +57,6 @@ public class UsersController {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
-    private final TenantService tenantService;
 
 
 
@@ -92,14 +90,7 @@ public class UsersController {
     public ResponseEntity<String> registerUser(@RequestHeader("X-Tenant-ID") String tenantId, @RequestBody AuthRequest authRequest) {
 
         // 1. 테넌트 식별자 설정
-//        tenantIdentifierResolver.setCurrentTenant(tenantId);
-        System.out.println("tenantId = " + tenantId);
-        TenantContext.setCurrentTenant(tenantId);
-
-
-        tenantService.exportSchema(tenantId);
-
-
+//        TenantContext.setCurrentTenant(tenantId);
 
         // 2. 이미 존재하는 사용자 검증
         if (usersRepository.findByUserName(authRequest.getUserName()).isPresent()) {
@@ -125,6 +116,8 @@ public class UsersController {
         newUser.setUserNickname(authRequest.getUserNickname());
 
         usersRepository.save(newUser);
+
+//        TenantContext.clear();
         return ResponseEntity.ok("사용자 등록 완료 - 테넌트: " + tenantId);
     }
 
