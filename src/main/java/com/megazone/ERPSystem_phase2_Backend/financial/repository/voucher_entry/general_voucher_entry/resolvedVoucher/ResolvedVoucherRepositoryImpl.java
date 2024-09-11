@@ -1,8 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.resolvedVoucher;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.GeneralShowAllDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.GeneralShowDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.ResolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.QResolvedVoucher;
 import com.querydsl.core.types.Projections;
@@ -10,7 +8,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,21 +44,34 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
     }
 
     @Override
-    public List<GeneralShowDTO> generalSearch(LocalDate startDate, LocalDate endDate, String startAccountCode, String endAccountCode) {
+    public List<GeneralShowDTO> generalSearch(LocalDate startDate, LocalDate endDate, String startAccountCode, String endAccountCode,
+                                              Long companyId) {
         QResolvedVoucher qResolvedVoucher = QResolvedVoucher.resolvedVoucher;
 
+
         return queryFactory
-                .select(Projections.constructor(GeneralShowDTO.class,
+                .select(
                         qResolvedVoucher.accountSubject.code,
                         qResolvedVoucher.accountSubject.name,
                         qResolvedVoucher.voucherDate.month(),
-                        qResolvedVoucher.debitAmount.sum(),
-                        qResolvedVoucher.creditAmount.sum()))
+                        qResolvedVoucher.debitAmount.sum().castToNum(BigDecimal.class),
+                        qResolvedVoucher.creditAmount.sum().castToNum(BigDecimal.class)
+                )
                 .from(qResolvedVoucher)
                 .where(qResolvedVoucher.voucherDate.between(startDate, endDate)
-                        .and(qResolvedVoucher.accountSubject.code.between(startAccountCode, endAccountCode)))
+                        .and(qResolvedVoucher.accountSubject.code.between(startAccountCode, endAccountCode))
+                        .and(qResolvedVoucher.company.id.eq(companyId)))
                 .groupBy(qResolvedVoucher.accountSubject.code, qResolvedVoucher.voucherDate)
                 .orderBy(qResolvedVoucher.voucherDate.asc(), qResolvedVoucher.accountSubject.code.asc())
-                .fetch();
+                .fetch().stream()
+                .map(tuple -> new GeneralShowDTO(
+                        tuple.get(qResolvedVoucher.accountSubject.code),
+                        tuple.get(qResolvedVoucher.accountSubject.name),
+                        Month.of(tuple.get(qResolvedVoucher.voucherDate.month())),  // Integer -> Month 변환
+                        tuple.get(qResolvedVoucher.debitAmount.sum().castToNum(BigDecimal.class)),
+                        tuple.get(qResolvedVoucher.creditAmount.sum().castToNum(BigDecimal.class)),
+                        BigDecimal.ZERO  // totalCash 값 설정 (필요 시)
+                ))
+                .collect(Collectors.toList());
     }
 }

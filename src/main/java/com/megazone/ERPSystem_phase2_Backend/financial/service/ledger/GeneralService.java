@@ -7,5 +7,5 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.GeneralS
 import java.util.List;
 
 public interface GeneralService {
-    List<GeneralShowDTO> getGeneralShow(GeneralDTO dto);
+    List<GeneralShowDTO> getGeneralShow(GeneralDTO dto, Long companyId);
 }

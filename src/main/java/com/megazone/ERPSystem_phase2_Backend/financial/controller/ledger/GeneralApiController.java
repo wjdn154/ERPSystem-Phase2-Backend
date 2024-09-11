@@ -30,7 +30,7 @@ public class GeneralApiController {
                 () -> new RuntimeException("사용자를 찾을 수 없습니다."));
         Long companyId = users.getCompany().getId();
 
-        List<GeneralShowDTO> generalShowDTOS = generalService.getGeneralShow(dto);
+        List<GeneralShowDTO> generalShowDTOS = generalService.getGeneralShow(dto,companyId);
 
         return generalShowDTOS.isEmpty() ? ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("조회가능한 전표가 없습니다.") :
                 ResponseEntity.status(HttpStatus.OK).body(generalShowDTOS);

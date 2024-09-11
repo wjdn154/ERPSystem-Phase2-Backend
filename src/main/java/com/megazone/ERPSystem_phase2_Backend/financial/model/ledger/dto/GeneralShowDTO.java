@@ -22,6 +22,7 @@ public class GeneralShowDTO {
 
     public static GeneralShowDTO create(String accountSubjectCode, String accountSubjectName, Month month,
                                         BigDecimal totalDebit, BigDecimal totalCredit, BigDecimal totalCash) {
+
         return new GeneralShowDTO(accountSubjectCode, accountSubjectName, month, totalDebit, totalCredit, totalCash);
     }
 

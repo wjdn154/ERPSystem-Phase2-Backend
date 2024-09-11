@@ -13,5 +13,6 @@ public interface ResolvedVoucherRepositoryCustom {
     List<GeneralShowDTO> generalSearch(@Param("startDate") LocalDate startDate,
                                        @Param("endDate") LocalDate endDate,
                                        @Param("startAccountCode") String startAccountCode,
-                                       @Param("endAccountCode") String endAccountCode);
+                                       @Param("endAccountCode") String endAccountCode,
+                                       Long companyId);
 }
