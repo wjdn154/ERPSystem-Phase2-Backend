@@ -36,16 +36,7 @@ public class AccountSubjectController {
      * @return 모든 계정과목과 적요 정보를 담은 AccountSubjectsAndMemosDTO 객체를 반환함.
      */
     @PostMapping("/")
-    public ResponseEntity<AccountSubjectsAndMemosDTO> getAllAccountSubjectDetails(@RequestHeader(value = "X-Tenant-ID", required = false) String tenantId, HttpServletRequest request) {
-
-        if (tenantId == null || tenantId.isEmpty()) {
-            String token = jwtUtil.resolveToken(request);
-            tenantId = jwtUtil.extractTenantId(token); // 토큰에서 테넌트 ID 추출
-        }
-
-//        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-//        Long company_id = user.getCompany().getId();
-        System.out.println("tenantId = " + tenantId);
+    public ResponseEntity<AccountSubjectsAndMemosDTO> getAllAccountSubjectDetails() {
 
         // 서비스에서 모든 계정과목과 적요 정보 가져옴
         Optional<AccountSubjectsAndMemosDTO> response = accountSubjectService.findAllAccountSubjectDetails(2L);

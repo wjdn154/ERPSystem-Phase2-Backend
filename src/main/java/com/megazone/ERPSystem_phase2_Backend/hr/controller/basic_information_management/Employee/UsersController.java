@@ -63,6 +63,9 @@ public class UsersController {
     @PostMapping("/auth/login")
     public String createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
 
+        // 테넌트 식별자 설정
+        TenantContext.setCurrentTenant("tenant_" + authRequest.getCompanyId());
+
         // 이메일 형식 검증 정규식
         Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
 
@@ -82,15 +85,17 @@ public class UsersController {
         // Users를 CustomUserDetails로 변환
         UserDetails userDetails = new CustomUserDetails(user);
 
+        TenantContext.clear();
+
         // JWT 토큰 생성
         return jwtUtil.generateToken(userDetails.getUsername(), user.getUserNickname());
     }
 
     @PostMapping("/auth/register")
-    public ResponseEntity<String> registerUser(@RequestHeader("X-Tenant-ID") String tenantId, @RequestBody AuthRequest authRequest) {
+    public ResponseEntity<String> registerUser(@RequestBody AuthRequest authRequest) {
 
         // 1. 테넌트 식별자 설정
-//        TenantContext.setCurrentTenant(tenantId);
+        TenantContext.setCurrentTenant("tenant_" + authRequest.getCompanyId());
 
         // 2. 이미 존재하는 사용자 검증
         if (usersRepository.findByUserName(authRequest.getUserName()).isPresent()) {
@@ -117,8 +122,8 @@ public class UsersController {
 
         usersRepository.save(newUser);
 
-//        TenantContext.clear();
-        return ResponseEntity.ok("사용자 등록 완료 - 테넌트: " + tenantId);
+        TenantContext.clear();
+        return ResponseEntity.ok("사용자 등록 완료 - 테넌트: " + "tenant_" + authRequest.getCompanyId());
     }
 
 
