@@ -24,6 +24,7 @@ public class WorkcenterDTO {
     private String description;
     private Boolean isActive;
 
+    private Long companyId; // 회사 ID
     private WarehouseType warehouseType; // TYPE: FACTORY OR OUTSOURCING_FACTORY
     private String factoryCode; // 공장 Code만 포함 (Warehouse)
     private String processCode; // 생산공정 Code만 포함 (ProcessDetails)
@@ -46,15 +47,5 @@ public class WorkcenterDTO {
     }
 
 }
-
-
-//    public void setTodayWorkers(List<WorkerAssignmentDTO> todayWorkers) {
-//        // null 이거나 비어있을 경우 "배정없음" 기본 값 설정
-//        if (todayWorkers == null || todayWorkers.isEmpty()) {
-//            this.todayWorkers = Collections.singletonList("배정없음");
-//        } else {
-//            this.todayWorkers = todayWorkers;
-//        }
-//    }
 
 

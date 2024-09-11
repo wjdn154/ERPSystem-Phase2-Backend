@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.workcenter;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.enums.WarehouseType;
@@ -37,9 +38,10 @@ public class WorkcenterServiceImpl implements WorkcenterService {
     private final ProcessDetailsRepository processDetailsRepository;
     private final EquipmentDataRepository equipmentDataRepository;
     private final WorkerAssignmentRepository workerAssignmentRepository;
+    private final CompanyRepository companyRepository;
 
     // DTO로 변환하는 메서드
-    private WorkcenterDTO convertToDTO(Workcenter workcenter) {
+    private WorkcenterDTO convertToDTO(Long company_id, Workcenter workcenter) {
 
         // 공장 타입이 FACTORY 또는 OUTSOURCING_FACTORY인 경우에만 데이터 설정
         boolean isValidWarehouse = workcenter.getFactory() != null &&
@@ -54,6 +56,8 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                 .description(workcenter.getDescription())
                 .isActive(workcenter.getIsActive())
 
+                // 회사Id
+                .companyId(workcenter.getCompany() != null ? workcenter.getCompany().getId() : null)
                 // 조건에 따라 factoryCode 설정
                 .factoryCode(isValidWarehouse ? workcenter.getFactory().getCode() : null)
                 .warehouseType(isValidWarehouse ? workcenter.getFactory().getWarehouseType() : null) // 확인용: 나중에 삭제
@@ -67,19 +71,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
     }
 
     // Entity로 변환하는 메서드
-    private Workcenter convertToEntity(WorkcenterDTO workcenterDTO) {
-
-        // DTO의 값들을 출력해 확인
-        System.out.println("Converting DTO to Entity");
-        System.out.println("Workcenter Code: " + workcenterDTO.getCode());
-        System.out.println("Workcenter Name: " + workcenterDTO.getName());
-        System.out.println("Workcenter Type: " + workcenterDTO.getWorkcenterType()); // 문제의 필드 확인
-        System.out.println("Process Code: " + workcenterDTO.getProcessCode());
-        System.out.println("Factory Code: " + workcenterDTO.getFactoryCode());
-
-        System.out.println("Equipment Ids: " + workcenterDTO.getEquipmentIds());
-        System.out.println("WorkerAssignment Ids: " + workcenterDTO.getWorkerAssignmentIds());
-        System.out.println("TodayWorkers: " + workcenterDTO.getTodayWorkers());
+    private Workcenter convertToEntity(Long company_id, WorkcenterDTO workcenterDTO) {
 
         return Workcenter.builder()
                 .code(workcenterDTO.getCode())
@@ -87,6 +79,10 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                 .workcenterType(workcenterDTO.getWorkcenterType())
                 .description(workcenterDTO.getDescription())
                 .isActive(workcenterDTO.getIsActive())
+
+                // 회사 ID 설정
+                .company(companyRepository.findById(company_id)
+                        .orElseThrow(() -> new RuntimeException("회사 ID를 찾을 수 없습니다: " + company_id)))
 
                 .factory(workcenterDTO.getFactoryCode() != null ?
                         warehouseRepository.findByCode(workcenterDTO.getFactoryCode())
@@ -126,11 +122,16 @@ public class WorkcenterServiceImpl implements WorkcenterService {
         }
 
         workcenterRepository.delete(workcenter);
-        return Optional.of(convertToDTO(workcenter));
+        return Optional.of(convertToDTO(company_id, workcenter));
     }
 
     @Override
     public Optional<WorkcenterDTO> updateByCode(Long company_id, String code, WorkcenterDTO workcenterDTO) {
+
+        if (workcenterRepository.findByCode(workcenterDTO.getCode()).isPresent() && !code.equals(workcenterDTO.getCode())) {
+            throw new IllegalArgumentException("이미 존재하는 작업장 코드입니다: " + workcenterDTO.getCode());
+        }
+
         return workcenterRepository.findByCode(code).map(existingWorkcenter -> {
             existingWorkcenter.setCode(workcenterDTO.getCode());
             existingWorkcenter.setName(workcenterDTO.getName());
@@ -141,30 +142,20 @@ public class WorkcenterServiceImpl implements WorkcenterService {
             // 업데이트된 작업장 저장
             Workcenter updatedWorkcenter = workcenterRepository.save(existingWorkcenter);
 
-            return convertToDTO(updatedWorkcenter);
+            return convertToDTO(company_id, updatedWorkcenter);
         });
     }
 
     @Override
     public Workcenter save(Long company_id, WorkcenterDTO workcenterDTO) {
-        System.out.println("save WorkcenterDTO");
-        System.out.println("Workcenter Code: " + workcenterDTO.getCode());
-        System.out.println("Workcenter Name: " + workcenterDTO.getName());
-        System.out.println("Workcenter Type: " + workcenterDTO.getWorkcenterType()); // 문제의 필드 확인
-        System.out.println("Process Code: " + workcenterDTO.getProcessCode());
-        System.out.println("Factory Code: " + workcenterDTO.getFactoryCode());
-
-        System.out.println("Equipment Ids: " + workcenterDTO.getEquipmentIds());
-        System.out.println("WorkerAssignment Ids: " + workcenterDTO.getWorkerAssignmentIds());
-        System.out.println("TodayWorkers: " + workcenterDTO.getTodayWorkers());
-
 
         // 작업장 코드 중복 확인
         if (workcenterRepository.findByCode(workcenterDTO.getCode()).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 코드입니다: " + workcenterDTO.getCode());
         }
 
-        Workcenter workcenter = convertToEntity(workcenterDTO);
+        // DTO에서 엔티티로 변환 시 company_id 전달
+        Workcenter workcenter = convertToEntity(company_id, workcenterDTO);
         return workcenterRepository.save(workcenter);
     }
 
@@ -174,7 +165,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
         List<Workcenter> workcenters = workcenterRepository.findAllWithDetails();
 
         return workcenters.stream().map(workcenter -> {
-            WorkcenterDTO workcenterDTO = convertToDTO(workcenter);
+            WorkcenterDTO workcenterDTO = convertToDTO(company_id, workcenter);
 
             // 오늘의 작업자 수 가져오기
             int todayWorkerCount = getTodayWorkerCount(company_id, workcenter.getCode(), today);
@@ -273,10 +264,11 @@ public class WorkcenterServiceImpl implements WorkcenterService {
     @Override
     public Optional<WorkcenterDTO> findByCode(Long company_id, String code) {
         return workcenterRepository.findByCode(code).map(workcenter -> {
-            WorkcenterDTO workcenterDTO = convertToDTO(workcenter);
+            WorkcenterDTO workcenterDTO = convertToDTO(company_id, workcenter);
 
             LocalDate today = LocalDate.now();
             List<WorkerAssignmentDTO> todayWorkers = findTodayWorkers(company_id, code);
+            workcenterDTO.setTodayWorkerCount(todayWorkers != null ? (long) todayWorkers.size() : 0L);
             workcenterDTO.setTodayWorkers(todayWorkers);
 
             return workcenterDTO;
@@ -297,12 +289,12 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 //        });
 //    }
 
-    @Override
-    public List<WorkcenterDTO> findByNameContaining(Long company_id, String name) {
-        return workcenterRepository.findByNameContaining(name).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<WorkcenterDTO> findByNameContaining(Long company_id, String name) {
+//        return workcenterRepository.findByNameContaining(name).stream()
+//                .map(this::convertToDTO)
+//                .collect(Collectors.toList());
+//    }
 
     @Override
     public List<WarehouseResponseDTO> findAllFactories(Long company_id) {
@@ -377,7 +369,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                 .workerId(workerAssignment.getWorker().getId())  // 작업자 ID
                 .workcenterCode(workerAssignment.getWorkcenter().getCode()) // 작업장 CODE
                 .assignmentDate(workerAssignment.getAssignmentDate())  // 배정 날짜
-//                .shift(workerAssignment.getShiftType().getId())  // 교대조 정보
+                .shiftTypeId(workerAssignment.getShiftType().getId())  // 교대조 정보
                 .build();
     }
 }

@@ -15,7 +15,7 @@ public interface WorkcenterService {
 
     Workcenter save(Long company_id, WorkcenterDTO workcenterDTO);
 
-    List<WorkcenterDTO> findByNameContaining(Long company_id, String name);
+//    List<WorkcenterDTO> findByNameContaining(Long company_id, String name);
 
     Optional<WorkcenterDTO> findByCode(Long company_id, String code);
 
@@ -27,7 +27,7 @@ public interface WorkcenterService {
 
     List<WarehouseResponseDTO> findAllFactories(Long company_id);
 
-    List<EquipmentDataDTO> findEquipmentByWorkcenterCode(Long company_id, String equipmentCode);
+    List<EquipmentDataDTO> findEquipmentByWorkcenterCode(Long company_id, String workcenterCode);
 
     List<WorkerAssignmentDTO> findWorkerAssignmentsByWorkcenterCode(Long company_id, String workcenterCode);
 
