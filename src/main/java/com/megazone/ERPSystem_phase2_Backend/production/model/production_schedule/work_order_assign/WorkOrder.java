@@ -16,8 +16,8 @@ import java.util.List;
  * 작업지시 엔티티
  */
 
-@Entity(name = "production_schedule_work_order")
-@Table(name = "production_schedule_work_order")
+@Entity(name = "work_order_assign_work_order")
+@Table(name = "work_order_assign_work_order")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

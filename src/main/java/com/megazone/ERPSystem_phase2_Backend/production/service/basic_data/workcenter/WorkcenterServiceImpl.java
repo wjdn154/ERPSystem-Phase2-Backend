@@ -168,7 +168,6 @@ public class WorkcenterServiceImpl implements WorkcenterService {
         return workcenterRepository.save(workcenter);
     }
 
-
     @Override
     public List<WorkcenterDTO> findAll(Long company_id) {
         LocalDate today = LocalDate.now();
@@ -178,8 +177,14 @@ public class WorkcenterServiceImpl implements WorkcenterService {
             WorkcenterDTO workcenterDTO = convertToDTO(workcenter);
 
             // 오늘의 작업자 수 가져오기
-            int todayWorkerCount = getTodayWorkerCount(workcenter.getCode(), today);
+            int todayWorkerCount = getTodayWorkerCount(company_id, workcenter.getCode(), today);
             workcenterDTO.setTodayWorkerCount((long) todayWorkerCount); // 오늘 작업자 수 설정
+
+            // 오늘의 작업자 명단 가져오기
+            List<WorkerAssignmentDTO> todayWorkers = findTodayWorkers(company_id, workcenter.getCode());
+
+            // 오늘의 작업자 리스트 설정 (작업자 명단이 없으면 '배정없음' 설정)
+            workcenterDTO.setTodayWorkers(todayWorkers);
 
             // 설치된 설비 수 가져오기
             List<Long> equipmentIds = workcenter.getEquipmentList().stream()
@@ -197,11 +202,6 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 
             return workcenterDTO;
         }).collect(Collectors.toList());
-    }
-
-    private int getTodayWorkerCount(String workcenterCode, LocalDate currentDate) {
-        List<WorkerAssignment> todayAssignments = workerAssignmentRepository.getWorkerAssignments(workcenterCode, Optional.of(currentDate));
-        return todayAssignments.size(); // 작업자 수 반환
     }
 
 

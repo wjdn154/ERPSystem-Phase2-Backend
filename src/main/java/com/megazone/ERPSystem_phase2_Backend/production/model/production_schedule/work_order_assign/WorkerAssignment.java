@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Entity(name = "resource_data_worker_assignment")
-@Table(name = "resource_data_worker_assignment", indexes = {
+@Entity(name = "work_order_assign_worker_assignment")
+@Table(name = "work_order_assign_worker_assignment", indexes = {
         @Index(name = "idx_assignment_date", columnList = "assignmentDate")
 })
 @Data
