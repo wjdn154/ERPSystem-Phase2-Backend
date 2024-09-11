@@ -226,41 +226,6 @@ public class WorkcenterServiceImpl implements WorkcenterService {
     }
 
 
-
-//    public List<WorkerAssignmentDTO> getTodayWorkers(String workcenterCode, LocalDate currentDate) {
-//        List<WorkerAssignment> todayAssignments = workerAssignmentRepository.getWorkerAssignments(workcenterCode, Optional.of(currentDate));
-//        return todayAssignments.stream()
-//                .map(assignment -> {
-//                    Employee employee = assignment.getWorker().getEmployee();
-//                    return WorkerAssignmentDTO.builder()
-//                            .workerId(employee.getId())
-//                            .workerName(employee.getLastName() + employee.getFirstName()) // 이름
-//                            .employeeNumber(employee.getEmployeeNumber())  // 사원번호
-//                            .shift(assignment.getShiftType().getId())  // 교대 정보에서 getName() 호출
-//                            .assignmentDate(assignment.getAssignmentDate())  // 배정 날짜
-//                            .workcenterCode(assignment.getWorkcenter().getCode())  // 작업장 코드
-//                            .build();
-//                })
-//                .collect(Collectors.toList());
-//    }
-
-
-
-//    public List<String> getTodayWorkers(String workcenterCode, LocalDate date) {
-//        // 오늘의 작업자 배정 이력 조회
-//        List<WorkerAssignment> todayAssignments = workcenterRepository.getWorkerAssignments(workcenterCode, Optional.of(LocalDate.now()));
-//
-//        // 배정된 작업자가 있으면 해당 정보를 리스트로 반환, 없으면 빈 리스트 반환
-//        return todayAssignments.stream()
-//                .map(assignment -> {
-//                    Employee employee = assignment.getWorker().getEmployee();
-//                    return employee.getLastName() + employee.getFirstName() + " (" + employee.getEmployeeNumber() + ")";
-//                })
-//                .collect(Collectors.toList());
-//    }
-
-
-
     @Override
     public Optional<WorkcenterDTO> findByCode(Long company_id, String code) {
         return workcenterRepository.findByCode(code).map(workcenter -> {

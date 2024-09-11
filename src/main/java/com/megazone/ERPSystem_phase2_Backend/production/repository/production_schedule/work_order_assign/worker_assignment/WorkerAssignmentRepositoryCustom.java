@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.work_order_assign.worker_assignment;
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.ShiftType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkerAssignment;
 
 import java.time.LocalDate;
@@ -69,5 +70,6 @@ public interface WorkerAssignmentRepositoryCustom {
      * @param assignmentDate 배정 날짜
      * @return 작업자 배정(Optional로 감싸서 반환)
      */
-    Optional<WorkerAssignment> findByWorkerIdAndAssignmentDate(Long workerId, LocalDate assignmentDate);
+
+
 }

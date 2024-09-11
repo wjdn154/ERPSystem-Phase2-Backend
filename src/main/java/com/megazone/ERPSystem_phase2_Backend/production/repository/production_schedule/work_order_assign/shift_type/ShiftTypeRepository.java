@@ -10,4 +10,5 @@ public interface ShiftTypeRepository extends JpaRepository<ShiftType, Long>, Shi
 
     Optional<ShiftType> findByName(String shift);
 
+    Boolean findIsUsedById(Long id);
 }

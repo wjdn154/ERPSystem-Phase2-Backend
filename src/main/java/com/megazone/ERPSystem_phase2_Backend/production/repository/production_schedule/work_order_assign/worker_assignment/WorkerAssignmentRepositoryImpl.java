@@ -97,13 +97,13 @@ public class WorkerAssignmentRepositoryImpl implements WorkerAssignmentRepositor
 
 
 
-    @Override
-    public Optional<WorkerAssignment> findByWorkerIdAndAssignmentDate(Long workerId, LocalDate assignmentDate) {
-        WorkerAssignment assignment = queryFactory
-                .selectFrom(workerAssignment)
-                .where(workerAssignment.worker.id.eq(workerId)
-                        .and(workerAssignment.assignmentDate.eq(assignmentDate)))
-                .fetchFirst();
-        return Optional.ofNullable(assignment);
-    }
+//    @Override
+//    public Optional<WorkerAssignment> findByWorkerIdAndAssignmentDate(Long workerId, LocalDate assignmentDate) {
+//        WorkerAssignment assignment = queryFactory
+//                .selectFrom(workerAssignment)
+//                .where(workerAssignment.worker.id.eq(workerId)
+//                        .and(workerAssignment.assignmentDate.eq(assignmentDate)))
+//                .fetchFirst();
+//        return Optional.ofNullable(assignment);
+//    }
 }
