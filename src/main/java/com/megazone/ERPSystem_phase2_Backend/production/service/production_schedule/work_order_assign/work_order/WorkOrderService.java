@@ -1,9 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.work_order_assign.work_order;
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkOrderDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkerAssignment;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface WorkOrderService {

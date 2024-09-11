@@ -1,12 +1,15 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.work_order_assign.work_order;
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.ShiftType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkOrder;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkOrderDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkerAssignment;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.Worker;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.plan_of_production.PlanOfMakeToOrderRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.plan_of_production.PlanOfMakeToStockRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.work_order_assign.shift_type.ShiftTypeRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.work_order_assign.work_order.WorkOrderRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.work_order_assign.worker_assignment.WorkerAssignmentRepository;
@@ -29,6 +32,8 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     private final WorkerRepository workerRepository;
     private final WorkcenterRepository workcenterRepository;
     private final ShiftTypeRepository shiftTypeRepository;
+    private final PlanOfMakeToOrderRepository planOfMakeToOrderRepository;
+    private final PlanOfMakeToStockRepository planOfMakeToStockRepository;
 
     /**
      * 작업 지시 조회 by ID
@@ -155,22 +160,82 @@ public class WorkOrderServiceImpl implements WorkOrderService {
         return !workerAssignmentRepository.findByWorkerIdAndAssignmentDate(workerId, assignmentDate).isEmpty();
     }
 
+    // 기존 엔티티 업데이트
+    private void updateWorkOrderEntity(WorkOrder workOrder, WorkOrderDTO workOrderDTO) {
+        if (workOrderDTO.getName() != null) {
+            workOrder.setName(workOrderDTO.getName());
+        }
+//        if (workOrderDTO.getPlanOfMakeToOrderId() != null) {
+//            workOrder.setPlanOfMakeToOrderId(workOrderDTO.getPlanOfMakeToOrderId());
+//        }
+//        if (workOrderDTO.getPlanOfMakeToStockId() != null) {
+//            workOrder.setPlanOfMakeToStockId(workOrderDTO.getPlanOfMakeToStockId());
+//        }
+        if (workOrderDTO.getRemarks() != null) {
+            workOrder.setRemarks(workOrderDTO.getRemarks());
+        }
+
+        // 작업자 배정 리스트 업데이트
+        List<WorkerAssignment> updatedAssignments = workOrderDTO.getWorkerAssignments().stream()
+                .map(this::convertWorkerAssignmentDTOToEntity)
+                .toList();
+        workOrder.setWorkerAssignments(updatedAssignments);
+    }
+
     // 엔티티를 DTO로 변환
     private WorkOrderDTO convertToDTO(WorkOrder workOrder) {
-        WorkOrderDTO workOrderDTO = new WorkOrderDTO();
-        // 필요한 필드를 설정
-        return workOrderDTO;
+        return WorkOrderDTO.builder()
+                .id(workOrder.getId())
+                .name(workOrder.getName())
+                .planOfMakeToOrderId(workOrder.getPlanOfMakeToOrder() != null ? workOrder.getPlanOfMakeToOrder().getId() : null)
+                .planOfMakeToStockId(workOrder.getPlanOfMakeToStock() != null ? workOrder.getPlanOfMakeToStock().getId() : null)
+                .workerAssignments(workOrder.getWorkerAssignments().stream()
+                        .map(this::convertWorkerAssignmentToDTO)
+                        .toList())
+                .remarks(workOrder.getRemarks())
+                .build();
     }
 
     // DTO를 엔티티로 변환
     private WorkOrder convertToEntity(WorkOrderDTO workOrderDTO) {
-        WorkOrder workOrder = new WorkOrder();
-        // 필요한 필드를 설정
-        return workOrder;
+        return WorkOrder.builder()
+                .id(workOrderDTO.getId())
+                .name(workOrderDTO.getName())
+                .planOfMakeToOrder(workOrderDTO.getPlanOfMakeToOrderId() != null ? planOfMakeToOrderRepository.findById(workOrderDTO.getPlanOfMakeToOrderId())
+                        .orElseThrow(() -> new EntityNotFoundException("생산 주문 계획을 찾을 수 없습니다.")) : null)
+                .planOfMakeToStock(workOrderDTO.getPlanOfMakeToStockId() != null ? planOfMakeToStockRepository.findById(workOrderDTO.getPlanOfMakeToStockId())
+                        .orElseThrow(() -> new EntityNotFoundException("생산 재고 계획을 찾을 수 없습니다.")) : null)
+                .workerAssignments(workOrderDTO.getWorkerAssignments().stream()
+                        .map(this::convertWorkerAssignmentDTOToEntity)
+                        .toList())
+                .remarks(workOrderDTO.getRemarks())
+                .build();
     }
 
-    // 기존 엔티티 업데이트
-    private void updateWorkOrderEntity(WorkOrder workOrder, WorkOrderDTO workOrderDTO) {
-        // 수정할 필드를 엔티티에 업데이트
+    // 작업자 배정 DTO를 엔티티로 변환하는 메서드
+    private WorkerAssignment convertWorkerAssignmentDTOToEntity(WorkerAssignmentDTO workerAssignmentDTO) {
+        return WorkerAssignment.builder()
+                .worker(workerRepository.findById(workerAssignmentDTO.getWorkerId())
+                        .orElseThrow(() -> new EntityNotFoundException("작업자를 찾을 수 없습니다."))
+                )
+                .workcenter(workcenterRepository.findByCode(workerAssignmentDTO.getWorkcenterCode())
+                        .orElseThrow(() -> new EntityNotFoundException("작업장을 찾을 수 없습니다."))
+                )
+                .shiftType(shiftTypeRepository.findById(workerAssignmentDTO.getShiftTypeId())
+                        .orElseThrow(() -> new EntityNotFoundException("교대근무유형을 찾을 수 없습니다."))
+                )
+                .assignmentDate(workerAssignmentDTO.getAssignmentDate())
+                .build();
     }
+
+    // 작업자 배정 엔티티를 DTO로 변환하는 메서드
+    private WorkerAssignmentDTO convertWorkerAssignmentToDTO(WorkerAssignment workerAssignment) {
+        return WorkerAssignmentDTO.builder()
+                .workerId(workerAssignment.getWorker().getId())
+                .workcenterCode(workerAssignment.getWorkcenter().getCode())
+                .shiftTypeId(workerAssignment.getShiftType().getId())
+                .assignmentDate(workerAssignment.getAssignmentDate())
+                .build();
+    }
+
 }

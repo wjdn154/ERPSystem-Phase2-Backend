@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.production_schedu
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ProductionRequests {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,7 +41,7 @@ public class ProductionRequests {
     private List<PlanOfMakeToOrder> planOfMakeToOrders; // 연관 주문생산계획
 
     @Column(nullable = false)
-    private String product; // TODO 연관 제품
+    private String product; // TODO 연관 제품 ( req -> product 단방향 ? )
 
     @Column(nullable = false)
     private String salesOrder; // TODO 연관 영업 주문
