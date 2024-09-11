@@ -30,7 +30,7 @@ spring:
         - classpath:initial-database/financial/account_subject/account_subject_cash_memo.sql
         - classpath:initial-database/financial/account_subject/account_subject_fixed_memo.sql
         - classpath:initial-database/financial/account_subject/account_subject_transfer_memo.sql
-        - classpath:initial-database/logistics/warehouse.sql
+        - classpath:initial-database/logistics/warehouse/warehouse.sql
         - classpath:initial-database/logistics/product_group.sql
         - classpath:initial-database/logistics/product.sql
 logging:

@@ -1,7 +1,8 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse;
+package com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.enums.TransferStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,13 +30,21 @@ public class WarehouseTransfer {
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "sending_warehouse_id", nullable = false)
     private Warehouse sendingWarehouse;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "receiving_warehouse_id", nullable = false)
     private Warehouse receivingWarehouse;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "employee_id", nullable = false)
+    private Employee employee;
+
+    @OneToMany(mappedBy = "warehouseTransfer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<WarehouseTransferProduct> products = new ArrayList<>();
 
     @Column(name = "transfer_date", nullable = false)
     private LocalDateTime transferDate;
@@ -47,8 +58,5 @@ public class WarehouseTransfer {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
 }

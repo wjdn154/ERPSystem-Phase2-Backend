@@ -50,23 +50,24 @@ spring:
         - classpath:initial-database/financial/journal_entry.sql
 
 
-        - classpath:initial-database/logistics/warehouse.sql
         - classpath:initial-database/hr/employee.sql
-        #- classpath:initial-database/hr/role.sql
+        - classpath:initial-database/hr/role.sql
 #        - classpath:initial-database/hr/users.sql
         - classpath:initial-database/logistics/product_group.sql
 #        - classpath:initial-database/logistics/product.sql
 
+        # [주의] 물류및생산 순서유지해야함 (1. 생산공정 2. 라우팅 3. 품목 4. 창고 5. 작업장 6. 작업지시 등)
         - classpath:initial-database/production/production_routing/processDetails.sql
-#        - classpath:initial-database/production/basic_data/workcenter.sql
         - classpath:initial-database/production/production_routing/productionRouting.sql
-#        - classpath:initial-database/production/production_schedule/work_order_assign/workOrder.sql
-#        - classpath:initial-database/production/production_schedule/work_order_assign/shiftType.sql
-
         - classpath:initial-database/logistics/product.sql
+        - classpath:initial-database/logistics/warehouse/warehouse.sql
+        - classpath:initial-database/production/basic_data/workcenter.sql
+        - classpath:initial-database/production/production_schedule/work_order_assign/workOrder.sql
 
-#        - classpath:initial-database/production/resource_data/equipmentData.sql
-#        - classpath:initial-database/production/resource_data/maintenanceHistory.sql
+        - classpath:initial-database/production/production_schedule/work_order_assign/shiftType.sql
+
+        - classpath:initial-database/production/resource_data/equipmentData.sql
+        - classpath:initial-database/production/resource_data/maintenanceHistory.sql
 #        - classpath:initial-database/production/resource_data/worker.sql
 #        - classpath:initial-database/production/production_schedule/work_order_assign/workerAssignment.sql
 

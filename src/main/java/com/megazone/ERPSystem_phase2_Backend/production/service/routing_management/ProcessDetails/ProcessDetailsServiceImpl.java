@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.service.routing_managem
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.WorkcenterDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProcessDetails;
@@ -11,6 +12,7 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.dto.ProcessDetailsDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.dto.ProductionRoutingDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.dto.RoutingStepDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.routing_management.ProcessDetails.ProcessDetailsRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -30,9 +32,11 @@ import java.util.stream.Collectors;
 @Transactional
 public class ProcessDetailsServiceImpl implements ProcessDetailsService {
     private final ProcessDetailsRepository processDetailsRepository;
+    private final WorkcenterRepository workcenterRepository;
+    private final ProductRepository productRepository;
 
     @Override
-    public List<ProcessDetailsDTO> getAllProcessDetails() {
+    public List<ProcessDetailsDTO> getAllProcessDetails(Long company_id) {
         List<ProcessDetails> processDetailsList = processDetailsRepository.findAll();
 
         List<ProcessDetailsDTO> processDetailsDTOs = processDetailsList.stream()
@@ -43,21 +47,21 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
     }
 
     @Override
-    public List<ProcessDetailsDTO> findByNameContaining(String name) {
+    public List<ProcessDetailsDTO> findByNameContaining(Long company_id, String name) {
         List<ProcessDetails> processes = processDetailsRepository.findByNameContaining(name);
         return processes.stream()
                 .map(this::convertToDTO).toList();
     }
 
     @Override
-    public Optional<ProcessDetailsDTO> getProcessDetailsByCode(String code) {
+    public Optional<ProcessDetailsDTO> getProcessDetailsByCode(Long company_id, String code) {
         ProcessDetails processDetails = processDetailsRepository.findByCode(code)
                 .orElseThrow(() -> new EntityNotFoundException("해당 생산공정 " + code + "을 찾을 수 없습니다."));
 
         // 품질 검사와 작업 실적 기록에 따라 표준 소요 시간, 공정 수행 비용, 평균 불량률 계산
-        double calculatedDuration = calculateDuration(processDetails);
-        BigDecimal calculatedCost = calculateCost(processDetails);
-        double calculatedDefectRate = calculateDefectRate(processDetails);
+        double calculatedDuration = calculateDuration(company_id, processDetails);
+        BigDecimal calculatedCost = calculateCost(company_id, processDetails);
+        double calculatedDefectRate = calculateDefectRate(company_id, processDetails);
 
         // 계산된 값을 엔티티에 설정
         processDetails.setDuration(calculatedDuration);
@@ -70,7 +74,7 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
         return Optional.ofNullable(convertToDTO(savedProcessDetails));
     }
 
-    private double calculateDuration(ProcessDetails processDetails) {
+    private double calculateDuration(Long company_id, ProcessDetails processDetails) {
         // 작업 실적 기록 목록을 가져와서 평균 시간을 계산
 //        List<Double> workTimes = getWorkTimesForProcess(processDetails); // 실제 기록을 가져오는 메서드
 
@@ -82,7 +86,7 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
 //        return totalTime / workTimes.size();
     }
 
-    private BigDecimal calculateCost(ProcessDetails processDetails) {
+    private BigDecimal calculateCost(Long company_id, ProcessDetails processDetails) {
         // 각 작업 단계에서 소모된 비용 목록을 가져와서 합산
 
         // if (costs.isEmpty())
@@ -91,7 +95,7 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
         // 비용 합산 계산
     }
 
-    private double calculateDefectRate(ProcessDetails processDetails) {
+    private double calculateDefectRate(Long company_id, ProcessDetails processDetails) {
         // 생산 실적 기록에서 총 생산량을 가져와 불량률 계산
         // 1. 총 생산량 메서드 -> totalCounts
         // 2. 불량품 수 메서드 -> defectCounts
@@ -107,7 +111,7 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
 
     @Override
     @Transactional
-    public ProcessDetailsDTO createProcessDetails(ProcessDetailsDTO processDetailsDTO) {
+    public ProcessDetailsDTO createProcessDetails(Long company_id, ProcessDetailsDTO processDetailsDTO) {
         // 1. Code가 이미 존재하는지 확인
         if (processDetailsRepository.existsByCode(processDetailsDTO.getCode())) {
             // 2. 존재하면 예외를 던져 중복 처리
@@ -124,7 +128,7 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
 
     @Override
     @Transactional
-    public ProcessDetailsDTO updateByCode(String code, ProcessDetailsDTO processDetailsDTO) {
+    public ProcessDetailsDTO updateByCode(Long company_id, String code, ProcessDetailsDTO processDetailsDTO) {
         // 1. CODE를 사용해 기존 ProcessDetails 엔티티를 조회
         ProcessDetails existingProcessDetails = processDetailsRepository.findByCode(code)
                 .orElseThrow(() -> new EntityNotFoundException("Process with code " + code + " not found"));
@@ -151,7 +155,7 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
 
     @Override
     @Transactional
-    public ProcessDetailsDTO deleteByCode(String code) {
+    public ProcessDetailsDTO deleteByCode(Long company_id, String code) {
         // 1. Code를 사용해 기존 ProcessDetails 엔티티를 조회
         ProcessDetails processDetails = processDetailsRepository.findByCode(code)
                 .orElseThrow(() -> new EntityNotFoundException("Process with code " + code + " not found"));
