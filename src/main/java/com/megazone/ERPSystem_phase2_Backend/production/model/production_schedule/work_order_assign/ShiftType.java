@@ -31,6 +31,9 @@ public class ShiftType {
 
     @OneToMany(mappedBy = "shiftType")
     private List<WorkerAssignment> workerAssignments;
+
+    @Column(nullable = false)
+    private Boolean isUsed;
 }
 
 /**

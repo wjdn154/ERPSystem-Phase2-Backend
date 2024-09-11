@@ -2,7 +2,6 @@ package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_manag
 
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Department;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentCreateDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentShowDTO;
@@ -31,7 +30,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     // 부서 리스트 조회
     @Override
-    public List<DepartmentShowDTO> findAllDepartments() {
+    public List<DepartmentShowDTO> findAllDepartments(Long company_id) {
         return departmentRepository.findAll().stream()
                 .map(department -> new DepartmentShowDTO(
                         department.getId(),
@@ -43,8 +42,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     // 부서 상세 조회
     @Override
-    public Optional<DepartmentShowDTO> findDepartmentById(Long id) {
-        Department department = departmentRepository.findById(id)
+    public Optional<DepartmentShowDTO> findDepartmentById(Long company_id) {
+        Department department = departmentRepository.findById(company_id)
                 .orElseThrow(()-> new IllegalArgumentException("아이디가 올바르지 않습니다."));
 
         DepartmentShowDTO departmentDTO = convertToDTO(department);

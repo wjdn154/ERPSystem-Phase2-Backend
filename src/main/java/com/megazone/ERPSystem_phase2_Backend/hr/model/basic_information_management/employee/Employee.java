@@ -67,10 +67,10 @@ public class Employee {
 //    private Allowance allowance;
 
     @Column(nullable = false)
-    private String firstName; // 성
+    private String firstName; // 이름
 
     @Column(nullable = false)
-    private String lastName; // 이름
+    private String lastName; // 성
 
     @Column(nullable = false)
     private LocalDate dateOfBirth; // 생년월일

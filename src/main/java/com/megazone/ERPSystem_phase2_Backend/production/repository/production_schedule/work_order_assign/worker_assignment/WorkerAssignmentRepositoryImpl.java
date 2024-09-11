@@ -1,7 +1,9 @@
 package com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.work_order_assign.worker_assignment;
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkerAssignment;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.QWorkerAssignment;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkerAssignment;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -10,35 +12,33 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.QWorkcenter.workcenter;
-import static com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.QWorkOrder.workOrder;
-import static com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.QWorker.worker;
-import static com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.QProcessDetails.processDetails;
+import static com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.QWorkerAssignment.workerAssignment;
 
 @Repository
 @RequiredArgsConstructor
 public class WorkerAssignmentRepositoryImpl implements WorkerAssignmentRepositoryCustom {
-    private final JPAQueryFactory queryFactory;
-    QWorkerAssignment workerAssignment = QWorkerAssignment.workerAssignment;
 
-    @Override
-    public boolean existsByWorkerIdAndAssignmentDate(Long workerId, LocalDate date) {
-        return false;
-    }
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public List<WorkerAssignment> findWorkerCountByWorkcenter() {
-        return List.of();
+        return queryFactory
+                .selectFrom(workerAssignment)
+                .groupBy(workerAssignment.workcenter)
+                .fetch();
     }
 
     @Override
     public Optional<WorkerAssignment> findByWorkcenterCode(String workcenterCode) {
-        return Optional.empty();
+        WorkerAssignment assignment = queryFactory
+                .selectFrom(workerAssignment)
+                .where(workerAssignment.workcenter.code.eq(workcenterCode))
+                .fetchFirst();
+        return Optional.ofNullable(assignment);
     }
 
     @Override
     public List<WorkerAssignment> findAssignmentsByWorkerAndWorkOrderAndDate(Long workerId, Long workOrderId, LocalDate assignmentDate) {
-
         return queryFactory
                 .selectFrom(workerAssignment)
                 .where(workerAssignment.worker.id.eq(workerId)
@@ -48,37 +48,60 @@ public class WorkerAssignmentRepositoryImpl implements WorkerAssignmentRepositor
     }
 
     @Override
+    public boolean existsByWorkerIdAndAssignmentDate(Long workerId, LocalDate date) {
+        Integer count = queryFactory
+                .selectOne()
+                .from(workerAssignment)
+                .where(workerAssignment.worker.id.eq(workerId)
+                        .and(workerAssignment.assignmentDate.eq(date)))
+                .fetchFirst();
+        return count != null;
+    }
+
+    @Override
     public List<WorkerAssignment> getWorkerAssignments(String workcenterCode, Optional<LocalDate> optionalDate) {
-        // 오늘 날짜가 있을 경우, 해당 날짜에 맞는 작업자 배정을 조회
-        if (optionalDate.isPresent()) {
-            LocalDate date = optionalDate.get();
-            return queryFactory
-                    .selectFrom(workerAssignment)
-                    .join(workerAssignment.workcenter, workcenter) // 작업장과 WorkerAssignment를 연결하는 Join
-                    .fetchJoin() // 데이터 함께 가져오기
-                    .where(workerAssignment.workcenter.code.eq(workcenterCode)
-                            .and(workerAssignment.assignmentDate.eq(date))) // 오늘 날짜 기준
-                    .fetch();
-        } else {
-            // 날짜가 없을 경우, 전체 작업자 배정을 날짜 순으로 조회
-            return queryFactory
-                    .selectFrom(workerAssignment)
-                    .where(workerAssignment.workcenter.code.eq(workcenterCode))
-                    .orderBy(workerAssignment.assignmentDate.desc()) // 최신 날짜 순 정렬
-                    .fetch();
-        }
+        var query = queryFactory
+                .selectFrom(workerAssignment)
+                .where(workerAssignment.workcenter.code.eq(workcenterCode));
+
+        optionalDate.ifPresent(date -> query.where(workerAssignment.assignmentDate.eq(date)));
+
+        return query.fetch();
     }
 
     @Override
     public List<WorkerAssignment> findWorkerAssignmentsByWorkcenterCodeAndDate(String workcenterCode, LocalDate date) {
         return queryFactory
                 .selectFrom(workerAssignment)
-                .join(workerAssignment.worker, worker)
-                .join(workerAssignment.workOrder, workOrder)
-                .join(workcenter.processDetails, processDetails)
-                .fetchJoin()
                 .where(workerAssignment.workcenter.code.eq(workcenterCode)
                         .and(workerAssignment.assignmentDate.eq(date)))
                 .fetch();
+    }
+
+    @Override
+    public List<WorkerAssignmentDTO> findTodayWorkers(String code) {
+        return queryFactory
+                .select(Projections.constructor(WorkerAssignmentDTO.class,
+                        workerAssignment.worker.id,
+                        workerAssignment.worker.employee.lastName,
+                        workerAssignment.worker.employee.firstName,
+                        workerAssignment.worker.employee.employeeNumber,
+                        workerAssignment.shiftType.name,
+                        workerAssignment.assignmentDate,
+                        workerAssignment.workcenter.code))
+                .from(workerAssignment)
+                .where(workerAssignment.workcenter.code.eq(code)
+                        .and(workerAssignment.assignmentDate.eq(LocalDate.now())))
+                .fetch();
+    }
+
+    @Override
+    public Optional<WorkerAssignment> findByWorkerIdAndAssignmentDate(Long workerId, LocalDate assignmentDate) {
+        WorkerAssignment assignment = queryFactory
+                .selectFrom(workerAssignment)
+                .where(workerAssignment.worker.id.eq(workerId)
+                        .and(workerAssignment.assignmentDate.eq(assignmentDate)))
+                .fetchFirst();
+        return Optional.ofNullable(assignment);
     }
 }

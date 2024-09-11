@@ -6,6 +6,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.routing_managemen
  * 작업장, 작업 시간, 작업자, 사용되는 기계 및 도구, 품질 기준 등이 포함
  */
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.mrp.MaterialInputStatus;
 import jakarta.persistence.*;
@@ -67,4 +68,7 @@ public class ProcessDetails {
     @OneToMany(mappedBy = "processDetails")
     private List<MaterialInputStatus>  materialInputStatus;
 
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "company_id")
+//    private Company company;                            //회사 테이블 참조 (회사 아이디)
 }
