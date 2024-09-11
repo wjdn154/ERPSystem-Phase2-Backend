@@ -100,8 +100,17 @@ public class TenantService {
 
         MetadataSources metadataSources = new MetadataSources(serviceRegistry);
         Set<Class<?>> entityClasses = entityManagerFactory.getMetamodel().getEntities()
-                .stream().map(e -> e.getJavaType()).collect(java.util.stream.Collectors.toSet());
-
+                .stream()
+                .map(e -> e.getJavaType())
+                .filter(entityClass -> !entityClass.getSimpleName().equals("company")  // company 제외
+                        && !entityClass.getSimpleName().equals("company_address")
+                        && !entityClass.getSimpleName().equals("company_admin")
+                        && !entityClass.getSimpleName().equals("company_corporate_kind")
+                        && !entityClass.getSimpleName().equals("company_corporate_type")
+                        && !entityClass.getSimpleName().equals("company_main_business")
+                        && !entityClass.getSimpleName().equals("company_representative")
+                        && !entityClass.getSimpleName().equals("company_tax_office"))
+                .collect(java.util.stream.Collectors.toSet());
         for (Class<?> entityClass : entityClasses) {
             metadataSources.addAnnotatedClass(entityClass); // 모든 엔티티 추가
         }

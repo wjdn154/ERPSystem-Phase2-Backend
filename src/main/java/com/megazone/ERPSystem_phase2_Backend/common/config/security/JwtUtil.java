@@ -3,6 +3,7 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_manageme
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -90,6 +91,7 @@ public class JwtUtil {
      */
     public String generateToken(String username, String userNickname) {
         Map<String, Object> claims = new HashMap<>();  // 기본 클레임 설정
+        claims.put("X-Tenant-ID", "tenant_2");  // 테넌트 ID 추가
         claims.put("userNickname", userNickname);  // 사용자 닉네임 추가
         return createToken(claims, username);  // 토큰 생성
     }
@@ -122,4 +124,22 @@ public class JwtUtil {
         final String extractedUsername = extractUsername(token);  // 토큰에서 사용자 이름 추출
         return (extractedUsername.equals(username) && !isTokenExpired(token));  // 사용자 이름과 만료 여부 확인
     }
+
+    public String resolveToken(HttpServletRequest request) {
+        // Authorization 헤더에서 JWT 토큰 추출
+        String bearerToken = request.getHeader("Authorization");
+
+        // Bearer 토큰 형식 확인 후 실제 토큰 부분만 반환
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);  // "Bearer " 이후의 토큰 부분 반환
+        }
+
+        return null;  // 토큰이 없을 경우 null 반환
+    }
+
+    public String extractTenantId(String token) {
+        return extractClaim(token, claims -> claims.get("X-Tenant-ID", String.class));
+    }
+
+
 }
