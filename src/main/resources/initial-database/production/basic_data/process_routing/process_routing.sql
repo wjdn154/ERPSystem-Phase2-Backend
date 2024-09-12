@@ -1,5 +1,5 @@
 INSERT INTO process_routing
-(id, production_routing_code, name, description, is_standard, is_active)
+(id, process_routing_code, name, description, is_standard, is_active)
 VALUES
 (1, 'ROUT001', '루트 A', '제품 A의 제조 과정', true, true),
 (2, 'ROUT002', '루트 B', '제품 B의 제조 과정', false, true),

@@ -41,7 +41,7 @@ public class WorkerAssignment {
     private ShiftType shiftType;  // 교대 근무 유형을 엔티티로 참조
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "work_order_id", nullable = false)
+    @JoinColumn(name = "production_order_id", nullable = false)
     private ProductionOrder productionOrder;
 
 }

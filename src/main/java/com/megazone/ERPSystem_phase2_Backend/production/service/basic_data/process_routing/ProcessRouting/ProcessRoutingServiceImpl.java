@@ -129,7 +129,7 @@ public class ProcessRoutingServiceImpl implements ProcessRoutingService {
                     return RoutingStep.builder()
                             .id(id)
                             .processRouting(routing)
-                            .process(processDetails)
+                            .processDetails(processDetails)
                             .stepOrder(stepDTO.getStepOrder())
                             .build();
                 })
@@ -332,7 +332,7 @@ public class ProcessRoutingServiceImpl implements ProcessRoutingService {
     private RoutingStepDTO convertRoutingStepToDTO(RoutingStep routingStep) {
         return RoutingStepDTO.builder()
                 .routingId(routingStep.getProcessRouting().getId())
-                .processId(routingStep.getProcess().getId())
+                .processId(routingStep.getProcessDetails().getId())
                 .stepOrder(routingStep.getStepOrder())
                 .build();
     }
@@ -398,7 +398,7 @@ public class ProcessRoutingServiceImpl implements ProcessRoutingService {
         return RoutingStep.builder()
                 .id(new RoutingStepId(dto.getRoutingId(), dto.getProcessId())) // 복합 키 설정
                 .processRouting(processRouting) // 상위 로직에서 전달된 ProcessRouting 엔티티 설정
-                .process(processDetails) // ProcessDetails 엔티티 설정
+                .processDetails(processDetails) // ProcessDetails 엔티티 설정
                 .stepOrder(dto.getStepOrder()) // 공정 순서 설정
                 .build();
     }

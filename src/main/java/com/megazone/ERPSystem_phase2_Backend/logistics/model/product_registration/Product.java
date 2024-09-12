@@ -33,7 +33,7 @@ public class Product {
 
     // 생산 라우팅 매핑
     @ManyToOne
-    @JoinColumn(name = "production_routing_id")
+    @JoinColumn(name = "process_routing_id")
     private ProcessRouting processRouting;
 
     // 품목구분 (Enum)

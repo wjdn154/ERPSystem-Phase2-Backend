@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/production/productionOrders")
+@RequestMapping("/api/production/productionOrder")
 @RequiredArgsConstructor
 public class ProductionOrderController {
 
@@ -35,7 +35,7 @@ public class ProductionOrderController {
      * @return 생성된 작업 지시 정보
      */
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<ProductionOrderDTO> createProductionOrder(@RequestBody ProductionOrderDTO productionOrderDTO) {
         ProductionOrderDTO createdProductionOrder = productionOrderService.createProductionOrder(productionOrderDTO);
         return ResponseEntity.ok(createdProductionOrder);
@@ -88,7 +88,7 @@ public class ProductionOrderController {
      * @param productionOrderDTO 수정할 작업 지시 정보
      * @return 수정된 작업 지시 정보
      */
-    @PutMapping("/{productionOrderId}")
+    @PostMapping("/update/{productionOrderId}")
     public ResponseEntity<ProductionOrderDTO> updateProductionOrder(@PathVariable Long productionOrderId, @RequestBody ProductionOrderDTO productionOrderDTO) {
         ProductionOrderDTO updatedProductionOrder = productionOrderService.updateProductionOrder(productionOrderId, productionOrderDTO);
         return ResponseEntity.ok(updatedProductionOrder);
@@ -100,7 +100,7 @@ public class ProductionOrderController {
      * @param productionOrderId 삭제할 작업 지시 ID
      * @return 성공 시 200 OK
      */
-    @DeleteMapping("/{productionOrderId}")
+    @PostMapping("/delete/{productionOrderId}")
     public ResponseEntity<String> deleteProductionOrder(@PathVariable Long productionOrderId) {
         productionOrderService.deleteProductionOrder(productionOrderId);
         return ResponseEntity.ok("작업 지시가 성공적으로 삭제되었습니다.");

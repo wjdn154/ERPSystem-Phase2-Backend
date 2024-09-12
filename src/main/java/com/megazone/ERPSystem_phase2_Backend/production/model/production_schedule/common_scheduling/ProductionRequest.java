@@ -27,7 +27,7 @@ public class ProductionRequest {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ProductionRequestType requestsType; // 생산의뢰구분
+    private ProductionRequestType requestType; // 생산의뢰구분
 
     @Column(nullable = false)
     private ProgressType progressType; // 진행상태구분

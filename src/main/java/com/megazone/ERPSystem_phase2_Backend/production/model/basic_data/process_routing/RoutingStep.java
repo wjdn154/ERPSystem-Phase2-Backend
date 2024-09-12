@@ -29,7 +29,7 @@ public class RoutingStep {
     @ManyToOne
     @MapsId("processId") // 복합키의 일부인 processId를 사용하여 연관관계를 맺음
     @JoinColumn(name = "process_id")
-    private ProcessDetails process;
+    private ProcessDetails processDetails;
 
     @Column(name = "step_order")
     private Long stepOrder; // Routing에서의 순서를 정의하는 필드

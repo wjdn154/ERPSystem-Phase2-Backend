@@ -1,5 +1,5 @@
 -- 작업자 배정 테이블에 데이터 삽입
-INSERT INTO common_scheduling_worker_assignment (workcenter_id, worker_id, assignment_date, shift_type_id, work_order_id)
+INSERT INTO common_scheduling_worker_assignment (workcenter_id, worker_id, assignment_date, shift_type_id, production_order_id)
 VALUES
     -- 현재 날짜로 배정
     (1, 1, CURRENT_DATE, 1, 1),  -- 작업장 1에 직원 1 배정

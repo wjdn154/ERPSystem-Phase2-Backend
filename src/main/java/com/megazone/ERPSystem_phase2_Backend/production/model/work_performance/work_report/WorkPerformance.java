@@ -30,7 +30,7 @@ public class WorkPerformance {
     private WorkDailyReport workDailyReport;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "work_order_id", nullable = false)
+    @JoinColumn(name = "production_order_id", nullable = false)
     private ProductionOrder productionOrder; // 연관 작업지시
 
     @Column(nullable = false)

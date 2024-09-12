@@ -1,4 +1,4 @@
--- routing_management_process_details 초기 데이터 삽입
+-- process_details 초기 데이터 삽입
 INSERT INTO process_routing_process_details (process_id, process_code, process_name, is_process_outsourced, process_duration, process_cost, process_defect_rate, process_description, process_is_used)
 VALUES
     (1, 'PRC001', '조립', FALSE, 2.5, 500000, 0.02, 'Assembly of parts and modules. 부품 및 모듈 조립.', TRUE),

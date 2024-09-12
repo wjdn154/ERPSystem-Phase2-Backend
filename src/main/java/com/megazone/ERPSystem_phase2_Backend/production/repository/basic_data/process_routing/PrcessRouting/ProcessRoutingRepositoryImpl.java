@@ -23,7 +23,7 @@ public class ProcessRoutingRepositoryImpl implements ProcessRoutingRepositoryCus
 
         return queryFactory.selectFrom(processRouting)
                 .join(processRouting.routingSteps, routingStep)
-                .where(routingStep.process.id.eq(processId))
+                .where(routingStep.processDetails.id.eq(processId))
                 .fetch();
 
     }
