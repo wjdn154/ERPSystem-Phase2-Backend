@@ -1,6 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration;
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProductionRouting;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessRouting;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,7 +34,7 @@ public class Product {
     // 생산 라우팅 매핑
     @ManyToOne
     @JoinColumn(name = "production_routing_id")
-    private ProductionRouting productionRouting;
+    private ProcessRouting processRouting;
 
     // 품목구분 (Enum)
     @Enumerated(EnumType.STRING)

@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data;
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.mrp.MaterialInputStatus;
-import com.megazone.ERPSystem_phase2_Backend.production.model.mrp.bom.StandardBomMaterial;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.planning.mrp.MaterialInputStatus;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.bom.StandardBomMaterial;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.MaterialType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

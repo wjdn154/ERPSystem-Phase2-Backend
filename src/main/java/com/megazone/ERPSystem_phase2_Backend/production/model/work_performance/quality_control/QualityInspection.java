@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control;
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.goods_receipt.InboundRegistration;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

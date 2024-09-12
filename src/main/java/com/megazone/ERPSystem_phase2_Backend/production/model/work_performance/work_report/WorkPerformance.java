@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report;
 
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkOrder;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionOrder;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +31,7 @@ public class WorkPerformance {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "work_order_id", nullable = false)
-    private WorkOrder workOrder; // 연관 작업지시
+    private ProductionOrder productionOrder; // 연관 작업지시
 
     @Column(nullable = false)
     private String product; // TODO 연관 제품

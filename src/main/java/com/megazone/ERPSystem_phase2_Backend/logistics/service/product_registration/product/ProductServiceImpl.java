@@ -8,8 +8,8 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registratio
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductSaveResponseDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product_group.ProductGroupRepository;
-import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProductionRouting;
-import com.megazone.ERPSystem_phase2_Backend.production.repository.routing_management.ProductionRouting.ProductionRoutingRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessRouting;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.process_routing.PrcessRouting.ProcessRoutingRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService{
 
     private final ProductRepository productRepository;
-    private final ProductionRoutingRepository productionRoutingRepository;
+    private final ProcessRoutingRepository processRoutingRepository;
     private final ProductGroupRepository productGroupRepository;
 
     /**
@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService{
                         .purchasePrice(product.getPurchasePrice())
                         .salesPrice(product.getSalesPrice())
                         .productType(product.getProductType())
-                        .productRoutingName(product.getProductionRouting() != null ? product.getProductionRouting().getName() : null)
+                        .productRoutingName(product.getProcessRouting() != null ? product.getProcessRouting().getName() : null)
                         .build())
                 .collect(Collectors.toList());
     }
@@ -80,7 +80,7 @@ public class ProductServiceImpl implements ProductService{
         }
 
         // 생산 라우팅 조회
-        Optional<ProductionRouting> productionRouting = productionRoutingRepository.findById(productSaveRequestDto.getProductionRoutingId());
+        Optional<ProcessRouting> productionRouting = processRoutingRepository.findById(productSaveRequestDto.getProductionRoutingId());
         if (productionRouting.isEmpty()) {
             return Optional.empty(); // 생산 라우팅 없으면 빈 Optional 반홤함
         }
@@ -120,9 +120,9 @@ public class ProductServiceImpl implements ProductService{
             }
 
             // 생산 라우팅 조회 및 업데이트
-            Optional<ProductionRouting> findProductionRouting = productionRoutingRepository.findById(productSaveRequestDto.getProductionRoutingId());
+            Optional<ProcessRouting> findProductionRouting = processRoutingRepository.findById(productSaveRequestDto.getProductionRoutingId());
             if (findProductionRouting.isPresent()) {
-                product.setProductionRouting(findProductionRouting.get());
+                product.setProcessRouting(findProductionRouting.get());
             } else {
                 return Optional.empty();
             }
@@ -171,7 +171,7 @@ public class ProductServiceImpl implements ProductService{
                 .code(product.getCode())
                 .name(product.getName())
                 .productGroupName(product.getProductGroup().getName())
-                .productionRoutingName(product.getProductionRouting().getName())
+                .productionRoutingName(product.getProcessRouting().getName())
                 .standard(product.getStandard())
                 .unit(product.getUnit())
                 .purchasePrice(product.getPurchasePrice())
