@@ -58,19 +58,20 @@ spring:
 #        - classpath:initial-database/logistics/product.sql
 
         # [주의] 물류및생산 순서유지해야함 (1. 생산공정 2. 라우팅 3. 품목 4. 창고 5. 작업장 6. 작업지시 등)
-        - classpath:initial-database/production/production_routing/processDetails.sql
-        - classpath:initial-database/production/production_routing/productionRouting.sql
+        - classpath:initial-database/production/basic_data/process_routing/process_details.sql
+        - classpath:initial-database/production/basic_data/process_routing/process_routing.sql
+
         - classpath:initial-database/logistics/product.sql
         - classpath:initial-database/logistics/warehouse/warehouse.sql
-        - classpath:initial-database/production/basic_data/workcenter.sql
-        - classpath:initial-database/production/production_schedule/work_order_assign/workOrder.sql
 
-        - classpath:initial-database/production/production_schedule/work_order_assign/shiftType.sql
+        - classpath:initial-database/production/basic_data/workcenter.sql
+        - classpath:initial-database/production/production_schedule/common_scheduling/production_order.sql
+        - classpath:initial-database/production/production_schedule/common_scheduling/shift_type.sql
 
         - classpath:initial-database/production/resource_data/equipmentData.sql
         - classpath:initial-database/production/resource_data/maintenanceHistory.sql
         - classpath:initial-database/production/resource_data/worker.sql
-        - classpath:initial-database/production/production_schedule/work_order_assign/workerAssignment.sql
+        - classpath:initial-database/production/production_schedule/common_scheduling/worker_assignment.sql
 
 logging:
   level:

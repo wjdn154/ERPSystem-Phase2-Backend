@@ -1,7 +1,7 @@
 //package com.megazone.ERPSystem_phase2_Backend.production.service.basic_data;
 //
 //import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse_registration.Warehouse;
-//import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
+//import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
 //import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.WorkcenterDTO;
 //import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.enums.WorkcenterType;
 //import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.EquipmentDataDTO;
