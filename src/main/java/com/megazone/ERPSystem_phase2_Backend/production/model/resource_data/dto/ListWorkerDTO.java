@@ -1,8 +1,16 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto;
+package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@Data
+@NoArgsConstructor
 public class ListWorkerDTO {
 
-    private String trainingStatue;     //안전교육 이수 여부(이수/미이수)
+    private Long id;
+    private String trainingStatus;     //안전교육 이수 여부(이수/미이수)
     private String employeeNumber;     //사원 번호
     private String employeeFirstName;  //이름
     private String employeeLastName;   //성

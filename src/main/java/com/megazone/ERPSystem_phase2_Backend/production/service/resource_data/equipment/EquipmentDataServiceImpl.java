@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class EquipmentDataServiceImpl implements EquipmentDataService{
+public class EquipmentDataServiceImpl implements EquipmentDataService {
 
     private final EquipmentDataRepository equipmentDataRepository;
     private final WorkcenterRepository workcenterRepository;
