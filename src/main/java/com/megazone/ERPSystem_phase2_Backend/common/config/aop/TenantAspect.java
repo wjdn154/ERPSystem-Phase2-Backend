@@ -31,6 +31,7 @@ public class TenantAspect {
             "@annotation(org.springframework.web.bind.annotation.PutMapping) || " +
             "@annotation(org.springframework.web.bind.annotation.DeleteMapping)")
     public void setTenantContext() throws Throwable {
+        TenantContext.setCurrentTenant("PUBLIC");
         // 요청에서 HttpServletRequest 객체를 얻음
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (requestAttributes != null) {
@@ -41,6 +42,7 @@ public class TenantAspect {
             if (token != null) {
                 String tenantId = jwtUtil.extractTenantId(token);
                 TenantContext.setCurrentTenant(tenantId);
+                System.out.println("tenantId = " + tenantId);
                 // 콘솔에 설정된 테넌트 ID를 출력함
             }
         }

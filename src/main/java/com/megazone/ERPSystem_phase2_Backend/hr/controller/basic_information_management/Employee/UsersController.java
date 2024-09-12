@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.controller.basic_information_management.Employee;
 
+import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.SchemaBasedMultiTenantConnectionProvider;
 import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.TenantContext;
 import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.TenantService;
 import com.megazone.ERPSystem_phase2_Backend.common.config.security.AuthRequest;
@@ -14,6 +15,7 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_manageme
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.UserPermission;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Users.UsersService;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.SessionFactory;
@@ -35,9 +37,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.bind.annotation.*;
 import org.hibernate.tool.schema.internal.SchemaCreatorImpl;
 
+import java.sql.SQLException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +63,9 @@ public class UsersController {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final EntityManager entityManager;
+    private final SchemaBasedMultiTenantConnectionProvider multiTenantConnectionProvider;
+    private final PlatformTransactionManager transactionManager;
 
 
 
@@ -93,38 +102,15 @@ public class UsersController {
     }
 
     @PostMapping("/auth/register")
-    public ResponseEntity<String> registerUser(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<String> registerUser(@RequestBody AuthRequest authRequest) throws SQLException {
 
-        // 1. 테넌트 식별자 설정
         TenantContext.setCurrentTenant("tenant_" + authRequest.getCompanyId());
 
-        // 2. 이미 존재하는 사용자 검증
-        if (usersRepository.findByUserName(authRequest.getUserName()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 존재하는 사용자입니다.");
-        }
-
-        // 3. 이메일 형식 검증 정규식
-        Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
-        if (!pattern.matcher(authRequest.getUserName()).matches()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 이메일 형식입니다.");
-        }
-
-        // 4. 비밀번호 암호화
-        String encodedPassword = passwordEncoder.encode(authRequest.getPassword());
-
-        // 5. 새 사용자 생성 및 저장
-        Users newUser = new Users();
-        newUser.setUserName(authRequest.getUserName());
-        newUser.setPassword(encodedPassword);
-        newUser.setPermission(new Permission()); // 권한 설정
-        newUser.setCompany(companyRepository.findById(authRequest.getCompanyId())
-                .orElseThrow(() -> new RuntimeException("회사 정보를 찾을 수 없습니다."))); // 회사 설정
-        newUser.setUserNickname(authRequest.getUserNickname());
-
-        usersRepository.save(newUser);
+        ResponseEntity<String> tenantResponse = usersService.registerUser(authRequest);
 
         TenantContext.clear();
-        return ResponseEntity.ok("사용자 등록 완료 - 테넌트: " + "tenant_" + authRequest.getCompanyId());
+
+        return tenantResponse;
     }
 
 
@@ -156,18 +142,6 @@ public class UsersController {
         UsersShowDTO user = usersService.findUserById(id);
         return ResponseEntity.ok(user);
     }
-
-    /**
-     * 새로운 사용자를 생성함.
-     *
-     * @param usersDTO 생성할 사용자 정보
-     * @return 생성된 사용자 정보를 반환함.
-     */
-    @PostMapping("/users/create")
-    public ResponseEntity<UsersShowDTO> createUser(@RequestBody UsersShowDTO usersDTO) {
-        UsersShowDTO createdUser = usersService.createUser(usersDTO);
-        return ResponseEntity.ok(createdUser);
-    } // 되네? id 값 변경해주고
 
     /**
      * 사용자를 수정함.

@@ -38,13 +38,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = requestAttributes.getRequest();
         String token = jwtUtil.resolveToken(request);
-        System.out.println("token = " + token);
 
         if (token != null) {
             String tenantId = jwtUtil.extractTenantId(token);
             TenantContext.setCurrentTenant(tenantId);
-            // 콘솔에 설정된 테넌트 ID를 출력함
-            System.out.println("연결된 테넌트 스키마: " + tenantId);
         }
 
         Users user = usersRepository.findByUserName(userName) // 사용자 이름으로 검색

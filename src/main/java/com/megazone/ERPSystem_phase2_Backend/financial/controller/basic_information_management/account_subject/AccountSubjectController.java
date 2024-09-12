@@ -88,7 +88,7 @@ public class AccountSubjectController {
      * @return 저장된 계정과목 DTO를 반환함.
      */
     @PostMapping("/save")
-    public ResponseEntity<AccountSubjectDTO> saveAccountSubject( @RequestBody AccountSubjectDTO accountSubjectDTO) {
+    public ResponseEntity<AccountSubjectDTO> saveAccountSubject(@RequestBody AccountSubjectDTO accountSubjectDTO) {
         Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         Long company_id = user.getCompany().getId();
 

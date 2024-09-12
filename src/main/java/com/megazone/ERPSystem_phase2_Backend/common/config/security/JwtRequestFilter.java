@@ -65,21 +65,21 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         // Authorization 헤더에서 JWT 토큰 추출
         final String authorizationHeader = request.getHeader("Authorization");
 
-        String userId = null;
+        String userName = null;
         String jwt = null;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);  // "Bearer " 부분을 제거하고 토큰만 추출
             try {
-                userId = jwtUtil.extractUsername(jwt);  // JWT에서 사용자 ID 추출
+                userName = jwtUtil.extractUsername(jwt);  // JWT에서 사용자 ID 추출
             } catch (Exception e) {
                 e.printStackTrace();  // 예외 발생 시 로그 출력
             }
         }
 
         // 토큰이 유효하고 인증되지 않은 경우에만 실행
-        if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(userId);
+        if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(userName);
 
             // 토큰이 유효한지 확인하고, 유효하면 인증 처리
             if (jwtUtil.validateToken(jwt, userDetails.getUsername())) {

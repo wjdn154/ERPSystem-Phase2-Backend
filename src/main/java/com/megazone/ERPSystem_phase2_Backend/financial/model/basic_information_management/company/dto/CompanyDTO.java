@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CompanyDTO {
+   private Long id; // 고유식별자
    private CorporateTypeDTO corporateType; // 법인구분
    private CorporateKindDTO corporateKind; // 법인종류
    private RepresentativeDTO representative; // 대표자
