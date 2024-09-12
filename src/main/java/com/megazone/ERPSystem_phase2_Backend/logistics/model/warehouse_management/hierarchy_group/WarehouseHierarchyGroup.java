@@ -1,6 +1,7 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse;
+package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.hierarchy_group;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import jakarta.persistence.*;
 import lombok.Data;
 

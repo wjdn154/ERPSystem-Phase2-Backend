@@ -1,7 +1,8 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management;
+package com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.iventory_adjustment;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory.Inventory;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.enums.EventType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
