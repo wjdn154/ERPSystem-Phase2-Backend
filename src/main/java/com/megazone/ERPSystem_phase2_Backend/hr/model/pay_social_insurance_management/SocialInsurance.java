@@ -1,6 +1,5 @@
-package com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management.SocialInsurance;
+package com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management;
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_salary_management.Salary;
 import jakarta.persistence.*;
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management.SocialInsurance.enums;
+package com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management.enums;
 
 public enum BusinessScale {
     LessThan150, // 150 미만 0.25%

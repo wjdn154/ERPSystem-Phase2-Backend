@@ -1,6 +1,6 @@
-package com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management.SocialInsurance;
+package com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management;
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management.SocialInsurance.enums.InsuranceType;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management.enums.InsuranceType;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;

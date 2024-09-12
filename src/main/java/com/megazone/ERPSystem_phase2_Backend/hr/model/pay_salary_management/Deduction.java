@@ -1,9 +1,7 @@
-package com.megazone.ERPSystem_phase2_Backend.hr.model.pay_deduction_management;
+package com.megazone.ERPSystem_phase2_Backend.hr.model.pay_salary_management;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.math.BigDecimal;
 
 /********* 공제 *********/
 @Data

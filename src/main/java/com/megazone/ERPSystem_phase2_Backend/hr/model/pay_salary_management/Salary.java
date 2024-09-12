@@ -1,12 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.pay_salary_management;
 
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_allowance_management.Allowance;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_allowance_management.AllowanceAmount;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_deduction_management.Deduction;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_deduction_management.DeductionAmount;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management.SocialInsurance.SocialInsurance;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management.SocialInsurance;
 import jakarta.persistence.*;
 import lombok.Data;
 

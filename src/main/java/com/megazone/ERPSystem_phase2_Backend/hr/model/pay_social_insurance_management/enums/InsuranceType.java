@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management.SocialInsurance.enums;
+package com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management.enums;
 
 public enum InsuranceType {
     EmploymentInsurance, // 고용보험

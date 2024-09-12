@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.hr.model.pay_allowance_management;
+package com.megazone.ERPSystem_phase2_Backend.hr.model.pay_salary_management;
 
 import jakarta.persistence.*;
 import lombok.Data;

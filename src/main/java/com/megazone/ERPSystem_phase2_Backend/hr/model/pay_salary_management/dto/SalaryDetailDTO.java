@@ -8,24 +8,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
-
-// 사원 급여 모두 보이는 리스트
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SalaryListDTO {
+public class SalaryDetailDTO {
     private Long id;
     private Long employeeId;
-    private String employeeNumber;
-    private String firstName;
-    private String lastName;
-    private BigDecimal baseSalary;
+    private String firstname;
+    private String lastname;
+    private BigDecimal salary;
     private List<Allowance> allowances;
     private List<Deduction> deductions;
     private SocialInsurance socialInsurance;
     private BigDecimal netPay;
-    private LocalDate month;
+
 }
