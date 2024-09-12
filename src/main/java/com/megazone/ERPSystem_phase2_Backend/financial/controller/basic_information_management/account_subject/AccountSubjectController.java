@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.controller.basic_information_management.account_subject;
 
+import com.megazone.ERPSystem_phase2_Backend.common.config.security.JwtUtil;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.CashMemo;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectRepository;
@@ -7,6 +8,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_informat
 import com.megazone.ERPSystem_phase2_Backend.financial.service.basic_information_management.account_subject.AccountSubjectService;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,7 @@ public class AccountSubjectController {
     private final AccountSubjectRepository accountSubjectRepository;
     private final CompanyRepository companyRepository;
     private final UsersRepository usersRepository;
+    private final JwtUtil jwtUtil;
 
     /**
      * 모든 계정과목과 관련된 적요 정보를 가져옴.
@@ -34,11 +37,9 @@ public class AccountSubjectController {
      */
     @PostMapping("/")
     public ResponseEntity<AccountSubjectsAndMemosDTO> getAllAccountSubjectDetails() {
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
 
         // 서비스에서 모든 계정과목과 적요 정보 가져옴
-        Optional<AccountSubjectsAndMemosDTO> response = accountSubjectService.findAllAccountSubjectDetails(company_id);
+        Optional<AccountSubjectsAndMemosDTO> response = accountSubjectService.findAllAccountSubjectDetails(2L);
         // HTTP 200 상태로 응답 반환
         return response.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -87,7 +88,7 @@ public class AccountSubjectController {
      * @return 저장된 계정과목 DTO를 반환함.
      */
     @PostMapping("/save")
-    public ResponseEntity<AccountSubjectDTO> saveAccountSubject( @RequestBody AccountSubjectDTO accountSubjectDTO) {
+    public ResponseEntity<AccountSubjectDTO> saveAccountSubject(@RequestBody AccountSubjectDTO accountSubjectDTO) {
         Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         Long company_id = user.getCompany().getId();
 
