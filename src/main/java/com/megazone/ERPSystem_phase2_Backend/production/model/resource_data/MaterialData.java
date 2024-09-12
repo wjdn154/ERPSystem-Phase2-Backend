@@ -4,9 +4,6 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedul
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.bom.StandardBomMaterial;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
-import com.megazone.ERPSystem_phase2_Backend.production.model.mrp.MaterialInputStatus;
-import com.megazone.ERPSystem_phase2_Backend.production.model.mrp.bom.StandardBomMaterial;
-import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.HazardousMaterialType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.MaterialType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -50,7 +47,8 @@ public class MaterialData {
     @Column(nullable = false)
     private BigDecimal purchasePrice;        //구매 가격
 
-    private HazardousMaterialType hazardousMaterialType;     //유해물질
+    @OneToMany(mappedBy = "materialData", fetch = FetchType.LAZY)
+    private List<HazardousMaterial> hazardousMaterial;     //유해물질
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
