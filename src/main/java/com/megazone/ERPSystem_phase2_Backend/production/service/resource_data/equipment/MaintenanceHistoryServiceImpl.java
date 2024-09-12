@@ -2,13 +2,11 @@ package com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.e
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
-import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.MaintenanceHistory;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.ListMaintenanceHistoryDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.MaintenanceHistoryDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.MaintenanceHistoryDetailShowDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.resource_data.equipment.EquipmentDataRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.resource_data.equipment.MaintenanceHistoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService{
+public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService {
 
     private final MaintenanceHistoryRepository maintenanceHistoryRepository;
     private final EquipmentDataRepository equipmentDataRepository;
