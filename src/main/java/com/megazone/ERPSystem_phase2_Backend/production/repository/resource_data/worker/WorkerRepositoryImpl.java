@@ -23,7 +23,7 @@ public class WorkerRepositoryImpl implements WorkerRepositoryCustom{
     @Override
     public List<ListWorkerDTO> findAllWorkerByDepartmentAndCompanyId(Long companyId) {
         return queryFactory
-                .select(Projections.fields(ListWorkerDTO.class,
+                .select(Projections.fields(ListWorkerDTO.class,     //ListWorkerDTO에 담길 필드를 명시
                         worker.id.as("id"),
                         worker.trainingStatus.stringValue().as("trainingStatus"),
                         worker.employee.employeeNumber.as("employeeNumber"),
@@ -38,6 +38,7 @@ public class WorkerRepositoryImpl implements WorkerRepositoryCustom{
                 .from(worker)
                 .where(worker.employee.department.departmentName.contains("생산"),
                         worker.company.id.eq(companyId))
+                .orderBy(worker.employee.firstName.asc())     //오름차순으로 정렬
                 .fetch();
     }
 
