@@ -32,7 +32,7 @@ public class ProcessDetailsController {
     private final CompanyRepository companyRepository;
 
     // GET: 모든 ProcessDetails 조회
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<List<ProcessDetailsDTO>> getAllProcessDetails() {
         Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         Long company_id = user.getCompany().getId();
@@ -53,7 +53,7 @@ public class ProcessDetailsController {
     }
 
     // 3. 이름으로 공정 리스트 검색 조회
-    @PostMapping("/search")
+    @PostMapping("/search/")
     public ResponseEntity<List<ProcessDetailsDTO>> getProcessDetailsByName(
             @RequestParam("name") String name) {
 
@@ -64,7 +64,7 @@ public class ProcessDetailsController {
         return ResponseEntity.ok(processDetailsDTOs);
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create/")
     public ProcessDetailsDTO createProcessDetails(@RequestBody ProcessDetailsDTO processDetailsDTO) {
 
         Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
@@ -79,7 +79,7 @@ public class ProcessDetailsController {
         }
     }
 
-    @PostMapping("/update/{code}")
+    @PostMapping("/update/{code}/")
     public ProcessDetailsDTO updateProcessDetails(@PathVariable("code") String code, @RequestBody ProcessDetailsDTO processDetailsDTO) {
 
         Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
@@ -97,7 +97,7 @@ public class ProcessDetailsController {
     }
 
     // DELETE
-    @PostMapping("/delete")
+    @PostMapping("/delete/")
     public ProcessDetailsDTO deleteProcessDetails(@RequestParam("code") String code) {
 
         Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));

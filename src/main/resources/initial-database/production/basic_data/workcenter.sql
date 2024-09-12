@@ -1,4 +1,5 @@
 -- Workcenter 초기 데이터 (warehouse_type이 FACTORY인 공장들만 포함)
+-- // TODO name이 원래 작업장명인데 공장명으로 들어가있어서 이따 수정
 INSERT INTO basic_data_workcenter (id, company_id, process_id, warehouse_id, code, description, name, workcenter_type, is_active)
 VALUES
 -- WH002에 속한 작업장들 (FACTORY)
