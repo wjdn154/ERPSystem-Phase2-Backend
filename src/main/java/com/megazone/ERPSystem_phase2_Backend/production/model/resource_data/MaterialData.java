@@ -1,5 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data;
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.planning.mrp.MaterialInputStatus;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.bom.StandardBomMaterial;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.production.model.mrp.MaterialInputStatus;

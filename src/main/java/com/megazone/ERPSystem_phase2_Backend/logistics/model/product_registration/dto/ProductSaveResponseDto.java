@@ -1,9 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.ProductGroup;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.ProductType;
-import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProductionRouting;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

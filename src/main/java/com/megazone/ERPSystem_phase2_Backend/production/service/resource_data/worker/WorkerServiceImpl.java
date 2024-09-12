@@ -6,8 +6,8 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_manageme
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
-import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkerAssignment;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.WorkerAssignment;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.Worker;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
@@ -16,7 +16,7 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equi
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataUpdateDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.ListEquipmentDataDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
-import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.work_order_assign.worker_assignment.WorkerAssignmentRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.worker_assignment.WorkerAssignmentRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.resource_data.equipment.EquipmentDataRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.resource_data.worker.WorkerRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.equipment.EquipmentDataService;

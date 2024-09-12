@@ -2,10 +2,8 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data;
 
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Attendance;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
-import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkerAssignment;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.WorkerAssignment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -7,8 +7,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.outsourcing;
     남품된 제품이 모두 제대로 도착했는지 확인.
 */
 //import com.megazone.ERPSystem_phase2_Backend.production.model.basic_information.Workcenter;
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
-import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.MaterialData;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +15,6 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Entity
