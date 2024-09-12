@@ -35,6 +35,8 @@ public class Inventory {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    private String standard;
+
     @Column(name = "quantity", nullable = false)
     private Long quantity;
 
@@ -44,13 +46,4 @@ public class Inventory {
 
     @Column(name = "batch_number")
     private String batchNumber;
-
-    @Column(name = "expiry_date")
-    private LocalDateTime expiryDate;
-
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 }
