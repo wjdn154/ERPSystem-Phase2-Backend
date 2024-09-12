@@ -2,7 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_manageme
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.enums.WarehouseType;
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -41,7 +41,7 @@ public class Warehouse {
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     private List<WarehouseHierarchyGroup> warehouseHierarchyGroup = new ArrayList<>();
 
-    @Column(name = "warehouse_code", nullable = false) // 창고코드
+    @Column(name = "warehouse_code", nullable = false, unique = true) // 창고코드
     private String code;
 
     @Column(nullable = false) // 창고명

@@ -4537,33 +4537,6 @@ GROUP BY code,name;
 SELECT DISTINCT code, name
 FROM journal_entry
 WHERE name IN ('현금', '외상', '카드');
-INSERT INTO warehouse_address (id, company_id, warehouse_address, detail_address, warehouse_postal_code, warehouse_place)
-VALUES (1, 1, '해운대구', '센텀동로', '31', '부산정보산업진흥원');
-
-
-INSERT INTO hierarchy_group (id, company_id, hierarchy_group_code, hierarchy_group_name)
-VALUES (1, 1, 'HG001', '그룹 A'),
-       (2, 1, 'HG002', '그룹 B'),
-       (3, 1, 'HG003', '그룹 C'),
-       (4, 2, 'HG004', '그룹 D'),
-       (5, 2, 'HG005', '그룹 E'),
-       (6, 2, 'HG006', '그룹 F');
-
-
-INSERT INTO warehouse (id, company_id, address_id, warehouse_code, warehouse_type, name, production_process, is_active)
-VALUES (1, 1, 1, 'WH001', 'WAREHOUSE', '재고창고', '지혁몸통창고', TRUE),
-       (2, 1, 1, 'WH002', 'FACTORY', '생산공장', '지혁이몸통생산', FALSE),
-       (3, 2, 1, 'WH002', 'FACTORY', '과일창고', '지혁이머리저장', FALSE),
-       (4, 2, 1, 'WH002', 'FACTORY', '부품공장', '지혁이머리생산', TRUE);
-
-INSERT INTO warehouse_hierarchy_group (id, company_id, warehouse_id, hierarchy_group_id)
-VALUES (1, 1, 1, 1),
-       (2, 1, 1, 2),
-       (3, 1, 2, 3),
-       (4, 2, 3, 4),
-       (5, 2, 3, 5),
-       (6, 2, 4, 6);
-
 INSERT INTO employee_department (department_code, department_name, location) VALUES
 ('0002','영업부','1층'),
 ('0003','생산부','2층'),
@@ -4586,15 +4559,27 @@ INSERT INTO employee_job_title (description, title_name) VALUES
 
 INSERT INTO employee (date_of_birth, hire_date, is_household_head, department_id, job_title_id, position_id, address, email, employee_number, first_name, last_name, phone_number, profile_picture, employment_status, employment_type)
 VALUES
-    ('1990-05-15', '2021-04-01', TRUE, 1, 1, 1, '서울', 'jiho.kim@example.com', '1001', '지호', '김', '010-1234-5678', 'img1.jpg', 'ACTIVE', 'FULL_TIME');
+    ('1990-05-15', '2021-04-01', TRUE, 1, 1, 1, '서울', 'jiho.kim@example.com', '20270910001', '지호', '김', '010-1234-5678', 'img1.jpg', 'ACTIVE', 'FULL_TIME');
 
 INSERT INTO employee (date_of_birth, hire_date, is_household_head, department_id, job_title_id, position_id, address, email, employee_number, first_name, last_name, phone_number, profile_picture, employment_status, employment_type)
 VALUES
-    ('1985-11-22', '2020-07-15', FALSE, 2, 2, 2, '부산', 'sungmin.lee@example.com', '1002', '성민', '이', '010-9876-5432', 'img2.jpg', 'ACTIVE', 'PART_TIME');
+    ('1985-11-22', '2020-07-15', FALSE, 2, 2, 2, '부산', 'sungmin.lee@example.com', '20270910002', '성민', '이', '010-9876-5432', 'img2.jpg', 'ACTIVE', 'PART_TIME');
 
 INSERT INTO employee (date_of_birth, hire_date, is_household_head, department_id, job_title_id, position_id, address, email, employee_number, first_name, last_name, phone_number, profile_picture, employment_status, employment_type)
 VALUES
-    ('1995-03-10', '2022-03-20', TRUE, 3, 3, 1, '대구', 'soojin.choi@example.com', '1003', '수진', '최', '010-2234-5678', 'img3.jpg', 'ACTIVE', 'INTERN');
+    ('1995-03-10', '2022-03-20', TRUE, 2, 1, 1, '대구', 'soojin.choi@example.com', '20270910003', '수진', '최', '010-2234-5678', 'img3.jpg', 'ACTIVE', 'INTERN');
+
+INSERT INTO employee (date_of_birth, hire_date, is_household_head, department_id, job_title_id, position_id, address, email, employee_number, first_name, last_name, phone_number, profile_picture, employment_status, employment_type)
+VALUES
+    ('1999-12-12', '2024-03-20', TRUE, 2, 1, 2, '부산', 'soojin.choi@example.com', '20270910004', '지혁', '최', '010-2234-5678', 'img4.jpg', 'ACTIVE', 'INTERN');
+
+INSERT INTO employee (date_of_birth, hire_date, is_household_head, department_id, job_title_id, position_id, address, email, employee_number, first_name, last_name, phone_number, profile_picture, employment_status, employment_type)
+VALUES
+    ('2000-01-01', '2022-03-20', TRUE, 2, 3, 1, '제주', 'soojin.choi@example.com', '20270910005', '민성', '김', '010-2234-5678', 'img5.jpg', 'ACTIVE', 'INTERN');
+
+INSERT INTO employee (date_of_birth, hire_date, is_household_head, department_id, job_title_id, position_id, address, email, employee_number, first_name, last_name, phone_number, profile_picture, employment_status, employment_type)
+VALUES
+    ('2000-10-16', '2024-12-13' , TRUE, 3, 2, 3, '거제', 'soojin.choi@example.com', '20270910006', '정현', '박', '010-2234-5678', 'img6.jpg', 'ACTIVE', 'INTERN');
 
 INSERT INTO employee_bank_account (employee_id,account_number, bank_name) VALUES
 (1,'291-12-0239314','부산은행'),
@@ -4608,6 +4593,36 @@ INSERT INTO employee_performance (evaluation_date, employee_id, evaluator_id, co
 
 
 
+# insert into users_role(role_name, role_type) values
+# ('시스템 관리자','SYSTEM_ADMINISTRATOR'),
+# ('인사 관리자','HR_STAFF'),
+# ('재무 관리자','FINANCE_STAFF');
+#
+# insert into users_permission(permission_name) values
+# ('READ_PRIVILEGES'),
+# ('READ_PRIVILEGES'),
+# ('READ_PRIVILEGES');
+#
+#
+
+
+INSERT INTO attendance_management (check_time, checkout_time, date, employee_id, attendance_code, status) VALUES
+    ('09:00:00','18:00:00','2024-01-05',1,'0001','PRESENT');
+
+INSERT INTO attendance_management (check_time, checkout_time, date, employee_id, attendance_code, status) VALUES
+    ('09:00:00','18:00:00','2024-01-12',1,'0002','PRESENT');
+
+INSERT INTO attendance_management (check_time, checkout_time, date, employee_id, attendance_code, status) VALUES
+    ('09:00:00','18:00:00','2024-01-18',1,'0003','PRESENT');
+
+INSERT INTO attendance_management (check_time, checkout_time, date, employee_id, attendance_code, status) VALUES
+    ('09:00:00','18:00:00','2024-02-08',2,'0004','PRESENT');
+
+INSERT INTO attendance_management (check_time, checkout_time, date, employee_id, attendance_code, status) VALUES
+    ('09:00:00','18:00:00','2024-02-13',2,'0005','PRESENT');
+
+INSERT INTO attendance_management (check_time, checkout_time, date, employee_id, attendance_code, status) VALUES
+    ('09:00:00','18:00:00','2024-02-20',3,'0006','PRESENT');
 INSERT INTO product_group (code, name, is_active) VALUES
 ('01', '가공식품', TRUE),
 ('02', '신선식품', TRUE),
@@ -4620,22 +4635,8 @@ INSERT INTO product_group (code, name, is_active) VALUES
 ('10', '전문스포츠/레저', TRUE),
 ('11', '패션잡화', TRUE),
 ('99', '기타', TRUE);
-# INSERT INTO routing_management_process_details (process_id, process_code, process_name, is_process_outsourced, process_duration, process_cost, process_defect_rate, process_description, process_is_used)
-# VALUES
-# (1, 'PRC001', '조립', FALSE, 2.5, 500000, 0.02, 'Assembly of parts and modules. 부품 및 모듈 조립.', TRUE),
-# (2, 'PRC002', '용접', FALSE, 3.0, 800000, 0.03, 'Welding of metal components. 금속 부품 용접.', TRUE),
-# (3, 'PRC003', '도장', TRUE, 4.0, 1200000, 0.01, 'Painting and corrosion protection. 도장 및 방청.', TRUE),
-# (4, 'PRC004', '가공', FALSE, 5.0, 1500000, 0.015, 'Precision machining of metal parts. 금속 부품 정밀 가공.', TRUE),
-# (5, 'PRC005', '열처리', TRUE, 7.0, 2000000, 0.005, 'Heat treatment to harden metal. 금속 경화를 위한 열처리.', TRUE),
-# (6, 'PRC006', '품질 검사', FALSE, 1.5, 300000, 0.001, 'Quality inspection and validation. 품질 검사 및 검증.', TRUE),
-# (7, 'PRC007', '프레스', FALSE, 2.0, 700000, 0.02, 'Pressing of metal sheets. 금속 판재 성형.', TRUE),
-# (8, 'PRC008', '단조', FALSE, 4.5, 1100000, 0.025, 'Forging of metal components. 금속 부품 단조.', TRUE),
-# (9, 'PRC009', '플라스틱 성형', TRUE, 3.5, 900000, 0.02, 'Molding of plastic parts. 플라스틱 부품 성형.', TRUE),
-# (10, 'PRC010', '주조', FALSE, 6.0, 1800000, 0.015, 'Casting of metal parts. 금속 부품 주조.', TRUE);
-
-
--- routing_management_process_details 초기 데이터 삽입
-INSERT INTO routing_management_process_details (process_id, process_code, process_name, is_process_outsourced, process_duration, process_cost, process_defect_rate, process_description, process_is_used)
+-- process_details 초기 데이터 삽입
+INSERT INTO process_routing_process_details (process_id, process_code, process_name, is_process_outsourced, process_duration, process_cost, process_defect_rate, process_description, process_is_used)
 VALUES
     (1, 'PRC001', '조립', FALSE, 2.5, 500000, 0.02, 'Assembly of parts and modules. 부품 및 모듈 조립.', TRUE),
     (2, 'PRC002', '용접', FALSE, 3.0, 800000, 0.03, 'Welding of metal components. 금속 부품 용접.', TRUE),
@@ -4667,8 +4668,8 @@ VALUES
     (28, 'PRC028', '냉각', FALSE, 1.0, 150000, 0.01, 'Cooling process for finished products. 완제품 냉각 공정.', TRUE),
     (29, 'PRC029', '플라스틱 재활용', TRUE, 4.0, 900000, 0.02, 'Plastic recycling process. 플라스틱 재활용 공정.', TRUE),
     (30, 'PRC030', '알루미늄 주조', FALSE, 5.5, 1600000, 0.015, 'Aluminum casting process. 알루미늄 주조 공정.', TRUE);
-INSERT INTO routing_management_production_routing
-(id, production_routing_code, name, description, is_standard, is_active)
+INSERT INTO process_routing
+(id, process_routing_code, name, description, is_standard, is_active)
 VALUES
 (1, 'ROUT001', '루트 A', '제품 A의 제조 과정', true, true),
 (2, 'ROUT002', '루트 B', '제품 B의 제조 과정', false, true),
@@ -4682,6 +4683,264 @@ VALUES
 (10, 'ROUT010', '루트 J', '제품 J의 제조 과정', false, false);
 
 -- processDetailsl, routingStep 함께 확인
-INSERT INTO product (code, product_group_id, production_routing_id, product_type, purchase_price, sales_price, name, standard, unit) VALUES
+INSERT INTO product (code, product_group_id, process_routing_id, product_type, purchase_price, sales_price, name, standard, unit) VALUES
 ('A0001', 5, 1, 'FINISHED_GOODS', 25000, 30000, 'JPA 시작하기', '700페이지', 'EA'),
 ('A0002', 5, 2, 'FINISHED_GOODS', 5000, 10000, 'Spring Boot 시작하기', '200페이지', 'EA');
+INSERT INTO warehouse_address (id, company_id, warehouse_address, detail_address, warehouse_postal_code, warehouse_place)
+VALUES (1, 1, '해운대구', '센텀동로', '31', '부산정보산업진흥원');
+
+
+INSERT INTO hierarchy_group (id, company_id, hierarchy_group_code, hierarchy_group_name)
+VALUES (1, 1, 'HG001', '그룹 A'),
+       (2, 1, 'HG002', '그룹 B'),
+       (3, 1, 'HG003', '그룹 C'),
+       (4, 2, 'HG004', '그룹 D'),
+       (5, 2, 'HG005', '그룹 E'),
+       (6, 2, 'HG006', '그룹 F');
+
+
+INSERT INTO warehouse (id, company_id, address_id, warehouse_code, warehouse_type, name, production_process, is_active)
+VALUES (1, 1, 1, 'WH001', 'WAREHOUSE', '재고창고', '지혁몸통창고', TRUE),
+       (2, 1, 1, 'WH002', 'FACTORY', '생산공장', '지혁이몸통생산', FALSE),
+       (3, 2, 1, 'WH003', 'FACTORY', '과일창고', '지혁이머리저장', FALSE),
+       (4, 2, 1, 'WH004', 'FACTORY', '부품공장', '지혁이머리생산', TRUE);
+
+INSERT INTO warehouse_hierarchy_group (id, company_id, warehouse_id, hierarchy_group_id)
+VALUES (1, 1, 1, 1),
+       (2, 1, 1, 2),
+       (3, 1, 2, 3),
+       (4, 2, 3, 4),
+       (5, 2, 3, 5),
+       (6, 2, 4, 6);
+
+INSERT INTO warehouse_location (id, company_id, warehouse_id, location_name, is_active)
+VALUES (1, 1, 1, 'A1', true),
+       (2, 1, 1, 'A2', true),
+       (3, 1, 1, 'A3', true),
+       (4, 1, 1, 'A4', true),
+       (5, 2, 3, 'A5', true),
+       (6, 2, 3, 'A6', true),
+       (7, 2, 3, 'A7', true),
+       (8, 2, 3, 'A8', true);
+
+INSERT INTO warehouse_transfer (id, company_id, employee_id, sending_warehouse_id, receiving_warehouse_id, transfer_date, created_at, comment, status)
+VALUES (1, 1, 1, 1, 2, '2024-09-10', '2024-09-10', null, '대기'),
+       (2, 1, 1, 1, 2, '2024-09-10', '2024-09-10', null, '진행중'),
+       (3, 1, 1, 1, 2, '2024-09-10', '2024-09-10', null, '완료'),
+       (4, 1, 1, 1, 2, '2024-09-10', '2024-09-10', null, '대기'),
+       (5, 2, 2, 3, 4, '2024-09-10', '2024-09-10', null, '대기'),
+       (6, 2, 2, 3, 4, '2024-09-10', '2024-09-10', null, '진행중'),
+       (7, 2, 2, 3, 4, '2024-09-10', '2024-09-10', null, '완료'),
+       (8, 2, 2, 3, 4, '2024-09-10', '2024-09-10', null, '대기');
+
+INSERT INTO warehouse_transfer_product (id, company_id, warehouse_transfer_id, product_id, quantity, comment)
+VALUES (1, 1, 1, 1, 100, null),
+       (2, 1, 1, 1, 10, null),
+       (3, 1, 1, 1, 1, null),
+       (4, 1, 1, 1, 200, null),
+       (5, 1, 1, 1, 300, null),
+       (6, 2, 5, 2, 100, null),
+       (7, 2, 5, 2, 10, null),
+       (8, 2, 5, 2, 1, null),
+       (9, 2, 5, 2, 200, null),
+       (10,2, 5, 2, 300, null);
+-- Workcenter 초기 데이터 (warehouse_type이 FACTORY인 작업장들만 포함)
+INSERT INTO basic_data_workcenter (id, company_id, process_id, warehouse_id, code, description, name, workcenter_type, is_active)
+VALUES
+-- WH002에 속한 작업장들 (FACTORY)
+(1, 1, 1, 2, 'WC001', '금속을 변형시키는 작업', '프레스 작업장', 'PRESS', TRUE),
+(2, 1, 2, 2, 'WC002', '부품을 조립하는 작업', '조립 작업장', 'ASSEMBLY', TRUE),
+(3, 1, 3, 2, 'WC003', '금속을 녹여 주형에 붓는 작업', '주조 작업장', 'CASTING', TRUE),
+(4, 2, 4, 2, 'WC004', '금속 부품을 용접하는 작업', '용접 작업장', 'WELDING', TRUE),
+(5, 2, 5, 2, 'WC005', '부품에 도장 처리를 하는 작업', '도장 작업장', 'PAINT', TRUE),
+
+-- WH003에 속한 작업장들 (FACTORY)
+(6, 1, 6, 3, 'WC006', '플라스틱 성형 작업을 진행하는 작업', '플라스틱 성형 작업장', 'PLASTIC_MOLDING', TRUE),
+(7, 1, 7, 3, 'WC007', '제품의 품질을 검사하는 작업', '품질 검사 작업장', 'QUALITY_INSPECTION', TRUE),
+(8, 1, 8, 3, 'WC008', '금속을 단조로 변형시키는 작업', '단조 작업장', 'FORGING', TRUE),
+(9, 2, 9, 3, 'WC009', '금속을 고온으로 가열하는 작업', '열처리 작업장', 'HEAT_TREATMENT', TRUE),
+(10, 2, 10, 3, 'WC010', '정밀한 기계 가공을 수행하는 작업', '기계 가공 작업장', 'MACHINING', TRUE),
+
+-- WH004에 속한 작업장들 (FACTORY)
+(11, 1, 11, 4, 'WC011', '금속을 변형시키는 작업', '프레스 작업장', 'PRESS', TRUE),
+(12, 1, 12, 4, 'WC012', '부품을 조립하는 작업', '조립 작업장', 'ASSEMBLY', TRUE),
+(13, 2, 13, 4, 'WC013', '금속을 녹여 주형에 붓는 작업', '주조 작업장', 'CASTING', TRUE),
+(14, 2, 14, 4, 'WC014', '금속 부품을 용접하는 작업', '용접 작업장', 'WELDING', TRUE),
+(15, 1, 15, 4, 'WC015', '부품에 도장 처리를 하는 작업', '도장 작업장', 'PAINT', TRUE),
+(16, 1, 16, 4, 'WC016', '플라스틱 성형 작업을 진행하는 작업', '플라스틱 성형 작업장', 'PLASTIC_MOLDING', TRUE),
+(17, 2, 17, 4, 'WC017', '제품의 품질을 검사하는 작업', '품질 검사 작업장', 'QUALITY_INSPECTION', TRUE),
+(18, 2, 18, 4, 'WC018', '금속을 단조로 변형시키는 작업', '단조 작업장', 'FORGING', TRUE),
+(19, 2, 19, 4, 'WC019', '금속을 고온으로 가열하는 작업', '열처리 작업장', 'HEAT_TREATMENT', TRUE),
+(20, 2, 20, 4, 'WC020', '정밀한 기계 가공을 수행하는 작업', '기계 가공 작업장', 'MACHINING', TRUE);
+
+-- Workcenter에 프로세스 ID 업데이트 (생산 공정과 작업장 연결)
+UPDATE basic_data_workcenter
+SET process_id = (SELECT process_id FROM process_routing_process_details WHERE process_code = 'PRC001')
+WHERE code = 'WC001';
+
+UPDATE basic_data_workcenter
+SET process_id = (SELECT process_id FROM process_routing_process_details WHERE process_code = 'PRC002')
+WHERE code = 'WC002';
+
+UPDATE basic_data_workcenter
+SET process_id = (SELECT process_id FROM process_routing_process_details WHERE process_code = 'PRC003')
+WHERE code = 'WC003';
+
+UPDATE basic_data_workcenter
+SET process_id = (SELECT process_id FROM process_routing_process_details WHERE process_code = 'PRC004')
+WHERE code = 'WC004';
+
+UPDATE basic_data_workcenter
+SET process_id = (SELECT process_id FROM process_routing_process_details WHERE process_code = 'PRC005')
+WHERE code = 'WC005';
+
+UPDATE basic_data_workcenter
+SET process_id = (SELECT process_id FROM process_routing_process_details WHERE process_code = 'PRC006')
+WHERE code = 'WC006';
+
+UPDATE basic_data_workcenter
+SET process_id = (SELECT process_id FROM process_routing_process_details WHERE process_code = 'PRC007')
+WHERE code = 'WC007';
+
+UPDATE basic_data_workcenter
+SET process_id = (SELECT process_id FROM process_routing_process_details WHERE process_code = 'PRC008')
+WHERE code = 'WC008';
+
+UPDATE basic_data_workcenter
+SET process_id = (SELECT process_id FROM process_routing_process_details WHERE process_code = 'PRC009')
+WHERE code = 'WC009';
+
+UPDATE basic_data_workcenter
+SET process_id = (SELECT process_id FROM process_routing_process_details WHERE process_code = 'PRC010')
+WHERE code = 'WC010';
+INSERT INTO common_scheduling_production_order (name, plan_of_make_to_order_id, plan_of_make_to_stock_id, remarks)
+VALUES
+    ('조립 작업 지시 1 - 엔진 조립', NULL, NULL, '엔진 부품을 조립하는 작업 지시. PRC001 (조립) 공정 수행'),
+    ('용접 작업 지시 2 - 차체 프레임 용접', NULL, NULL, '차체 프레임을 용접하는 작업 지시. PRC002 (용접) 공정 수행'),
+    ('도장 작업 지시 3 - 도어 패널 도장', NULL, NULL, '도어 패널의 표면을 도장하는 작업 지시. PRC003 (도장) 공정 수행'),
+    ('가공 작업 지시 4 - 기어 가공', NULL, NULL, '기어 부품을 정밀 가공하는 작업 지시. PRC004 (가공) 공정 수행'),
+    ('열처리 작업 지시 5 - 샤프트 열처리', NULL, NULL, '샤프트 부품의 강도 향상을 위한 열처리 작업 지시. PRC005 (열처리) 공정 수행'),
+    ('품질 검사 작업 지시 6 - 브레이크 시스템 검사', NULL, NULL, '브레이크 시스템의 품질을 검사하는 작업 지시. PRC006 (품질 검사) 공정 수행'),
+    ('프레스 작업 지시 7 - 휠 프레스 성형', NULL, NULL, '자동차 휠을 프레스 성형하는 작업 지시. PRC007 (프레스) 공정 수행'),
+    ('단조 작업 지시 8 - 클러치 플레이트 단조', NULL, NULL, '클러치 플레이트를 단조하는 작업 지시. PRC008 (단조) 공정 수행'),
+    ('플라스틱 성형 작업 지시 9 - 대시보드 성형', NULL, NULL, '대시보드를 플라스틱 성형하는 작업 지시. PRC009 (플라스틱 성형) 공정 수행'),
+    ('주조 작업 지시 10 - 엔진 블록 주조', NULL, NULL, '엔진 블록을 금속 주조하는 작업 지시. PRC010 (주조) 공정 수행'),
+    ('세척 작업 지시 11 - 기어 박스 부품 세척', NULL, NULL, '기어 박스 부품을 세척하는 작업 지시. PRC011 (세척) 공정 수행'),
+    ('절단 작업 지시 12 - 철판 절단', NULL, NULL, '철판을 절단하는 작업 지시. PRC012 (절단) 공정 수행'),
+    ('레이저 절단 작업 지시 13 - 정밀 부품 레이저 절단', NULL, NULL, '정밀 부품을 레이저로 절단하는 작업 지시. PRC013 (레이저 절단) 공정 수행'),
+    ('CNC 가공 작업 지시 14 - 금속 부품 CNC 가공', NULL, NULL, '금속 부품을 CNC 가공하는 작업 지시. PRC014 (CNC 가공) 공정 수행'),
+    ('연마 작업 지시 15 - 금속 표면 연마', NULL, NULL, '금속 표면을 연마하는 작업 지시. PRC015 (연마) 공정 수행'),
+    ('조립 2차 작업 지시 16 - 엔진 부품 2차 조립', NULL, NULL, '엔진 부품의 2차 조립을 수행하는 작업 지시. PRC016 (조립 2차) 공정 수행'),
+    ('패키징 작업 지시 17 - 완제품 패키징', NULL, NULL, '완제품을 패키징하는 작업 지시. PRC017 (패키징) 공정 수행'),
+    ('압출 성형 작업 지시 18 - 플라스틱 압출 성형', NULL, NULL, '플라스틱 부품의 압출 성형을 수행하는 작업 지시. PRC018 (압출 성형) 공정 수행'),
+    ('프레스 2차 작업 지시 19 - 금속 프레스 2차 작업', NULL, NULL, '금속 프레스 2차 작업을 수행하는 작업 지시. PRC019 (프레스 2차) 공정 수행'),
+    ('경화 작업 지시 20 - 재료 경화 작업', NULL, NULL, '재료 경화를 위한 작업 지시. PRC020 (경화) 공정 수행');
+-- ShiftType 데이터 삽입
+INSERT INTO common_scheduling_shift_type (name, description, duration, is_used) VALUES
+                                                        ('주간', '8시간 주간 근무', 8, TRUE),
+                                                        ('야간', '8시간 야간 근무', 8, TRUE),
+                                                        ('오전', '8시간 오전 근무', 8, TRUE),
+                                                        ('오후', '8시간 오후 근무', 8, TRUE),
+                                                        ('주간 12시간', '12시간 주간 근무', 12, FALSE),
+                                                        ('야간 12시간', '12시간 야간 근무', 12, FALSE),
+                                                        ('4조 3교대', '4개조 3교대 근무', 8, FALSE),
+                                                        ('3조 2교대', '3개조 2교대 근무', 12, FALSE),
+                                                        ('4조 2교대', '4개조 2교대 근무', 12, FALSE);
+
+
+INSERT INTO equipment_data (cost,install_date,purchase_date,company_id,factory_id,workcenter_id,equipment_img,equipment_name,equipment_num,manufacturer,model_name,equipment_type,operation_status) VALUES
+    (100,'2022-02-02','2022-02-03',1,1,1,'설비 사진1','조립설비1','PRD-EM-001','삼성','MZ1','ASSEMBLY','BEFORE_OPERATION');
+
+INSERT INTO equipment_data (cost,install_date,purchase_date,company_id,factory_id,workcenter_id,equipment_img,equipment_name,equipment_num,manufacturer,model_name,equipment_type,operation_status) VALUES
+    (1000,'2022-02-02','2022-02-04',1,2,1,'설비 사진2','제조설비2','PRD-EM1-002','LG','MZ','ASSEMBLY','BEFORE_OPERATION');
+
+INSERT INTO equipment_data (cost,install_date,purchase_date,company_id,factory_id,workcenter_id,equipment_img,equipment_name,equipment_num,manufacturer,model_name,equipment_type,operation_status) VALUES
+    (1000,'2022-02-02','2022-02-04',1,1,1,'설비 사진3','제조설비3','PRD-EM1-003','YG','MZ','ASSEMBLY','BEFORE_OPERATION');
+
+INSERT INTO equipment_data (cost,install_date,purchase_date,company_id,factory_id,workcenter_id,equipment_img,equipment_name,equipment_num,manufacturer,model_name,equipment_type,operation_status) VALUES
+    (100000,'2022-02-02','2022-02-04',1,1,1,'설비 사진4','제조설비4','PRD-EM1-004','현대','MZ','ASSEMBLY','BEFORE_OPERATION');
+
+INSERT INTO equipment_data (cost,install_date,purchase_date,company_id,factory_id,workcenter_id,equipment_img,equipment_name,equipment_num,manufacturer,model_name,equipment_type,operation_status) VALUES
+    (10000,'2022-02-02','2022-02-04',1,2,1,'설비 사진5','제조설비5','PRD-EM1-005','삼성','MZ','ASSEMBLY','BEFORE_OPERATION');
+
+INSERT INTO equipment_data (cost,install_date,purchase_date,company_id,factory_id,workcenter_id,equipment_img,equipment_name,equipment_num,manufacturer,model_name,equipment_type,operation_status) VALUES
+    (111111,'2022-02-02','2022-02-04',1,1,1,'설비 사진6','조립설비2','PRD-EM1-006','삼성','MZ','ASSEMBLY',n'REPAIRING');
+
+INSERT INTO equipment_data (cost,install_date,purchase_date,company_id,factory_id,workcenter_id,equipment_img,equipment_name,equipment_num,manufacturer,model_name,equipment_type,operation_status) VALUES
+    (1500000,'2022-03-02','2021-02-04',1,1,1,'설비 사진7','조립설비3','PRD-EM1-007','LG','메가존클라우드','ASSEMBLY',n'REPAIRING');
+
+INSERT INTO equipment_data (cost,install_date,purchase_date,company_id,factory_id,workcenter_id,equipment_img,equipment_name,equipment_num,manufacturer,model_name,equipment_type,operation_status) VALUES
+    (1500000,'2022-03-02','2021-02-04',1,1,1,'설비 사진8','포장설비1','PRD-EM1-008','LG','메가존클라우드','ASSEMBLY',n'REPAIRING');
+
+INSERT INTO equipment_data (cost,install_date,purchase_date,company_id,factory_id,workcenter_id,equipment_img,equipment_name,equipment_num,manufacturer,model_name,equipment_type,operation_status) VALUES
+    (1500000,'2022-03-02','2021-02-04',1,1,1,'설비 사진9','포장설비2','PRD-EM1-009','현대자동차','메가존클라우드','ASSEMBLY',n'REPAIRING');
+
+INSERT INTO equipment_data (cost,install_date,purchase_date,company_id,factory_id,workcenter_id,equipment_img,equipment_name,equipment_num,manufacturer,model_name,equipment_type,operation_status) VALUES
+    (1500000,'2022-03-02','2021-02-04',1,1,1,'설비 사진10','포장설비3','PRD-EM1-010','삼성','메가존클라우드','ASSEMBLY',n'REPAIRING');
+
+INSERT INTO equipment_data (cost,install_date,purchase_date,company_id,factory_id,workcenter_id,equipment_img,equipment_name,equipment_num,manufacturer,model_name,equipment_type,operation_status) VALUES
+    (1500000,'2022-03-02','2021-02-04',2,1,1,'설비 사진1','포장설비3','PRD-EM2-001','삼성','메가존클라우드','ASSEMBLY',n'REPAIRING');
+
+INSERT INTO equipment_data (cost,install_date,purchase_date,company_id,factory_id,workcenter_id,equipment_img,equipment_name,equipment_num,manufacturer,model_name,equipment_type,operation_status) VALUES
+    (1500000,'2022-04-02','2021-04-04',2,1,1,'설비 사진2','포장설비3','PRD-EM2-002','삼성','메가존클라우드','ASSEMBLY',n'REPAIRING');
+insert into equipment_maintenance_history(maintenance_cost, maintenance_date, maintenance_status, next_maintenance_date, equiment_data_id, maintenance_detail, maintenance_manager, title, maintenance_type,company_id)
+VALUES(10000, '2024-08-25',true,'2025-08-25',1,'유지보수 상세 내용','박정현','유지보수 제목','REGULAR_INSPECTION',1);
+
+insert into equipment_maintenance_history(maintenance_cost, maintenance_date, maintenance_status, next_maintenance_date, equiment_data_id, maintenance_detail, maintenance_manager, title, maintenance_type,company_id)
+VALUES(10000, '2024-08-25',true,'2025-08-25',1,'유지보수 상세 내용2','지혁쿤','유지보수 제목2','REGULAR_INSPECTION',1);
+
+insert into equipment_maintenance_history(maintenance_cost, maintenance_date, maintenance_status, next_maintenance_date, equiment_data_id, maintenance_detail, maintenance_manager, title, maintenance_type,company_id)
+VALUES(10000, '2024-08-25',true,'2025-08-25',2,'유지보수 상세 내용1','박정현','유지보수 제목1','REGULAR_INSPECTION',1);
+
+insert into equipment_maintenance_history(maintenance_cost, maintenance_date, maintenance_status, next_maintenance_date, equiment_data_id, maintenance_detail, maintenance_manager, title, maintenance_type,company_id)
+VALUES(10000, '2024-08-25',true,'2025-08-25',3,'유지보수 상세 내용1','박정현','유지보수 제목1','REGULAR_INSPECTION',1);
+
+insert into equipment_maintenance_history(maintenance_cost, maintenance_date, maintenance_status, next_maintenance_date, equiment_data_id, maintenance_detail, maintenance_manager, title, maintenance_type,company_id)
+VALUES(10000, '2024-08-27',true,'2025-08-27',4,'유지보수 상세 내용1','박정현','유지보수 제목1','REGULAR_INSPECTION',1);
+
+insert into equipment_maintenance_history(maintenance_cost, maintenance_date, maintenance_status, next_maintenance_date, equiment_data_id, maintenance_detail, maintenance_manager, title, maintenance_type,company_id)
+VALUES(10000, '2024-08-27',true,'2025-08-27',1,'유지보수 상세 내용1','박정현','유지보수 제목1','REGULAR_INSPECTION',2);
+
+insert into equipment_maintenance_history(maintenance_cost, maintenance_date, maintenance_status, next_maintenance_date, equiment_data_id, maintenance_detail, maintenance_manager, title, maintenance_type,company_id)
+VALUES(10000, '2024-08-27',true,'2025-08-27',2,'유지보수 상세 내용1','박정현','유지보수 제목1','REGULAR_INSPECTION',2);
+
+insert into equipment_maintenance_history(maintenance_cost, maintenance_date, maintenance_status, next_maintenance_date, equiment_data_id, maintenance_detail, maintenance_manager, title, maintenance_type,company_id)
+VALUES(10000, '2024-08-27',true,'2025-08-27',3,'유지보수 상세 내용1','박정현','유지보수 제목1','REGULAR_INSPECTION',2);
+
+insert into equipment_maintenance_history(maintenance_cost, maintenance_date, maintenance_status, next_maintenance_date, equiment_data_id, maintenance_detail, maintenance_manager, title, maintenance_type,company_id)
+VALUES(10000, '2024-08-27',true,'2025-08-27',4,'유지보수 상세 내용1','박정현','유지보수 제목1','REGULAR_INSPECTION',2);
+
+insert into equipment_maintenance_history(maintenance_cost, maintenance_date, maintenance_status, next_maintenance_date, equiment_data_id, maintenance_detail, maintenance_manager, title, maintenance_type,company_id)
+VALUES(10000, '2024-08-27',true,'2025-08-27',5,'유지보수 상세 내용1','박정현','유지보수 제목1','REGULAR_INSPECTION',2);
+INSERT INTO worker (training_status, employee_id, company_id)
+VALUES
+    (false, 1, 1), -- employee_id 1 (지호 김), company_id 1
+    (false, 2, 1), -- employee_id 2 (성민 이), company_id 1
+    (false, 3, 1); -- employee_id 3 (수진 최), company_id 2
+-- 작업자 배정 테이블에 데이터 삽입
+INSERT INTO common_scheduling_worker_assignment (workcenter_id, worker_id, assignment_date, shift_type_id, production_order_id)
+VALUES
+    -- 현재 날짜로 배정
+    (1, 1, CURRENT_DATE, 1, 1),  -- 작업장 1에 직원 1 배정
+    (2, 2, CURRENT_DATE, 1, 2),  -- 작업장 2에 직원 2 배정
+    (3, 3, CURRENT_DATE, 1, 3),  -- 작업장 3에 직원 3 배정
+
+    -- 2024년 1월에서 2월 사이 배정
+    (1, 1, '2024-01-05', 1, 4),
+    (2, 2, '2024-01-12', 1, 5),
+    (3, 3, '2024-01-18', 1, 6),
+    (1, 1, '2024-02-08', 1, 7),
+    (2, 2, '2024-02-13', 1, 8),
+    (3, 3, '2024-02-20', 1, 9),
+
+    -- 랜덤 날짜 생성
+    (1, 1, DATE_ADD(LAST_DAY('2024-03-01'), INTERVAL -RAND()*30 DAY), 1, 10),
+    (2, 2, DATE_ADD(LAST_DAY('2024-04-01'), INTERVAL -RAND()*30 DAY), 1, 11),
+    (3, 3, DATE_ADD(LAST_DAY('2024-05-01'), INTERVAL -RAND()*30 DAY), 1, 12),
+    (1, 1, DATE_ADD(LAST_DAY('2024-06-01'), INTERVAL -RAND()*30 DAY), 1, 13),
+    (2, 2, DATE_ADD(LAST_DAY('2024-07-01'), INTERVAL -RAND()*30 DAY), 1, 14),
+    (3, 3, DATE_ADD(LAST_DAY('2024-08-01'), INTERVAL -RAND()*30 DAY), 1, 15),
+    (1, 1, DATE_ADD(LAST_DAY('2024-09-01'), INTERVAL -RAND()*30 DAY), 1, 16),
+    (2, 2, DATE_ADD(LAST_DAY('2024-10-01'), INTERVAL -RAND()*30 DAY), 1, 17),
+    (3, 3, DATE_ADD(LAST_DAY('2024-11-01'), INTERVAL -RAND()*30 DAY), 1, 18),
+    (1, 1, DATE_ADD(LAST_DAY('2024-12-01'), INTERVAL -RAND()*30 DAY), 1, 19);

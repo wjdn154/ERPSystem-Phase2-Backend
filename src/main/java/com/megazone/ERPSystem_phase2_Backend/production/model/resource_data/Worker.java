@@ -2,10 +2,8 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data;
 
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Attendance;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
-import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.WorkerAssignment;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.WorkerAssignment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,7 +24,7 @@ public class Worker {
     private Long id;
 
     @Column(nullable = false)
-    private String trainingStatue;       //교육이수 여부. (이수/미이수)
+    private Boolean trainingStatus;       //교육이수 여부. (이수/미이수)
 
     /**인사 기본정보 참조
      * (사원번호,작업자 성,이름, 부서, 직위, 직책, 생년월일, 전화번호,고용상태,고용유형,고용일,프로필 사진)
@@ -42,11 +40,10 @@ public class Worker {
     private Employee employee;
 
     /**작업자 배치 참조
-     *
+     * 배치날짜
      * 작업자 배치의 작업장 참조 (작업장 코드, 작업장 이름)
-     *
      * */
-    @OneToMany(mappedBy = "worker")
+    @OneToMany(mappedBy = "worker" , fetch = FetchType.LAZY)
     private List<WorkerAssignment> workerAssignments;
 
     @ManyToOne(fetch = FetchType.LAZY)

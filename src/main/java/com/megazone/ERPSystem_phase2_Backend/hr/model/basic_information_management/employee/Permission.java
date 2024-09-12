@@ -135,35 +135,42 @@ public class Permission  {
     @Enumerated(EnumType.STRING) private UserPermission inventoryAdjustmentStatusPermission = UserPermission.NO_ACCESS;  // 재고조정현황 권한
 
 
+
     // 생산관리 권한
-    // 기초정보관리 관련 권한
+    // 기초정보관리 내 작업장관리 관련 권한
     @Enumerated(EnumType.STRING) private UserPermission workcenterManagementPermission = UserPermission.NO_ACCESS;  // 작업장 관리 권한
-    @Enumerated(EnumType.STRING) private UserPermission lotManagementPermission = UserPermission.NO_ACCESS;  // LOT 관리 권한
-    @Enumerated(EnumType.STRING) private UserPermission serialManagementPermission = UserPermission.NO_ACCESS;  // Serial No 관리 권한
+    // 기초정보관리 내 공정관리 관련 권한
+    @Enumerated(EnumType.STRING) private UserPermission processDetailsPermission = UserPermission.NO_ACCESS;  // 공정세부정보 관리 권한
+    @Enumerated(EnumType.STRING) private UserPermission routingManagementPermission = UserPermission.NO_ACCESS;  // Routing 관리 권한
+    // 기초정보관리 내 자재명세서관리 관련 권한
+    @Enumerated(EnumType.STRING) private UserPermission bomManagementPermission = UserPermission.NO_ACCESS;  // BOM 관리 권한
     // 자원관리 관련 권한
     @Enumerated(EnumType.STRING) private UserPermission workerManagementPermission = UserPermission.NO_ACCESS;  // 작업자 관리 권한
     @Enumerated(EnumType.STRING) private UserPermission materialManagementPermission = UserPermission.NO_ACCESS;  // 자재 정보 관리 권한
     @Enumerated(EnumType.STRING) private UserPermission equipmentManagementPermission = UserPermission.NO_ACCESS;  // 설비 정보 관리 권한
     @Enumerated(EnumType.STRING) private UserPermission maintenanceHistoryPermission = UserPermission.NO_ACCESS;  // 유지보수 이력 관리 권한
-    // 공정경로관리 관련 권한
-    @Enumerated(EnumType.STRING) private UserPermission processDetailsPermission = UserPermission.NO_ACCESS;  // 공정세부정보 관리 권한
-    @Enumerated(EnumType.STRING) private UserPermission routingManagementPermission = UserPermission.NO_ACCESS;  // Routing 관리 권한
-    // 자재소요관리 관련 권한
-    @Enumerated(EnumType.STRING) private UserPermission bomManagementPermission = UserPermission.NO_ACCESS;  // BOM 관리 권한
-    @Enumerated(EnumType.STRING) private UserPermission materialPlanPermission = UserPermission.NO_ACCESS;  // 자재소요량 계획 관리 권한
-    @Enumerated(EnumType.STRING) private UserPermission materialInputStatusPermission = UserPermission.NO_ACCESS;  // 실자재 투입 현황 권한
+    // 폐기물관리 구현 시 추가 작성 필요
+
     // 생산계획관리 관련 권한
+    @Enumerated(EnumType.STRING) private UserPermission mrpPermission = UserPermission.NO_ACCESS;  // 자재소요량 계획 관리 권한
+    @Enumerated(EnumType.STRING) private UserPermission materialInputStatusPermission = UserPermission.NO_ACCESS;  // 실자재 투입 현황 권한
     @Enumerated(EnumType.STRING) private UserPermission productionRequestPermission = UserPermission.NO_ACCESS;  // 생산 의뢰 관리 권한
-    @Enumerated(EnumType.STRING) private UserPermission productionOrderPermission = UserPermission.NO_ACCESS;  // 주문 생산 계획 관리 권한
-    @Enumerated(EnumType.STRING) private UserPermission productionInventoryPermission = UserPermission.NO_ACCESS;  // 재고 생산 계획 관리 권한
-    @Enumerated(EnumType.STRING) private UserPermission workOrderPermission = UserPermission.NO_ACCESS;  // 작업 지시 관리 권한
+    @Enumerated(EnumType.STRING) private UserPermission planOfMakeToOrderPermission = UserPermission.NO_ACCESS;  // 주문 생산 계획 관리 권한
+    @Enumerated(EnumType.STRING) private UserPermission planOfMakeToStockPermission = UserPermission.NO_ACCESS;  // 재고 생산 계획 관리 권한
+    @Enumerated(EnumType.STRING) private UserPermission productionOrderPermission = UserPermission.NO_ACCESS;  // 작업 지시 관리 권한
+    @Enumerated(EnumType.STRING) private UserPermission workerAssignmentPermission = UserPermission.NO_ACCESS;  // 작업자 배정이력 관리 권한
+    @Enumerated(EnumType.STRING) private UserPermission shiftTypePermission = UserPermission.NO_ACCESS;  // 교대유형 관리 권한
+    // CRP, MPS 구현 시 추가 작성 필요
+
     // 생산실적관리 관련 권한
     @Enumerated(EnumType.STRING) private UserPermission workPerformancePermission = UserPermission.NO_ACCESS;  // 작업 실적 관리 권한
     @Enumerated(EnumType.STRING) private UserPermission defectGroupPermission = UserPermission.NO_ACCESS;  // 불량군 관리 권한
     @Enumerated(EnumType.STRING) private UserPermission defectTypePermission = UserPermission.NO_ACCESS;  // 불량 유형 관리 권한
     @Enumerated(EnumType.STRING) private UserPermission qualityInspectionPermission = UserPermission.NO_ACCESS;  // 품질 검사 관리 권한
-    @Enumerated(EnumType.STRING) private UserPermission productReceivingPermission = UserPermission.NO_ACCESS;  // 생산품 입고 처리 권한
+    @Enumerated(EnumType.STRING) private UserPermission goodsReceiptPermission = UserPermission.NO_ACCESS;  // 생산품 입고 처리 권한
     @Enumerated(EnumType.STRING) private UserPermission dailyMonthlyReportPermission = UserPermission.NO_ACCESS;  // 생산 일/월보 처리 권한
+    @Enumerated(EnumType.STRING) private UserPermission lotManagementPermission = UserPermission.NO_ACCESS;  // LOT 관리 권한
+    @Enumerated(EnumType.STRING) private UserPermission serialManagementPermission = UserPermission.NO_ACCESS;  // Serial No 관리 권한
     // 외주/계약관리 관련 권한
     @Enumerated(EnumType.STRING) private UserPermission outsourcingPricePermission = UserPermission.NO_ACCESS;  // 외주 단가 관리 권한
     @Enumerated(EnumType.STRING) private UserPermission outsourcingOrderPermission = UserPermission.NO_ACCESS;  // 외주 발주 관리 권한

@@ -1,9 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto;
 
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.dto.WorkcenterDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.EquipmentType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.OperationStatus;
 
@@ -13,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
