@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto;
+package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.hierarchy_group.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
