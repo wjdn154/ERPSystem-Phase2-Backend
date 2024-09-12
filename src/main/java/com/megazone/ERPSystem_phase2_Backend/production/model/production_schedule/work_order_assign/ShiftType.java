@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Entity
-@Table
+@Entity(name = "work_order_assign_shift_type")
+@Table(name = "work_order_assign_shift_type")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

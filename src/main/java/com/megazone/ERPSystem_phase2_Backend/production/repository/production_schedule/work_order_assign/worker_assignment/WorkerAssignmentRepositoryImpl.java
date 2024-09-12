@@ -78,22 +78,24 @@ public class WorkerAssignmentRepositoryImpl implements WorkerAssignmentRepositor
                 .fetch();
     }
 
-    @Override
-    public List<WorkerAssignmentDTO> findTodayWorkers(String code) {
-        return queryFactory
-                .select(Projections.constructor(WorkerAssignmentDTO.class,
-                        workerAssignment.worker.id,
-                        workerAssignment.worker.employee.lastName,
-                        workerAssignment.worker.employee.firstName,
-                        workerAssignment.worker.employee.employeeNumber,
-                        workerAssignment.shiftType.name,
-                        workerAssignment.assignmentDate,
-                        workerAssignment.workcenter.code))
-                .from(workerAssignment)
-                .where(workerAssignment.workcenter.code.eq(code)
-                        .and(workerAssignment.assignmentDate.eq(LocalDate.now())))
-                .fetch();
-    }
+//    @Override
+//    public List<WorkerAssignmentDTO> findTodayWorkers(String code) {
+//        return queryFactory
+//                .select(Projections.constructor(WorkerAssignmentDTO.class,
+//                        workerAssignment.worker.id, // Long id
+//                        workerAssignment.worker.employee.lastName.concat(" ").concat(workerAssignment.worker.employee.firstName), // String workerName
+//                        workerAssignment.worker.employee.employeeNumber, // String employeeNumber
+//                        workerAssignment.workcenter.code, // String workcenterCode
+//                        workerAssignment.assignmentDate, // LocalDate assignmentDate
+//                        workerAssignment.shiftType.id, // Long shiftTypeId
+//                        workerAssignment.workOrder.id)) // Long workOrderId
+//                .from(workerAssignment)
+//                .where(workerAssignment.workcenter.code.eq(code)
+//                        .and(workerAssignment.assignmentDate.eq(LocalDate.now())))
+//                .fetch();
+//    }
+
+
 
     @Override
     public Optional<WorkerAssignment> findByWorkerIdAndAssignmentDate(Long workerId, LocalDate assignmentDate) {
