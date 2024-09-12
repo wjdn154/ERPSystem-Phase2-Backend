@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse;
+package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.hierarchy_group;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import jakarta.persistence.*;
@@ -25,7 +25,7 @@ public class HierarchyGroup {
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    @Column(name = "hierarchy_group_code", nullable = false)
+    @Column(name = "hierarchy_group_code", nullable = false, unique = true)
     private String hierarchyGroupCode;
 
     @Column(name = "hierarchy_group_name", nullable = false)
