@@ -45,7 +45,7 @@ public class Worker {
      * 배치날짜
      * 작업자 배치의 작업장 참조 (작업장 코드, 작업장 이름)
      * */
-    @OneToMany(mappedBy = "worker")
+    @OneToMany(mappedBy = "worker" , fetch = FetchType.LAZY)
     private List<WorkerAssignment> workerAssignments;
 
     @ManyToOne(fetch = FetchType.LAZY)

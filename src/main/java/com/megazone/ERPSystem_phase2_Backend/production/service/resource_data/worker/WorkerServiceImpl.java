@@ -116,6 +116,8 @@ public class WorkerServiceImpl implements WorkerService {
         return new ListWorkerAttendanceDTO(
                 worker.getId(),
                 worker.getEmployee().getEmployeeNumber(),
+                worker.getEmployee().getFirstName(),
+                worker.getEmployee().getLastName(),
                 attendanceList,
                 assignmentList
         );
@@ -140,7 +142,7 @@ public class WorkerServiceImpl implements WorkerService {
         workerDetailShowDTO.setProfilePicture(worker.getEmployee().getProfilePicture());
 
         //작업배치가 비어있지 않다면 배치 날짜 기준으로 가장 최근의 작업배치 정보 가져오기
-        if(!worker.getWorkerAssignments().isEmpty()){
+        if(worker.getWorkerAssignments() != null && !worker.getWorkerAssignments().isEmpty()){
             WorkerAssignment recentAssignment = worker.getWorkerAssignments().stream()
                             .max(Comparator.comparing(WorkerAssignment::getAssignmentDate))
                                     .orElseThrow(() -> new IllegalArgumentException("작업 배치 정보가 없습니다. "));

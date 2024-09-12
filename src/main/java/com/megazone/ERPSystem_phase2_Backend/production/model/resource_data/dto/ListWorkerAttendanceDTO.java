@@ -13,6 +13,8 @@ public class ListWorkerAttendanceDTO {
 
     private Long id;
     private String employeeNumber;     //employee 의 사원번호
+    private String employeeFirstName;
+    private String employeeLastName;
     private List<WorkerAttendanceDTO> workerAttendance;
     private List<WorkerAssignmentDTO> workerAssignment;
 
