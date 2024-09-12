@@ -1,6 +1,6 @@
-package com.megazone.ERPSystem_phase2_Backend.hr.model.payment.SocialInsurance;
+package com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management.SocialInsurance;
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.payment.SocialInsurance.enums.TermCareJoinStatusType;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management.SocialInsurance.enums.InsuranceType;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
@@ -8,7 +8,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /*
@@ -31,7 +30,7 @@ public class Health {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TermCareJoinStatusType joinStatus; // 장기요양 보험 가입여부
+    private InsuranceType joinStatus; // 장기요양 보험 가입여부
 
     @CreatedDate
     @Column(updatable = false, nullable = false)
