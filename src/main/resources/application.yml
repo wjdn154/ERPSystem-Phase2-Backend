@@ -51,6 +51,7 @@ spring:
 
 
         - classpath:initial-database/hr/employee.sql
+        - classpath:initial-database/hr/attendance_management.sql
         #- classpath:initial-database/hr/role.sql
 #        - classpath:initial-database/hr/users.sql
         - classpath:initial-database/logistics/product_group.sql

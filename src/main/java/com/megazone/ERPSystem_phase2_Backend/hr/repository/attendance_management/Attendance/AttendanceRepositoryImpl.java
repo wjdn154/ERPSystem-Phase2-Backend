@@ -1,4 +1,4 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.repository.attendance_management.Attendance;
 
-public class AttendanceRepositoryImpl {
+public class AttendanceRepositoryImpl implements AttendanceRepositoryCustom{
 }
