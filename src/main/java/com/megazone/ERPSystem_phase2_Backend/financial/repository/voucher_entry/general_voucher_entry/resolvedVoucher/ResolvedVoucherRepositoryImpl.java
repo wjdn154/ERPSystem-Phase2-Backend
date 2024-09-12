@@ -61,17 +61,18 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                 .where(qResolvedVoucher.voucherDate.between(startDate, endDate)
                         .and(qResolvedVoucher.accountSubject.code.between(startAccountCode, endAccountCode))
                         .and(qResolvedVoucher.company.id.eq(companyId)))
-                .groupBy(qResolvedVoucher.accountSubject.code, qResolvedVoucher.voucherDate)
+                .groupBy(qResolvedVoucher.accountSubject.code, qResolvedVoucher.voucherDate, qResolvedVoucher.accountSubject.name)
                 .orderBy(qResolvedVoucher.voucherDate.asc(), qResolvedVoucher.accountSubject.code.asc())
-                .fetch().stream()
-                .map(tuple -> new GeneralShowDTO(
+                .fetch()
+                .stream()
+                .map(tuple -> GeneralShowDTO.create(
                         tuple.get(qResolvedVoucher.accountSubject.code),
                         tuple.get(qResolvedVoucher.accountSubject.name),
-                        Month.of(tuple.get(qResolvedVoucher.voucherDate.month())),  // Integer -> Month 변환
+                        Month.of(tuple.get(qResolvedVoucher.voucherDate.month())),
                         tuple.get(qResolvedVoucher.debitAmount.sum().castToNum(BigDecimal.class)),
                         tuple.get(qResolvedVoucher.creditAmount.sum().castToNum(BigDecimal.class)),
-                        BigDecimal.ZERO  // totalCash 값 설정 (필요 시)
+                        BigDecimal.ZERO
                 ))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

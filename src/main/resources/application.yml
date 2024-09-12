@@ -44,7 +44,6 @@ spring:
         - classpath:initial-database/financial/bank_account/financial_address.sql
         - classpath:initial-database/financial/bank_account/financial_bank_account.sql
 #        - classpath:initial-database/financial/credit_card/credit_card.sql
-#        - classpath:initial-database/financial/unresolved_voucher.sql
         - classpath:initial-database/financial/vat_type.sql
         - classpath:initial-database/financial/journal_entry_type_setup.sql
         - classpath:initial-database/financial/journal_entry.sql
@@ -70,6 +69,8 @@ spring:
         - classpath:initial-database/production/resource_data/maintenanceHistory.sql
         - classpath:initial-database/production/resource_data/worker.sql
         - classpath:initial-database/production/production_schedule/work_order_assign/workerAssignment.sql
+
+#        - classpath:initial-database/financial/unresolvedVoucher.sql
 
 logging:
   level:
