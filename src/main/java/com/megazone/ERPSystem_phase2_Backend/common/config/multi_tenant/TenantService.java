@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 각 테넌트의 스키마 생성, 테이블 생성, SQL 스크립트 실행 및 Flyway 마이그레이션을 관리함.
@@ -84,20 +85,12 @@ public class TenantService {
      * Hibernate 엔티티를 기반으로 테이블 생성
      */
     private void generateTenantTables() {
-        // Hibernate 설정을 기반으로 테이블 생성
-        StandardServiceRegistryBuilder registryBuilder = new StandardServiceRegistryBuilder()
-                .applySettings(entityManagerFactory.unwrap(SessionFactoryImplementor.class)
-                        .getProperties());
-
-        entityManagerFactory
-                .unwrap(SessionFactoryImplementor.class)
-                .getServiceRegistry()
-                .getService(SchemaManagementTool.class);
-
+        // Hibernate 설정을 기반으로 서비스 레지스트리 생성
         StandardServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(entityManagerFactory.getProperties())
                 .build();
 
+        // 메타데이터 소스 생성
         MetadataSources metadataSources = new MetadataSources(serviceRegistry);
         Set<Class<?>> entityClasses = entityManagerFactory.getMetamodel().getEntities()
                 .stream()
@@ -110,18 +103,26 @@ public class TenantService {
                         && !entityClass.getSimpleName().equals("company_main_business")
                         && !entityClass.getSimpleName().equals("company_representative")
                         && !entityClass.getSimpleName().equals("company_tax_office"))
-                .collect(java.util.stream.Collectors.toSet());
+                .collect(Collectors.toSet());
         for (Class<?> entityClass : entityClasses) {
             metadataSources.addAnnotatedClass(entityClass); // 모든 엔티티 추가
         }
 
+        // 메타데이터 빌드
+        Metadata metadata = metadataSources.buildMetadata();
+
+        // 스키마 익스포트 생성 및 설정
         SchemaExport schemaExport = new SchemaExport();
         schemaExport.setDelimiter(";"); // SQL 구문 끝에 세미콜론 추가
         schemaExport.setFormat(false); // SQL 포맷 비활성화
-        schemaExport.setOutputFile("src/main/resources/db/migration/v1/V1__create_tables.sql"); // 테이블 생성 SQL 파일 지정
-        schemaExport.execute(EnumSet.of(TargetType.SCRIPT), SchemaExport.Action.CREATE, metadataSources.buildMetadata()); // 테이블 생성 실행
+        schemaExport.setHaltOnError(true); // 에러 발생 시 중지
+        schemaExport.setOutputFile("src/main/resources/db/migration/v1/V1__create_tables.sql"); // 출력 파일 지정
 
-        StandardServiceRegistryBuilder.destroy(registryBuilder.build()); // 레지스트리 종료
+        // 테이블 생성만 실행
+        schemaExport.create(EnumSet.of(TargetType.SCRIPT), metadata);
+
+        // 서비스 레지스트리 종료
+        StandardServiceRegistryBuilder.destroy(serviceRegistry);
     }
 
     /**
