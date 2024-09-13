@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.enums.TransactionType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Address;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,16 +41,15 @@ public class Client {
     private FinancialInfo financialInfo; // 재무 정보
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "client_manager_info_id")
+    @JoinColumn(name = "manager_info_id")
     private ManagerInfo managerInfo; // 업체 담당자 정보
 
-//    @ManyToOne
-//    @JoinColumn(name = "department_employee_id")
-//    private DepartmentEmployee departmentEmployee; // 담당 부서 사원 코드 참조 <- 이거 사원만 참조하면 사원에 부서 있으니까 괜찮음
-    private String departmentEmployee; // 담당 부서 사원 코드 참조
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee; // 담당자
 
     @ManyToOne
-    @JoinColumn(name = "client_category_id")
+    @JoinColumn(name = "category_id")
     private Category category; // 거래처 분류 코드
 
     @ManyToOne

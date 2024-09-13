@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.common.dto.AddressDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.common.dto.BankDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -24,9 +25,9 @@ public class ClientDTO {
     private LiquorDTO liquor; // 주류 정보
     private BankAccountDTO bankAccount; // 은행 계좌 정보
     private CategoryDTO category; // 거래처 분류 정보
+    private Employee employee; // 담당자 정보
 
     private String code; // 거래처 코드
-    private String departmentEmployee; // 담당 부서 사원 코드
     private String transactionType; // 거래 유형
     private String businessRegistrationNumber; // 사업자등록번호
     private String idNumber; // 주민등록번호
@@ -85,7 +86,7 @@ public class ClientDTO {
                 client.getCategory().getCode(),
                 client.getCategory().getName()
         );
-        this.departmentEmployee = client.getDepartmentEmployee();
+        this.employee = client.getEmployee();
         this.transactionType = client.getTransactionType().name();
         this.businessRegistrationNumber = client.getBusinessRegistrationNumber();
         this.idNumber = client.getIdNumber();

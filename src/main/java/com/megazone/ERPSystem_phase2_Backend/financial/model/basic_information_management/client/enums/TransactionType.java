@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.enums;
 
 public enum TransactionType {
-    Sales,    //매출
-    Purchase, //매입
-    Both      //동시
+    SALES, //매출
+    PURCHASE, //매입
+    BOTH //동시
 }
