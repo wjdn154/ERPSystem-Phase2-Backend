@@ -18,6 +18,6 @@ public class WorkerAssignmentDTO {
     private String employeeNumber;
     private String workcenterCode; // 작업장
     private LocalDate assignmentDate; // 배정일
-    private String shift; // 교대
-    private Long workOrderId; // 연관 작업지시
+    private Long shiftTypeId; // 교대 ID
+    private Long productionOrderId; // 연관 작업지시
 }
