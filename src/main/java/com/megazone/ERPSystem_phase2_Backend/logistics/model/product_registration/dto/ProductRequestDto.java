@@ -17,6 +17,7 @@ public class ProductRequestDto {
 
     private String code; // 품목 코드
     private String name; // 품목명
+    private Long clientId; // 거래처_id
     private Long productGroupId;// 폼목 그룹_id
     private Long productionRoutingId; // 생산라우팅_id
     private String standard; // 규격
@@ -24,5 +25,7 @@ public class ProductRequestDto {
     private Double purchasePrice; // 입고단가
     private Double salesPrice; // 출고 단가
     private ProductType productType; // 품목 구분
+    private String imageUrl; // 이미지 경로
+    private String remarks; // 적요
 
 }

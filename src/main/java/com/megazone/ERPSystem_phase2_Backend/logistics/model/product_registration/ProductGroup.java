@@ -35,9 +35,6 @@ public class ProductGroup {
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    @OneToMany(mappedBy = "productGroup")
-    private List<Product> products;
-
     // 품목 그룹 코드
     @Column(nullable = false)
     private String code;

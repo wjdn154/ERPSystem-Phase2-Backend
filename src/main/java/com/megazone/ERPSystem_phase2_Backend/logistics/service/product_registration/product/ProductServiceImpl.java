@@ -1,6 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.product;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.ProductGroup;
@@ -12,6 +14,7 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management
 import com.megazone.ERPSystem_phase2_Backend.production.repository.routing_management.ProductionRouting.ProductionRoutingRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,9 +28,10 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService{
 
     private final ProductRepository productRepository;
-    private final ProductionRoutingRepository productionRoutingRepository;
     private final ProductGroupRepository productGroupRepository;
+    private final ProductionRoutingRepository productionRoutingRepository;
     private final CompanyRepository companyRepository;
+    private final ClientRepository clientRepository;
 
     /**
      * 품목등록 리스트 조회
@@ -80,17 +84,20 @@ public class ProductServiceImpl implements ProductService{
         // 코드 중복 검사
         validateProductCodeUnique(productRequestDto.getCode());
 
+        // 거래처 조회
+        Client client = clientRepository.findById(productRequestDto.getClientId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 거래처를 찾을 수 없습니다."));
+
         // 품목 그룹 조회
         ProductGroup productGroup = productGroupRepository.findByCompanyIdAndId(companyId, productRequestDto.getProductGroupId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 품목 그룹을 찾을 수 없습니다."));
-
 
         // 생산 라우팅 조회
         ProductionRouting productionRouting = productionRoutingRepository.findByCompanyIdAndId(companyId, productRequestDto.getProductionRoutingId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 생산 라우팅을 찾을 수 없습니다."));
 
         // 엔티티로 변환 후 저장
-        Product product = toEntity(productRequestDto, company, productGroup, productionRouting);
+        Product product = toEntity(productRequestDto, company, client ,productGroup, productionRouting);
         Product savedProduct = productRepository.save(product);
 
         // 다시 DTO로 변환 후 반환
@@ -119,16 +126,22 @@ public class ProductServiceImpl implements ProductService{
             throw new IllegalArgumentException("동일한 코드를 가진 품목이 이미 존재합니다.");
         }
 
+        // 거래처 조회
+        Client client = clientRepository.findById(productRequestDto.getClientId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 거래처를 찾을 수 없습니다."));
+
         // 품목 그룹 조회
         ProductGroup productGroup = productGroupRepository.findByCompanyIdAndId(companyId, productRequestDto.getProductGroupId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 품목 그룹을 찾을 수 없습니다."));
-        product.setProductGroup(productGroup);
 
-        // 생산 라우팅 조회 및 업데이트
+        // 생산 라우팅 조회
         ProductionRouting productionRouting = productionRoutingRepository.findByCompanyIdAndId(companyId, productRequestDto.getProductionRoutingId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 생산 라우팅을 찾을 수 없습니다."));
-        product.setProductionRouting(productionRouting);
 
+        // 거래처, 품목 그룹, 생산 라우팅 필드 업데이트
+        product.setClient(client);
+        product.setProductGroup(productGroup);
+        product.setProductionRouting(productionRouting);
         // 나머지 필드 업데이트
         updateProductFields(product, productRequestDto);
 
@@ -137,7 +150,7 @@ public class ProductServiceImpl implements ProductService{
         return Optional.of(toDto(updatedProduct));
     }
 
-    /**
+    /** 수정 필요
      * 품목 삭제
      * @param companyId
      * @param id
@@ -149,12 +162,29 @@ public class ProductServiceImpl implements ProductService{
         // 회사 존재 여부 검사
         validateCompanyExistence(companyId);
 
-        return productRepository.findByCompanyIdAndId(companyId, id)
-                .map(product -> {
-                    productRepository.delete(product);
-                    return product.getName() + " 품목이 삭제되었습니다.";
-                })
-                .orElse("삭제 실패 : 사용자의 회사에 삭제하려는 해당 품목을 찾을 수 없습니다.");
+        try {
+            Product product = productRepository.findByCompanyIdAndId(companyId, id)
+                    .orElseThrow(() -> new IllegalArgumentException("삭제 실패: 해당 회사에서 품목을 찾을 수 없습니다."));
+
+            productRepository.delete(product);
+            return product.getName() + " 품목이 삭제되었습니다.";
+
+        } catch (DataIntegrityViolationException e) {
+            // 외래 키 제약 조건으로 인한 삭제 실패 처리
+            if (e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
+                Throwable rootCause = e.getRootCause();
+                if (rootCause instanceof java.sql.SQLIntegrityConstraintViolationException) {
+                    return "삭제 실패: 다른 곳에서 해당 품목을 참조하고 있어 삭제할 수 없습니다.";
+                }
+            }
+            return "삭제 실패: 이 품목은 다른 데이터와 연결되어 있어 삭제할 수 없습니다.";
+
+        } catch (IllegalArgumentException e) {
+            return e.getMessage();
+
+        } catch (RuntimeException e) {
+            return "삭제 중 오류가 발생했습니다.";
+        }
 
     }
 
@@ -235,6 +265,8 @@ public class ProductServiceImpl implements ProductService{
                 .id(product.getId())
                 .code(product.getCode())
                 .name(product.getName())
+                .clientCode(product.getClient() != null ? product.getClient().getCode() : null)
+                .clientName(product.getClient() != null ? product.getClient().getPrintClientName() : null)
                 .productGroupCode(product.getProductGroup() != null ? product.getProductGroup().getCode() : null)
                 .productGroupName(product.getProductGroup() != null ? product.getProductGroup().getName() : null)
                 .standard(product.getStandard())
@@ -244,16 +276,19 @@ public class ProductServiceImpl implements ProductService{
                 .productType(product.getProductType())
                 .productionRoutingCode(product.getProductionRouting() != null ? product.getProductionRouting().getCode() : null)
                 .productionRoutingName(product.getProductionRouting() != null ? product.getProductionRouting().getName() : null)
+                .imagePath(product.getImagePath())
+                .remarks(product.getRemarks())
                 .isActive(product.isActive())
                 .build();
     }
 
     // DTO -> Entity 변환 메서드
-    public Product toEntity(ProductRequestDto productRequestDto, Company company, ProductGroup productGroup, ProductionRouting productionRouting) {
+    public Product toEntity(ProductRequestDto productRequestDto, Company company, Client client, ProductGroup productGroup, ProductionRouting productionRouting) {
         return Product.builder()
                 .code(productRequestDto.getCode())
                 .name(productRequestDto.getName())
                 .company(company)
+                .client(client)
                 .productGroup(productGroup)
                 .productionRouting(productionRouting)
                 .standard(productRequestDto.getStandard())
@@ -261,6 +296,8 @@ public class ProductServiceImpl implements ProductService{
                 .purchasePrice(productRequestDto.getPurchasePrice())
                 .salesPrice(productRequestDto.getSalesPrice())
                 .productType(productRequestDto.getProductType())
+                .imagePath(productRequestDto.getImageUrl())
+                .remarks(productRequestDto.getRemarks())
                 .build();
     }
 

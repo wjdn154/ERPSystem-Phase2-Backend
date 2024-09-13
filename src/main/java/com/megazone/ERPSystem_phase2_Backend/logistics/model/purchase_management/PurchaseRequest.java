@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_managemen
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.Currency;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import jakarta.persistence.*;
@@ -37,50 +38,35 @@ public class PurchaseRequest {
     private Company company;
 
     // 발주 요청과 발주 계획 간의 중간 엔티티와의 일대다 관계
-    @OneToMany(mappedBy = "purchaseRequest")
+    @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL)
     @Builder.Default
     private List<PurchasePlanRequest> purchasePlanRequests = new ArrayList<>();
 
-    // 거래처 - N : 1
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "client_id", nullable = false)
-    private Client client;
+    // 발주 요청 상세와의 일대다 관계
+    @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<PurchaseRequestDetail> purchaseRequestDetails = new ArrayList<>();
 
-    // 사원_id - N : 1
-    @Column(nullable = false)
-    private Long employeeId;
+    // 사원(담당자) - N : 1
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "manager_id", nullable = false)
+    private Employee manager;
 
     // 창고_id - 입고될 창고
-    @ManyToOne
-    @JoinColumn(name = "warehouse_id")
-    private Warehouse warehouse;
-
-    // 통화_id
-    @ManyToOne
-    @JoinColumn(name = "currency_id")
-    private Currency currency;
-
-    // 품목_id
-    @Column
-    private Long productId;
-
-    // 수량
-    @Column(nullable = false )
-    private Integer quantity;
-
-    // 공급가액 - 수량 * 단가
-    @Column(nullable = false)
-    private Double supplyPrice;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "warehouse_id", nullable = false)
+    private Warehouse receivingWarehouse;
 
     // 부가세율 적용 or 미적용
     @Column(nullable = false)
     private Boolean vatType;
 
-    // 부가세 - 공급가액의 10%
-    @Column
-    private Double vat;
+    // 통화_id
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "currency_id", nullable = false)
+    private Currency currency;
 
-    // 일자
+    // 발주 요청 일자
     @Column(nullable = false)
     private LocalDate date;
 

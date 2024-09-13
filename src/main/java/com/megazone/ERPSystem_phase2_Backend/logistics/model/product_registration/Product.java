@@ -1,21 +1,21 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.PurchaseRequestDetail;
 import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProductionRouting;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 품목 테이블
  * 품목에 대한 정보가 있는 테이블 - 품목 등록 시 사용
  */
 @Entity(name = "product")
-@Table(
-        name = "product",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"company_id", "code"})
-        }
-)
+@Table(name = "product")
 @Data
 @Builder
 @NoArgsConstructor
@@ -35,14 +35,20 @@ public class Product {
     @Column(nullable = false)
     private String code;
 
+    // 거래처 - N : 1
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
+
     // 품목 그룹 코드 참조
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_group_id")
     private ProductGroup productGroup;
 
     // 생산 라우팅 매핑
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "production_routing_id")
+    @ToString.Exclude
     private ProductionRouting productionRouting;
 
     // 품목구분 (Enum)
@@ -70,6 +76,14 @@ public class Product {
     @Column(nullable = false)
     private String unit;
 
+    // 이미지 파일 경로
+    @Column
+    private String imagePath;
+
+    // 비고
+    @Column
+    private String remarks;
+
     // 폼목 사용 여부
     @Column(nullable = false)
     @Builder.Default
@@ -82,4 +96,9 @@ public class Product {
     public void reactivate() {
         this.isActive = true;
     }
+
+    @OneToMany(mappedBy = "product")
+    @ToString.Exclude
+    private List<PurchaseRequestDetail> purchaseRequestDetails = new ArrayList<>();
+
 }
