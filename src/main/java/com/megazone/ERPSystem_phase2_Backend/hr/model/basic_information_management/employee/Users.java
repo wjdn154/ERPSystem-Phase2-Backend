@@ -29,7 +29,7 @@ public class Users {
     @Column(nullable = false)
     private String userNickname;  // 사용자 이름
 
-    @Column(nullable = false, name = "user_name")
+    @Column(nullable = false, name = "user_name", unique = true)
     private String userName;
 
     @Column(nullable = false)

@@ -10,8 +10,8 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registratio
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductResponseDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product_group.ProductGroupRepository;
-import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProductionRouting;
-import com.megazone.ERPSystem_phase2_Backend.production.repository.routing_management.ProductionRouting.ProductionRoutingRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessRouting;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.process_routing.PrcessRouting.ProcessRoutingRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService{
 
     private final ProductRepository productRepository;
+    private final ProcessRoutingRepository processRoutingRepository;
     private final ProductGroupRepository productGroupRepository;
-    private final ProductionRoutingRepository productionRoutingRepository;
     private final CompanyRepository companyRepository;
     private final ClientRepository clientRepository;
 
@@ -93,7 +93,7 @@ public class ProductServiceImpl implements ProductService{
                 .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 품목 그룹을 찾을 수 없습니다."));
 
         // 생산 라우팅 조회
-        ProductionRouting productionRouting = productionRoutingRepository.findByCompanyIdAndId(companyId, productRequestDto.getProductionRoutingId())
+        ProcessRouting processRouting = processRoutingRepository.findByCompanyIdAndId(companyId, productRequestDto.getProcessRoutingId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 생산 라우팅을 찾을 수 없습니다."));
 
         // 엔티티로 변환 후 저장
@@ -135,7 +135,7 @@ public class ProductServiceImpl implements ProductService{
                 .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 품목 그룹을 찾을 수 없습니다."));
 
         // 생산 라우팅 조회
-        ProductionRouting productionRouting = productionRoutingRepository.findByCompanyIdAndId(companyId, productRequestDto.getProductionRoutingId())
+        ProcessRouting processRouting =  processRoutingRepository.findByCompanyIdAndId(companyId, productRequestDto.getProcessRoutingId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 생산 라우팅을 찾을 수 없습니다."));
 
         // 거래처, 품목 그룹, 생산 라우팅 필드 업데이트
@@ -274,8 +274,8 @@ public class ProductServiceImpl implements ProductService{
                 .purchasePrice(product.getPurchasePrice())
                 .salesPrice(product.getSalesPrice())
                 .productType(product.getProductType())
-                .productionRoutingCode(product.getProductionRouting() != null ? product.getProductionRouting().getCode() : null)
-                .productionRoutingName(product.getProductionRouting() != null ? product.getProductionRouting().getName() : null)
+                .processRoutingCode(product.getProcessRouting() != null ? product.getProductionRouting().getCode() : null)
+                .processRoutingName(product.getProcessRouting() != null ? product.getProductionRouting().getName() : null)
                 .imagePath(product.getImagePath())
                 .remarks(product.getRemarks())
                 .isActive(product.isActive())
@@ -283,14 +283,14 @@ public class ProductServiceImpl implements ProductService{
     }
 
     // DTO -> Entity 변환 메서드
-    public Product toEntity(ProductRequestDto productRequestDto, Company company, Client client, ProductGroup productGroup, ProductionRouting productionRouting) {
+    public Product toEntity(ProductRequestDto productRequestDto, Company company, Client client, ProductGroup productGroup, ProcessRouting processRouting) {
         return Product.builder()
                 .code(productRequestDto.getCode())
                 .name(productRequestDto.getName())
                 .company(company)
                 .client(client)
                 .productGroup(productGroup)
-                .productionRouting(productionRouting)
+                .processRouting(processRouting)
                 .standard(productRequestDto.getStandard())
                 .unit(productRequestDto.getUnit())
                 .purchasePrice(productRequestDto.getPurchasePrice())

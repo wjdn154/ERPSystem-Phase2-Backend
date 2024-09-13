@@ -3,7 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registrati
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.PurchaseRequestDetail;
-import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.ProductionRouting;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessRouting;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,6 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
+
     // 고유 식별자
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,9 +48,9 @@ public class Product {
 
     // 생산 라우팅 매핑
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "production_routing_id")
+    @JoinColumn(name = "process_routing_id")
     @ToString.Exclude
-    private ProductionRouting productionRouting;
+    private ProcessRouting processRouting;
 
     // 품목구분 (Enum)
     @Enumerated(EnumType.STRING)

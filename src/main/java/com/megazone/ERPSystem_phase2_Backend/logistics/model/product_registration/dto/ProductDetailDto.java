@@ -24,8 +24,8 @@ public class ProductDetailDto {
     private Double purchasePrice; // 입고단가
     private Double salesPrice; // 출고 단가
     private ProductType productType; // 품목 구분
-    private String productionRoutingCode; // 생산라우팅 코드
-    private String productionRoutingName; // 생산라우팅
+    private String processRoutingCode; // 생산라우팅 코드
+    private String processRoutingName; // 생산라우팅
 
 
     public static ProductDetailDto createProductDetailDto(Product product) {
@@ -40,8 +40,8 @@ public class ProductDetailDto {
                 product.getPurchasePrice(),
                 product.getSalesPrice(),
                 product.getProductType(),
-                product.getProductionRouting().getCode(),
-                product.getProductionRouting().getName()
+                product.getprocessRouting().getCode(),
+                product.getprocessRouting().getName()
         );
     }
 }

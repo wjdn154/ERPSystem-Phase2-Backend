@@ -1,6 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto;
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.work_order_assign.ShiftType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +18,6 @@ public class WorkerAssignmentDTO {
     private String employeeNumber;
     private String workcenterCode; // 작업장
     private LocalDate assignmentDate; // 배정일
-    private ShiftType shift; // 교대
-    private Long workOrderId; // 연관 작업지시
+    private Long shiftTypeId; // 교대 ID
+    private Long productionOrderId; // 연관 작업지시
 }
