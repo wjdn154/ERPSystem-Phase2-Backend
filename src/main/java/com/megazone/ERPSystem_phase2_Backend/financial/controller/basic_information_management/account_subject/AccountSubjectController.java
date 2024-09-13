@@ -39,7 +39,7 @@ public class AccountSubjectController {
     public ResponseEntity<AccountSubjectsAndMemosDTO> getAllAccountSubjectDetails() {
 
         // 서비스에서 모든 계정과목과 적요 정보 가져옴
-        Optional<AccountSubjectsAndMemosDTO> response = accountSubjectService.findAllAccountSubjectDetails(2L);
+        Optional<AccountSubjectsAndMemosDTO> response = accountSubjectService.findAllAccountSubjectDetails();
         // HTTP 200 상태로 응답 반환
         return response.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -52,11 +52,9 @@ public class AccountSubjectController {
      */
     @PostMapping("/{code}")
     public ResponseEntity<AccountSubjectDetailDTO> getAccountSubjectDetailByCode(@PathVariable("code") String code) {
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
 
         // 리포지토리에서 해당 코드의 계정과목 상세 정보 가져옴
-        Optional<AccountSubjectDetailDTO> response = accountSubjectRepository.findAccountSubjectDetailByCode(company_id, code);
+        Optional<AccountSubjectDetailDTO> response = accountSubjectRepository.findAccountSubjectDetailByCode(code);
 
         // 해당 코드의 계정과목이 존재하지 않을 경우 404 상태 반환
         return response.map(ResponseEntity::ok)
@@ -72,10 +70,8 @@ public class AccountSubjectController {
      */
     @PostMapping("/saveMemo/{code}")
     public ResponseEntity<Object> addMemoToAccountSubject(@PathVariable("code") String accountSubjectCode, @RequestBody MemoRequestDTO memoRequestDTO) {
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
 
-        Optional<Object> savedMemo = accountSubjectService.addMemoToAccountSubject(company_id, accountSubjectCode, memoRequestDTO);
+        Optional<Object> savedMemo = accountSubjectService.addMemoToAccountSubject(accountSubjectCode, memoRequestDTO);
         return savedMemo
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
@@ -89,10 +85,8 @@ public class AccountSubjectController {
      */
     @PostMapping("/save")
     public ResponseEntity<AccountSubjectDTO> saveAccountSubject(@RequestBody AccountSubjectDTO accountSubjectDTO) {
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
 
-        Optional<AccountSubjectDTO> savedAccount = accountSubjectService.saveAccountSubject(company_id, accountSubjectDTO);
+        Optional<AccountSubjectDTO> savedAccount = accountSubjectService.saveAccountSubject(accountSubjectDTO);
         return savedAccount
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
@@ -105,10 +99,8 @@ public class AccountSubjectController {
      */
     @PutMapping("/update/{code}")
     public ResponseEntity<AccountSubjectDTO> updateAccount(@PathVariable("code") String code, @RequestBody AccountSubjectDTO accountSubjectDTO) {
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
 
-        Optional<AccountSubjectDTO> updatedAccount = accountSubjectService.updateAccountSubject(company_id, code, accountSubjectDTO);
+        Optional<AccountSubjectDTO> updatedAccount = accountSubjectService.updateAccountSubject(code, accountSubjectDTO);
 
         return updatedAccount
                 .map(ResponseEntity::ok)
@@ -123,11 +115,9 @@ public class AccountSubjectController {
      */
     @DeleteMapping("/delete/{code}")
     public ResponseEntity<String> deleteAccount(@PathVariable("code") String code) {
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
 
         try {
-            accountSubjectService.deleteAccount(company_id, code);
+            accountSubjectService.deleteAccount(code);
             return ResponseEntity.ok("계정과목을 삭제했습니다. 코드번호 : " + code);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage()); // 계정과목을 찾지 못했을 때 404 반환

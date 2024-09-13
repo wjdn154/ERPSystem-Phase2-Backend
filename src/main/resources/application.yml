@@ -8,8 +8,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver # 데이터베이스 드라이버 클래스 이름
   jpa:
     hibernate:
-      ddl-auto: create
-#    generate-ddl: true
+      ddl-auto: create-only
+    #    generate-ddl: true
     properties:
       hibernate:
         multi-tenancy: SCHEMA # 멀티 테넌시 설정 (스키마 기반)
