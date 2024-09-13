@@ -15,8 +15,8 @@ public class ProductResponseDto {
     private Long id; // 고유 식별자
     private String code; // 품목 코드
     private String name; // 품목명
-    private String clientCode; // 거래처 코드
-    private String clientName; // 거래처명
+//    private String clientCode; // 거래처 코드
+//    private String clientName; // 거래처명
     private String productGroupCode; // 품목 그룹 코드
     private String productGroupName; // 폼목 그룹명
     private String standard; // 규격

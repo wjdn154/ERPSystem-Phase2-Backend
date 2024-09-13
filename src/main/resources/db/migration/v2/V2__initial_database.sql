@@ -4623,18 +4623,29 @@ INSERT INTO attendance_management (check_time, checkout_time, date, employee_id,
 
 INSERT INTO attendance_management (check_time, checkout_time, date, employee_id, attendance_code, status) VALUES
     ('09:00:00','18:00:00','2024-02-20',3,'0006','PRESENT');
-INSERT INTO product_group (code, name, is_active) VALUES
-('01', '가공식품', TRUE),
-('02', '신선식품', TRUE),
-('03', '일상용품', TRUE),
-('05', '의약품/의료기기', TRUE),
-('06', '교육/문화용품', TRUE),
-('07', '디지털/가전', TRUE),
-('08', '가구/인테리어', TRUE),
-('09', '의류', TRUE),
-('10', '전문스포츠/레저', TRUE),
-('11', '패션잡화', TRUE),
-('99', '기타', TRUE);
+INSERT INTO product_group (company_id, code, name, is_active) VALUES
+(1, '01', '가공식품', TRUE),
+(1, '02', '신선식품', TRUE),
+(1, '03', '일상용품', TRUE),
+(1, '05', '의약품/의료기기', TRUE),
+(1, '06', '교육/문화용품', TRUE),
+(1, '07', '디지털/가전', TRUE),
+(1, '08', '가구/인테리어', TRUE),
+(1, '09', '의류', TRUE),
+(1, '10', '전문스포츠/레저', TRUE),
+(1, '11', '패션잡화', TRUE),
+(1, '99', '기타', TRUE),
+(2, '01', '가공식품', TRUE),
+(2, '02', '신선식품', TRUE),
+(2, '03', '일상용품', TRUE),
+(2, '05', '의약품/의료기기', TRUE),
+(2, '06', '교육/문화용품', TRUE),
+(2, '07', '디지털/가전', TRUE),
+(2, '08', '가구/인테리어', TRUE),
+(2, '09', '의류', TRUE),
+(2, '10', '전문스포츠/레저', TRUE),
+(2, '11', '패션잡화', TRUE),
+(2, '99', '기타', TRUE);
 -- process_details 초기 데이터 삽입
 INSERT INTO process_routing_process_details (process_id, process_code, process_name, is_process_outsourced, process_duration, process_cost, process_defect_rate, process_description, process_is_used)
 VALUES
@@ -4669,23 +4680,24 @@ VALUES
     (29, 'PRC029', '플라스틱 재활용', TRUE, 4.0, 900000, 0.02, 'Plastic recycling process. 플라스틱 재활용 공정.', TRUE),
     (30, 'PRC030', '알루미늄 주조', FALSE, 5.5, 1600000, 0.015, 'Aluminum casting process. 알루미늄 주조 공정.', TRUE);
 INSERT INTO process_routing
-(id, process_routing_code, name, description, is_standard, is_active)
+(id, company_id, process_routing_code, name, description, is_standard, is_active)
 VALUES
-(1, 'ROUT001', '루트 A', '제품 A의 제조 과정', true, true),
-(2, 'ROUT002', '루트 B', '제품 B의 제조 과정', false, true),
-(3, 'ROUT003', '루트 C', '제품 C의 제조 과정', true, false),
-(4, 'ROUT004', '루트 D', '제품 D의 제조 과정', false, true),
-(5, 'ROUT005', '루트 E', '제품 E의 제조 과정', true, true),
-(6, 'ROUT006', '루트 F', '제품 F의 제조 과정', false, true),
-(7, 'ROUT007', '루트 G', '제품 G의 제조 과정', true, false),
-(8, 'ROUT008', '루트 H', '제품 H의 제조 과정', false, true),
-(9, 'ROUT009', '루트 I', '제품 I의 제조 과정', true, true),
-(10, 'ROUT010', '루트 J', '제품 J의 제조 과정', false, false);
+(1, 1, 'ROUT001', '루트 A', '제품 A의 제조 과정', true, true),
+(2, 1, 'ROUT002', '루트 B', '제품 B의 제조 과정', false, true),
+(3, 1, 'ROUT003', '루트 C', '제품 C의 제조 과정', true, false),
+(4, 1, 'ROUT004', '루트 D', '제품 D의 제조 과정', false, true),
+(5, 1, 'ROUT005', '루트 E', '제품 E의 제조 과정', true, true),
+(6, 1, 'ROUT006', '루트 F', '제품 F의 제조 과정', false, true),
+(7, 1, 'ROUT007', '루트 G', '제품 G의 제조 과정', true, false),
+(8, 1, 'ROUT008', '루트 H', '제품 H의 제조 과정', false, true),
+(9, 1, 'ROUT009', '루트 I', '제품 I의 제조 과정', true, true),
+(10, 1, 'ROUT010', '루트 J', '제품 J의 제조 과정', false, false);
 
 -- processDetailsl, routingStep 함께 확인
-INSERT INTO product (code, product_group_id, process_routing_id, product_type, purchase_price, sales_price, name, standard, unit) VALUES
-('A0001', 5, 1, 'FINISHED_GOODS', 25000, 30000, 'JPA 시작하기', '700페이지', 'EA'),
-('A0002', 5, 2, 'FINISHED_GOODS', 5000, 10000, 'Spring Boot 시작하기', '200페이지', 'EA');
+INSERT INTO product (company_id, code, product_group_id, process_routing_id, product_type, purchase_price, sales_price, name, standard, unit, image_path, remarks, is_active) VALUES
+(1, 'A0001', 5, 1, 'GOODS', 25000, 30000, 'JPA 시작하기', '700페이지', 'EA', null, null,TRUE),
+(1, 'A0002', 5, 2, 'GOODS', 5000, 10000, 'Spring Boot 시작하기', '200페이지', 'EA', null, null,TRUE),
+(2, 'A0001', 5, 2, 'GOODS', 5000, 10000, 'Spring Boot 시작하기', '200페이지', 'EA', null, null,TRUE);
 INSERT INTO warehouse_address (id, company_id, warehouse_address, detail_address, warehouse_postal_code, warehouse_place)
 VALUES (1, 1, '해운대구', '센텀동로', '31', '부산정보산업진흥원');
 

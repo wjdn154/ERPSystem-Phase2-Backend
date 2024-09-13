@@ -14,7 +14,7 @@ public class ProductRequestDto {
 
     private String code; // 품목 코드
     private String name; // 품목명
-    private Long clientId; // 거래처_id
+//    private Long clientId; // 거래처_id
     private Long productGroupId;// 폼목 그룹_id
     private Long processRoutingId; // 생산라우팅_id
     private String standard; // 규격

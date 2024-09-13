@@ -1,6 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.product;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
@@ -85,8 +84,8 @@ public class ProductServiceImpl implements ProductService{
         validateProductCodeUnique(productRequestDto.getCode());
 
         // 거래처 조회
-        Client client = clientRepository.findById(productRequestDto.getClientId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 거래처를 찾을 수 없습니다."));
+//        Client client = clientRepository.findById(productRequestDto.getClientId())
+//                .orElseThrow(() -> new IllegalArgumentException("해당 거래처를 찾을 수 없습니다."));
 
         // 품목 그룹 조회
         ProductGroup productGroup = productGroupRepository.findByCompanyIdAndId(companyId, productRequestDto.getProductGroupId())
@@ -97,7 +96,8 @@ public class ProductServiceImpl implements ProductService{
                 .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 생산 라우팅을 찾을 수 없습니다."));
 
         // 엔티티로 변환 후 저장
-        Product product = toEntity(productRequestDto, company, client ,productGroup, processRouting);
+//        Product product = toEntity(productRequestDto, company, client ,productGroup, processRouting);
+        Product product = toEntity(productRequestDto, company, productGroup, processRouting);
         Product savedProduct = productRepository.save(product);
 
         // 다시 DTO로 변환 후 반환
@@ -127,8 +127,8 @@ public class ProductServiceImpl implements ProductService{
         }
 
         // 거래처 조회
-        Client client = clientRepository.findById(productRequestDto.getClientId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 거래처를 찾을 수 없습니다."));
+//        Client client = clientRepository.findById(productRequestDto.getClientId())
+//                .orElseThrow(() -> new IllegalArgumentException("해당 거래처를 찾을 수 없습니다."));
 
         // 품목 그룹 조회
         ProductGroup productGroup = productGroupRepository.findByCompanyIdAndId(companyId, productRequestDto.getProductGroupId())
@@ -139,7 +139,7 @@ public class ProductServiceImpl implements ProductService{
                 .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 생산 라우팅을 찾을 수 없습니다."));
 
         // 거래처, 품목 그룹, 생산 라우팅 필드 업데이트
-        product.setClient(client);
+//        product.setClient(client);
         product.setProductGroup(productGroup);
         product.setProcessRouting(processRouting);
         // 나머지 필드 업데이트
@@ -265,8 +265,8 @@ public class ProductServiceImpl implements ProductService{
                 .id(product.getId())
                 .code(product.getCode())
                 .name(product.getName())
-                .clientCode(product.getClient() != null ? product.getClient().getCode() : null)
-                .clientName(product.getClient() != null ? product.getClient().getPrintClientName() : null)
+//                .clientCode(product.getClient() != null ? product.getClient().getCode() : null)
+//                .clientName(product.getClient() != null ? product.getClient().getPrintClientName() : null)
                 .productGroupCode(product.getProductGroup() != null ? product.getProductGroup().getCode() : null)
                 .productGroupName(product.getProductGroup() != null ? product.getProductGroup().getName() : null)
                 .standard(product.getStandard())
@@ -283,12 +283,12 @@ public class ProductServiceImpl implements ProductService{
     }
 
     // DTO -> Entity 변환 메서드
-    public Product toEntity(ProductRequestDto productRequestDto, Company company, Client client, ProductGroup productGroup, ProcessRouting processRouting) {
+    public Product toEntity(ProductRequestDto productRequestDto, Company company, ProductGroup productGroup, ProcessRouting processRouting) {
         return Product.builder()
                 .code(productRequestDto.getCode())
                 .name(productRequestDto.getName())
                 .company(company)
-                .client(client)
+//                .client(client)
                 .productGroup(productGroup)
                 .processRouting(processRouting)
                 .standard(productRequestDto.getStandard())

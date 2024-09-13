@@ -1,3 +1,4 @@
+
 // 플러그인 설정: Java와 Spring Boot 관련 플러그인을 포함
 plugins {
 	java // Java 플러그인 사용
