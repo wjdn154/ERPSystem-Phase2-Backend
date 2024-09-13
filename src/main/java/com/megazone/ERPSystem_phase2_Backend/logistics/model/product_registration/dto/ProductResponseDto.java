@@ -24,8 +24,8 @@ public class ProductResponseDto {
     private Double purchasePrice; // 입고단가
     private Double salesPrice; // 출고 단가
     private ProductType productType; // 품목 구분
-    private String productionRoutingCode; // 생산라우팅 코드
-    private String productionRoutingName; // 생산라우팅명
+    private String processRoutingCode; // 생산라우팅 코드
+    private String processRoutingName; // 생산라우팅명
     private String imagePath; // 이미지 경로
     private String remarks; // 적요
     private Boolean isActive; // 품목 사용 여부

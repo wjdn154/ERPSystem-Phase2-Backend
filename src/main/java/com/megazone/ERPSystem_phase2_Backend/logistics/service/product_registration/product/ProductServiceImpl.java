@@ -97,7 +97,7 @@ public class ProductServiceImpl implements ProductService{
                 .orElseThrow(() -> new IllegalArgumentException("사용자의 회사에 해당 생산 라우팅을 찾을 수 없습니다."));
 
         // 엔티티로 변환 후 저장
-        Product product = toEntity(productRequestDto, company, client ,productGroup, productionRouting);
+        Product product = toEntity(productRequestDto, company, client ,productGroup, processRouting);
         Product savedProduct = productRepository.save(product);
 
         // 다시 DTO로 변환 후 반환
@@ -141,7 +141,7 @@ public class ProductServiceImpl implements ProductService{
         // 거래처, 품목 그룹, 생산 라우팅 필드 업데이트
         product.setClient(client);
         product.setProductGroup(productGroup);
-        product.setProductionRouting(productionRouting);
+        product.setProcessRouting(processRouting);
         // 나머지 필드 업데이트
         updateProductFields(product, productRequestDto);
 
@@ -274,8 +274,8 @@ public class ProductServiceImpl implements ProductService{
                 .purchasePrice(product.getPurchasePrice())
                 .salesPrice(product.getSalesPrice())
                 .productType(product.getProductType())
-                .processRoutingCode(product.getProcessRouting() != null ? product.getProductionRouting().getCode() : null)
-                .processRoutingName(product.getProcessRouting() != null ? product.getProductionRouting().getName() : null)
+                .processRoutingCode(product.getProcessRouting() != null ? product.getProcessRouting().getCode() : null)
+                .processRoutingName(product.getProcessRouting() != null ? product.getProcessRouting().getName() : null)
                 .imagePath(product.getImagePath())
                 .remarks(product.getRemarks())
                 .isActive(product.isActive())
