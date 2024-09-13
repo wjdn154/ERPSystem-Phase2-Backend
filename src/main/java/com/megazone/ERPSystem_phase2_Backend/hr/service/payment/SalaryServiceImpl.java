@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,13 +23,23 @@ import java.util.Optional;
 @Transactional
 public class SalaryServiceImpl implements SalaryService{
 
+    private final SalaryRepository salaryRepository;
+
     @Override
     public List<SalaryListDTO> findAllEmployeesAndSalary() {
-        return List.of();
+        List<Salary> salaries = salaryRepository.findAll();
+
+
+        List<SalaryListDTO> dtos = new ArrayList<>();
+        for (Salary salary : salaries) {
+            dtos.add(SalaryListDTO.create(salary));
+        }
+
+        return dtos;
     }
 
     @Override
     public Optional<SalaryListDTO> findEmployeeSalaryBySalaryId(Long id) {
-        return Optional.empty();
+
     }
 }

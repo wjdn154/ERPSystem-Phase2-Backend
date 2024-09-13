@@ -11,6 +11,4 @@ public interface SalaryService {
 
     // 사원의 월급 상세 조회
     Optional<SalaryListDTO> findEmployeeSalaryBySalaryId(Long id);
-
-    //
 }

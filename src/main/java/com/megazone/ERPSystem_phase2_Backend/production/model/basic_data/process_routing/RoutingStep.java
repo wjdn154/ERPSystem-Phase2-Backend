@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 }, indexes = {
         @Index(name = "idx_routing_step_order", columnList = "process_routing_id, stepOrder")
 })
+@AttributeOverride(name = "id.processRoutingId", column = @Column(name = "process_routing_id"))
+@AttributeOverride(name = "id.processId", column = @Column(name = "process_id"))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

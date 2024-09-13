@@ -31,7 +31,7 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
      * @return 계정과목 목록을 반환함.
      */
     @Override
-    public List<AccountSubjectDTO> findAllAccountSubject(Long company_id) {
+    public List<AccountSubjectDTO> findAllAccountSubject() {
 
         return queryFactory
                 .select(Projections.fields(AccountSubjectDTO.class,
@@ -53,7 +53,6 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
                 .from(accountSubject)
                 .leftJoin(QNature.nature).on(accountSubject.natureCode.eq(QNature.nature.code)
                         .and(QNature.nature.structure.eq(accountSubject.structure)))
-                .where(accountSubject.company.id.eq(company_id))
                 .groupBy(accountSubject.id, accountSubject.structure.code, accountSubject.parent.code, accountSubject.code,
                         accountSubject.name, accountSubject.englishName, accountSubject.natureCode,
                         accountSubject.entryType, accountSubject.increaseDecreaseType, accountSubject.isActive,
@@ -71,7 +70,7 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
      * @return 계정과목 상세 정보를 담은 Optional 객체를 반환함.
      */
     @Override
-    public Optional<AccountSubjectDetailDTO> findAccountSubjectDetailByCode(Long company_id, String code) {
+    public Optional<AccountSubjectDetailDTO> findAccountSubjectDetailByCode(String code) {
 
         QNature nature = QNature.nature;
         QStandardFinancialStatement standardFinancialStatement = QStandardFinancialStatement.standardFinancialStatement;
@@ -163,7 +162,7 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
                         .and(nature.structure.eq(accountSubject.structure))) // 성격 정보에 대한 조인
                 .leftJoin(standardFinancialStatement).on(accountSubject.structure.eq(standardFinancialStatement.structure)
                         .and(standardFinancialStatement.code.eq(accountSubject.standardFinancialStatementCode))) // 표준 재무제표 정보에 대한 조인
-                .where(accountSubject.code.eq(code).and(accountSubject.company.id.eq(company_id))) // 계정과목 코드로 필터링
+                .where(accountSubject.code.eq(code)) // 계정과목 코드로 필터링
                 .fetchOne();
 
         if (result != null) {
@@ -178,7 +177,6 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
                 result.setParentName(queryFactory
                         .select(accountSubject.name)
                         .from(accountSubject)
-                        .where(accountSubject.code.eq(result.getParentCode()).and(accountSubject.company.id.eq(company_id)))
                         .fetchOne());
             }
         }

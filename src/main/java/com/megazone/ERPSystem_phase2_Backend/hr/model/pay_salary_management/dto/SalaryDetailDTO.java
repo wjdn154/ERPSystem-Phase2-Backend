@@ -1,7 +1,9 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.pay_salary_management.dto;
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_salary_management.Allowance;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_salary_management.AllowanceAmount;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_salary_management.Deduction;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_salary_management.DeductionAmount;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management.SocialInsurance;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,8 +21,8 @@ public class SalaryDetailDTO {
     private String firstname;
     private String lastname;
     private BigDecimal salary;
-    private List<Allowance> allowances;
-    private List<Deduction> deductions;
+    private List<AllowanceAmount> allowances;
+    private List<DeductionAmount> deductions;
     private SocialInsurance socialInsurance;
     private BigDecimal netPay;
 

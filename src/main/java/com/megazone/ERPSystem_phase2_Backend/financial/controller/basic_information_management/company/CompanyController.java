@@ -17,7 +17,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/financial/company")
@@ -26,6 +30,25 @@ public class CompanyController {
 
     private final CompanyService companyService;
     private final CompanyRepository companyRepository;
+
+    /**
+     * 회사 조회
+     * @return 조회한 회사 정보를 담은 CompanyDTO 객체를 반환함.
+     */
+    @PostMapping("/")
+    public ResponseEntity<List<CompanyDTO>> findCompany() {
+        List<CompanyDTO> allCompany = companyService.findAllCompany();
+        return ResponseEntity.ok(allCompany);
+    }
+
+    /**
+     * 회사 상세 조회
+     * @param searchText 조회할 회사의 검색어
+     */
+    @PostMapping("/search")
+    public List<CompanyDTO> searchCompany(@RequestBody Map<String, String> searchText) {
+        return companyService.searchCompany(searchText.get("searchText"));
+    }
 
     /**
      * 회사 등록
