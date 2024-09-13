@@ -59,7 +59,7 @@ public class SchemaBasedMultiTenantConnectionProvider implements MultiTenantConn
 
         // MySQL에서 스키마 전환 (setSchema 대신 USE 사용)
         connection.createStatement().execute("USE " + tenantIdentifier);
-        System.out.println("연결된 테넌트 스키마: " + tenantIdentifier);
+        System.out.println("연결된 테넌트 스키마 : " + tenantIdentifier);
 
         return connection;
     }

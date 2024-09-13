@@ -54,6 +54,7 @@ public class TenantService {
 
     // 스키마 전환
     private void switchToTenantSchema(String tenantId) {
+        TenantContext.setCurrentTenant(tenantId);
         jdbcTemplate.execute("USE " + tenantId);
     }
 
@@ -76,14 +77,14 @@ public class TenantService {
         Set<Class<?>> entityClasses = entityManagerFactory.getMetamodel().getEntities()
                 .stream()
                 .map(e -> e.getJavaType())
-                .filter(entityClass -> !entityClass.getSimpleName().contains("company")
-                        && !entityClass.getSimpleName().contains("company_address")
-                        && !entityClass.getSimpleName().contains("company_admin")
-                        && !entityClass.getSimpleName().contains("company_corporate_kind")
-                        && !entityClass.getSimpleName().contains("company_corporate_type")
-                        && !entityClass.getSimpleName().contains("company_main_business")
-                        && !entityClass.getSimpleName().contains("company_representative")
-                        && !entityClass.getSimpleName().contains("company_tax_office"))
+//                .filter(entityClass -> !entityClass.getSimpleName().contains("company")
+//                        && !entityClass.getSimpleName().contains("company_address")
+//                        && !entityClass.getSimpleName().contains("company_admin")
+//                        && !entityClass.getSimpleName().contains("company_corporate_kind")
+//                        && !entityClass.getSimpleName().contains("company_corporate_type")
+//                        && !entityClass.getSimpleName().contains("company_main_business")
+//                        && !entityClass.getSimpleName().contains("company_representative")
+//                        && !entityClass.getSimpleName().contains("company_tax_office"))
                 .collect(java.util.stream.Collectors.toSet());
 
         MetadataSources metadataSources = new MetadataSources(registryBuilder.build());
