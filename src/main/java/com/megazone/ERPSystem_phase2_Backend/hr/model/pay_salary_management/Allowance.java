@@ -15,8 +15,8 @@ public class Allowance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "allowance", cascade = CascadeType.ALL)
-    private List<AllowanceAmount> allowanceAmounts;
+//    @OneToMany(mappedBy = "allowance", cascade = CascadeType.ALL)
+//    private List<AllowanceAmount> allowanceAmounts;
 
     @Column(nullable = false,unique = true)
     private String code;

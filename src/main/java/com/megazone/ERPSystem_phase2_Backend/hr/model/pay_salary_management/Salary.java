@@ -18,9 +18,9 @@ public class Salary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id", nullable = false)
-    private Employee employee; // 직원 참조
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "employee_id", nullable = false)
+//    private Employee employee; // 직원 참조
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "severancepay_id")

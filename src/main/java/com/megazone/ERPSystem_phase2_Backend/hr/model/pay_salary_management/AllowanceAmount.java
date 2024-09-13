@@ -16,9 +16,9 @@ public class AllowanceAmount {
     @JoinColumn(name = "allowance_id", nullable = false)
     private Allowance allowance;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "salary_id", nullable = false)
-    private Salary salary;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "salary_id", nullable = false)
+//    private Salary salary;
 
     @Column(precision = 9)
     private BigDecimal amount; // 수당 금액

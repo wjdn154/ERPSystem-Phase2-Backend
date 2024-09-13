@@ -17,10 +17,6 @@ public class DeductionAmount {
     @JoinColumn(name = "deduction_id", nullable = false)
     private Deduction deduction;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "salary_id", nullable = false)
-    private Salary salary;
-
     private BigDecimal amount;
 }
 
