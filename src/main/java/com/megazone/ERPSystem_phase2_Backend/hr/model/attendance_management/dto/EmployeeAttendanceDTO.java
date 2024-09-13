@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Time;
 import java.time.LocalDate;
-
+// 특정 사원의 출퇴근 기록
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.controller.attendance_management;
 
 
+import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.dto.AttendanceShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.dto.EmployeeAttendanceDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
@@ -31,4 +32,12 @@ public class AttendanceController {
         return ResponseEntity.ok(attendanceRecords);
     }
 
+    // 모든 사원의 출퇴근 기록 조회
+    @PostMapping("/records/all")
+    public ResponseEntity<List<AttendanceShowDTO>> getAllAttendanceRecords(){
+        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Long company_id = user.getCompany().getId();
+        List<AttendanceShowDTO> attendanceshowRecords = attendanceService.getAllAttendanceRecords();
+        return ResponseEntity.ok(attendanceshowRecords);
+    }
 }

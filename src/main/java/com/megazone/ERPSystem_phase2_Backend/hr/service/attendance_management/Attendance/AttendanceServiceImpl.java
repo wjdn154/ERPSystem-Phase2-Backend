@@ -2,6 +2,8 @@ package com.megazone.ERPSystem_phase2_Backend.hr.service.attendance_management.A
 
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Attendance;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.dto.AttendanceDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.dto.AttendanceShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.dto.EmployeeAttendanceDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.attendance_management.Attendance.AttendanceRepository;
 import jakarta.transaction.Transactional;
@@ -38,5 +40,21 @@ public class AttendanceServiceImpl implements AttendanceService {
                 ))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<AttendanceShowDTO> getAllAttendanceRecords() {
+        List<Attendance> attendanceList = attendanceRepository.findAll();
+
+        // Attendance 엔티티를 AttendanceDTO로 변환
+        return attendanceList.stream().map(attendance -> new AttendanceShowDTO(
+                attendance.getEmployee().getId(),
+                attendance.getAttendanceCode(),
+                attendance.getDate(),
+                attendance.getCheckTime(),
+                attendance.getCheckoutTime(),
+                attendance.getStatus().toString()
+        )).collect(Collectors.toList());
     }
+}
+
 
