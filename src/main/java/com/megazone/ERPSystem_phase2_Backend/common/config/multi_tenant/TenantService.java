@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.metamodel.Type;
 import lombok.RequiredArgsConstructor;
 import org.flywaydb.core.Flyway;
 import org.hibernate.boot.MetadataSources;
@@ -76,7 +77,7 @@ public class TenantService {
 
         Set<Class<?>> entityClasses = entityManagerFactory.getMetamodel().getEntities()
                 .stream()
-                .map(e -> e.getJavaType())
+                .map(Type::getJavaType)
 //                .filter(entityClass -> !entityClass.getSimpleName().contains("company")
 //                        && !entityClass.getSimpleName().contains("company_address")
 //                        && !entityClass.getSimpleName().contains("company_admin")

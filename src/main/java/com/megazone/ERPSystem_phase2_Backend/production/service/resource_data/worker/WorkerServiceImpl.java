@@ -8,6 +8,7 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_managemen
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.WorkerAssignment;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.Worker;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
@@ -105,13 +106,18 @@ public class WorkerServiceImpl implements WorkerService {
                         attendance.getStatus().toString()
                 )).toList();
 
-        //작업배치 관리 리스트 생성
+        // 작업 배치 관리 리스트 생성
         List<WorkerAssignmentDTO> assignmentList = worker.getWorkerAssignments().stream()
                 .map(assignment -> new WorkerAssignmentDTO(
+                        assignment.getWorker().getEmployee().getFirstName() + " " + assignment.getWorker().getEmployee().getLastName(),  // 작업자 이름
+                        assignment.getWorker().getEmployee().getEmployeeNumber(),
                         assignment.getWorkcenter().getCode(),
                         assignment.getWorkcenter().getName(),
-                        assignment.getAssignmentDate().toString()
-                        )).toList();
+                        assignment.getAssignmentDate(),
+                        assignment.getShiftType().getName(),
+                        assignment.getProductionOrder().getName()
+                )).toList();
+
         //최종 dto 생성 및 반환
         return new ListWorkerAttendanceDTO(
                 worker.getId(),

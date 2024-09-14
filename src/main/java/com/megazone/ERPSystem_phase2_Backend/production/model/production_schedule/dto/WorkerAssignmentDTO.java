@@ -12,12 +12,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class WorkerAssignmentDTO {
-    private Long id;
-    private Long workerId; // 작업자
     private String workerName;
     private String employeeNumber;
-    private String workcenterCode; // 작업장
+    private String workcenterCode; // 작업장코드
+    private String workcenterName; // 작업장명
     private LocalDate assignmentDate; // 배정일
-    private Long shiftTypeId; // 교대 ID
-    private Long productionOrderId; // 연관 작업지시
+    private String shiftTypeName; // 교대유형명
+    private String productionOrderName; // 연관 작업지시
 }

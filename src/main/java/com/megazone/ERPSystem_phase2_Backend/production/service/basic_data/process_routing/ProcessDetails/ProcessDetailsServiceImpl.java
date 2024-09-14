@@ -36,7 +36,7 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
     private final ProductRepository productRepository;
 
     @Override
-    public List<ProcessDetailsDTO> getAllProcessDetails(Long company_id) {
+    public List<ProcessDetailsDTO> getAllProcessDetails() {
         List<ProcessDetails> processDetailsList = processDetailsRepository.findAll();
 
         List<ProcessDetailsDTO> processDetailsDTOs = processDetailsList.stream()
@@ -47,34 +47,34 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
     }
 
     @Override
-    public List<ProcessDetailsDTO> findByNameContaining(Long company_id, String name) {
+    public List<ProcessDetailsDTO> findByNameContaining(String name) {
         List<ProcessDetails> processes = processDetailsRepository.findByNameContaining(name);
         return processes.stream()
                 .map(this::convertToDTO).toList();
     }
 
     @Override
-    public Optional<ProcessDetailsDTO> getProcessDetailsByCode(Long company_id, String code) {
+    public Optional<ProcessDetailsDTO> getProcessDetailsByCode(String code) {
         ProcessDetails processDetails = processDetailsRepository.findByCode(code)
                 .orElseThrow(() -> new EntityNotFoundException("해당 생산공정 " + code + "을 찾을 수 없습니다."));
 
-        // 품질 검사와 작업 실적 기록에 따라 표준 소요 시간, 공정 수행 비용, 평균 불량률 계산
-        double calculatedDuration = calculateDuration(company_id, processDetails);
-        BigDecimal calculatedCost = calculateCost(company_id, processDetails);
-        double calculatedDefectRate = calculateDefectRate(company_id, processDetails);
+//        // 품질 검사와 작업 실적 기록에 따라 표준 소요 시간, 공정 수행 비용, 평균 불량률 계산
+//        double calculatedDuration = calculateDuration(processDetails);
+//        BigDecimal calculatedCost = calculateCost(processDetails);
+//        double calculatedDefectRate = calculateDefectRate(processDetails);
+//
+//        // 계산된 값을 엔티티에 설정
+//        processDetails.setDuration(calculatedDuration);
+//        processDetails.setCost(calculatedCost);
+//        processDetails.setDefectRate(calculatedDefectRate);
+//
+//        // 변경 사항을 데이터베이스에 저장
+//        ProcessDetails savedProcessDetails = processDetailsRepository.save(processDetails);
 
-        // 계산된 값을 엔티티에 설정
-        processDetails.setDuration(calculatedDuration);
-        processDetails.setCost(calculatedCost);
-        processDetails.setDefectRate(calculatedDefectRate);
-
-        // 변경 사항을 데이터베이스에 저장
-        ProcessDetails savedProcessDetails = processDetailsRepository.save(processDetails);
-
-        return Optional.ofNullable(convertToDTO(savedProcessDetails));
+        return Optional.ofNullable(convertToDTO(processDetails));
     }
 
-    private double calculateDuration(Long company_id, ProcessDetails processDetails) {
+    private double calculateDuration(ProcessDetailsDTO dto) {
         // 작업 실적 기록 목록을 가져와서 평균 시간을 계산
 //        List<Double> workTimes = getWorkTimesForProcess(processDetails); // 실제 기록을 가져오는 메서드
 
@@ -86,7 +86,7 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
 //        return totalTime / workTimes.size();
     }
 
-    private BigDecimal calculateCost(Long company_id, ProcessDetails processDetails) {
+    private BigDecimal calculateCost(ProcessDetailsDTO dto) {
         // 각 작업 단계에서 소모된 비용 목록을 가져와서 합산
 
         // if (costs.isEmpty())
@@ -95,7 +95,7 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
         // 비용 합산 계산
     }
 
-    private double calculateDefectRate(Long company_id, ProcessDetails processDetails) {
+    private double calculateDefectRate(ProcessDetailsDTO dto) {
         // 생산 실적 기록에서 총 생산량을 가져와 불량률 계산
         // 1. 총 생산량 메서드 -> totalCounts
         // 2. 불량품 수 메서드 -> defectCounts
@@ -110,28 +110,37 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
     }
 
     @Override
-    @Transactional
-    public ProcessDetailsDTO createProcessDetails(Long company_id, ProcessDetailsDTO processDetailsDTO) {
-        // 1. Code가 이미 존재하는지 확인
+    public ProcessDetailsDTO createProcessDetails(ProcessDetailsDTO processDetailsDTO) {
         if (processDetailsRepository.existsByCode(processDetailsDTO.getCode())) {
-            // 2. 존재하면 예외를 던져 중복 처리
             throw new IllegalArgumentException("이미 존재하는 코드입니다: " + processDetailsDTO.getCode());
         }
 
-        // 3. 중복되지 않은 경우, 엔티티로 변환 후 저장
+        // 사용자가 입력하지 않은 경우에만 자동 계산 로직 적용
+        double duration = (processDetailsDTO.getDuration() != null) ?
+                processDetailsDTO.getDuration() : calculateDuration(processDetailsDTO);
+
+        BigDecimal cost = (processDetailsDTO.getCost() != null) ?
+                processDetailsDTO.getCost() : calculateCost(processDetailsDTO);
+
+        double defectRate = (processDetailsDTO.getDefectRate() != null) ?
+                processDetailsDTO.getDefectRate() : calculateDefectRate(processDetailsDTO);
+
+        // 엔티티로 변환 후 저장
         ProcessDetails processDetails = convertToEntity(processDetailsDTO);
+        processDetails.setDuration(duration);
+        processDetails.setCost(cost);
+        processDetails.setDefectRate(defectRate);
+
         ProcessDetails savedProcessDetails = processDetailsRepository.save(processDetails);
 
-        // 4. 저장된 엔티티를 DTO로 변환하여 반환
         return convertToDTO(savedProcessDetails);
     }
 
     @Override
-    @Transactional
-    public ProcessDetailsDTO updateByCode(Long company_id, String code, ProcessDetailsDTO processDetailsDTO) {
+    public ProcessDetailsDTO updateByCode(String code, ProcessDetailsDTO processDetailsDTO) {
         // 1. CODE를 사용해 기존 ProcessDetails 엔티티를 조회
         ProcessDetails existingProcessDetails = processDetailsRepository.findByCode(code)
-                .orElseThrow(() -> new EntityNotFoundException("Process with code " + code + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("해당 코드 " + code + "의 공정을 찾을 수 없습니다."));
 
         // 2. ProcessDetailsDTO에서 받은 데이터를 사용해 필드를 업데이트
         existingProcessDetails.setCode(processDetailsDTO.getCode());
@@ -149,13 +158,13 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
             return convertToDTO(updatedProcessDetails);
         } catch (DataIntegrityViolationException e) {
             // 데이터베이스에서 고유성 위반이 발생할 경우 예외 처리
-            throw new IllegalArgumentException("The provided code already exists.");
+            throw new IllegalArgumentException("이미 존재하는 생산공정입니다.");
         }
     }
 
     @Override
     @Transactional
-    public ProcessDetailsDTO deleteByCode(Long company_id, String code) {
+    public ProcessDetailsDTO deleteByCode(String code) {
         // 1. Code를 사용해 기존 ProcessDetails 엔티티를 조회
         ProcessDetails processDetails = processDetailsRepository.findByCode(code)
                 .orElseThrow(() -> new EntityNotFoundException("Process with code " + code + " not found"));
@@ -246,6 +255,15 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
                 .build();
     }
 
+    private Workcenter convertToWorkcenter(WorkcenterDTO workcenterDTO) {
+        return Workcenter.builder()
+                .id(workcenterDTO.getId())
+                .code(workcenterDTO.getCode())
+                .name(workcenterDTO.getName())
+                .workcenterType(workcenterDTO.getWorkcenterType())
+                .build();
+    }
+
     private ProcessDetails convertToEntity(ProcessDetailsDTO processDetailsDTO) {
         return ProcessDetails.builder()
                 .id(processDetailsDTO.getId())  // DTO의 ID를 엔티티에 설정
@@ -264,15 +282,6 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
                                         .collect(Collectors.toList())
                                 : Collections.emptyList()
                 )
-                .build();
-    }
-
-    private Workcenter convertToWorkcenter(WorkcenterDTO workcenterDTO) {
-        return Workcenter.builder()
-                .id(workcenterDTO.getId())
-                .code(workcenterDTO.getCode())
-                .name(workcenterDTO.getName())
-                .workcenterType(workcenterDTO.getWorkcenterType())
                 .build();
     }
 }
