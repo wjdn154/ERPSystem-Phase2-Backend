@@ -1,6 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto;
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.EmploymentStatus;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.EmploymentType;
 import lombok.AllArgsConstructor;
@@ -12,7 +11,9 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeDTO {
+//@ToString(exclude ="employee")
+public class EmployeeFindDTO {
+    private Long id;
     private String employeeNumber;
     private String firstName;
     private String lastName;
@@ -30,27 +31,10 @@ public class EmployeeDTO {
     private Long departmentId; // 부서 ID
     private Long positionId; // 직위 ID
     private Long jobTitleId; // 직책 ID
-    private BankAccountDTO bankAccountDTO; // 계좌 번호
-
-    public static EmployeeDTO create(Employee employee) {
-        return new EmployeeDTO(
-                employee.getEmployeeNumber(),
-                employee.getFirstName(),
-                employee.getLastName(),
-                employee.getDateOfBirth(),
-                employee.getPhoneNumber(),
-                employee.getEmploymentStatus(),
-                employee.getEmploymentType(),
-                employee.getEmail(),
-                employee.getAddress(),
-                employee.getHireDate(),
-                employee.isHouseholdHead(),
-                employee.getProfilePicture(),
-                employee.getDepartment().getId(),
-                employee.getPosition().getId(),
-                employee.getJobTitle().getId(),
-                BankAccountDTO.create(employee.getBankAccount())
-        );
-    }
+    private Long bankAccountId; // 은행 계좌 ID
+    //private DepartmentDTO departmentName; // 부서 이름
+    //private PositionDTO positionName; // 직위 이름
+    //private JobTitleDTO jobTitleName; // 직책 이름
+    //private BankAccountDTO bankAccountNumber; // 계좌 번호
 
 }

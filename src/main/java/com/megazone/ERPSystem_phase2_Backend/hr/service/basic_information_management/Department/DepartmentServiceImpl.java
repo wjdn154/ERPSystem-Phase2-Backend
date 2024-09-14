@@ -30,7 +30,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     // 부서 리스트 조회
     @Override
-    public List<DepartmentShowDTO> findAllDepartments(Long company_id) {
+    public List<DepartmentShowDTO> findAllDepartments(Long id) {
         return departmentRepository.findAll().stream()
                 .map(department -> new DepartmentShowDTO(
                         department.getId(),
@@ -42,8 +42,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     // 부서 상세 조회
     @Override
-    public Optional<DepartmentShowDTO> findDepartmentById(Long company_id) {
-        Department department = departmentRepository.findById(company_id)
+    public Optional<DepartmentShowDTO> findDepartmentById(Long id) {
+        Department department = departmentRepository.findById(id)
                 .orElseThrow(()-> new IllegalArgumentException("아이디가 올바르지 않습니다."));
 
         DepartmentShowDTO departmentDTO = convertToDTO(department);

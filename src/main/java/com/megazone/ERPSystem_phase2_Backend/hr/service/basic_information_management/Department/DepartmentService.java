@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface DepartmentService {
     // 부서 리스트 조회
-    List<DepartmentShowDTO> findAllDepartments(Long company_id);
+    List<DepartmentShowDTO> findAllDepartments(Long id);
 
     // 부서 id 로 조회
     Optional<DepartmentShowDTO> findDepartmentById(Long id);
