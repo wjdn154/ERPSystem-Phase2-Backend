@@ -4,33 +4,22 @@ import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import org.flywaydb.core.Flyway;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
-import org.hibernate.tool.schema.TargetType;
-import org.hibernate.tool.schema.spi.SchemaManagementTool;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * 각 테넌트의 스키마 생성, 테이블 생성, SQL 스크립트 실행 및 Flyway 마이그레이션을 관리함.
- * 애플리케이션 실행 시 초기 테넌트들을 자동으로 등록하며,
- * 각 테넌트별 스키마와 데이터를 개별적으로 관리할 수 있도록 지원함.
- */
 @Service
 @RequiredArgsConstructor
 public class TenantService {
@@ -39,109 +28,91 @@ public class TenantService {
     private final EntityManagerFactory entityManagerFactory; // 엔티티 관리를 위한 EntityManagerFactory 주입
     private final SqlInitProperties sqlInitProperties; // SQL 초기화 프로퍼티를 위한 SqlInitProperties 주입
 
-    /**
-     * 애플리케이션 시작 시 테넌트 등록
-     */
+    // 애플리케이션 시작 시 테넌트 등록
     @PostConstruct
     public void init() {
         registerTenant("tenant_1");
         registerTenant("tenant_2");
+        registerTenant("tenant_3");
     }
 
-    /**
-     * 주어진 테넌트 ID로 테넌트 등록
-     *
-     * @param tenantId 테넌트 ID
-     */
+    // 테넌트 초기 세팅
     public void registerTenant(String tenantId) {
         createSchema(tenantId); // 스키마 생성
         switchToTenantSchema(tenantId); // 스키마 전환
-        generateTenantTables(); // 테이블 생성
-        mergeAndExecuteSqlScriptsForTenant(); // SQL 스크립트 병합 및 실행
-        applyFlywayMigrations(tenantId); // Flyway 마이그레이션 적용
+        Path migrationDir = createTemporaryMigrationDir(tenantId); // 마이그레이션 임시 디렉토리 생성
+        generateTenantTables(migrationDir); // Hibernate 엔티티를 기반으로 테이블 SQL 파일 생성
+        mergeAndExecuteSqlScriptsForTenant(migrationDir); // 초기값 SQL 파일 생성
+        applyFlywayMigrations(tenantId, migrationDir); // DB 마이그레이션
     }
 
-    /**
-     * 테넌트 스키마 생성
-     *
-     * @param tenantId 테넌트 ID
-     */
+    // 테넌트 스키마 생성
     private void createSchema(String tenantId) {
         String createSchemaSQL = "CREATE SCHEMA IF NOT EXISTS " + tenantId;
-        jdbcTemplate.execute(createSchemaSQL); // 스키마 생성 SQL 실행
+        jdbcTemplate.execute(createSchemaSQL);
     }
 
-    /**
-     * 주어진 테넌트 스키마로 전환
-     *
-     * @param tenantId 테넌트 ID
-     */
+    // 스키마 전환
     private void switchToTenantSchema(String tenantId) {
-        jdbcTemplate.execute("USE " + tenantId); // 스키마 전환 SQL 실행
+        TenantContext.setCurrentTenant(tenantId);
+        jdbcTemplate.execute("USE " + tenantId);
     }
 
-    /**
-     * Hibernate 엔티티를 기반으로 테이블 생성
-     */
-    private void generateTenantTables() {
+    // 마이그레이션 임시 디렉토리 생성
+    private Path createTemporaryMigrationDir(String tenantId) {
+        try {
+            return Files.createTempDirectory("flyway_migrations_" + tenantId);
+        } catch (Exception e) {
+            throw new RuntimeException("임시 디렉토리 생성 실패: " + e.getMessage(), e);
+        }
+    }
+
+    // Hibernate 엔티티를 기반으로 테이블 SQL 파일 생성
+    private void generateTenantTables(Path migrationDir) {
         // Hibernate 설정을 기반으로 테이블 생성
         StandardServiceRegistryBuilder registryBuilder = new StandardServiceRegistryBuilder()
                 .applySettings(entityManagerFactory.unwrap(SessionFactoryImplementor.class)
                         .getProperties());
 
-        entityManagerFactory
-                .unwrap(SessionFactoryImplementor.class)
-                .getServiceRegistry()
-                .getService(SchemaManagementTool.class);
-
-        StandardServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-                .applySettings(entityManagerFactory.getProperties())
-                .build();
-
-        MetadataSources metadataSources = new MetadataSources(serviceRegistry);
         Set<Class<?>> entityClasses = entityManagerFactory.getMetamodel().getEntities()
                 .stream()
                 .map(e -> e.getJavaType())
-                .filter(entityClass -> !entityClass.getSimpleName().equals("company")  // company 제외
-                        && !entityClass.getSimpleName().equals("company_address")
-                        && !entityClass.getSimpleName().equals("company_admin")
-                        && !entityClass.getSimpleName().equals("company_corporate_kind")
-                        && !entityClass.getSimpleName().equals("company_corporate_type")
-                        && !entityClass.getSimpleName().equals("company_main_business")
-                        && !entityClass.getSimpleName().equals("company_representative")
-                        && !entityClass.getSimpleName().equals("company_tax_office"))
+//                .filter(entityClass -> !entityClass.getSimpleName().contains("company")
+//                        && !entityClass.getSimpleName().contains("company_address")
+//                        && !entityClass.getSimpleName().contains("company_admin")
+//                        && !entityClass.getSimpleName().contains("company_corporate_kind")
+//                        && !entityClass.getSimpleName().contains("company_corporate_type")
+//                        && !entityClass.getSimpleName().contains("company_main_business")
+//                        && !entityClass.getSimpleName().contains("company_representative")
+//                        && !entityClass.getSimpleName().contains("company_tax_office"))
                 .collect(java.util.stream.Collectors.toSet());
+
+        MetadataSources metadataSources = new MetadataSources(registryBuilder.build());
         for (Class<?> entityClass : entityClasses) {
-            metadataSources.addAnnotatedClass(entityClass); // 모든 엔티티 추가
+            metadataSources.addAnnotatedClass(entityClass);
         }
 
         SchemaExport schemaExport = new SchemaExport();
-        schemaExport.setDelimiter(";"); // SQL 구문 끝에 세미콜론 추가
-        schemaExport.setFormat(false); // SQL 포맷 비활성화
-        schemaExport.setOutputFile("src/main/resources/db/migration/v1/V1__create_tables.sql"); // 테이블 생성 SQL 파일 지정
-        schemaExport.execute(EnumSet.of(TargetType.SCRIPT), SchemaExport.Action.CREATE, metadataSources.buildMetadata()); // 테이블 생성 실행
+        schemaExport.setDelimiter(";");
+        schemaExport.setFormat(false);
+        schemaExport.setHaltOnError(true);
 
-        StandardServiceRegistryBuilder.destroy(registryBuilder.build()); // 레지스트리 종료
+        // 출력 파일 경로를 임시 디렉토리로 설정
+        String outputFilePath = migrationDir.resolve("V1__create_tables.sql").toString();
+        schemaExport.setOutputFile(outputFilePath);
+
+        schemaExport.execute(EnumSet.of(org.hibernate.tool.schema.TargetType.SCRIPT),
+                SchemaExport.Action.CREATE, metadataSources.buildMetadata());
     }
 
-    /**
-     * 테넌트용 SQL 스크립트를 병합하고 실행
-     */
-    private void mergeAndExecuteSqlScriptsForTenant() {
-        try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
-            String outputFilePath = "src/main/resources/db/migration/v2/V2__initial_database.sql"; // 병합된 SQL 파일 경로
-            mergeSqlFiles(sqlInitProperties.getDataLocations(), outputFilePath); // SQL 파일 병합
-        } catch (SQLException e) {
-            e.printStackTrace(); // SQL 예외 처리
-        }
+    // 초기값 SQL 파일 생성
+    private void mergeAndExecuteSqlScriptsForTenant(Path migrationDir) {
+        // 데이터 초기화 SQL 파일을 임시 디렉토리에 생성
+        String outputFilePath = migrationDir.resolve("V2__initial_database.sql").toString();
+        mergeSqlFiles(sqlInitProperties.getDataLocations(), outputFilePath); // SQL 파일 병합
     }
 
-    /**
-     * SQL 파일 병합
-     *
-     * @param sqlFilePaths 병합할 SQL 파일 경로 리스트
-     * @param outputFilePath 병합 결과 파일 경로
-     */
+    // SQL 파일 병합
     private void mergeSqlFiles(List<String> sqlFilePaths, String outputFilePath) {
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
@@ -152,59 +123,36 @@ public class TenantService {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace(); // 파일 입출력 예외 처리
+            e.printStackTrace();
         }
     }
 
-    /**
-     * SQL 파일 내용을 병합 결과 파일에 추가
-     *
-     * @param resource 리소스 파일
-     * @param writer 파일 작성자
-     * @throws IOException 입출력 예외
-     */
+    // 파일 내용 추가
     private void appendFileContent(Resource resource, BufferedWriter writer) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                writer.write(line); // 파일 내용 쓰기
-                writer.newLine(); // 줄바꿈 추가
+                writer.write(line);
+                writer.newLine();
             }
         }
     }
 
-    /**
-     * Flyway 마이그레이션 실행
-     *
-     * @param tenantSchema 테넌트 스키마
-     */
-    public void applyFlywayMigrations(String tenantSchema) {
+    // DB 마이그레이션 실행
+    private void applyFlywayMigrations(String tenantSchema, Path migrationDir) {
         Flyway flyway = Flyway.configure()
-                .dataSource(jdbcTemplate.getDataSource()) // 데이터 소스 설정
-                .schemas(tenantSchema) // 스키마 설정
-                .locations("classpath:db/migration/v1") // V1 마이그레이션 파일 경로
-                .baselineOnMigrate(true) // 기존 스키마 마이그레이션 설정
+                .dataSource(jdbcTemplate.getDataSource())
+                .schemas(tenantSchema)
+                .locations("filesystem:" + migrationDir.toAbsolutePath().toString())
+                .baselineOnMigrate(true)
                 .load();
 
         try {
-            flyway.migrate(); // V1 마이그레이션 실행
+            flyway.migrate();
         } catch (Exception e) {
-            System.out.println("테이블 마이그레이션 실패: " + e.getMessage());
-            flyway.repair(); // 오류 발생 시 복구
-        }
-
-        try {
-            flyway = Flyway.configure()
-                    .dataSource(jdbcTemplate.getDataSource()) // 데이터 소스 설정
-                    .schemas(tenantSchema) // 스키마 설정
-                    .locations("classpath:db/migration/v2") // V2 마이그레이션 파일 경로
-                    .baselineOnMigrate(true) // 기존 스키마 마이그레이션 설정
-                    .load();
-
-            flyway.migrate(); // V2 마이그레이션 실행
-        } catch (Exception e) {
-            System.out.println("데이터 마이그레이션 실패: " + e.getMessage());
-            flyway.repair(); // 오류 발생 시 복구
+            System.out.println("마이그레이션 실패: " + e.getMessage());
+            flyway.repair();
         }
     }
+
 }

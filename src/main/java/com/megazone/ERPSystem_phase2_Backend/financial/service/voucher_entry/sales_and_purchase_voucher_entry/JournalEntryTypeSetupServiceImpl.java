@@ -23,8 +23,7 @@ public class JournalEntryTypeSetupServiceImpl implements JournalEntryTypeSetupSe
                 dto.getJournalEntryTypeId()).orElse(null);
 
 
-        AccountSubject accountSubject = accountSubjectRepository.findByCompanyIdAndCode(company_id,
-                dto.getAccountSubjectCode()).orElse(null);
+        AccountSubject accountSubject = accountSubjectRepository.findByCode(dto.getAccountSubjectCode()).orElse(null);
 
         if (journalEntryTypeSetup != null && accountSubject != null) {
             journalEntryTypeSetup.setAccountSubject(accountSubject);

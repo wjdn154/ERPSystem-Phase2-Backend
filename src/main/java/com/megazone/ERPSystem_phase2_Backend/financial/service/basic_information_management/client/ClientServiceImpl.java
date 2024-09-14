@@ -129,7 +129,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     private Client createClient(ClientDTO clientDTO, Client client) {
-        client.setDepartmentEmployee(clientDTO.getDepartmentEmployee());
+        client.setEmployee(clientDTO.getEmployee());
         client.setTransactionType(TransactionType.valueOf(clientDTO.getTransactionType()));
         client.setPrintClientName(clientDTO.getPrintClientName());
         client.setBusinessRegistrationNumber(clientDTO.getBusinessRegistrationNumber());

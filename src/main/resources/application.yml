@@ -8,8 +8,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver # 데이터베이스 드라이버 클래스 이름
   jpa:
     hibernate:
-      ddl-auto: create
-#    generate-ddl: true
+      ddl-auto: create-only
+    #    generate-ddl: true
     properties:
       hibernate:
         multi-tenancy: SCHEMA # 멀티 테넌시 설정 (스키마 기반)
@@ -49,16 +49,18 @@ spring:
         - classpath:initial-database/financial/account_subject/account_subject_fixed_memo.sql
         - classpath:initial-database/financial/account_subject/account_subject_transfer_memo.sql
         - classpath:initial-database/financial/common/financial_bank.sql
-        - classpath:initial-database/financial/client/client_liquor.sql
         - classpath:initial-database/financial/client/client_category.sql
         - classpath:initial-database/financial/bank_account/bank_account_type.sql
-        - classpath:initial-database/financial/bank_account/financial_address.sql
-        - classpath:initial-database/financial/bank_account/financial_bank_account.sql
+        - classpath:initial-database/financial/common/financial_address.sql
+        - classpath:initial-database/financial/common/financial_bank_account.sql
 #        - classpath:initial-database/financial/credit_card/credit_card.sql
 #        - classpath:initial-database/financial/unresolved_voucher.sql
         - classpath:initial-database/financial/vat_type.sql
         - classpath:initial-database/financial/journal_entry_type_setup.sql
         - classpath:initial-database/financial/journal_entry.sql
+
+
+
 
 
         - classpath:initial-database/hr/employee.sql
@@ -83,6 +85,17 @@ spring:
         - classpath:initial-database/production/resource_data/maintenanceHistory.sql
         - classpath:initial-database/production/resource_data/worker.sql
         - classpath:initial-database/production/production_schedule/common_scheduling/worker_assignment.sql
+
+
+        - classpath:initial-database/financial/client/client_contact_info.sql
+        - classpath:initial-database/financial/client/client_bank_account.sql
+        - classpath:initial-database/financial/client/client_business_info.sql
+        - classpath:initial-database/financial/client/client_financial_info.sql
+        - classpath:initial-database/financial/client/client_manager_info.sql
+        - classpath:initial-database/financial/client/client_category.sql
+        - classpath:initial-database/financial/client/client_liquor.sql
+        - classpath:initial-database/financial/common/financial_bank_account.sql
+        - classpath:initial-database/financial/client/client.sql
 
 logging:
   level:
