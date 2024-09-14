@@ -32,8 +32,8 @@ public class TenantService {
     @PostConstruct
     public void init() {
         registerTenant("tenant_1");
-        registerTenant("tenant_2");
-        registerTenant("tenant_3");
+//        registerTenant("tenant_2");
+//        registerTenant("tenant_3");
     }
 
     // 테넌트 초기 세팅
