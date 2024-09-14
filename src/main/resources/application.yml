@@ -3,6 +3,7 @@ spring:
     name: ERPSystem-phase2-Backend # 애플리케이션 이름 설정
   datasource:
     url: jdbc:mysql://localhost:3306/PUBLIC?useSSL=false&serverTimezone=UTC # 데이터베이스 URL 설정 (MySQL 데이터베이스 연결)
+#    url: jdbc:mysql://15.165.212.208:3306/PUBLIC?useSSL=false&serverTimezone=UTC
     username: root # 데이터베이스 사용자 이름
     password: 1234 # 데이터베이스 사용자 비밀번호
     driver-class-name: com.mysql.cj.jdbc.Driver # 데이터베이스 드라이버 클래스 이름
@@ -12,6 +13,7 @@ spring:
     #    generate-ddl: true
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
         multi-tenancy: SCHEMA # 멀티 테넌시 설정 (스키마 기반)
         tenant_identifier_resolver: com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.SchemaBasedTenantIdentifierResolver
         multi_tenant_connection_provider: com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.SchemaBasedMultiTenantConnectionProvider
@@ -101,6 +103,9 @@ logging:
   level:
     org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE # Hibernate SQL 바인딩 로그 레벨 설정 (TRACE)
+  file:
+    path: /home/ubuntu/backend/
+    name: backend.log
 
 jwt:
   secret: dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234
