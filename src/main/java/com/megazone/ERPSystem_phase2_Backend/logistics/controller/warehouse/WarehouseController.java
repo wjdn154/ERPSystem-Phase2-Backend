@@ -1,78 +1,67 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.controller.warehouse;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.*;
-import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.hierarchy_group.HierarchyGroupRepository;
-import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
-import com.megazone.ERPSystem_phase2_Backend.logistics.service.hierarchy_management.HierarchyGroupService;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.test.WarehouseListResponseDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.test.WarehouseRequestTestDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.test.WarehouseResponseTestDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.service.warehouse_management.WarehouseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/logistics")
+@RequestMapping("/api/logistics/warehouse")
 public class WarehouseController {
 
     private final WarehouseService warehouseService;
-    private final WarehouseRepository warehouseRepository;
-    private final HierarchyGroupService hierarchyGroupService;
-    private final HierarchyGroupRepository hierarchyGroupRepository;
+    private final UsersRepository usersRepository;
 
-    /**
-     * 모든 창고리스트들을 가져옴.
-     * @return 모든 창고 정보를 담은 WarehouseResponseDTO 객체를 반환함
-     */
-    @PostMapping("/warehouse/showall/{companyId}")
-    public ResponseEntity<List<WarehouseResponseDTO>> getAllWarehouse(@PathVariable("companyId") Long companyId) {
-        // 리포지토리에서 모든 창고리스트들을 가져옴
-        List<WarehouseResponseDTO> response = warehouseService.findAllWarehouses(companyId);
+    @PostMapping("/")
+    public ResponseEntity<List<WarehouseListResponseDTO>> getAllWarehouseList() {
+        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Long companyId = user.getCompany().getId();
+
+        List<WarehouseListResponseDTO> response = warehouseService.getWarehouseListByCompany(companyId);
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * 창고 상세 정보를 가져옴.
-     * @param id
-     * @return 창고 상세 정보를 담은 WarehouseDetailDTO 객체를 반환함.
-     */
-    @PostMapping("/warehouse/show/{id}")
-    public ResponseEntity<WarehouseDetailDTO> getWarehouseDetail(@PathVariable("id") Long id) {
-        WarehouseDetailDTO warehouseDetail = warehouseService.getWarehouseDetail(id);
-
+    @PostMapping("/{id}")
+    public ResponseEntity<WarehouseResponseTestDTO> getWarehouseDetailTest(@PathVariable("id") Long id) {
+        WarehouseResponseTestDTO warehouseDetail = warehouseService.getWarehouseDetailTest(id);
         return ResponseEntity.ok(warehouseDetail);
     }
 
-    /**
-     *
-     * @param warehouseDetailDTO
-     * @return
-     */
-    @PostMapping("/warehouse/saveWarehouse")
-    public ResponseEntity<WarehouseDetailDTO> saveWarehouse(@RequestBody WarehouseDetailDTO warehouseDetailDTO) {
-        Optional<WarehouseDetailDTO> savedWarehouse = warehouseService.saveWarehouse(warehouseDetailDTO);
-        return savedWarehouse.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+    @PostMapping("/saveWarehouse")
+    public ResponseEntity<WarehouseResponseTestDTO> saveTestWarehouse(@RequestBody WarehouseRequestTestDTO warehouseRequestTestDTO) {
+        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Long companyId = user.getCompany().getId();
+
+        WarehouseResponseTestDTO savedWarehouse = warehouseService.saveTestWarehouse(warehouseRequestTestDTO, companyId);
+        return ResponseEntity.ok(savedWarehouse);
     }
 
-    @PutMapping("/warehouse/updateWarehouse/{id}")
-    public ResponseEntity<UpdateWarehouseDTO> updateWarehouse(@PathVariable("id") Long id, @RequestBody UpdateWarehouseDTO dto) {
-        Optional<UpdateWarehouseDTO> updateWarehouse = warehouseService.updateWarehouse(id, dto);
-        return updateWarehouse
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    @PutMapping("/updateWarehouse/{id}")
+    public ResponseEntity<WarehouseResponseTestDTO> updateTestWarehouse(@PathVariable("id") Long id, @RequestBody WarehouseRequestTestDTO dto) {
+        WarehouseResponseTestDTO updatedWarehouse = warehouseService.updateTestWarehouse(id, dto);
+        return ResponseEntity.ok(updatedWarehouse);
     }
 
-    @DeleteMapping("/warehouse/deleteWarehouse/{id}")
+    @DeleteMapping("/deleteWarehouse/{id}")
     public ResponseEntity<String> deleteWarehouse(@PathVariable("id") Long id) {
         try {
             String result = warehouseService.deleteWarehouse(id);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
-            return ResponseEntity.status(500)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("창고 삭제 중 오류가 발생했습니다.");
         }
     }

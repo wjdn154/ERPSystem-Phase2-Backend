@@ -6,6 +6,7 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_manageme
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Department.DepartmentRepository;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class DepartmentServiceImpl implements DepartmentService {
-
     private DepartmentRepository departmentRepository;
-
+    private EmployeeRepository employeeRepository;
 
     @Autowired
     public DepartmentServiceImpl(DepartmentRepository departmentRepository) {
@@ -78,5 +78,19 @@ public class DepartmentServiceImpl implements DepartmentService {
                 savedDepartment.getDepartmentCode(),
                 savedDepartment.getDepartmentName(),
                 savedDepartment.getLocation());
+    }
+
+    // 부서에 속한 사원이 있는지 확인
+    public boolean hasEmployees(Long departmentId) {
+        // 부서에 속한 사원이 있는지 employeeRepository를 통해 확인
+        return employeeRepository.existsByDepartmentId(departmentId);
+    }
+
+    // 부서 삭제 로직
+    public void deleteDepartment(Long departmentId) {
+        // 부서가 존재하는지 확인하고 삭제
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new RuntimeException("부서를 찾을 수 없습니다."));
+        departmentRepository.delete(department);
     }
 }

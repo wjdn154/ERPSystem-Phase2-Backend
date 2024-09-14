@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter;
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.enums.WorkcenterType;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.enums.WorkcenterType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -85,12 +85,12 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
                         throw new IllegalArgumentException("입금 출금 전표는 현금계정과목을 사용할 수 없습니다.");
                     }
 
-                    UnresolvedVoucher savedVoucher = createUnresolvedVoucher(dto,newVoucherNum,nowTime,companyId);
+                    UnresolvedVoucher savedVoucher = createUnresolvedVoucher(dto,newVoucherNum,nowTime);
                     unresolvedVoucherList.add(savedVoucher);
                     // 입금,출금 전표인 경우 현금 계정과목 자동분개 처리
                     if(depositAndWithdrawalUnresolvedVoucherTypeCheck(dto)) {
                         unresolvedVoucherList.add(createUnresolvedVoucher(autoCreateUnresolvedVoucherDto(dto)
-                                ,newVoucherNum,nowTime,companyId));
+                                ,newVoucherNum,nowTime));
                     }
                 }
             }
@@ -110,7 +110,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
 
                 // 한 거래에 같은 전표 번호 부여.
                 for (UnresolvedVoucherEntryDTO dto : dtoList) {
-                    UnresolvedVoucher savedVoucher = createUnresolvedVoucher(dto,newVoucherNum,nowTime,companyId);
+                    UnresolvedVoucher savedVoucher = createUnresolvedVoucher(dto,newVoucherNum,nowTime);
                     unresolvedVoucherList.add(savedVoucher);
                 }
             }
@@ -134,18 +134,15 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
      * @return 생성된 미결전표
      */
     @Override
-    public UnresolvedVoucher createUnresolvedVoucher(UnresolvedVoucherEntryDTO dto, String voucherNum, LocalDateTime nowTime,
-                                                     Long companyId) {
+    public UnresolvedVoucher createUnresolvedVoucher(UnresolvedVoucherEntryDTO dto, String voucherNum, LocalDateTime nowTime) {
         UnresolvedVoucher unresolvedVoucher = UnresolvedVoucher.builder()
 //                .userCompanyId(dto.getUserCompany())
-                .accountSubject(accountSubjectRepository.findByCompanyIdAndCode(companyId, dto.getAccountSubjectCode()).orElseThrow(
+                .accountSubject(accountSubjectRepository.findByCode(dto.getAccountSubjectCode()).orElseThrow(
                         () -> new IllegalArgumentException("해당하는 코드의 계정과목이 없습니다.")))
                 .client(clientRepository.findByCode(dto.getClientCode()).orElseThrow(
                         () -> new IllegalArgumentException("해당하는 코드의 거래처가 없습니다.")))
                 .voucherManager(employeeRepository.findById(dto.getVoucherManagerId()).orElseThrow(
                         () -> new IllegalArgumentException("해당하는 사원이 없습니다.")))
-                .company(companyRepository.findById(companyId).orElseThrow(
-                        () -> new IllegalArgumentException("해당하는 회사가 없습니다.")))
                 .transactionDescription(dto.getTransactionDescription())
                 .voucherNumber(voucherNum)
                 .voucherType(dto.getVoucherType())

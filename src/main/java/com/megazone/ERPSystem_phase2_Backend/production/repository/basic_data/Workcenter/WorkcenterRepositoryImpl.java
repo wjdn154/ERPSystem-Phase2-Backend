@@ -1,16 +1,16 @@
 package com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.QWarehouse;
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.Workcenter;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.QEquipmentData;
-import com.megazone.ERPSystem_phase2_Backend.production.model.routing_management.QProcessDetails;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.QProcessDetails;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.QWorkcenter.workcenter;
+import static com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.QWorkcenter.workcenter;
 
 @Repository
 @RequiredArgsConstructor
