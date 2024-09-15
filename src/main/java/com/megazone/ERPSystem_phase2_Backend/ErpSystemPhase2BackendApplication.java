@@ -17,7 +17,7 @@ import java.util.Arrays;
 public class ErpSystemPhase2BackendApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ErpSystemPhase2BackendApplication.class, args);
-		System.out.println("젠킨스 테스트12");
+		System.out.println("젠킨스 테스트13");
 	}
 
 //	@Bean
