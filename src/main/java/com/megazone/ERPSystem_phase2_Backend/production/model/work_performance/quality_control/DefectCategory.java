@@ -39,6 +39,6 @@ public class DefectCategory {
     private DefectType defectType;     // 연관 불량유형 목록
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "quality)inspection_id")
+    @JoinColumn(name = "quality_inspection_id")
     private QualityInspection qualityInspections; // 연관 품질검사
 }

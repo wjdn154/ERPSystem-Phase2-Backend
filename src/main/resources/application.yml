@@ -3,13 +3,13 @@ spring:
     name: ERPSystem-phase2-Backend # 애플리케이션 이름 설정
   datasource:
     url: jdbc:mysql://localhost:3306/PUBLIC?useSSL=false&serverTimezone=UTC # 데이터베이스 URL 설정 (MySQL 데이터베이스 연결)
-#    url: jdbc:mysql://15.165.212.208:3306/PUBLIC?useSSL=false&serverTimezone=UTC
     username: root # 데이터베이스 사용자 이름
     password: 1234 # 데이터베이스 사용자 비밀번호
     driver-class-name: com.mysql.cj.jdbc.Driver # 데이터베이스 드라이버 클래스 이름
   jpa:
     hibernate:
-      ddl-auto: create-only
+      ddl-auto: none
+#      ddl-auto: create-only
     #    generate-ddl: true
     properties:
       hibernate:
@@ -33,7 +33,7 @@ spring:
 
   sql:
     init:
-      mode: always # 항상 SQL 초기화 모드를 사용하도록 설정
+      mode: never
       data-locations:
         - classpath:initial-database/financial/common/financial_contact.sql
         - classpath:initial-database/financial/company/company_tax_office.sql
