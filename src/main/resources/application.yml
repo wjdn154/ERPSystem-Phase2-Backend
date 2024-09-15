@@ -103,9 +103,6 @@ logging:
   level:
     org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE # Hibernate SQL 바인딩 로그 레벨 설정 (TRACE)
-  file:
-    path: /home/ubuntu/backend/
-    name: backend.log
 
 jwt:
   secret: dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234
