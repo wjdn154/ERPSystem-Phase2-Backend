@@ -9,7 +9,5 @@ import java.util.Optional;
 public interface HierarchyGroupRepository extends JpaRepository<HierarchyGroup, Long>, HierarchyGroupRepositoryCustom {
     Optional<HierarchyGroup> findByHierarchyGroupCode(String code);
 
-    List<HierarchyGroup> findByCompanyIdAndParentGroupIsNull(Long companyId);
-
-    HierarchyGroup findByIdAndCompanyId(Long id, Long companyId);
+    List<HierarchyGroup> findByParentGroupIsNull();
 }
