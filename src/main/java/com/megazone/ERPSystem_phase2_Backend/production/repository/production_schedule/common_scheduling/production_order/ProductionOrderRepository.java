@@ -9,7 +9,5 @@ import java.util.Optional;
 public interface ProductionOrderRepository extends JpaRepository<ProductionOrder, Long>, ProductionOrderRepositoryCustom {
     Optional<ProductionOrder> findByName(String productionOrderName);
 
-    boolean existsByWorkerIdAndAssignmentDateAndDifferentWorkcenter(Long workerId, LocalDate assignmentDate, String workcenterCode);
 
-    boolean existsByWorkerIdAndAssignmentDateAndDifferentShiftType(Long workerId, LocalDate assignmentDate, Long shiftTypeId);
 }

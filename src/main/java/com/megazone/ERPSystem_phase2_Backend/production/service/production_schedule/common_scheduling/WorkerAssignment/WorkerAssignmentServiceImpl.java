@@ -187,13 +187,13 @@ public class WorkerAssignmentServiceImpl implements WorkerAssignmentService {
 
     // 엔티티 변환 메서드 (WorkerAssignmentDTO -> WorkerAssignment)
     private WorkerAssignment convertToEntity(WorkerAssignmentDTO dto) {
-        Worker worker = workerRepository.findByName(dto.getWorkerName())
+        Worker worker = workerRepository.findById(dto.getWorkerId())
                 .orElseThrow(() -> new EntityNotFoundException("작업자를 찾을 수 없습니다."));
         Workcenter workcenter = workcenterRepository.findByCode(dto.getWorkcenterCode())
                 .orElseThrow(() -> new EntityNotFoundException("작업장을 찾을 수 없습니다."));
         ShiftType shiftType = shiftTypeRepository.findByName(dto.getShiftTypeName())
                 .orElseThrow(() -> new EntityNotFoundException("교대근무유형을 찾을 수 없습니다."));
-        ProductionOrder productionOrder = productionOrderRepository.findByName(dto.getProductionOrderName())
+        ProductionOrder productionOrder = productionOrderRepository.findById(dto.getProductionOrderId())
                 .orElseThrow(() -> new EntityNotFoundException("작업지시를 찾을 수 없습니다."));
 
         return WorkerAssignment.builder()
