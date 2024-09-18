@@ -65,14 +65,12 @@ public class WarehouseTransferServiceImpl implements WarehouseTransferService {
                 .employee(employee)
                 .transferDate(requestDTO.getTransferDate())
                 .transferNumber(transferNumber)
-                .status(TransferStatus.미확인)  // 기본 상태: 미확인
+                .status(TransferStatus.미확인)
                 .comment(requestDTO.getComment())
                 .build();
 
-        // 창고 이동 엔티티 저장
         WarehouseTransfer savedTransfer = warehouseTransferRepository.save(transfer);
 
-        // 각 이동 품목 저장 (Product 엔티티도 리포지토리에서 조회)
         List<WarehouseTransferProduct> products = requestDTO.getProducts().stream()
                 .map(productDTO -> {
                     Product product = productRepository.findById(productDTO.getId())
@@ -89,7 +87,6 @@ public class WarehouseTransferServiceImpl implements WarehouseTransferService {
 
         warehouseTransferProductRepository.saveAll(products);
 
-        // 응답 DTO 생성
         return new WarehouseTransferResponseDTO(
                 savedTransfer.getId(),
                 savedTransfer.getTransferDate(),
@@ -116,25 +113,22 @@ public class WarehouseTransferServiceImpl implements WarehouseTransferService {
         WarehouseTransfer existingTransfer = warehouseTransferRepository.findById(transferId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 창고 이동입니다."));
 
-        // 날짜가 변경된 경우, 동일 날짜의 창고 이동 번호 중복을 방지하기 위한 처리
         Long transferNumber;
         if (!existingTransfer.getTransferDate().equals(updateDTO.getTransferDate())) {
-            // 동일 날짜에 이미 존재하는 다른 창고 이동이 있는지 확인
             Long maxTransferNumber = warehouseTransferRepository.findMaxTransferNumberByDate(updateDTO.getTransferDate());
             if (maxTransferNumber != null) {
-                transferNumber = maxTransferNumber + 1;  // 중복을 피하기 위해 최대값 + 1로 설정
+                transferNumber = maxTransferNumber + 1;
             } else {
-                transferNumber = existingTransfer.getTransferNumber();  // 중복이 없으면 기존 번호 유지
+                transferNumber = existingTransfer.getTransferNumber();
             }
         } else {
-            transferNumber = existingTransfer.getTransferNumber();  // 날짜가 변경되지 않으면 기존 번호 유지
+            transferNumber = existingTransfer.getTransferNumber();
         }
 
-        // 새롭게 빌더 패턴을 사용하여 업데이트된 WarehouseTransfer 객체 생성
         WarehouseTransfer updatedTransfer = WarehouseTransfer.builder()
-                .id(existingTransfer.getId())  // 기존 ID 유지
+                .id(existingTransfer.getId())
                 .transferDate(updateDTO.getTransferDate())
-                .transferNumber(transferNumber)  // 계산된 이동 번호 설정
+                .transferNumber(transferNumber)
                 .comment(updateDTO.getComment())
                 .status(updateDTO.getStatus())
                 .sendingWarehouse(warehouseRepository.findById(updateDTO.getSendingWarehouseId())
@@ -145,7 +139,6 @@ public class WarehouseTransferServiceImpl implements WarehouseTransferService {
                         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 담당자입니다.")))
                 .build();
 
-        // 품목 리스트 업데이트 로직 (기존 품목 삭제 후 새로 추가)
         warehouseTransferProductRepository.deleteAllByWarehouseTransfer(existingTransfer);
 
         List<WarehouseTransferProduct> updatedProducts = updateDTO.getProducts().stream()
@@ -183,14 +176,11 @@ public class WarehouseTransferServiceImpl implements WarehouseTransferService {
 
     @Override
     public void deleteTransfer(Long transferId) {
-        // 창고 이동 조회
         WarehouseTransfer existingTransfer = warehouseTransferRepository.findById(transferId)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 창고 이동입니다."));
 
-        // 연관된 품목 삭제
         warehouseTransferProductRepository.deleteAllByWarehouseTransfer(existingTransfer);
 
-        // 창고 이동 삭제
         warehouseTransferRepository.delete(existingTransfer);
     }
 }

@@ -23,7 +23,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Receiving {
 
-    // 고유 식별자
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

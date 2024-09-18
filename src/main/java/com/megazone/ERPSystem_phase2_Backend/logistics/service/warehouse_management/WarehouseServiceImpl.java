@@ -70,26 +70,22 @@ public class WarehouseServiceImpl implements WarehouseService {
 
         List<WarehouseHierarchyGroup> updatedHierarchyGroups = requestDTO.getHierarchyGroups().stream()
                 .map(dto -> {
-                    // HierarchyGroup 객체를 WarehouseHierarchyGroup에 연결
                     HierarchyGroup hierarchyGroup = hierarchyGroupRepository.findById(dto.getId())
                             .orElseThrow(() -> new IllegalArgumentException("해당 계층 그룹을 찾을 수 없습니다."));
 
-                    // 창고와 계층 그룹을 연결하는 WarehouseHierarchyGroup 생성
                     return WarehouseHierarchyGroup.builder()
-                            .warehouse(existingWarehouse) // 연결된 창고 설정
-                            .hierarchyGroup(hierarchyGroup) // 연결된 계층 그룹 설정
+                            .warehouse(existingWarehouse)
+                            .hierarchyGroup(hierarchyGroup)
                             .build();
                 })
                 .collect(Collectors.toList());
 
-        // 생산 공정 정보 업데이트
         ProcessDetails processDetails = null;
         if (requestDTO.getWarehouseType() == WarehouseType.FACTORY && requestDTO.getProcessDetailsId() != null) {
             processDetails = processDetailsRepository.findById(requestDTO.getProcessDetailsId())
                     .orElseThrow(() -> new IllegalArgumentException("해당 생산 공정을 찾을 수 없습니다."));
         }
 
-        // 빌더를 사용하여 창고 엔티티 업데이트
         Warehouse updatedWarehouse = Warehouse.builder()
                 .id(existingWarehouse.getId())
                 .code(requestDTO.getCode())
@@ -97,16 +93,13 @@ public class WarehouseServiceImpl implements WarehouseService {
                 .warehouseType(requestDTO.getWarehouseType())
                 .isActive(requestDTO.getIsActive())
                 .processDetail(processDetails)
-                .warehouseHierarchyGroup(updatedHierarchyGroups) // 새로운 계층 그룹 리스트 추가
+                .warehouseHierarchyGroup(updatedHierarchyGroups)
                 .build();
 
-        // 저장
         Warehouse savedWarehouse = warehouseRepository.save(updatedWarehouse);
 
-        // 업데이트된 창고 정보를 DTO로 변환하여 반환
         return WarehouseResponseTestDTO.mapToDTO(savedWarehouse);
     }
-
 
     @Override
     public String deleteWarehouse(Long id) {

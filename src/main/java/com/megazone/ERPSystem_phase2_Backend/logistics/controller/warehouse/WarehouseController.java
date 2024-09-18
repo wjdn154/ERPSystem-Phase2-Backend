@@ -43,11 +43,11 @@ public class WarehouseController {
     public ResponseEntity<WarehouseResponseTestDTO> createWarehouse(@RequestBody WarehouseRequestTestDTO requestDTO) {
         try {
             WarehouseResponseTestDTO createdWarehouse = warehouseService.createWarehouse(requestDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdWarehouse);  // 성공적으로 등록된 창고 정보 반환
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdWarehouse);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();  // 잘못된 요청일 때 400 Bad Request
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();  // 서버 오류 시 500 Internal Server Error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -57,9 +57,9 @@ public class WarehouseController {
             WarehouseResponseTestDTO updatedWarehouse = warehouseService.updateWarehouse(warehouseId, requestDTO);
             return ResponseEntity.ok(updatedWarehouse);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // 잘못된 요청일 경우
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // 서버 오류 발생 시
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 

@@ -29,12 +29,12 @@ public class WarehouseTransferRepositoryCustomImpl implements WarehouseTransferR
                         warehouseTransfer.id,
                         Expressions.stringTemplate("DATE_FORMAT({0}, '%Y/%m/%d')", warehouseTransfer.transferDate)
                                 .concat(" - ")
-                                .concat(warehouseTransfer.transferNumber.stringValue()).as("transferNumber"),  // 포맷팅된 이동 번호
+                                .concat(warehouseTransfer.transferNumber.stringValue()).as("transferNumber"),
                         warehouseTransfer.sendingWarehouse.name.as("sendingWarehouseName"),
                         warehouseTransfer.receivingWarehouse.name.as("receivingWarehouseName"),
-                        Expressions.stringTemplate("MIN({0})", warehouseTransferProduct.product.name).as("productName"),  // 첫 번째 품목 이름
-                        Expressions.stringTemplate("concat('외 ', {0}, '건')", warehouseTransferProduct.count().subtract(1)).as("additionalProducts"),  // 추가 품목 수
-                        warehouseTransferProduct.quantity.sum().as("totalQuantity"),  // 총 수량
+                        Expressions.stringTemplate("MIN({0})", warehouseTransferProduct.product.name).as("productName"),
+                        Expressions.stringTemplate("concat('외 ', {0}, '건')", warehouseTransferProduct.count().subtract(1)).as("additionalProducts"),
+                        warehouseTransferProduct.quantity.sum().as("totalQuantity"),
                         warehouseTransfer.status
                 ))
                 .from(warehouseTransfer)
