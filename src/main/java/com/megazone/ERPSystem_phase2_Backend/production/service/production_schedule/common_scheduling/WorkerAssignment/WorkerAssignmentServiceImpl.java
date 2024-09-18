@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.common_scheduling.WorkerAssignment;
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionOrder;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentSummaryDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ShiftType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.Worker;
@@ -174,30 +175,33 @@ public class WorkerAssignmentServiceImpl implements WorkerAssignmentService {
     // DTO 변환 메서드 (WorkerAssignment -> WorkerAssignmentDTO)
     private WorkerAssignmentDTO convertToDTO(WorkerAssignment assignment) {
         return WorkerAssignmentDTO.builder()
-                .id(assignment.getId())
-                .workerId(assignment.getWorker().getId())
                 .workerName(assignment.getWorker().getEmployee().getLastName() + " " + assignment.getWorker().getEmployee().getFirstName())
                 .employeeNumber(assignment.getWorker().getEmployee().getEmployeeNumber())
                 .workcenterCode(assignment.getWorkcenter().getCode())
+                .workcenterName(assignment.getWorkcenter().getName())
                 .assignmentDate(assignment.getAssignmentDate())
-                .shiftTypeId(assignment.getShiftType().getId())
+                .shiftTypeName(assignment.getShiftType().getName())
+                .productionOrderName(assignment.getProductionOrder().getName())
                 .build();
     }
 
     // 엔티티 변환 메서드 (WorkerAssignmentDTO -> WorkerAssignment)
     private WorkerAssignment convertToEntity(WorkerAssignmentDTO dto) {
-        Worker worker = workerRepository.findById(dto.getWorkerId())
+        Worker worker = workerRepository.findByName(dto.getWorkerName())
                 .orElseThrow(() -> new EntityNotFoundException("작업자를 찾을 수 없습니다."));
         Workcenter workcenter = workcenterRepository.findByCode(dto.getWorkcenterCode())
                 .orElseThrow(() -> new EntityNotFoundException("작업장을 찾을 수 없습니다."));
-        ShiftType shiftType = shiftTypeRepository.findById(dto.getShiftTypeId())
+        ShiftType shiftType = shiftTypeRepository.findByName(dto.getShiftTypeName())
                 .orElseThrow(() -> new EntityNotFoundException("교대근무유형을 찾을 수 없습니다."));
+        ProductionOrder productionOrder = productionOrderRepository.findByName(dto.getProductionOrderName())
+                .orElseThrow(() -> new EntityNotFoundException("작업지시를 찾을 수 없습니다."));
 
         return WorkerAssignment.builder()
                 .worker(worker)
                 .workcenter(workcenter)
                 .shiftType(shiftType)
                 .assignmentDate(dto.getAssignmentDate())
+                .productionOrder(productionOrder)
                 .build();
     }
 }

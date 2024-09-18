@@ -106,17 +106,18 @@ public class WorkerServiceImpl implements WorkerService {
                         attendance.getStatus().toString()
                 )).toList();
 
-        // 작업 배치 관리 리스트 생성
+// 작업 배치 관리 리스트 생성
         List<WorkerAssignmentDTO> assignmentList = worker.getWorkerAssignments().stream()
-                .map(assignment -> new WorkerAssignmentDTO(
-                        assignment.getWorker().getEmployee().getFirstName() + " " + assignment.getWorker().getEmployee().getLastName(),  // 작업자 이름
-                        assignment.getWorker().getEmployee().getEmployeeNumber(),
-                        assignment.getWorkcenter().getCode(),
-                        assignment.getWorkcenter().getName(),
-                        assignment.getAssignmentDate(),
-                        assignment.getShiftType().getName(),
-                        assignment.getProductionOrder().getName()
-                )).toList();
+                .map(assignment -> WorkerAssignmentDTO.builder()
+                        .workerName(assignment.getWorker().getEmployee().getFirstName() + " " + assignment.getWorker().getEmployee().getLastName()) // 작업자 이름
+                        .employeeNumber(assignment.getWorker().getEmployee().getEmployeeNumber()) // 직원 번호
+                        .workcenterCode(assignment.getWorkcenter().getCode()) // 작업장 코드
+                        .workcenterName(assignment.getWorkcenter().getName()) // 작업장 이름
+                        .assignmentDate(assignment.getAssignmentDate()) // 배정 날짜
+                        .shiftTypeName(assignment.getShiftType().getName()) // 교대 근무 유형
+                        .productionOrderName(assignment.getProductionOrder().getName()) // 연관된 작업 지시
+                        .build()
+                ).toList();
 
         //최종 dto 생성 및 반환
         return new ListWorkerAttendanceDTO(

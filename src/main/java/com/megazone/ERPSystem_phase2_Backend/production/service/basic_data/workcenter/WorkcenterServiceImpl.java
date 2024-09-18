@@ -208,7 +208,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                         .workerName(assignment.getWorker().getEmployee() != null ?
                                 assignment.getWorker().getEmployee().getLastName() + " " + assignment.getWorker().getEmployee().getFirstName() : "Unknown")  // 작업자 이름
                         .employeeNumber(assignment.getWorker().getEmployee() != null ?
-                                assignment.getWorker().getEmployee().getEmployeeNumber() : "Unknown")  // 사원 번호
+                                assignment.getWorker().getEmployee().getEmployeeNumber() : "해당없음")  // 사원 번호
                         .workcenterCode(assignment.getWorkcenter().getCode())  // 작업장 코드
                         .assignmentDate(assignment.getAssignmentDate())  // 배정 날짜
                         .shiftTypeId(assignment.getShiftType() != null ? assignment.getShiftType().getId() : null)  // 교대조 ID
