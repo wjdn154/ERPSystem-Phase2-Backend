@@ -22,54 +22,38 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProcessDetailsController {
 
-    private final ProcessDetailsRepository processDetailsRepository;
     private final ProcessDetailsService processDetailsService;
-    private final UsersRepository usersRepository;
-    private final WorkcenterRepository workcenterRepository;
-    private final WorkcenterService workcenterService;
-    private final CompanyRepository companyRepository;
 
     // GET: 모든 ProcessDetails 조회
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<List<ProcessDetailsDTO>> getAllProcessDetails() {
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
 
-        List<ProcessDetailsDTO> processDetailsDTOs = processDetailsService.getAllProcessDetails(company_id);
+        List<ProcessDetailsDTO> processDetailsDTOs = processDetailsService.getAllProcessDetails();
         return ResponseEntity.ok(processDetailsDTOs);
     }
 
     // GET: CODE로 특정 ProcessDetails 조회
-    @PostMapping("/details/{code}/")
+    @PostMapping("/details/{code}")
     public ResponseEntity<Optional<ProcessDetailsDTO>> getProcessDetailsById(@PathVariable("code") String code) {
 
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
-
-        Optional<ProcessDetailsDTO> processDetailsDTO = processDetailsService.getProcessDetailsByCode(company_id, code);
+        Optional<ProcessDetailsDTO> processDetailsDTO = processDetailsService.getProcessDetailsByCode(code);
         return ResponseEntity.ok(processDetailsDTO);
     }
 
     // 3. 이름으로 공정 리스트 검색 조회
-    @PostMapping("/search/")
+    @PostMapping("/search")
     public ResponseEntity<List<ProcessDetailsDTO>> getProcessDetailsByName(
             @RequestParam("name") String name) {
 
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
-
-        List<ProcessDetailsDTO> processDetailsDTOs = processDetailsService.findByNameContaining(company_id, name);
+        List<ProcessDetailsDTO> processDetailsDTOs = processDetailsService.findByNameContaining(name);
         return ResponseEntity.ok(processDetailsDTOs);
     }
 
-    @PostMapping("/create/")
+    @PostMapping("/new")
     public ProcessDetailsDTO createProcessDetails(@RequestBody ProcessDetailsDTO processDetailsDTO) {
 
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
-
         try {
-            return processDetailsService.createProcessDetails(company_id, processDetailsDTO);
+            return processDetailsService.createProcessDetails(processDetailsDTO);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("입력하신 코드가 이미 존재합니다: " + processDetailsDTO.getCode());
         } catch (Exception e) {
@@ -77,14 +61,11 @@ public class ProcessDetailsController {
         }
     }
 
-    @PostMapping("/update/{code}/")
+    @PostMapping("/update/{code}")
     public ProcessDetailsDTO updateProcessDetails(@PathVariable("code") String code, @RequestBody ProcessDetailsDTO processDetailsDTO) {
 
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
-
         try {
-            return processDetailsService.updateByCode(company_id, code, processDetailsDTO);
+            return processDetailsService.updateByCode(code, processDetailsDTO);
         } catch (EntityNotFoundException e) {
             throw new EntityNotFoundException("해당 코드의 공정을 찾을 수 없습니다: " + code);
         } catch (IllegalArgumentException e) {
@@ -95,15 +76,11 @@ public class ProcessDetailsController {
     }
 
     // DELETE
-    @PostMapping("/delete/")
+    @PostMapping("/delete")
     public ProcessDetailsDTO deleteProcessDetails(@RequestParam("code") String code) {
 
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
-
-
         try {
-            return processDetailsService.deleteByCode(company_id, code);
+            return processDetailsService.deleteByCode(code);
         } catch (IllegalArgumentException e) {
             // 코드가 없거나 사용 중인 경우에 대한 예외 처리
             throw new IllegalArgumentException("삭제할 수 없습니다. 이유: " + e.getMessage());
