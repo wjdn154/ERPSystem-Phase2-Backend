@@ -32,10 +32,8 @@ public class WorkcenterController {
     // 1. 전체 작업장 조회
     @PostMapping("/")
     public ResponseEntity<List<WorkcenterDTO>> getAllWorkcenters() {
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
 
-        List<WorkcenterDTO> workcenterDTOs = workcenterService.findAll(company_id);
+        List<WorkcenterDTO> workcenterDTOs = workcenterService.findAll();
         return ResponseEntity.ok(workcenterDTOs);
     }
 
@@ -57,10 +55,7 @@ public class WorkcenterController {
     public ResponseEntity<WorkcenterDTO> getWorkcenterDetailByCode(
             @PathVariable("code") String code) {
 
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
-
-        Optional<WorkcenterDTO> workcenterDTO = workcenterService.findByCode(company_id, code);
+        Optional<WorkcenterDTO> workcenterDTO = workcenterService.findByCode(code);
 
         return workcenterDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
@@ -68,11 +63,8 @@ public class WorkcenterController {
     @PostMapping("/create/")
     public ResponseEntity<String> saveWorkcenter(@RequestBody WorkcenterDTO workcenterDTO) {
 
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
-
         try {
-            workcenterService.save(company_id, workcenterDTO);
+            workcenterService.save(workcenterDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body("작업장이 성공적으로 생성되었습니다.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());             // 중복 코드 발생 시 메시지 반환
@@ -87,11 +79,9 @@ public class WorkcenterController {
     public ResponseEntity<String> updateWorkcenter(
             @PathVariable("code") String code,
             @RequestBody WorkcenterDTO workcenterDTO) {
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
 
         try {
-            Optional<WorkcenterDTO> updatedWorkcenterDTO = workcenterService.updateByCode(company_id, code, workcenterDTO);
+            Optional<WorkcenterDTO> updatedWorkcenterDTO = workcenterService.updateByCode(code, workcenterDTO);
             if (updatedWorkcenterDTO.isPresent()) {
                 return ResponseEntity.ok("작업장이 성공적으로 업데이트되었습니다.");
             } else {
@@ -109,11 +99,8 @@ public class WorkcenterController {
     @PostMapping("/delete")
     public ResponseEntity<String> deleteWorkcenter(@RequestParam("code") String code) {
 
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
-
         try {
-            workcenterService.deleteByCode(company_id, code);
+            workcenterService.deleteByCode(code);
             return ResponseEntity.ok("작업장이 성공적으로 삭제되었습니다.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("삭제할 수 없습니다: " + e.getMessage());
@@ -128,10 +115,7 @@ public class WorkcenterController {
     @PostMapping("/factories/")
     public ResponseEntity<List<WarehouseResponseDTO>> getWorkcenterFactories() {
 
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
-
-        List<WarehouseResponseDTO> factoryDTOs = workcenterService.findAllFactories(company_id);
+        List<WarehouseResponseDTO> factoryDTOs = workcenterService.findAllFactories();
         return ResponseEntity.ok(factoryDTOs);
     }
 
@@ -143,10 +127,7 @@ public class WorkcenterController {
     @PostMapping("/processes/")
     public ResponseEntity<List<ProcessDetailsDTO>> getAllProcessDetails() {
 
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
-
-        List<ProcessDetailsDTO> processDetailsDTOs = processDetailsService.getAllProcessDetails(company_id);
+        List<ProcessDetailsDTO> processDetailsDTOs = processDetailsService.getAllProcessDetails();
         return ResponseEntity.ok(processDetailsDTOs);
     }
 
@@ -154,19 +135,13 @@ public class WorkcenterController {
     @PostMapping("/processes/{processCode}/")
     public ResponseEntity<ProcessDetailsDTO> getProcessByCode(@PathVariable String processCode) {
 
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
-
-        Optional<ProcessDetailsDTO> processDetailsDTO = processDetailsService.getProcessDetailsByCode(company_id, processCode);
+        Optional<ProcessDetailsDTO> processDetailsDTO = processDetailsService.getProcessDetailsByCode(processCode);
         return processDetailsDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
 // 굳이여서 주석
 //    @PostMapping("/equipments/{equipmentName}/")
 //    public ResponseEntity<List<EquipmentDataDTO>> getEquipmentsByWorkcenterCode(@PathVariable("equipmentName") String workcenterCode) {
-//
-//        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-//        Long company_id = user.getCompany().getId();
 //
 //        List<EquipmentDataDTO> equipmentDataDTOs = workcenterService.findEquipmentByWorkcenterCode(company_id, equipmentName);
 //        return ResponseEntity.ok(equipmentDataDTOs);
@@ -175,10 +150,8 @@ public class WorkcenterController {
     // 10. 작업자 배정 이력 조회
     @PostMapping("/workerAssignments/{workcenterCode}/")
     public ResponseEntity<List<WorkerAssignmentDTO>> getWorkerAssignmentsByWorkcenterCode(@PathVariable("workcenterCode") String workcenterCode) {
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long company_id = user.getCompany().getId();
 
-        List<WorkerAssignmentDTO> workerAssignmentDTOs = workcenterService.findWorkerAssignmentsByWorkcenterCode(company_id, workcenterCode);
+       List<WorkerAssignmentDTO> workerAssignmentDTOs = workcenterService.findWorkerAssignmentsByWorkcenterCode(workcenterCode);
         return ResponseEntity.ok(workerAssignmentDTOs);
     }
 }
