@@ -17,4 +17,8 @@ public interface DepartmentService {
 
     // 부서 등록
     DepartmentCreateDTO saveDepartment(DepartmentDTO dto);
+
+    boolean hasEmployees(Long id);
+
+    void deleteDepartment(Long id);
 }

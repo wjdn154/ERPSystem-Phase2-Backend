@@ -54,4 +54,23 @@ public class DepartmentController {
         DepartmentCreateDTO createdDepartment = departmentService.saveDepartment(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdDepartment);
     }
+
+    // 부서 삭제
+    @DeleteMapping("/department/delete/{id}")
+    public ResponseEntity<String> deleteDepartment(@PathVariable("id") Long id) {
+        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Long company_id = user.getCompany().getId();
+
+        // 부서에 속한 사원이 있는지 확인
+        if (departmentService.hasEmployees(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("부서에 속한 사원이 있습니다. 부서를 삭제하기 전에 사원을 다른 부서로 옮기십시오.");
+        }
+
+        // 사원이 없는 경우 부서 삭제
+        departmentService.deleteDepartment(id);
+        return ResponseEntity.ok("부서가 성공적으로 삭제되었습니다.");
+    }
+
 }
