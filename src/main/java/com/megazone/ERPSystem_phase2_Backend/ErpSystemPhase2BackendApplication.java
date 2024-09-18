@@ -17,7 +17,7 @@ import java.util.Arrays;
 public class ErpSystemPhase2BackendApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ErpSystemPhase2BackendApplication.class, args);
-		System.out.println("젠킨스 테스트 2024.09.18 23:52");
+		System.out.println("젠킨스 테스트 2024.09.19 00:02");
 	}
 
 //	@Bean
