@@ -36,10 +36,10 @@ public class Product {
     @Column(nullable = false)
     private String code;
 
-//    // 거래처 - N : 1
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "client_id", nullable = true)
-//    private Client client;
+    // 거래처 - N : 1
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
 
     // 품목 그룹 코드 참조
     @ManyToOne(fetch = FetchType.LAZY)

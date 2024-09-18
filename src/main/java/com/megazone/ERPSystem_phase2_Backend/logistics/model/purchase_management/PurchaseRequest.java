@@ -32,11 +32,6 @@ public class PurchaseRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 회사 참조
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "company_id", nullable = false)
-    private Company company;
-
     // 발주 요청과 발주 계획 간의 중간 엔티티와의 일대다 관계
     @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL)
     @Builder.Default
@@ -77,4 +72,10 @@ public class PurchaseRequest {
     // 비고
     @Column
     private String remarks;
+
+    // 진행 상태
+    @Column
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private State status = State.IN_PROGRESS;
 }

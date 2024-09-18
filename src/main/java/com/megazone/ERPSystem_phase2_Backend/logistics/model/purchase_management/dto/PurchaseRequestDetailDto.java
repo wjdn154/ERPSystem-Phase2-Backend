@@ -1,24 +1,28 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto;
 
-import java.time.LocalDate;
-
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class PurchaseRequestDTO {
+public class PurchaseRequestDetailDto {
     private Long id;
-    private Long clientId;
-    private Long employeeId;
-    private Long warehouseId;
-    private Long currencyId;
+
+    // 발주 요청 ID
+    private Long purchaseRequestId;
+
+    // 품목 ID
     private Long productId;
+
+    // 수량
     private Integer quantity;
+
+    // 공급가액 (수량 * 단가)
     private Double supplyPrice;
-    private Boolean vatType;
+
+    // 부가세
     private Double vat;
-    private LocalDate date;
-    private LocalDate deliveryDate;
+
+    // 비고
     private String remarks;
 }
