@@ -1,6 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse_transfer;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,10 +17,6 @@ public class WarehouseTransferProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "company_id", nullable = false)
-    private Company company;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "warehouse_transfer_id", nullable = false)
