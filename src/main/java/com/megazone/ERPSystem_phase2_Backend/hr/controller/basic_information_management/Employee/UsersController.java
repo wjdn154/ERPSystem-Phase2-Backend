@@ -16,8 +16,10 @@ import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_manage
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,9 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import org.hibernate.tool.schema.internal.SchemaCreatorImpl;
 
 import java.sql.SQLException;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @RestController
@@ -55,44 +55,70 @@ public class UsersController {
 
 
     @PostMapping("/auth/login")
-    public String createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequest authRequest) {
 
-        String tenantId = "tenant_" + authRequest.getCompanyId();
+        // 회사 선택 검증
+        if(authRequest.getCompanyId() == null) return ResponseEntity.badRequest().body("회사를 선택해주세요.");
+
         // 테넌트 식별자 설정
+        String tenantId = "tenant_" + authRequest.getCompanyId();
         TenantContext.setCurrentTenant(tenantId);
 
         // 이메일 형식 검증 정규식
         Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
 
         // 이메일 형식 검증
-        if (!pattern.matcher(authRequest.getUserName()).matches()) throw new IllegalArgumentException("잘못된 이메일 형식입니다.");
-
-
-        // 사용자 인증
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword())
-        );
+        if (!pattern.matcher(authRequest.getUserName()).matches()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 이메일 형식입니다.");
+        }
 
         // 사용자 정보 가져오기
-        Users user = usersRepository.findByUserName(authRequest.getUserName())
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        Optional<Users> userOptional = usersRepository.findByUserName(authRequest.getUserName());
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자를 찾을 수 없습니다.");
+        }
+
+        Users user = userOptional.get();
+
+        try {
+            // 사용자 인증
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword())
+            );
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 정보가 올바르지 않습니다.");
+        }
 
         // Users를 CustomUserDetails로 변환
         UserDetails userDetails = new CustomUserDetails(user);
 
+        // JWT 토큰 생성
+        String jwtToken = jwtUtil.generateToken(tenantId, userDetails.getUsername(), user.getUserNickname());
+
+        // 성공 메시지와 JWT 토큰 반환
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "로그인 성공");
+        response.put("token", jwtToken);
+
+        // 테넌트 컨텍스트 해제
         TenantContext.clear();
 
-        // JWT 토큰 생성
-        return jwtUtil.generateToken(tenantId, userDetails.getUsername(), user.getUserNickname());
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/auth/register")
     public ResponseEntity<String> registerUser(@RequestBody AuthRequest authRequest) throws SQLException {
 
+        // 회사 선택 검증
+        if(authRequest.getCompanyId() == null) return ResponseEntity.badRequest().body("회사를 선택해주세요.");
+
+        // 테넌트 식별자 설정
         TenantContext.setCurrentTenant("tenant_" + authRequest.getCompanyId());
 
+        // 사용자 등록
         ResponseEntity<String> tenantResponse = usersService.registerUser(authRequest);
 
+        // 테넌트 컨텍스트 해제
         TenantContext.clear();
 
         return tenantResponse;
