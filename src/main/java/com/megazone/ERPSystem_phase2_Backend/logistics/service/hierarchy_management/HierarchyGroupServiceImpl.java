@@ -1,7 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.hierarchy_management;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.hierarchy_group.HierarchyGroup;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.hierarchy_group.dto.HierarchyGroupResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.hierarchy_group.dto.test.*;
@@ -21,11 +19,9 @@ import java.util.stream.Collectors;
 public class HierarchyGroupServiceImpl implements HierarchyGroupService {
 
     private final HierarchyGroupRepository hierarchyGroupRepository;
-    private final CompanyRepository companyRepository;
-
 
     @Override
-    public void saveHierarchyGroupTest(HierarchyGroupCreateRequestListDTO requestListDTO, Long companyId) {
+    public void saveHierarchyGroupTest(HierarchyGroupCreateRequestListDTO requestListDTO) {
 
         HierarchyGroup parentGroup = hierarchyGroupRepository.findById(requestListDTO.getParentGroupId())
                 .orElseThrow(() -> new IllegalArgumentException("상위 그룹을 찾을 수 없습니다."));
@@ -37,19 +33,12 @@ public class HierarchyGroupServiceImpl implements HierarchyGroupService {
             newGroup.setIsActive(groupRequest.getIsActive());
             newGroup.setParentGroup(parentGroup);
 
-            Company company = new Company();
-            company.setId(companyId);
-            newGroup.setCompany(company);
-
             hierarchyGroupRepository.save(newGroup);
         }
     }
 
     @Override
-    public Optional<HierarchyGroupUpdatedResponseDTO> updateHierarchyGroupTest(Long id, HierarchyGroupUpdatedRequestDTO dto, Long companyId) {
-
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new RuntimeException("회사를 찾을 수 없습니다."));
+    public Optional<HierarchyGroupUpdatedResponseDTO> updateHierarchyGroupTest(Long id, HierarchyGroupUpdatedRequestDTO dto) {
 
         HierarchyGroup existingGroup = hierarchyGroupRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("수정할 계층 그룹을 찾을 수 없습니다."));
@@ -79,8 +68,8 @@ public class HierarchyGroupServiceImpl implements HierarchyGroupService {
     }
 
     @Override
-    public List<HierarchyGroupResponseTreeDTO> getHierarchyGroupTree(Long companyId) {
-        List<HierarchyGroup> groups = hierarchyGroupRepository.findByCompanyIdAndParentGroupIsNull(companyId);
+    public List<HierarchyGroupResponseTreeDTO> getHierarchyGroupTree() {
+        List<HierarchyGroup> groups = hierarchyGroupRepository.findByParentGroupIsNull();
         return groups.stream()
                 .map(HierarchyGroupResponseTreeDTO::new)
                 .collect(Collectors.toList());

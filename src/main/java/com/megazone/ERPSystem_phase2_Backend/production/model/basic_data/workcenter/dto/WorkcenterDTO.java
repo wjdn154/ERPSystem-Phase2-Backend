@@ -24,7 +24,6 @@ public class WorkcenterDTO {
     private String description;
     private Boolean isActive;
 
-    private Long companyId; // 회사 ID
     private WarehouseType warehouseType; // TYPE: FACTORY OR OUTSOURCING_FACTORY
     private String factoryCode; // 공장 Code만 포함 (Warehouse)
     private String processCode; // 생산공정 Code만 포함 (ProcessDetails)

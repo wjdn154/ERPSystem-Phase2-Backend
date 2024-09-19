@@ -10,14 +10,14 @@ import java.util.Optional;
 @Service
 public interface ProcessDetailsService {
 
-    List<ProcessDetailsDTO> getAllProcessDetails(Long company_id);
+    List<ProcessDetailsDTO> getAllProcessDetails();
 //    ProcessDetailsDTO getProcessDetailsById(Long id);
-    ProcessDetailsDTO createProcessDetails(Long company_id, ProcessDetailsDTO processDetailsDTO);
-    ProcessDetailsDTO updateByCode(Long company_id, String code, ProcessDetailsDTO processDetailsDTO);
-    ProcessDetailsDTO deleteByCode(Long company_id, String code);
+    ProcessDetailsDTO createProcessDetails(ProcessDetailsDTO processDetailsDTO);
+    ProcessDetailsDTO updateByCode(String code, ProcessDetailsDTO processDetailsDTO);
+    ProcessDetailsDTO deleteByCode(String code);
 
-    Optional<ProcessDetailsDTO> getProcessDetailsByCode(Long company_id, String code);
+    Optional<ProcessDetailsDTO> getProcessDetailsByCode(String code);
 
-    List<ProcessDetailsDTO> findByNameContaining(Long company_id, String name);
+    List<ProcessDetailsDTO> findByNameContaining(String name);
 
 }

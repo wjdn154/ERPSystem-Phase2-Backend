@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.common_scheduling.ProductionOrder;
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionOrder;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.ProductionOrderDTO;
 
 import java.util.List;
@@ -14,6 +15,5 @@ public interface ProductionOrderService {
 
     void deleteProductionOrder(Long productionOrderId);
 
-    void assignWorkersToWorkcenter(ProductionOrderDTO productionOrderDTO);
-
+    void assignWorkersToWorkcenter(ProductionOrderDTO productionOrderDTO, ProductionOrder productionOrder);
     }

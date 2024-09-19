@@ -64,7 +64,7 @@ public class Employee {
 //
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "allowance_Id", nullable = false)
-//    private Allowance allowance;
+//    private Allowance allowance.sql;
 
     @Column(nullable = false)
     private String firstName; // 이름

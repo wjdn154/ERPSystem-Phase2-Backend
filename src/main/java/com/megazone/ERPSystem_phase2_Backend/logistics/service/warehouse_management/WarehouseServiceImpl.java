@@ -1,11 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.warehouse_management;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.hierarchy_group.HierarchyGroup;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.hierarchy_group.WarehouseHierarchyGroup;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.test.WarehouseListResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.test.WarehouseRequestTestDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.test.WarehouseResponseListDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.test.WarehouseResponseTestDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.enums.WarehouseType;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.hierarchy_group.HierarchyGroupRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse_hierarchy_group.WarehouseHierarchyGroupRepository;
@@ -28,75 +29,76 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseHierarchyGroupRepository warehouseHierarchyGroupRepository;
     private final ProcessDetailsRepository processDetailsRepository;
 
+
     @Override
-    public List<WarehouseListResponseDTO> getWarehouseListByCompany(Long companyId) {
-        List<Warehouse> warehouses = warehouseRepository.findAllByCompanyId(companyId);
-        return warehouses.stream()
-                .map(WarehouseListResponseDTO::new)
+    public List<WarehouseResponseListDTO> getWarehouseList() {
+        return warehouseRepository.findWarehouseList();
+    }
+
+    @Override
+    public WarehouseResponseTestDTO getWarehouseDetail(Long warehouseId) {
+        Warehouse warehouse = warehouseRepository.findById(warehouseId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 창고를 찾을 수 없습니다."));
+
+        return WarehouseResponseTestDTO.mapToDTO(warehouse);
+    }
+
+    @Override
+    public WarehouseResponseTestDTO createWarehouse(WarehouseRequestTestDTO requestDTO) {
+        ProcessDetails processDetail = null;
+        if (requestDTO.getWarehouseType() == WarehouseType.FACTORY && requestDTO.getProcessDetailsId() != null) {
+            processDetail = processDetailsRepository.findById(requestDTO.getProcessDetailsId())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 생산 공정입니다."));
+        }
+
+        List<WarehouseHierarchyGroup> hierarchyGroups = requestDTO.getHierarchyGroups().stream()
+                .map(dto -> warehouseHierarchyGroupRepository.findById(dto.getId())
+                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계층 그룹입니다.")))
                 .collect(Collectors.toList());
+
+        Warehouse newWarehouse = requestDTO.mapToEntity(processDetail, hierarchyGroups);
+
+        Warehouse savedWarehouse = warehouseRepository.save(newWarehouse);
+
+        return WarehouseResponseTestDTO.mapToDTO(savedWarehouse);
     }
 
     @Override
-    public WarehouseResponseTestDTO getWarehouseDetailTest(Long id) {
-        Warehouse warehouse = warehouseRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("창고를 찾을 수 없습니다."));
-        return new WarehouseResponseTestDTO(warehouse);
-    }
+    public WarehouseResponseTestDTO updateWarehouse(Long warehouseId, WarehouseRequestTestDTO requestDTO) {
+        Warehouse existingWarehouse = warehouseRepository.findById(warehouseId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 창고를 찾을 수 없습니다."));
 
-    @Override
-    public WarehouseResponseTestDTO saveTestWarehouse(WarehouseRequestTestDTO warehouseRequestTestDTO, Long companyId) {
-        Company company= new Company();
-        company.setId(companyId);
+        List<WarehouseHierarchyGroup> updatedHierarchyGroups = requestDTO.getHierarchyGroups().stream()
+                .map(dto -> {
+                    HierarchyGroup hierarchyGroup = hierarchyGroupRepository.findById(dto.getId())
+                            .orElseThrow(() -> new IllegalArgumentException("해당 계층 그룹을 찾을 수 없습니다."));
 
-        ProcessDetails processDetails = warehouseRequestTestDTO.getProcessDetailsId() != null ?
-                processDetailsRepository.findById(warehouseRequestTestDTO.getProcessDetailsId())
-                        .orElseThrow(() -> new RuntimeException("공정 정보를 찾을 수 없습니다.")) : null;
+                    return WarehouseHierarchyGroup.builder()
+                            .warehouse(existingWarehouse)
+                            .hierarchyGroup(hierarchyGroup)
+                            .build();
+                })
+                .collect(Collectors.toList());
 
-        List<WarehouseHierarchyGroup> hierarchyGroups = null;
-        if (warehouseRequestTestDTO.getHierarchyGroups() != null && !warehouseRequestTestDTO.getHierarchyGroups().isEmpty()) {
-            hierarchyGroups = warehouseRequestTestDTO.getHierarchyGroups().stream()
-                    .map(dto -> warehouseHierarchyGroupRepository.findById(dto.getId())
-                            .orElseThrow(() -> new RuntimeException("계층 그룹을 찾을 수 없습니다.")))
-                    .collect(Collectors.toList());
+        ProcessDetails processDetails = null;
+        if (requestDTO.getWarehouseType() == WarehouseType.FACTORY && requestDTO.getProcessDetailsId() != null) {
+            processDetails = processDetailsRepository.findById(requestDTO.getProcessDetailsId())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 생산 공정을 찾을 수 없습니다."));
         }
 
-        Warehouse warehouse = warehouseRequestTestDTO.mapToEntity(processDetails, hierarchyGroups);
-        warehouse.setCompany(company);
+        Warehouse updatedWarehouse = Warehouse.builder()
+                .id(existingWarehouse.getId())
+                .code(requestDTO.getCode())
+                .name(requestDTO.getName())
+                .warehouseType(requestDTO.getWarehouseType())
+                .isActive(requestDTO.getIsActive())
+                .processDetail(processDetails)
+                .warehouseHierarchyGroup(updatedHierarchyGroups)
+                .build();
 
-        Warehouse savedWarehouse = warehouseRepository.save(warehouse);
-        return new WarehouseResponseTestDTO(savedWarehouse);
-    }
+        Warehouse savedWarehouse = warehouseRepository.save(updatedWarehouse);
 
-    @Override
-    public WarehouseResponseTestDTO updateTestWarehouse(Long id, WarehouseRequestTestDTO dto) {
-
-        Warehouse warehouse = warehouseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("해당 ID의 창고를 찾을 수 없습니다."));
-
-        ProcessDetails processDetails = dto.getProcessDetailsId() != null ?
-                processDetailsRepository.findById(dto.getProcessDetailsId())
-                        .orElseThrow(() -> new RuntimeException("공정 정보를 찾을 수 없습니다.")) : null;
-
-        List<WarehouseHierarchyGroup> hierarchyGroups = null;
-        if (dto.getHierarchyGroups() != null && !dto.getHierarchyGroups().isEmpty()) {
-            hierarchyGroups = dto.getHierarchyGroups().stream()
-                    .map(groups -> warehouseHierarchyGroupRepository.findById(groups.getId())
-                            .orElseThrow(() -> new RuntimeException("계층 그룹을 찾을 수 없습니다.")))
-                    .collect(Collectors.toList());
-        }
-
-        warehouse.setCode(dto.getCode());
-        warehouse.setName(dto.getName());
-        warehouse.setWarehouseType(dto.getWarehouseType());
-        warehouse.setIsActive(dto.getIsActive());
-        warehouse.setProcessDetail(processDetails);
-
-        if (hierarchyGroups != null) {
-            warehouse.setWarehouseHierarchyGroup(hierarchyGroups);
-        }
-
-        Warehouse updatedWarehouse = warehouseRepository.save(warehouse);
-        return new WarehouseResponseTestDTO(updatedWarehouse);
+        return WarehouseResponseTestDTO.mapToDTO(savedWarehouse);
     }
 
     @Override
