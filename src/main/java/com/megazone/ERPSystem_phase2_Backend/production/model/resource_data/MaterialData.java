@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.planning.mrp.MaterialInputStatus;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.bom.StandardBomMaterial;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
@@ -24,7 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@ToString(exclude = "substituteMaterial")
+//@ToString(exclude = "substituteMaterial")
 public class MaterialData {
 
     @Id
@@ -50,9 +51,8 @@ public class MaterialData {
     @OneToMany(mappedBy = "materialData", fetch = FetchType.LAZY)
     private List<HazardousMaterial> hazardousMaterial;     //유해물질
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;                         //품목 테이블 참조
+    @OneToMany(mappedBy = "materialData", fetch = FetchType.LAZY)
+    private List<Product> product;                         //품목 테이블 참조   하나의 자재에 여러개 품목
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id", nullable = false)
@@ -64,6 +64,10 @@ public class MaterialData {
 
     @OneToMany(mappedBy = "material", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StandardBomMaterial> bomMaterials = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;                 //회사 테이블(회사 아이디)
 
 //    @OneToMany(mappedBy = "substituteMaterial", fetch = FetchType.LAZY)
 //    private List<MaterialData> parent;        //자기참조 부모값? fk값이 들어감? db에는 컬럼이 안생기긴 했음.

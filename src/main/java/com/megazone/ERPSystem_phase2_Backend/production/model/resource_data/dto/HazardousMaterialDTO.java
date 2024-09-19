@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @Data
 public class HazardousMaterialDTO {
 
-    private Long id;
     private String hazardousMaterialCode;    //유해물질 코드
     private String hazardousMaterialName;    //유해물질 이름
     private HazardLevel hazardLevel;         //위험등급
     private String description;              //설명
+
 }

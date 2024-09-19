@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration;
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessRouting;
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.MaterialData;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -60,5 +61,10 @@ public class Product {
     // 단위
     @Column(nullable = false)
     private String unit;
+
+    //생산 자재 매핑 (하나의 자재에 여러개 품목)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "materialData_id")
+    private MaterialData materialData;
 
 }

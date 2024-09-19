@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data;
 
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.HazardLevel;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,14 @@ public class HazardousMaterial {
     private HazardLevel hazardLevel;         //위험등급 (row, medium, high)
 
     private String description;              //추가 설명
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "materialData_id")
+    private MaterialData materialData;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;                 //회사 테이블(회사 아이디)
 
 
 }

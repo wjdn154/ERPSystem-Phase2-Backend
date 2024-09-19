@@ -1,6 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductMaterialDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.MaterialType;
 import lombok.AllArgsConstructor;
@@ -13,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ListMaterialDataDTO {
+public class MaterialDataShowDTO {
 
     private Long id;
     private String materialCode;           //자재 코드
@@ -23,5 +22,7 @@ public class ListMaterialDataDTO {
     private BigDecimal purchasePrice;      //구매 가격
     private String representativeCode;     //거래처 코드
     private String representativeName;     //거래처 명 (한 거래처에 여러개의 자재)
-    private Long hazardousMaterialQuantity;    //유해물질 개수
+
+    private List<ProductMaterialDTO> product;             //품목 리스트(한 자재에 여러개의 품목?)
+    private List<HazardousMaterialDTO> hazardousMaterial;   //유해물질 리스트
 }
