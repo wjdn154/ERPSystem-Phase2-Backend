@@ -32,15 +32,11 @@ public class ResolvedVoucherApiController {
      * @param requestData
      * @return
      */
-    @PostMapping("/api/financial/general-voucher-entry/showResolvedVoucherEntry/{companyId}")
+    @PostMapping("/api/financial/general-voucher-entry/showResolvedVoucherEntry")
     public ResponseEntity<ResolvedVoucherShowAllDTO> showAllResolvedVoucher(@RequestBody Map<String, LocalDate> requestData) {
         LocalDate date = requestData.get("searchDate");
 
-        Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
-                () -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = users.getCompany().getId();
-
-        List<ResolvedVoucher> resolvedVoucherList = resolvedVoucherService.resolvedVoucherAllSearch(companyId, date);
+        List<ResolvedVoucher> resolvedVoucherList = resolvedVoucherService.resolvedVoucherAllSearch(date);
 
         List<ResolvedVoucherShowDTO> showDtos = resolvedVoucherList.stream().map(
                 (voucher) -> { return ResolvedVoucherShowDTO.create(voucher); }).toList();
@@ -49,8 +45,8 @@ public class ResolvedVoucherApiController {
                 date,
                 showDtos,
                 BigDecimal.ZERO,  // 현재잔액 기능 구현필요 <<<<
-                resolvedVoucherService.totalDebit(date,companyId),
-                resolvedVoucherService.totalCredit(date,companyId)
+                resolvedVoucherService.totalDebit(date),
+                resolvedVoucherService.totalCredit(date)
         );
 
         return (!resolvedVoucherList.isEmpty()) ?
@@ -63,14 +59,10 @@ public class ResolvedVoucherApiController {
      * @param dto
      * @return
      */
-    @PostMapping("api/financial/general-voucher-entry/deleteResolvedVoucher/{companyId}")
+    @PostMapping("api/financial/general-voucher-entry/deleteResolvedVoucher")
     public ResponseEntity<String> deleteResolvedVoucher(@RequestBody ResolvedVoucherDeleteDTO dto) {
 
-        Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
-                () -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = users.getCompany().getId();
-
-        List<Long> resolvedVoucherList = resolvedVoucherService.deleteResolvedVoucher(dto,companyId);
+        List<Long> resolvedVoucherList = resolvedVoucherService.deleteResolvedVoucher(dto);
 
         return (!resolvedVoucherList.isEmpty()) ?
                 ResponseEntity.status(HttpStatus.OK).body("삭제가 완료되었습니다.") :

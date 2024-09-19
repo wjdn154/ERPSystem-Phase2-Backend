@@ -1,13 +1,9 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.controller.voucher_entry.sales_and_purchase_voucher_entry;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.ResolvedVoucher;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherShowAllDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherShowDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.UnresolvedVoucherShowAllDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.UnresolvedVoucherShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.ResolvedSaleAndPurchaseVoucher;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.sales_and_purchase_voucher_entry.ResolvedSaleAndPurchaseVoucherService;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
@@ -30,7 +26,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ResolvedSaleAndPurchaseVoucherApiController {
     private final ResolvedSaleAndPurchaseVoucherService resolvedSaleAndPurchaseVoucherService;
-    private final UsersRepository usersRepository;
 //
     /**
      * 매출매입전표 전체조회 기능
@@ -40,13 +35,9 @@ public class ResolvedSaleAndPurchaseVoucherApiController {
     @PostMapping("/api/financial/sale-end-purchase-resolved-voucher/shows")
     public ResponseEntity<ResolvedSaleAndPurchaseVoucherShowAllDTO> showAll(@RequestBody Map<String, LocalDate> requestData) {
 
-        Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
-                () -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = users.getCompany().getId();
-
         LocalDate date = requestData.get("searchDate");
 
-        List<ResolvedSaleAndPurchaseVoucher> voucherList = resolvedSaleAndPurchaseVoucherService.searchAllVoucher(date,companyId);
+        List<ResolvedSaleAndPurchaseVoucher> voucherList = resolvedSaleAndPurchaseVoucherService.searchAllVoucher(date);
 
         if(voucherList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -67,11 +58,7 @@ public class ResolvedSaleAndPurchaseVoucherApiController {
     @PostMapping("/api/financial/sale-end-purchase-resolved-voucher/show/{voucherNumber}")
     public ResponseEntity<Object> showOne(@PathVariable("voucherNumber") String voucherNumber) {
         try {
-            Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
-                    () -> new RuntimeException("사용자를 찾을 수 없습니다."));
-            Long companyId = users.getCompany().getId();
-
-            List<ResolvedVoucher> vouchers = resolvedSaleAndPurchaseVoucherService.searchEntryVoucher(voucherNumber,companyId);
+            List<ResolvedVoucher> vouchers = resolvedSaleAndPurchaseVoucherService.searchEntryVoucher(voucherNumber);
 
             if (vouchers == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("등록된 전표가 없습니다.");
@@ -106,11 +93,7 @@ public class ResolvedSaleAndPurchaseVoucherApiController {
     @PostMapping("/api/financial/sale-end-purchase-resolved-voucher/deletes")
     public ResponseEntity<String> deleteVoucher(@RequestBody ResolvedSaleAndPurchaseVoucherDeleteDTO dto) {
 
-        Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
-                () -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = users.getCompany().getId();
-
-        String message = resolvedSaleAndPurchaseVoucherService.deleteVoucher(dto,companyId);
+        String message = resolvedSaleAndPurchaseVoucherService.deleteVoucher(dto);
 
         return (message != null) ?
                 ResponseEntity.status(HttpStatus.OK).body("삭제가 완료되었습니다.") :

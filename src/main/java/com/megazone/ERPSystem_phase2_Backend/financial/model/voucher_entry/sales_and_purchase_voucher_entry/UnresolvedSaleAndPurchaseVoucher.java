@@ -30,10 +30,6 @@ public class UnresolvedSaleAndPurchaseVoucher {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "company_id", nullable = false)
-    private Company company; // 사용회사 ID
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "vatType_id",nullable = false)
     private VatType vatType; // 부가세 유형
 

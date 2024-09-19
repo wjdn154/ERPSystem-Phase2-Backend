@@ -36,12 +36,9 @@ public class UnresolvedSaleAndPurchaseVoucherApiController {
      */
     @PostMapping("/api/financial/sale-and-purchase-unresolved-voucher/entry")
     public ResponseEntity<String> Entry(@RequestBody UnresolvedSaleAndPurchaseVoucherEntryDTO dto) {
-        Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
-                () -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = users.getCompany().getId();
 
         UnresolvedSaleAndPurchaseVoucher unresolvedSaleAndPurchaseVoucher =
-                unresolvedSaleAndPurchaseVoucherService.save(dto,companyId);
+                unresolvedSaleAndPurchaseVoucherService.save(dto);
         return unresolvedSaleAndPurchaseVoucher != null ?
                 ResponseEntity.status(HttpStatus.OK).body("등록이 완료되었습니다.") :
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -55,11 +52,8 @@ public class UnresolvedSaleAndPurchaseVoucherApiController {
     @PostMapping("/api/financial/sale-end-purchase-unresolved-voucher/shows")
     public ResponseEntity<UnresolvedSaleAndPurchaseVoucherShowAllDTO> showAll(@RequestBody Map<String, LocalDate> requestData) {
         LocalDate date = requestData.get("searchDate");
-        Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
-                () -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = users.getCompany().getId();
 
-        List<UnresolvedSaleAndPurchaseVoucher> voucherList = unresolvedSaleAndPurchaseVoucherService.searchAllVoucher(date,companyId);
+        List<UnresolvedSaleAndPurchaseVoucher> voucherList = unresolvedSaleAndPurchaseVoucherService.searchAllVoucher(date);
 
         if(voucherList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -82,11 +76,8 @@ public class UnresolvedSaleAndPurchaseVoucherApiController {
     @PostMapping("/api/financial/sale-end-purchase-unresolved-voucher/deletes")
     public ResponseEntity<String> deleteVoucher(@RequestBody UnresolvedSaleAndPurchaseVoucherDeleteDTO dto) {
 
-        Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
-                () -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = users.getCompany().getId();
 
-        String message = unresolvedSaleAndPurchaseVoucherService.deleteVoucher(dto,companyId);
+        String message = unresolvedSaleAndPurchaseVoucherService.deleteVoucher(dto);
 
         return (message != null) ?
                 ResponseEntity.status(HttpStatus.OK).body("삭제가 완료되었습니다.") :
@@ -100,12 +91,8 @@ public class UnresolvedSaleAndPurchaseVoucherApiController {
      */
     @PostMapping("/api/financial/sale-end-purchase-unresolved-voucher/show/{voucherNumber}")
     public ResponseEntity<Object> showOne(@PathVariable("voucherNumber") String voucherNumber) {
-        Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
-                () -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = users.getCompany().getId();
-
         try {
-            List<UnresolvedVoucher> vouchers = unresolvedSaleAndPurchaseVoucherService.searchVoucher(voucherNumber,companyId);
+            List<UnresolvedVoucher> vouchers = unresolvedSaleAndPurchaseVoucherService.searchVoucher(voucherNumber);
 
             if (vouchers == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("등록된 전표가 없습니다.");
@@ -138,11 +125,8 @@ public class UnresolvedSaleAndPurchaseVoucherApiController {
     @PostMapping("/api/financial/sale-end-purchase-unresolved-voucher/approve")
     public ResponseEntity<String> voucherApprovalProcessing(@RequestBody UnresolvedSaleAndPurchaseVoucherApprovalDTO dto) {
 
-        Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
-                () -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = users.getCompany().getId();
 
-        List<UnresolvedSaleAndPurchaseVoucher> unresolvedVoucherList = unresolvedSaleAndPurchaseVoucherService.ApprovalProcessing(dto,companyId);
+        List<UnresolvedSaleAndPurchaseVoucher> unresolvedVoucherList = unresolvedSaleAndPurchaseVoucherService.ApprovalProcessing(dto);
 
 
         return (unresolvedVoucherList != null && !unresolvedVoucherList.isEmpty()) ?

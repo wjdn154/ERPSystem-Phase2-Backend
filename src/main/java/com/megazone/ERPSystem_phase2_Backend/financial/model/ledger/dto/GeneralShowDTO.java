@@ -13,17 +13,17 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 public class GeneralShowDTO {
-    private String accountSubjectCode;
-    private String accountSubjectName;
-    private Month month;
+    private Integer month;
     private BigDecimal totalDebit;
     private BigDecimal totalCredit;
     private BigDecimal totalCash;
 
-    public static GeneralShowDTO create(String accountSubjectCode, String accountSubjectName, Month month,
-                                        BigDecimal totalDebit, BigDecimal totalCredit, BigDecimal totalCash) {
+    public static GeneralShowDTO create(Integer month, BigDecimal totalDebit, BigDecimal totalCredit, BigDecimal totalCash) {
 
-        return new GeneralShowDTO(accountSubjectCode, accountSubjectName, month, totalDebit, totalCredit, totalCash);
+        return new GeneralShowDTO(month, totalDebit, totalCredit, totalCash);
     }
 
+    public int getMonth() {
+        return month;
+    }
 }

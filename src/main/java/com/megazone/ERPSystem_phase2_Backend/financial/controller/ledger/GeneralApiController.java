@@ -6,6 +6,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.service.ledger.GeneralSer
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.tools.ant.taskdefs.condition.Http;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,21 +21,24 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class GeneralApiController {
-    private final UsersRepository usersRepository;
     private final GeneralService generalService;
 
     @PostMapping("/api/financial/ledger/general/show")
     public ResponseEntity<Object> generalShow(@RequestBody GeneralDTO dto) {
 
-        Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
-                () -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = users.getCompany().getId();
-
-        List<GeneralShowDTO> generalShowDTOS = generalService.getGeneralShow(dto,companyId);
+        List<GeneralAccountListDTO> generalShowDTOS = generalService.getGeneralShow(dto);
 
         return generalShowDTOS.isEmpty() ? ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("조회가능한 전표가 없습니다.") :
                 ResponseEntity.status(HttpStatus.OK).body(generalShowDTOS);
+    }
 
+    @PostMapping("/api/financial/ledget/general/selectShow")
+    public ResponseEntity<GeneralShowAllDTO> selectGeneralShow(@RequestBody GeneralSelectDTO dto) {
+
+        GeneralShowAllDTO generalShowAllDTO = generalService.getGeneralSelectShow(dto);
+
+        return generalShowAllDTO != null ? ResponseEntity.status(HttpStatus.OK).body(generalShowAllDTO) :
+                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
 }

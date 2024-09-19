@@ -22,21 +22,21 @@ public class JournalServiceImpl implements JournalService {
 
 
     @Override
-    public List<UnresolvedVoucher> journalSearch(LocalDate StartDate, LocalDate EndDate, Long companyId) {
-        return unresolvedVoucherRepository.journalSearch(StartDate, EndDate,companyId);
+    public List<UnresolvedVoucher> journalSearch(LocalDate StartDate, LocalDate EndDate) {
+        return unresolvedVoucherRepository.journalSearch(StartDate, EndDate);
     }
 
     @Override
-    public List<BigDecimal> journalTotalAmount(LocalDate StartDate, LocalDate EndDate, Long companyId) {
+    public List<BigDecimal> journalTotalAmount(LocalDate StartDate, LocalDate EndDate) {
         List<BigDecimal> amounts = new ArrayList<>();
-        amounts.add(unresolvedVoucherRepository.testTotalDebit(StartDate, EndDate,companyId));
-        amounts.add(unresolvedVoucherRepository.testTotalCredit(StartDate, EndDate,companyId));
+        amounts.add(unresolvedVoucherRepository.testTotalDebit(StartDate, EndDate));
+        amounts.add(unresolvedVoucherRepository.testTotalCredit(StartDate, EndDate));
 
         return amounts;
     }
 
     @Override
-    public BigDecimal journalTotalCount(LocalDate StartDate, LocalDate EndDate, Long companyId) {
-        return unresolvedVoucherRepository.journalTotalCount(StartDate, EndDate,companyId);
+    public BigDecimal journalTotalCount(LocalDate StartDate, LocalDate EndDate) {
+        return unresolvedVoucherRepository.journalTotalCount(StartDate, EndDate);
     }
 }

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ResolvedVoucherRepository extends JpaRepository<ResolvedVoucher,Long>,ResolvedVoucherRepositoryCustom {
-    List<ResolvedVoucher> findByVoucherDateAndCompany_IdOrderByVoucherNumberAsc(LocalDate date,Long companyId);
+    List<ResolvedVoucher> findByVoucherDateOrderByVoucherNumberAsc(LocalDate date);
 
 //    @Query("SELECT r FROM resolved_voucher r WHERE r.voucherDate between :startDate AND :endDate " +
 //            "AND r.accountSubject.code >= :startAccountCode AND r.accountSubject.code <= :endAccountCode")

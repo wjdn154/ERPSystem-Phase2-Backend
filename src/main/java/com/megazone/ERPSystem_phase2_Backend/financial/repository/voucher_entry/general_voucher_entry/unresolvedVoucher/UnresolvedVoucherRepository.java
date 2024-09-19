@@ -15,24 +15,23 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UnresolvedVoucherRepository extends JpaRepository<UnresolvedVoucher, Long>, UnresolvedVoucherRepositoryCustom {
-    Optional<UnresolvedVoucher> findFirstByVoucherDateAndCompany_idOrderByIdDesc(LocalDate voucherDate, Long companyId);
-    List<UnresolvedVoucher> findByVoucherDateAndCompany_idOrderByVoucherNumberAsc(LocalDate date, Long companyId);
+    Optional<UnresolvedVoucher> findFirstByVoucherDateOrderByIdDesc(LocalDate voucherDate);
+    List<UnresolvedVoucher> findByVoucherDateOrderByVoucherNumberAsc(LocalDate date);
 
-    @Query("SELECT r FROM unresolved_voucher r WHERE r.voucherDate between :startDate AND :endDate AND r.company.id = :companyId")
-    List<UnresolvedVoucher> journalSearch(@Param("startDate")LocalDate startDate, @Param("endDate")LocalDate endDate, @Param("companyId")Long companyId);
+    @Query("SELECT r FROM unresolved_voucher r WHERE r.voucherDate between :startDate AND :endDate")
+    List<UnresolvedVoucher> journalSearch(@Param("startDate")LocalDate startDate, @Param("endDate")LocalDate endDate);
 
-    @Query("SELECT sum(r.debitAmount) FROM unresolved_voucher r WHERE r.voucherDate between :startDate AND :endDate AND r.company.id = :companyId")
-    BigDecimal testTotalDebit(@Param("startDate")LocalDate startDate, @Param("endDate")LocalDate endDate, @Param("companyId")Long companyId);
+    @Query("SELECT sum(r.debitAmount) FROM unresolved_voucher r WHERE r.voucherDate between :startDate AND :endDate")
+    BigDecimal testTotalDebit(@Param("startDate")LocalDate startDate, @Param("endDate")LocalDate endDate);
 
-    @Query("SELECT sum(r.creditAmount) FROM unresolved_voucher r WHERE r.voucherDate between :startDate AND :endDate AND r.company.id = :companyId")
-    BigDecimal testTotalCredit(@Param("startDate")LocalDate startDate, @Param("endDate")LocalDate endDate, @Param("companyId")Long companyId);
+    @Query("SELECT sum(r.creditAmount) FROM unresolved_voucher r WHERE r.voucherDate between :startDate AND :endDate")
+    BigDecimal testTotalCredit(@Param("startDate")LocalDate startDate, @Param("endDate")LocalDate endDate);
 
     @Query(value = "SELECT COUNT(*) FROM ("
             + "SELECT 1 "
             + "FROM unresolved_voucher "
             + "WHERE voucher_date BETWEEN :startDate AND :endDate "
-            + "AND company_id = :companyId "
             + "GROUP BY voucher_date, voucher_number) AS grouped_vouchers",
             nativeQuery = true)
-    BigDecimal journalTotalCount(@Param("startDate")LocalDate startDate, @Param("endDate")LocalDate endDate, @Param("companyId") Long companyId);
+    BigDecimal journalTotalCount(@Param("startDate")LocalDate startDate, @Param("endDate")LocalDate endDate);
 }

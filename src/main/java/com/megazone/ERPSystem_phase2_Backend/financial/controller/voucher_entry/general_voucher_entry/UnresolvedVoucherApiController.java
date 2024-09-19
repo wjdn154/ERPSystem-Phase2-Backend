@@ -32,12 +32,7 @@ public class UnresolvedVoucherApiController {
      */
     @PostMapping("/api/financial/general-voucher-entry/unresolvedVoucherEntry")
     public ResponseEntity<List<UnresolvedVoucherEntryDTO>> unresolvedVoucherEntry(@RequestBody List<UnresolvedVoucherEntryDTO> dto) {
-        Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
-                () -> new RuntimeException("사용자를 찾을 수 없습니다."));
-
-        Long companyId = users.getCompany().getId();
-
-        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.unresolvedVoucherEntry(companyId,dto);
+        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.unresolvedVoucherEntry(dto);
 
         List<UnresolvedVoucherEntryDTO> entryDtoList = new ArrayList<UnresolvedVoucherEntryDTO>();
 
@@ -60,13 +55,9 @@ public class UnresolvedVoucherApiController {
 
 
         try{
-            Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
-                    () -> new RuntimeException("사용자를 찾을 수 없습니다."));
-            Long companyId = users.getCompany().getId();
-
             LocalDate date = requestData.get("searchDate");
 
-            List<UnresolvedVoucher> vouchers = unresolvedVoucherEntryService.unresolvedVoucherAllSearch(companyId,date);
+            List<UnresolvedVoucher> vouchers = unresolvedVoucherEntryService.unresolvedVoucherAllSearch(date);
 
             List<UnresolvedVoucherShowDTO> showDtos = vouchers.stream().map(
                     UnresolvedVoucherShowDTO::create).toList();
@@ -92,11 +83,10 @@ public class UnresolvedVoucherApiController {
      * @param dto  사용자가 입력한 날짜, 체크한 전표번호, 담당자Id 전송객체
      * @return 삭제 완료, 미완료 정보 출력
      */
-    @PostMapping("api/financial/general-voucher-entry/deleteUnresolvedVoucher/{companyId}")
-    public ResponseEntity<String> deleteUnresolvedVoucher(@PathVariable("companyId") Long companyId,
-                                                          @RequestBody UnresolvedVoucherDeleteDTO dto) {
+    @PostMapping("api/financial/general-voucher-entry/deleteUnresolvedVoucher")
+    public ResponseEntity<String> deleteUnresolvedVoucher(@RequestBody UnresolvedVoucherDeleteDTO dto) {
 
-        List<Long> unresolvedVoucherList = unresolvedVoucherEntryService.deleteUnresolvedVoucher(companyId,dto);
+        List<Long> unresolvedVoucherList = unresolvedVoucherEntryService.deleteUnresolvedVoucher(dto);
 
         return (!unresolvedVoucherList.isEmpty()) ?
                 ResponseEntity.status(HttpStatus.OK).body("삭제가 완료되었습니다.") :
@@ -111,11 +101,8 @@ public class UnresolvedVoucherApiController {
     @PostMapping("api/financial/general-voucher-entry/approvalUnresolvedVoucher")
     public ResponseEntity<String> voucherApprovalProcessing(@RequestBody UnresolvedVoucherApprovalDTO dto) {
 
-        Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
-                () -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = users.getCompany().getId();
 
-        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.voucherApprovalProcessing(companyId,dto);
+        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.voucherApprovalProcessing(dto);
 
 
         return (unresolvedVoucherList != null && !unresolvedVoucherList.isEmpty()) ?

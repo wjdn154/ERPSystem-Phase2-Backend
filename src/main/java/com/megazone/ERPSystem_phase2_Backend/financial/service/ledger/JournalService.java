@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface JournalService {
 
-    List<UnresolvedVoucher> journalSearch(LocalDate StartDate, LocalDate EndDate, Long companyId);
+    List<UnresolvedVoucher> journalSearch(LocalDate StartDate, LocalDate EndDate);
 
-    List<BigDecimal> journalTotalAmount(LocalDate StartDate, LocalDate EndDate, Long companyId);
+    List<BigDecimal> journalTotalAmount(LocalDate StartDate, LocalDate EndDate);
 
-    BigDecimal journalTotalCount(LocalDate StartDate, LocalDate EndDate, Long companyId);
+    BigDecimal journalTotalCount(LocalDate StartDate, LocalDate EndDate);
 }

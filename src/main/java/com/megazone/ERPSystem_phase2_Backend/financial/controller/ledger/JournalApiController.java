@@ -32,15 +32,11 @@ public class JournalApiController {
     @PostMapping("/api/financial/ledger/journal/show")
     public ResponseEntity<JournalShowDTO> journalShow(@RequestBody JournalDTO dto) {
 
-        Users users = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
-                () -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = users.getCompany().getId();
-
-        List<UnresolvedVoucherShowDTO> ShowDTOs = journalService.journalSearch(dto.getStartDate(),dto.getEndDate(),companyId)
+        List<UnresolvedVoucherShowDTO> ShowDTOs = journalService.journalSearch(dto.getStartDate(),dto.getEndDate())
                 .stream().map(UnresolvedVoucherShowDTO::create).toList();
 
-        List<BigDecimal> totalAmounts = journalService.journalTotalAmount(dto.getStartDate(),dto.getEndDate(),companyId);
-        BigDecimal totalCount = journalService.journalTotalCount(dto.getStartDate(),dto.getEndDate(),companyId);
+        List<BigDecimal> totalAmounts = journalService.journalTotalAmount(dto.getStartDate(),dto.getEndDate());
+        BigDecimal totalCount = journalService.journalTotalCount(dto.getStartDate(),dto.getEndDate());
 
         JournalShowDTO journalShowDTO = JournalShowDTO.create(ShowDTOs,totalAmounts.get(0),totalAmounts.get(1),
                 totalCount);
