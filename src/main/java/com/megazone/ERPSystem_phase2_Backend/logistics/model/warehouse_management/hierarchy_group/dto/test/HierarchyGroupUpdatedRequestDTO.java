@@ -16,13 +16,4 @@ public class HierarchyGroupUpdatedRequestDTO {
     private Long parentGroupId;
     private Boolean isActive;
 
-    public HierarchyGroup mapToEntity(HierarchyGroup parentGroup, Company company) {
-        HierarchyGroup hierarchyGroupEntity = new HierarchyGroup();
-        hierarchyGroupEntity.setHierarchyGroupCode(hierarchyGroupCode);
-        hierarchyGroupEntity.setHierarchyGroupName(hierarchyGroupName);
-        hierarchyGroupEntity.setIsActive(isActive);
-        hierarchyGroupEntity.setParentGroup(parentGroup);
-        hierarchyGroupEntity.setCompany(company);
-        return hierarchyGroupEntity;
-    }
 }

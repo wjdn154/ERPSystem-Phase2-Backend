@@ -1,8 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.hierarchy_group;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,16 +14,13 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class HierarchyGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "company_id", nullable = false)
-    private Company company;
 
     @Column(name = "hierarchy_group_code", nullable = false, unique = true)
     private String hierarchyGroupCode;
@@ -34,6 +31,8 @@ public class HierarchyGroup {
     private Boolean isActive;
 
     @OneToMany(mappedBy = "hierarchyGroup", orphanRemoval = true, cascade = CascadeType.ALL)
+    @Builder.Default
+
     private List<WarehouseHierarchyGroup> warehouseHierarchyGroups = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -41,5 +40,6 @@ public class HierarchyGroup {
     private HierarchyGroup parentGroup;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentGroup", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<HierarchyGroup> childGroup = new ArrayList<>();
 }

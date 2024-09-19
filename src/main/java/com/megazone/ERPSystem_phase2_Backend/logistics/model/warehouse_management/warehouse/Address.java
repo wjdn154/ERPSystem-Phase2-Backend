@@ -1,13 +1,10 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 주소 정보 테이블
@@ -15,7 +12,8 @@ import java.util.List;
  */
 @Entity(name = "warehouse_address")
 @Table(name = "warehouse_address")
-@Data
+@Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Address {
@@ -23,13 +21,6 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id; // 고유 식별자
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "company_id", nullable = false)
-    private Company company;
-
-    @OneToMany(mappedBy = "address")
-    private List<Warehouse> warehouseList = new ArrayList<>();
 
     @Column(nullable = false) // 창고 주소
     private String warehouseAddress;

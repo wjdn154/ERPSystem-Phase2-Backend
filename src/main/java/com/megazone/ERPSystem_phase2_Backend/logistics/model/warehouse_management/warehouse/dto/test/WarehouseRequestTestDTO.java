@@ -22,17 +22,13 @@ public class WarehouseRequestTestDTO {
     private Boolean isActive; // 사용 여부 (사용, 미사용)
 
     public Warehouse mapToEntity(ProcessDetails processDetail, List<WarehouseHierarchyGroup> hierarchyGroups) {
-        Warehouse warehouse = new Warehouse();
-        warehouse.setCode(this.code);
-        warehouse.setName(this.name);
-        warehouse.setWarehouseType(this.warehouseType);
-        warehouse.setIsActive(this.isActive);
-
-        warehouse.setProcessDetail(processDetail);
-        if (hierarchyGroups != null && !hierarchyGroups.isEmpty()) {
-            warehouse.setWarehouseHierarchyGroup(hierarchyGroups);
-        }
-
-        return warehouse;
+        return Warehouse.builder()
+                .code(this.code)
+                .name(this.name)
+                .warehouseType(this.warehouseType)
+                .processDetail(processDetail)
+                .isActive(this.isActive)
+                .warehouseHierarchyGroup(hierarchyGroups)
+                .build();
     }
 }
