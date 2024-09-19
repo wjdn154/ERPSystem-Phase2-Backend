@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product;
 
+import aj.org.objectweb.asm.commons.InstructionAdapter;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 

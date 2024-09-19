@@ -67,7 +67,4 @@ public class ProcessDetails {
     @OneToMany(mappedBy = "processDetails")
     private List<MaterialInputStatus>  materialInputStatus;
 
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "company_id")
-//    private Company company;                            //회사 테이블 참조 (회사 아이디)
 }

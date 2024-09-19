@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto;
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

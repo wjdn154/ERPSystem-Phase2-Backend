@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.reflect.Field;
 import java.sql.SQLException;
@@ -51,12 +52,10 @@ public class UsersServiceImpl implements UsersService{
         Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
 
         // 이메일 형식 검증
-        if (!pattern.matcher(authRequest.getUserName()).matches()) throw new IllegalArgumentException("잘못된 이메일 형식입니다.");
+        if (!pattern.matcher(authRequest.getUserName()).matches()) return ResponseEntity.badRequest().body("잘못된 이메일 형식입니다.");
 
         // 유저 검증
-        if (usersRepository.findByUserName(authRequest.getUserName()).isPresent()) {
-            throw new RuntimeException("이미 존재하는 사용자입니다.");
-        }
+        if (usersRepository.findByUserName(authRequest.getUserName()).isPresent()) return ResponseEntity.badRequest().body("이미 존재하는 사용자입니다.");
 
         // 테넌트 스키마에 저장할 사용자 생성
         Users tenantUser = new Users();
@@ -64,7 +63,7 @@ public class UsersServiceImpl implements UsersService{
         tenantUser.setPassword(passwordEncoder.encode(authRequest.getPassword()));
         tenantUser.setPermission(new Permission());
         tenantUser.setCompany(companyRepository.findById(authRequest.getCompanyId())
-                .orElseThrow(() -> new RuntimeException("회사 정보를 찾을 수 없습니다.")));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "회사 정보를 찾을 수 없습니다.")));
         tenantUser.setUserNickname(authRequest.getUserNickname());
 
         usersRepository.save(tenantUser);
