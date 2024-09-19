@@ -8,6 +8,7 @@ import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_man
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.JobTitle.JobTitleRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Performance.PerformanceRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Position.PositionRepository;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final PositionRepository positionRepository;
     private final JobTitleRepository jobTitleRepository;
     private final EmployeeBankAccountRepository bankAccountRepository;
+    private final UsersRepository usersRepository;
 
     // 사원 리스트 조회
     @Override
@@ -254,6 +256,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         BankAccount newBankAccount = new BankAccount();
         newBankAccount.setBankName(dto.getBankAccountDTO().getBankName());
         newBankAccount.setAccountNumber(dto.getBankAccountDTO().getAccountNumber());
+        newBankAccount.setEmployee(employee);
         employee.setBankAccount(newBankAccount);
         bankAccountRepository.save(newBankAccount);
 

@@ -1,6 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto;
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.BankAccount;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.EmploymentStatus;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.EmploymentType;
 import lombok.AllArgsConstructor;

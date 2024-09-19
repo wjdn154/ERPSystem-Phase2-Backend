@@ -3,15 +3,15 @@ INSERT INTO employee_department (department_code, department_name, location) VAL
 ('0003','생산부','2층'),
 ('0004','물류부','3층');
 
-INSERT INTO employee_position (description, position_name) VALUES
-('Responsible for managing team and overseeing projects.', 'Manager'),
-('Leads the development team and coordinates between departments.', 'Team Lead'),
-('Develops and maintains software applications.', 'Senior Developer');
+INSERT INTO employee_position (code,description, position_name) VALUES
+('01','Responsible for managing team and overseeing projects.', '사원'),
+('02','Leads the development team and coordinates between departments.', '주임'),
+('03','Develops and maintains software applications.', '대리');
 
-INSERT INTO employee_job_title (description, title_name) VALUES
-('1','강사 개발자'),
-('2','백엔드 개발자'),
-('3','프론트 개발자');
+INSERT INTO employee_job_title (code,description, title_name) VALUES
+('12','1','인사 부장'),
+('13','2','총무과장'),
+('14','3','마케팅 팀장');
 
 -- INSERT INTO employee (date_of_birth, hire_date, is_household_head, department_id, job_title_id, position_id, address, email, employee_number, first_name, last_name, phone_number, profile_picture, employment_status, employment_type) VALUES
 -- ('2000-07-20','2024-08-20',TRUE,1, 1,  1,'부산','ckacl2512@naver.com','0001','김', '민성','010-2512-9361','x','ACTIVE', 'INTERN'),
@@ -45,12 +45,18 @@ VALUES
 INSERT INTO employee_bank_account (employee_id,account_number, bank_name) VALUES
 (1,'291-12-0239314','부산은행'),
 (2,'939302-00-747614','국민은행'),
-(3,'01025129361','기업은행');
-
+(3,'01025129361','우리은행'),
+(4,'01029392102','하나은행'),
+(5,'01093201932','국민은행'),
+(6,'01029192011','기업은행');
 INSERT INTO employee_performance (evaluation_date, employee_id, evaluator_id, comments, score) VALUES
 ('2023-06-15', 1, 1, 'Excellent performance, consistently meets expectations.', 'A'),
 ('2023-06-20', 2, 1, 'Needs improvement in meeting deadlines.', 'C'),
 ('2023-07-01', 3, 1, 'Outstanding problem-solving skills.', 'A+');
+
+INSERT INTO employee_transfer (transfer_date, employee_id, from_department_id, to_department_id, reason, transfer_type ) VALUES
+('2024-09-19', 1, 1, 2, '승진', 'promotion'),
+('2024-10-01', 2, 1, 2, '부서 이동', 'lateral');
 
 
 

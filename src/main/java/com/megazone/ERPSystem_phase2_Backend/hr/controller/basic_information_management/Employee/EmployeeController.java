@@ -1,14 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.controller.basic_information_management.Employee;
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.*;
-import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Employee.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
