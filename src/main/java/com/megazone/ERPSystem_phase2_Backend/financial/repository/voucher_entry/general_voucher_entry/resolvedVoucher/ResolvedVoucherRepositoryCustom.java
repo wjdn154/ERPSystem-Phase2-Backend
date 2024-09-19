@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.ResolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherDeleteDTO;
+import com.querydsl.core.Tuple;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
