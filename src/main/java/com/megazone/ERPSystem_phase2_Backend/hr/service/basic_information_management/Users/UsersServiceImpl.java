@@ -4,11 +4,13 @@ import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.SchemaBa
 import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.TenantContext;
 import com.megazone.ERPSystem_phase2_Backend.common.config.security.AuthRequest;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Permission;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersPermissionDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.UserPermission;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Permission.PermissionRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import jakarta.transaction.Transactional;
@@ -38,6 +40,7 @@ public class UsersServiceImpl implements UsersService{
     private final UsersRepository usersRepository;
     private final PermissionRepository permissionRepository;
     private final CompanyRepository companyRepository;
+    private final EmployeeRepository employeeRepository;
     //private final RoleRepository roleRepository;
 
     private final PasswordEncoder passwordEncoder;
@@ -57,6 +60,9 @@ public class UsersServiceImpl implements UsersService{
         // 유저 검증
         if (usersRepository.findByUserName(authRequest.getUserName()).isPresent()) return ResponseEntity.badRequest().body("이미 존재하는 사용자입니다.");
 
+        Employee employee = employeeRepository.findByEmail(authRequest.getUserName()).orElse(null);
+        if(employee == null) return ResponseEntity.badRequest().body("사원 정보를 찾을 수 없습니다.");
+
         // 테넌트 스키마에 저장할 사용자 생성
         Users tenantUser = new Users();
         tenantUser.setUserName(authRequest.getUserName());
@@ -64,6 +70,7 @@ public class UsersServiceImpl implements UsersService{
         tenantUser.setPermission(new Permission());
         tenantUser.setCompany(companyRepository.findById(authRequest.getCompanyId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "회사 정보를 찾을 수 없습니다.")));
+        tenantUser.setEmployee(employee);
         tenantUser.setUserNickname(authRequest.getUserNickname());
 
         usersRepository.save(tenantUser);

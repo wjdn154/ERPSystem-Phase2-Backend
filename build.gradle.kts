@@ -48,6 +48,7 @@ dependencies {
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2") // JWT Jackson
 	implementation("jakarta.servlet:jakarta.servlet-api:5.0.0")
 
+
 	// Querydsl 관련 라이브러리
 	implementation("com.querydsl:querydsl-apt:5.0.0") // Querydsl APT
 	implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta") // Querydsl JPA Jakarta
