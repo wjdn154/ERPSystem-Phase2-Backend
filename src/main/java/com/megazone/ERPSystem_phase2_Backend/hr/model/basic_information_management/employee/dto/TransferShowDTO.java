@@ -16,7 +16,7 @@ public class TransferShowDTO {
     private String transferType;
     private String reason;
 
-    public TransferShowDTO create(Transfer transfer) {
+    public static TransferShowDTO create(Transfer transfer) {
         return new TransferShowDTO(
                 transfer.getTransferDate(),
                 transfer.getEmployee().getLastName() + transfer.getEmployee().getFirstName(),
