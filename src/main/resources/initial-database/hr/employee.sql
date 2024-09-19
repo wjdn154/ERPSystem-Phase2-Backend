@@ -40,15 +40,7 @@ VALUES
 
 INSERT INTO employee (date_of_birth, hire_date, is_household_head, department_id, job_title_id, position_id, address, email, employee_number, first_name, last_name, phone_number, profile_picture, employment_status, employment_type)
 VALUES
-    ('2000-10-14', '2024-12-13' , TRUE, 3, 2, 3, '울산', 'soojin.choi@example.com', '0006', '이주', '최', '010-2234-5678', 'img6.jpg', 'ACTIVE', 'INTERN');
-
-INSERT INTO employee (date_of_birth, hire_date, is_household_head, department_id, job_title_id, position_id, address, email, employee_number, first_name, last_name, phone_number, profile_picture, employment_status, employment_type)
-VALUES
-    ('2000-10-16', '2024-12-10' , TRUE, 3, 2, 3, '거제', 'wkdgywjd77@naver.com', '0006', '정현', '박', '010-2234-5678', 'img7.jpg', 'ACTIVE', 'FULL_TIME');
-
-INSERT INTO employee (date_of_birth, hire_date, is_household_head, department_id, job_title_id, position_id, address, email, employee_number, first_name, last_name, phone_number, profile_picture, employment_status, employment_type)
-VALUES
-    ('2000-12-25', '2024-12-15' , TRUE, 3, 2, 3, '서울', 'sojung.park@example.com', '0006', '소정', '박', '010-2234-5678', 'img8.jpg', 'ACTIVE', 'INTERN');
+    ('2000-10-16', '2024-12-13' , TRUE, 3, 2, 3, '거제', 'soojin.choi@example.com', '0006', '정현', '박', '010-2234-5678', 'img6.jpg', 'ACTIVE', 'INTERN');
 
 INSERT INTO employee_bank_account (employee_id,account_number, bank_name) VALUES
 (1,'291-12-0239314','부산은행'),
