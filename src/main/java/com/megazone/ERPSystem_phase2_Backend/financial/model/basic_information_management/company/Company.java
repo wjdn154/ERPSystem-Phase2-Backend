@@ -120,4 +120,5 @@ public class Company {
         this.fiscalYearEnd = fiscalYearEnd;
         this.fiscalCardinalNumber = fiscalCardinalNumber;
     }
+
 }

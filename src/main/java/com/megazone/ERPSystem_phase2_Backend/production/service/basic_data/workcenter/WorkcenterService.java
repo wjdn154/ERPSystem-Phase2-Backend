@@ -11,25 +11,25 @@ import java.util.Optional;
 
 public interface WorkcenterService {
 
-    Optional<WorkcenterDTO> updateByCode(Long company_id, String code, WorkcenterDTO workcenterDTO);
+    Optional<WorkcenterDTO> updateByCode(String code, WorkcenterDTO workcenterDTO);
 
-    Workcenter save(Long company_id, WorkcenterDTO workcenterDTO);
+    Workcenter save(WorkcenterDTO workcenterDTO);
 
-//    List<WorkcenterDTO> findByNameContaining(Long company_id, String name);
+//    List<WorkcenterDTO> findByNameContaining(String name);
 
-    Optional<WorkcenterDTO> findByCode(Long company_id, String code);
+    Optional<WorkcenterDTO> findByCode(String code);
 
-    Optional<WorkcenterDTO> findById(Long company_id, Long id);
+    Optional<WorkcenterDTO> findById(Long id);
 
-    Optional<WorkcenterDTO> deleteByCode(Long company_id, String code);
+    Optional<WorkcenterDTO> deleteByCode(String code);
 
-    List<WorkcenterDTO> findAll(Long company_id);
+    List<WorkcenterDTO> findAll();
 
-    List<WarehouseResponseDTO> findAllFactories(Long company_id);
+    List<WarehouseResponseDTO> findAllFactories();
 
-    List<EquipmentDataDTO> findEquipmentByWorkcenterCode(Long company_id, String workcenterCode);
+    List<EquipmentDataDTO> findEquipmentByWorkcenterCode(String workcenterCode);
 
-    List<WorkerAssignmentDTO> findWorkerAssignmentsByWorkcenterCode(Long company_id, String workcenterCode);
+    List<WorkerAssignmentDTO> findWorkerAssignmentsByWorkcenterCode(String workcenterCode);
 
-    List<WorkerAssignmentDTO> findTodayWorkers(Long company_id, String workcenterCode);
+    List<WorkerAssignmentDTO> findTodayWorkers(String workcenterCode);
 }

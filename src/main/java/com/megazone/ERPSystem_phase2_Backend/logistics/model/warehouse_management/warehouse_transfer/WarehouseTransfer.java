@@ -1,6 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse_transfer;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse_transfer.enums.TransferStatus;
@@ -10,8 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -26,10 +24,6 @@ public class WarehouseTransfer {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "company_id", nullable = false)
-    private Company company;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "sending_warehouse_id", nullable = false)
     private Warehouse sendingWarehouse;
 
@@ -41,12 +35,11 @@ public class WarehouseTransfer {
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
-    @OneToMany(mappedBy = "warehouseTransfer", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<WarehouseTransferProduct> products = new ArrayList<>();
+    @OneToMany(mappedBy = "warehouseTransfer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<WarehouseTransferProduct> warehouseTransferProducts;
 
     @Column(name = "transfer_date", nullable = false)
-    private LocalDateTime transferDate;
+    private LocalDate transferDate;
 
     @Column(name = "transfer_number", nullable = false)
     private Long transferNumber;

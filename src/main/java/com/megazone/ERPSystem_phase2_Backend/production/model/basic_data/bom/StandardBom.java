@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,12 @@ public class StandardBom {
 
     @Column(nullable = false)
     private String code; // BOM 지정코드
+
+    @Column(nullable = false)
+    private Double version; // BOM 버전
+
+    @Column(nullable = false)
+    private LocalDateTime createdDate; // BOM 생성일자
 
     @Column(nullable = true)
     private String description; // 설명
@@ -81,6 +88,6 @@ public class StandardBom {
     private List<StandardBomMaterial> bomMaterials = new ArrayList<>(); // 중간 엔티티 리스트
 
     @OneToMany(mappedBy = "standardBom", fetch = FetchType.LAZY)
-    private List<Mrp> mrps = new ArrayList<>(); // 연관 S bom 목록
+    private List<Mrp> mrps = new ArrayList<>(); // 연관 MRP
 
 }

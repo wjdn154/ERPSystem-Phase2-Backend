@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WarehouseTransferProductRequestDTO {
-    private Long productId;    // 상품 ID
-    private Integer quantity;  // 상품 수량
-    private String comment;    // 비고사항 (nullable)
+    private Long id; // 품목 ID (고유)
+    private String productCode; // 품목 코드
+    private String productName; // 품목명
+    private Long quantity; // 수량
+    private String comment; // 품목 관련 코멘트 (선택 사항)
 }

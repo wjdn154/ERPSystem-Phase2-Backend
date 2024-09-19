@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 public class ProductionRequestDTO {
 
-    private Long id; // PK
+    private Long id;
 
     private ProductionRequestType requestsType; // 생산의뢰구분 (Enum)
 
