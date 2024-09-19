@@ -35,17 +35,10 @@ public class TenantService {
      */
     @PostConstruct
     public void init() throws Exception {
-        try {
-            // PUBLIC 스키마 및 테넌트 스키마 처리
-            handlePublicSchema();
-            registerTenant("tenant_1");
-            registerTenant("tenant_2");
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
-        }
-
+        // PUBLIC 스키마 및 테넌트 스키마 처리
+        handlePublicSchema();
+        registerTenant("tenant_1");
+        registerTenant("tenant_2");
     }
 
     /**

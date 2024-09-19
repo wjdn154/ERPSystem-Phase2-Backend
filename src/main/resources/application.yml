@@ -9,7 +9,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-#      ddl-auto: create-only
+    #      ddl-auto: create-only
     #    generate-ddl: true
     properties:
       hibernate:
@@ -18,7 +18,7 @@ spring:
         tenant_identifier_resolver: com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.SchemaBasedTenantIdentifierResolver
         multi_tenant_connection_provider: com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.SchemaBasedMultiTenantConnectionProvider
 
-#    show-sql: true # SQL 쿼리를 콘솔에 출력하도록 설정
+    #    show-sql: true # SQL 쿼리를 콘솔에 출력하도록 설정
     show-sql: false # SQL 쿼리를 콘솔에 출력하도록 설정
     defer-datasource-initialization: true # 데이터베이스 초기화를 지연시켜, 스키마 생성 후 데이터 초기화가 이루어지도록 설정
   web:
@@ -56,8 +56,8 @@ spring:
         - classpath:initial-database/financial/bank_account/bank_account_type.sql
         - classpath:initial-database/financial/common/financial_address.sql
         - classpath:initial-database/financial/common/financial_bank_account.sql
-#        - classpath:initial-database/financial/credit_card/credit_card.sql
-#        - classpath:initial-database/financial/unresolved_voucher.sql
+        #        - classpath:initial-database/financial/credit_card/credit_card.sql
+        #        - classpath:initial-database/financial/unresolved_voucher.sql
         - classpath:initial-database/financial/vat_type.sql
         - classpath:initial-database/financial/journal_entry_type_setup.sql
         - classpath:initial-database/financial/journal_entry.sql
@@ -68,14 +68,24 @@ spring:
 
         - classpath:initial-database/hr/employee.sql
         - classpath:initial-database/hr/role.sql
-#        - classpath:initial-database/hr/users.sql
+        #        - classpath:initial-database/hr/users.sql
         - classpath:initial-database/hr/attendance_management.sql
         - classpath:initial-database/logistics/product_group.sql
-#        - classpath:initial-database/logistics/product.sql
+        #        - classpath:initial-database/logistics/product.sql
 
         # [주의] 물류및생산 순서유지해야함 (1. 생산공정 2. 라우팅 3. 품목 4. 창고 5. 작업장 6. 작업지시 등)
         - classpath:initial-database/production/basic_data/process_routing/process_details.sql
         - classpath:initial-database/production/basic_data/process_routing/process_routing.sql
+
+        - classpath:initial-database/financial/client/client_contact_info.sql
+        - classpath:initial-database/financial/client/client_bank_account.sql
+        - classpath:initial-database/financial/client/client_business_info.sql
+        - classpath:initial-database/financial/client/client_financial_info.sql
+        - classpath:initial-database/financial/client/client_manager_info.sql
+        - classpath:initial-database/financial/client/client_category.sql
+        - classpath:initial-database/financial/client/client_liquor.sql
+        - classpath:initial-database/financial/common/financial_bank_account.sql
+        - classpath:initial-database/financial/client/client.sql
 
         - classpath:initial-database/logistics/product.sql
         - classpath:initial-database/logistics/warehouse/warehouse.sql
@@ -88,22 +98,11 @@ spring:
         - classpath:initial-database/production/resource_data/maintenanceHistory.sql
         - classpath:initial-database/production/resource_data/worker.sql
         - classpath:initial-database/production/production_schedule/common_scheduling/worker_assignment.sql
-
-
-        - classpath:initial-database/financial/client/client_contact_info.sql
-        - classpath:initial-database/financial/client/client_bank_account.sql
-        - classpath:initial-database/financial/client/client_business_info.sql
-        - classpath:initial-database/financial/client/client_financial_info.sql
-        - classpath:initial-database/financial/client/client_manager_info.sql
-        - classpath:initial-database/financial/client/client_category.sql
-        - classpath:initial-database/financial/client/client_liquor.sql
-        - classpath:initial-database/financial/common/financial_bank_account.sql
-        - classpath:initial-database/financial/client/client.sql
-
+        -
 logging:
   level:
-#    org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)
-#    org.hibernate.type.descriptor.sql.BasicBinder: TRACE # Hibernate SQL 바인딩 로그 레벨 설정 (TRACE)
+    #    org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)
+    #    org.hibernate.type.descriptor.sql.BasicBinder: TRACE # Hibernate SQL 바인딩 로그 레벨 설정 (TRACE)
     org.hibernate.SQL: OFF # SQL 쿼리 로그 비활성화
     org.hibernate.type.descriptor.sql.BasicBinder: ERROR # SQL 바인딩 로그 비활성화
 
