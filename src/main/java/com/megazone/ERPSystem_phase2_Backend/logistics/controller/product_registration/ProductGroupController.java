@@ -18,19 +18,16 @@ import java.util.List;
 public class ProductGroupController {
 
     private final ProductGroupService productGroupService;
-    private final UsersRepository usersRepository;
 
     /**
-     * 특정 회사에 등록된 품목 그룹 리스트 조회 (검색어 포함)
+     * 품목 그룹 리스트 조회 (검색어 포함)
      * @param searchTerm 검색어
-     * @return 해당 회사의 모든 품목 그룹 리스트를 반환
+     * @return 모든 품목 그룹 리스트를 반환
      */
     @PostMapping("/")
     public ResponseEntity<List<ProductGroupDto>> getAllProductGroups(@RequestParam(value = "search", required = false) String searchTerm) {
 
-        Long companyId = getCompanyIdOfAuthenticatedUser();
-
-        List<ProductGroupDto> response = productGroupService.findAllProductGroups(companyId, searchTerm);
+        List<ProductGroupDto> response = productGroupService.findAllProductGroups(searchTerm);
 
         return ResponseEntity.ok(response);
     }
@@ -43,9 +40,7 @@ public class ProductGroupController {
     @PostMapping("/save")
     public ResponseEntity<ProductGroupDto> saveProductGroup(@RequestBody ProductGroupDto productGroupDto) {
 
-        Long companyId = getCompanyIdOfAuthenticatedUser();
-
-        return productGroupService.saveProductGroup(companyId, productGroupDto)
+        return productGroupService.saveProductGroup(productGroupDto)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
@@ -59,9 +54,7 @@ public class ProductGroupController {
     @PutMapping("/update/{id}")
     public ResponseEntity<ProductGroupDto> updateProductGroup(@PathVariable("id") Long id, @RequestBody ProductGroupDto productGroupDto) {
 
-        Long companyId = getCompanyIdOfAuthenticatedUser();
-
-        return productGroupService.updateProduct(companyId, id, productGroupDto)
+        return productGroupService.updateProduct(id, productGroupDto)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
@@ -74,9 +67,7 @@ public class ProductGroupController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteProductGroup(@PathVariable("id") Long id) {
 
-        Long companyId = getCompanyIdOfAuthenticatedUser();
-
-        String result = productGroupService.deleteProductGroup(companyId, id);
+        String result = productGroupService.deleteProductGroup(id);
 
         return ResponseEntity.ok(result);
     }
@@ -89,9 +80,7 @@ public class ProductGroupController {
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<String> deactivateProductGroup(@PathVariable("id") Long id) {
 
-        Long companyId = getCompanyIdOfAuthenticatedUser();
-
-        String result = productGroupService.deactivateProductGroup(companyId, id);
+        String result = productGroupService.deactivateProductGroup(id);
 
         return ResponseEntity.ok(result);
     }
@@ -104,24 +93,9 @@ public class ProductGroupController {
     @PutMapping("/{id}/reactivate")
     public ResponseEntity<String> reactivateProductGroup(@PathVariable("id") Long id) {
 
-        Long companyId = getCompanyIdOfAuthenticatedUser();
-
-        String result = productGroupService.reactivateProductGroup(companyId, id);
+        String result = productGroupService.reactivateProductGroup(id);
 
         return ResponseEntity.ok(result);
     }
 
-    /**
-     * 사용자 인증 정보를 통해 회사 ID를 가져오는 메서드
-     * @return 인증된 사용자의 회사 ID
-     */
-    private Long getCompanyIdOfAuthenticatedUser() {
-
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        Users user = usersRepository.findByUserName(userName)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-
-        return user.getCompany().getId();
-    }
 }

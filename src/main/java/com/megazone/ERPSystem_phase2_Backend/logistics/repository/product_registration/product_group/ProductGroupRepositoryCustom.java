@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface ProductGroupRepositoryCustom {
 
-    List<ProductGroup> findProductGroupsByCompanyAndSearchTerm(Long companyId, String searchTerm);
+    List<ProductGroup> findProductGroupsBySearchTerm(String searchTerm);
 
 }

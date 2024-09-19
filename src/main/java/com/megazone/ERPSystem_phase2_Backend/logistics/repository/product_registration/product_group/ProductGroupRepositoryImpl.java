@@ -15,13 +15,10 @@ public class ProductGroupRepositoryImpl implements ProductGroupRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ProductGroup> findProductGroupsByCompanyAndSearchTerm(Long companyId, String searchTerm) {
+    public List<ProductGroup> findProductGroupsBySearchTerm(String searchTerm) {
         QProductGroup productGroup = QProductGroup.productGroup;
 
         BooleanBuilder builder = new BooleanBuilder();
-
-        // 회사 ID에 따른 필터링
-        builder.and(productGroup.company.id.eq(companyId));
 
         // 검색어가 있는 경우에만 필터링
         if (searchTerm != null && !searchTerm.isEmpty()) {

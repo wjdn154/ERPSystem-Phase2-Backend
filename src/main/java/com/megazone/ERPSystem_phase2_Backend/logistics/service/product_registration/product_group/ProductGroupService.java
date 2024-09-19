@@ -8,15 +8,15 @@ import java.util.Optional;
 
 public interface ProductGroupService {
 
-    List<ProductGroupDto> findAllProductGroups(Long companyId, String searchTerm);
+    List<ProductGroupDto> findAllProductGroups(String searchTerm);
 
-    Optional<ProductGroupDto> saveProductGroup(Long companyId, ProductGroupDto productGroupDto);
+    Optional<ProductGroupDto> saveProductGroup(ProductGroupDto productGroupDto);
 
-    Optional<ProductGroupDto> updateProduct(Long companyId, Long id, ProductGroupDto productGroupDto);
+    Optional<ProductGroupDto> updateProduct(Long id, ProductGroupDto productGroupDto);
 
-    String deleteProductGroup(Long companyId, Long id);
+    String deleteProductGroup(Long id);
 
-    String deactivateProductGroup(Long companyId, Long id);
+    String deactivateProductGroup(Long id);
 
-    String reactivateProductGroup(Long companyId, Long id);
+    String reactivateProductGroup(Long id);
 }

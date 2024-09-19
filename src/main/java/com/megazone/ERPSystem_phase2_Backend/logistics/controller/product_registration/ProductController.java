@@ -29,9 +29,7 @@ public class ProductController {
     @PostMapping("/")
     public ResponseEntity<List<ProductResponseDto>> getAllProductList() {
 
-        Long companyId = getCompanyIdOfAuthenticatedUser();
-
-        List<ProductResponseDto> response = productService.findAllProducts(companyId);
+        List<ProductResponseDto> response = productService.findAllProducts();
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -43,9 +41,7 @@ public class ProductController {
     @PostMapping("/{id}")
     public ResponseEntity<ProductResponseDto> getProductDetailById(@PathVariable("id") Long id) {
 
-        Long companyId = getCompanyIdOfAuthenticatedUser();
-
-        return productService.findProductDetailById(companyId, id)
+        return productService.findProductDetailById(id)
                 .map(response -> ResponseEntity.status(HttpStatus.OK).body(response))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
@@ -58,9 +54,7 @@ public class ProductController {
     @PostMapping("/save")
     public ResponseEntity<ProductResponseDto> saveProduct(@RequestBody ProductRequestDto productRequestDto) {
 
-        Long companyId = getCompanyIdOfAuthenticatedUser();
-
-        return productService.saveProduct(companyId, productRequestDto)
+        return productService.saveProduct(productRequestDto)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
 
@@ -75,9 +69,7 @@ public class ProductController {
     @PutMapping("/update/{id}")
     public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable("id") Long id, @RequestBody ProductRequestDto productRequestDto){
 
-        Long companyId = getCompanyIdOfAuthenticatedUser();
-
-        return productService.updateProduct(companyId, id, productRequestDto)
+        return productService.updateProduct(id, productRequestDto)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
 
@@ -92,9 +84,7 @@ public class ProductController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Long id){
 
-        Long companyId = getCompanyIdOfAuthenticatedUser();
-
-        String result = productService.deleteProduct(companyId, id);
+        String result = productService.deleteProduct(id);
 
         return ResponseEntity.ok(result);
 
@@ -109,9 +99,7 @@ public class ProductController {
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<String> deactivateProduct(@PathVariable("id") Long id) {
 
-        Long companyId = getCompanyIdOfAuthenticatedUser();
-
-        String result = productService.deactivateProduct(companyId, id);
+        String result = productService.deactivateProduct(id);
 
         return ResponseEntity.ok(result);
     }
@@ -125,24 +113,9 @@ public class ProductController {
     @PutMapping("/{id}/reactivate")
     public ResponseEntity<String> reactivateProductGroup(@PathVariable("id") Long id) {
 
-        Long companyId = getCompanyIdOfAuthenticatedUser();
-
-        String result = productService.reactivateProduct(companyId, id);
+        String result = productService.reactivateProduct(id);
 
         return ResponseEntity.ok(result);
     }
 
-    /**
-     * 사용자 인증 정보를 통해 회사 ID를 가져오는 메서드
-     * @return 인증된 사용자의 회사 ID
-     */
-    private Long getCompanyIdOfAuthenticatedUser() {
-
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        Users user = usersRepository.findByUserName(userName)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-
-        return user.getCompany().getId();
-    }
 }

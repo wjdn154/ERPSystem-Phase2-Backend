@@ -12,12 +12,7 @@ import java.util.List;
  */
 
 @Entity(name = "product_group")
-@Table(
-        name = "product_group",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"company_id", "code"})
-        }
-)
+@Table(name = "product_group")
 @Data
 @Builder
 @ToString
@@ -30,13 +25,8 @@ public class ProductGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 회사 참조
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "company_id", nullable = false)
-    private Company company;
-
     // 품목 그룹 코드
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String code;
 
     // 품목 그룹 명

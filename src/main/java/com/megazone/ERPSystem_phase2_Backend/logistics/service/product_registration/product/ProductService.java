@@ -8,17 +8,17 @@ import java.util.Optional;
 
 public interface ProductService {
 
-    List<ProductResponseDto> findAllProducts(Long company_id);
+    List<ProductResponseDto> findAllProducts();
 
-    Optional<ProductResponseDto> findProductDetailById(Long companyId, Long id);
+    Optional<ProductResponseDto> findProductDetailById(Long id);
 
-    Optional<ProductResponseDto> saveProduct(Long companyId, ProductRequestDto productRequestDto);
+    Optional<ProductResponseDto> saveProduct(ProductRequestDto productRequestDto);
 
-    Optional<ProductResponseDto> updateProduct(Long companyId, Long id, ProductRequestDto productRequestDto);
+    Optional<ProductResponseDto> updateProduct(Long id, ProductRequestDto productRequestDto);
 
-    String deleteProduct(Long companyId, Long id);
+    String deleteProduct(Long id);
 
-    String deactivateProduct(Long companyId, Long id);
+    String deactivateProduct(Long id);
 
-    String reactivateProduct(Long companyId, Long id);
+    String reactivateProduct(Long id);
 }
