@@ -2,13 +2,24 @@ spring:
   application:
     name: ERPSystem-phase2-Backend # 애플리케이션 이름 설정
   datasource:
-    url: jdbc:mysql://localhost:3306/erp?useSSL=false&serverTimezone=UTC # 데이터베이스 URL 설정 (MySQL 데이터베이스 연결)
+    url: jdbc:mysql://localhost:3306/PUBLIC?useSSL=false&serverTimezone=UTC # 데이터베이스 URL 설정 (MySQL 데이터베이스 연결)
     username: root # 데이터베이스 사용자 이름
     password: 1234 # 데이터베이스 사용자 비밀번호
+    driver-class-name: com.mysql.cj.jdbc.Driver # 데이터베이스 드라이버 클래스 이름
   jpa:
     hibernate:
-      ddl-auto: create # 애플리케이션 시작 시 Hibernate가 데이터베이스 스키마를 생성하도록 설정
-    show-sql: true # SQL 쿼리를 콘솔에 출력하도록 설정
+      ddl-auto: none
+#      ddl-auto: create-only
+    #    generate-ddl: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        multi-tenancy: SCHEMA # 멀티 테넌시 설정 (스키마 기반)
+        tenant_identifier_resolver: com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.SchemaBasedTenantIdentifierResolver
+        multi_tenant_connection_provider: com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.SchemaBasedMultiTenantConnectionProvider
+
+#    show-sql: true # SQL 쿼리를 콘솔에 출력하도록 설정
+    show-sql: false # SQL 쿼리를 콘솔에 출력하도록 설정
     defer-datasource-initialization: true # 데이터베이스 초기화를 지연시켜, 스키마 생성 후 데이터 초기화가 이루어지도록 설정
   web:
     resources:
@@ -18,9 +29,12 @@ spring:
         - 'classpath:/resources/' # 정적 리소스 위치 지정 (클래스패스 기준)
         - 'classpath:/META-INF/resources/' # 정적 리소스 위치 지정 (클래스패스 기준)
         - 'file:src/main/frontend/dist/' # 정적 리소스 위치 지정 (파일 시스템 기준)
+  flyway:
+    enabled: false
+
   sql:
     init:
-      mode: always # 항상 SQL 초기화 모드를 사용하도록 설정
+      mode: never
       data-locations:
         - classpath:initial-database/financial/common/financial_contact.sql
         - classpath:initial-database/financial/company/company_tax_office.sql
@@ -38,16 +52,18 @@ spring:
         - classpath:initial-database/financial/account_subject/account_subject_fixed_memo.sql
         - classpath:initial-database/financial/account_subject/account_subject_transfer_memo.sql
         - classpath:initial-database/financial/common/financial_bank.sql
-        - classpath:initial-database/financial/client/client_liquor.sql
         - classpath:initial-database/financial/client/client_category.sql
         - classpath:initial-database/financial/bank_account/bank_account_type.sql
-        - classpath:initial-database/financial/bank_account/financial_address.sql
-        - classpath:initial-database/financial/bank_account/financial_bank_account.sql
+        - classpath:initial-database/financial/common/financial_address.sql
+        - classpath:initial-database/financial/common/financial_bank_account.sql
 #        - classpath:initial-database/financial/credit_card/credit_card.sql
 #        - classpath:initial-database/financial/unresolved_voucher.sql
         - classpath:initial-database/financial/vat_type.sql
         - classpath:initial-database/financial/journal_entry_type_setup.sql
         - classpath:initial-database/financial/journal_entry.sql
+
+
+
 
 
         - classpath:initial-database/hr/employee.sql
@@ -73,10 +89,23 @@ spring:
         - classpath:initial-database/production/resource_data/worker.sql
         - classpath:initial-database/production/production_schedule/common_scheduling/worker_assignment.sql
 
+
+        - classpath:initial-database/financial/client/client_contact_info.sql
+        - classpath:initial-database/financial/client/client_bank_account.sql
+        - classpath:initial-database/financial/client/client_business_info.sql
+        - classpath:initial-database/financial/client/client_financial_info.sql
+        - classpath:initial-database/financial/client/client_manager_info.sql
+        - classpath:initial-database/financial/client/client_category.sql
+        - classpath:initial-database/financial/client/client_liquor.sql
+        - classpath:initial-database/financial/common/financial_bank_account.sql
+        - classpath:initial-database/financial/client/client.sql
+
 logging:
   level:
-    org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE # Hibernate SQL 바인딩 로그 레벨 설정 (TRACE)
+#    org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)
+#    org.hibernate.type.descriptor.sql.BasicBinder: TRACE # Hibernate SQL 바인딩 로그 레벨 설정 (TRACE)
+    org.hibernate.SQL: OFF # SQL 쿼리 로그 비활성화
+    org.hibernate.type.descriptor.sql.BasicBinder: ERROR # SQL 바인딩 로그 비활성화
 
 jwt:
   secret: dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234

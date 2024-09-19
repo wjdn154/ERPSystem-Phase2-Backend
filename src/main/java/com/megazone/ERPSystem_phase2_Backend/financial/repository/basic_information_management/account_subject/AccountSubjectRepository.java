@@ -20,5 +20,5 @@ public interface AccountSubjectRepository extends JpaRepository<AccountSubject, 
      * @param code 계정과목 코드
      * @return 해당 코드의 계정과목을 Optional로 반환함.
      */
-    Optional<AccountSubject> findByCompanyIdAndCode(Long company_id, String code);
+    Optional<AccountSubject> findByCode(String code);
 }

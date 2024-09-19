@@ -9,7 +9,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,30 @@ public class CompanyServiceImpl implements CompanyService {
     private final ContactRepository contactRepository;
     private final MainBusinessRepository mainBusinessRepository;
     private final TaxOfficeRepository taxOfficeRepository;
+
+    @Override
+    public List<CompanyDTO> findAllCompany() {
+        List<Company> companies = companyRepository.findAll();
+        return companies.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CompanyDTO> searchCompany(String searchText) {
+        List<Company> companies;
+
+        // 검색 텍스트가 없으면 모든 회사 조회
+        if(searchText != null) {
+            companies = companyRepository.findByNameContaining(searchText); // 검색어로 회사 조회
+        }else {
+            companies = companyRepository.findAll(); // 모든 회사 조회
+        }
+
+        return companies.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
 
     /**
      * 회사 정보를 저장함.
@@ -167,6 +193,7 @@ public class CompanyServiceImpl implements CompanyService {
      */
     private CompanyDTO mapToDTO(Company company) {
         return new CompanyDTO(
+                company.getId(), // ID
                 new CorporateTypeDTO(company.getCorporateType()), // 법인구분 정보
                 new CorporateKindDTO(company.getCorporateKind()), // 법인종류별 구분 정보
                 new RepresentativeDTO(company.getRepresentative()), // 대표자 정보

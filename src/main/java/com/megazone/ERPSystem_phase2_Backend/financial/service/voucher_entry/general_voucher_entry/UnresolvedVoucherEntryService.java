@@ -18,8 +18,7 @@ public interface UnresolvedVoucherEntryService {
 
 //    UnresolvedVoucher createUnresolvedVoucher(UnresolvedVoucherEntryDTO dto, String voucherNum, LocalDateTime nowTime);
 
-    UnresolvedVoucher createUnresolvedVoucher(UnresolvedVoucherEntryDTO dto, String voucherNum, LocalDateTime nowTime,
-                                              Long companyId);
+    UnresolvedVoucher createUnresolvedVoucher(UnresolvedVoucherEntryDTO dto, String voucherNum, LocalDateTime nowTime);
 
     boolean depositAndWithdrawalUnresolvedVoucherTypeCheck(UnresolvedVoucherEntryDTO dto);
 

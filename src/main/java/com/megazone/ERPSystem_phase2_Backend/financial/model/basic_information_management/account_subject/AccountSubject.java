@@ -14,14 +14,6 @@ import java.util.List;
  */
 @Entity(name = "account_subject")
 @Table(name = "account_subject",
-        uniqueConstraints= {
-                @UniqueConstraint(
-                        columnNames = {
-                                "company_id",
-                                "code"
-                        }
-                )
-        },
         indexes = {
                 @Index(name = "idx_account_subject_code", columnList = "code")
         }
@@ -32,10 +24,6 @@ public class AccountSubject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "company_id")
-    private Company company; // 회사 참조
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "structure_code", referencedColumnName = "code")
@@ -70,7 +58,7 @@ public class AccountSubject {
     @Column(nullable = false)
     private IncreaseDecreaseType increaseDecreaseType;  // 증감구분
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String code; // 계정과목 코드
     @Column(nullable = false)
     private String name; // 계정과목명

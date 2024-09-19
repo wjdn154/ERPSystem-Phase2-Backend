@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * 발주요청 테이블

@@ -1,19 +1,21 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.HierarchyGroupResponseDTO;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseResponseDTO;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseDetailDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.test.WarehouseHierarchyGroupDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.test.WarehouseResponseListDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.test.WarehouseResponseTestDTO;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
-import static com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.QHierarchyGroup.hierarchyGroup;
+import static com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.hierarchy_group.QHierarchyGroup.hierarchyGroup;
+import static com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.hierarchy_group.QWarehouseHierarchyGroup.warehouseHierarchyGroup;
 import static com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.QWarehouse.warehouse;
-import static com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.QWarehouseHierarchyGroup.warehouseHierarchyGroup;
+import static com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.QProcessDetails.processDetails;
+
 
 @Repository
 @RequiredArgsConstructor
@@ -21,57 +23,62 @@ public class WarehouseRepositoryImpl implements WarehouseRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-    /**
-     * 모든 창고를 조회함.
-     * @return 창고 목록을 반환함.
-     */
     @Override
-    public List<WarehouseResponseDTO> findAllWarehouse() {
+    public List<WarehouseResponseListDTO> findWarehouseList() {
         return queryFactory
-                .select(Projections.fields(WarehouseResponseDTO.class,
-                        warehouse.code.as("code"),
-                        warehouse.name.as("name"),
-                        warehouse.warehouseType.as("warehouseType"),
-                        warehouse.productionProcess.as("productionProcess"),
-                        warehouse.isActive.as("isActive")
-                        ))
+                .select(Projections.fields(
+                        WarehouseResponseListDTO.class,
+                        warehouse.id,
+                        warehouse.code,
+                        warehouse.name,
+                        warehouse.warehouseType.stringValue().as("warehouseType"),
+                        warehouse.processDetail,
+                        warehouse.isActive
+                ))
                 .from(warehouse)
-                .orderBy(Expressions.stringTemplate("LENGTH({0})", warehouse.code).asc(),
-                        warehouse.code.asc())
+                .leftJoin(warehouse.processDetail, processDetails)
                 .fetch();
     }
 
     @Override
-    public WarehouseDetailDTO getWarehouseDetail(Long id) {
-        // 창고코드, 창고명, 창고타입, 영업단가그룹(예정), 구매단가그룹(예정), 창고계층그룹, 창고사용여부
-        WarehouseDetailDTO warehouseDetail = queryFactory
-                .select(Projections.fields(WarehouseDetailDTO.class,
-                        warehouse.id.as("id"),
-                        warehouse.code.as("code"),
-                        warehouse.name.as("name"),
-                        warehouse.warehouseType.as("warehouseType"),
-                        warehouse.productionProcess.as("productionProcess"),
-                        warehouse.isActive.as("isActive")
-                        ))
+    public Optional<WarehouseResponseTestDTO> findWarehouseDetailById(Long warehouseId) {
+        WarehouseResponseTestDTO warehouseDetail = queryFactory
+                .select(Projections.fields(
+                        WarehouseResponseTestDTO.class,
+                        warehouse.id,
+                        warehouse.code,
+                        warehouse.name,
+                        warehouse.warehouseType,
+                        warehouse.processDetail.name.as("productionProcess"),
+                        warehouse.isActive
+                ))
                 .from(warehouse)
-                .where(warehouse.id.eq(id))
+                .leftJoin(warehouse.processDetail, processDetails)
+                .leftJoin(warehouse.warehouseHierarchyGroup, warehouseHierarchyGroup)
+                .leftJoin(warehouseHierarchyGroup.hierarchyGroup, hierarchyGroup)
+                .where(warehouse.id.eq(warehouseId))
                 .fetchOne();
 
-        List<HierarchyGroupResponseDTO> hierarchyGroups = queryFactory
-                .select(Projections.fields(HierarchyGroupResponseDTO.class,
-                        hierarchyGroup.id.as("id"),
-                        hierarchyGroup.hierarchyGroupCode.as("hierarchyGroupCode"),
-                        hierarchyGroup.hierarchyGroupName.as("hierarchyGroupName")
-                        ))
+        if (warehouseDetail == null) {
+            return Optional.empty();
+        }
+
+        // 계층 그룹 정보 추가
+        List<WarehouseHierarchyGroupDTO> hierarchyGroups = queryFactory
+                .select(Projections.fields(
+                        WarehouseHierarchyGroupDTO.class,
+                        hierarchyGroup.id,
+                        hierarchyGroup.hierarchyGroupCode.as("code"),
+                        hierarchyGroup.hierarchyGroupName.as("name")
+                ))
                 .from(warehouseHierarchyGroup)
                 .leftJoin(warehouseHierarchyGroup.hierarchyGroup, hierarchyGroup)
-                .where(warehouseHierarchyGroup.warehouse.id.eq(id))
+                .where(warehouseHierarchyGroup.warehouse.id.eq(warehouseId))
                 .fetch();
 
-        warehouseDetail.setHierarchyGroupList(hierarchyGroups);
+        warehouseDetail.setHierarchyGroups(hierarchyGroups);
 
-        return warehouseDetail;
+        return Optional.of(warehouseDetail);
     }
-
 
 }

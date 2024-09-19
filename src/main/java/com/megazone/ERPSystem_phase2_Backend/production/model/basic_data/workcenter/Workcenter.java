@@ -73,8 +73,4 @@ public class Workcenter {
     @JoinColumn(name = "process_id")
     private ProcessDetails processDetails; // 작업장에서 이뤄지는 생산공정
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "company_id")
-    private Company company;                            //회사 테이블 참조 (회사 아이디)
-
 }

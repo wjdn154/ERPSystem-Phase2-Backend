@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 public class ProductionOrderDTO {
 
-    private Long id; // 고유 ID
+    private Long id;
 
     private String name; // 작업지시명
 
@@ -26,4 +26,5 @@ public class ProductionOrderDTO {
 //    private List<WorkPerformanceDTO> workPerformances; // 작업 실적 DTO 리스트
 
     private String remarks; // 추가 설명 또는 비고
+
 }

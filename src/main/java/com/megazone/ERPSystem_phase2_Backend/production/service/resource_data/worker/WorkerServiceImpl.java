@@ -8,6 +8,7 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_managemen
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.WorkerAssignment;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.Worker;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
@@ -105,13 +106,19 @@ public class WorkerServiceImpl implements WorkerService {
                         attendance.getStatus().toString()
                 )).toList();
 
-        //작업배치 관리 리스트 생성
+// 작업 배치 관리 리스트 생성
         List<WorkerAssignmentDTO> assignmentList = worker.getWorkerAssignments().stream()
-                .map(assignment -> new WorkerAssignmentDTO(
-                        assignment.getWorkcenter().getCode(),
-                        assignment.getWorkcenter().getName(),
-                        assignment.getAssignmentDate().toString()
-                        )).toList();
+                .map(assignment -> WorkerAssignmentDTO.builder()
+                        .workerName(assignment.getWorker().getEmployee().getFirstName() + " " + assignment.getWorker().getEmployee().getLastName()) // 작업자 이름
+                        .employeeNumber(assignment.getWorker().getEmployee().getEmployeeNumber()) // 직원 번호
+                        .workcenterCode(assignment.getWorkcenter().getCode()) // 작업장 코드
+                        .workcenterName(assignment.getWorkcenter().getName()) // 작업장 이름
+                        .assignmentDate(assignment.getAssignmentDate()) // 배정 날짜
+                        .shiftTypeName(assignment.getShiftType().getName()) // 교대 근무 유형
+                        .productionOrderName(assignment.getProductionOrder().getName()) // 연관된 작업 지시
+                        .build()
+                ).toList();
+
         //최종 dto 생성 및 반환
         return new ListWorkerAttendanceDTO(
                 worker.getId(),

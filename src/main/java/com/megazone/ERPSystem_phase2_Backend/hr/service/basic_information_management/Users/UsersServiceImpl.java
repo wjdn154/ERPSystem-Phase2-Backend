@@ -1,18 +1,32 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Users;
 
+import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.SchemaBasedMultiTenantConnectionProvider;
+import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.TenantContext;
+import com.megazone.ERPSystem_phase2_Backend.common.config.security.AuthRequest;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Permission;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersPermissionDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.UserPermission;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Permission.PermissionRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.lang.reflect.Field;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -20,14 +34,68 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class UsersServiceImpl implements UsersService{
-    @Autowired
-    private UsersRepository usersRepository;
+
+    private final UsersRepository usersRepository;
+    private final PermissionRepository permissionRepository;
+    private final CompanyRepository companyRepository;
     //private final RoleRepository roleRepository;
-    @Autowired
-    private PermissionRepository permissionRepository;
-    public Users createUser(Users user) {
-        return usersRepository.save(user);
+
+    private final PasswordEncoder passwordEncoder;
+    private final SchemaBasedMultiTenantConnectionProvider multiTenantConnectionProvider;
+    private final JdbcTemplate jdbcTemplate;
+
+
+    @Override
+    public ResponseEntity<String> registerUser(AuthRequest authRequest) throws SQLException {
+
+        // 이메일 형식 검증 정규식
+        Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+
+        // 이메일 형식 검증
+        if (!pattern.matcher(authRequest.getUserName()).matches()) return ResponseEntity.badRequest().body("잘못된 이메일 형식입니다.");
+
+        // 유저 검증
+        if (usersRepository.findByUserName(authRequest.getUserName()).isPresent()) return ResponseEntity.badRequest().body("이미 존재하는 사용자입니다.");
+
+        // 테넌트 스키마에 저장할 사용자 생성
+        Users tenantUser = new Users();
+        tenantUser.setUserName(authRequest.getUserName());
+        tenantUser.setPassword(passwordEncoder.encode(authRequest.getPassword()));
+        tenantUser.setPermission(new Permission());
+        tenantUser.setCompany(companyRepository.findById(authRequest.getCompanyId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "회사 정보를 찾을 수 없습니다.")));
+        tenantUser.setUserNickname(authRequest.getUserNickname());
+
+        usersRepository.save(tenantUser);
+
+        return ResponseEntity.ok("사용자 등록 완료 - 테넌트: tenant_" + authRequest.getCompanyId());
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public Optional<Users> getUserById(Long id) {
         return usersRepository.findById(id);
@@ -116,16 +184,6 @@ public class UsersServiceImpl implements UsersService{
 
 
         return dto;
-    }
-
-    @Override
-    public UsersShowDTO createUser(UsersShowDTO usersDTO) {
-        Users users = new Users();
-        users.setUserName(usersDTO.getUserName());
-
-
-        Users savedUser = usersRepository.save(users);
-        return convertToDTO(savedUser);
     }
 
     @Override

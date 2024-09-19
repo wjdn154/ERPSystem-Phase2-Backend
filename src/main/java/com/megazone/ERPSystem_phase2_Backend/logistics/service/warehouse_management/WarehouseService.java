@@ -1,25 +1,22 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.warehouse_management;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.UpdateWarehouseDTO;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseResponseDTO;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseDetailDTO;
+
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.test.WarehouseResponseListDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.test.WarehouseRequestTestDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.test.WarehouseResponseTestDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface WarehouseService {
 
+    List<WarehouseResponseListDTO> getWarehouseList();
 
-    List<WarehouseResponseDTO> findAllWarehouses(Long companyId);
+    WarehouseResponseTestDTO getWarehouseDetail(Long warehouseId);
 
-    WarehouseDetailDTO getWarehouseDetail(Long id);
+    WarehouseResponseTestDTO createWarehouse(WarehouseRequestTestDTO requestDTO);
 
-    Optional<WarehouseDetailDTO> saveWarehouse(WarehouseDetailDTO dto);
-
-    Optional<UpdateWarehouseDTO> updateWarehouse(Long id, UpdateWarehouseDTO dto);
+    WarehouseResponseTestDTO updateWarehouse(Long warehouseId, WarehouseRequestTestDTO requestDTO);
 
     String deleteWarehouse(Long id);
 
 }
-//
