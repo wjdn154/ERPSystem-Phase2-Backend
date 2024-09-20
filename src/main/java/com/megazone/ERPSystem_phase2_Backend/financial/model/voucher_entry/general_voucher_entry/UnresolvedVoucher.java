@@ -38,10 +38,6 @@ public class UnresolvedVoucher {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "company_id", nullable = false)
-    private Company company; // 유저 회사 ID
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_id", nullable = false)
     private AccountSubject accountSubject; // 계정과목 참조
 

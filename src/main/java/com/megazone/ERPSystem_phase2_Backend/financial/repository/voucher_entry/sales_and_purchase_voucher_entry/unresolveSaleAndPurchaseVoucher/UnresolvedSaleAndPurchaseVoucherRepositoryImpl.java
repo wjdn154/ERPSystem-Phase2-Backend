@@ -25,16 +25,13 @@ public class UnresolvedSaleAndPurchaseVoucherRepositoryImpl implements Unresolve
 
 
     @Override
-    public List<UnresolvedSaleAndPurchaseVoucher> findApprovalTypeVoucher(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto,
-                                                                          Long companyId) {
+    public List<UnresolvedSaleAndPurchaseVoucher> findApprovalTypeVoucher(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto) {
         QUnresolvedSaleAndPurchaseVoucher qUnresolvedVoucher = QUnresolvedSaleAndPurchaseVoucher.unresolvedSaleAndPurchaseVoucher;
 
         List<UnresolvedSaleAndPurchaseVoucher> results = queryFactory.selectFrom(qUnresolvedVoucher)
                 .where(qUnresolvedVoucher.voucherDate.eq(dto.getSearchDate())
                         .and(qUnresolvedVoucher.voucherNumber.in(dto.getSearchVoucherNumList()))
-                        .and(qUnresolvedVoucher.company.id.eq(companyId))
                         .and(qUnresolvedVoucher.approvalStatus.eq(ApprovalStatus.PENDING)))
-
                 .fetch();
 
         return results;

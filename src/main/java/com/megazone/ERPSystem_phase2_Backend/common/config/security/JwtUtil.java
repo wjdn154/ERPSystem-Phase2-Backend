@@ -1,4 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.common.config.security;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Permission;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -90,10 +92,13 @@ public class JwtUtil {
      * @param userNickname 사용자 닉네임
      * @return 생성된 JWT 토큰
      */
-    public String generateToken(String tenantId, String username, String userNickname) {
+    public String generateToken(String tenantId, String username, String userNickname, Long companyId, Long employeeId, Long permissionId) {
         Map<String, Object> claims = new HashMap<>();  // 기본 클레임 설정
         claims.put("X-Tenant-ID", tenantId);  // 테넌트 ID 추가
         claims.put("userNickname", userNickname);  // 사용자 닉네임 추가
+        claims.put("companyId", companyId);
+        claims.put("employeeId", employeeId);
+        claims.put("permissionId", permissionId);
         return createToken(claims, username);  // 토큰 생성
     }
 
