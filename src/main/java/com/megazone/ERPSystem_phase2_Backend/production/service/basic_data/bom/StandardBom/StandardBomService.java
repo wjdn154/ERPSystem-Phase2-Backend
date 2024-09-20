@@ -6,20 +6,23 @@ import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface StandardBomService {
 
     StandardBomDTO createStandardBom(@Valid StandardBomDTO standardBomDTO);
 
-    Optional<StandardBomDTO> getStandardBomById(Long id);
+    StandardBomDTO getStandardBomById(Long id);
 
     List<StandardBomDTO> getAllStandardBoms();
 
     StandardBomDTO updateStandardBom(Long id, StandardBomDTO standardBomDTO);
 
-    void deleteStandardBom(Long id);
+    StandardBomDTO deleteStandardBom(Long id);
 
-    List<StandardBomDTO> getChildBoms(Long parentProductId);
+    //    List<StandardBomDTO> getChildBoms(Long parentProductId);
+    List<StandardBomDTO> getChildBoms(Long parentProductId, Set<Long> checkedBomIds);
+//    List<StandardBomDTO> getParentBoms(Long childProductId);
 
-    List<StandardBomDTO> getParentBoms(Long childProductId);
+    StandardBomDTO getParentBom(Long childProductId);
 }
