@@ -6,14 +6,12 @@ import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.TenantSe
 import com.megazone.ERPSystem_phase2_Backend.common.config.security.AuthRequest;
 import com.megazone.ERPSystem_phase2_Backend.common.config.security.CustomUserDetails;
 import com.megazone.ERPSystem_phase2_Backend.common.config.security.JwtUtil;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Permission;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.EmployeeDTO;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.PermissionDTO;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersPermissionDTO;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Permission.PermissionRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Users.UsersService;
@@ -61,52 +59,35 @@ public class UsersController {
 
 
 
+    // 로그인
     @PostMapping("/auth/login")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<Object> createAuthenticationToken(@RequestBody AuthRequest authRequest) {
 
         // 회사 선택 검증
         if(authRequest.getCompanyId() == null) return ResponseEntity.badRequest().body("회사를 선택해주세요.");
 
         // 테넌트 식별자 설정
         String tenantId = "tenant_" + authRequest.getCompanyId();
+
+        // 테넌트 컨텍스트 설정
         TenantContext.setCurrentTenant(tenantId);
 
-        // 이메일 형식 검증 정규식
-        Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+        // 사용자 인증 & 토큰 생성
+        ResponseEntity<Object> authenticationToken = usersService.createAuthenticationToken(authRequest, tenantId);
+        if (authenticationToken.getStatusCode() != HttpStatus.OK) return authenticationToken;
 
-        // 이메일 형식 검증
-        if (!pattern.matcher(authRequest.getUserName()).matches()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 이메일 형식입니다.");
-        }
+        // 사용자 권한 조회
+        ResponseEntity<Object> permissionByUsername = usersService.getPermissionByUsername(authRequest.getUserName());
+        if (permissionByUsername.getStatusCode() != HttpStatus.OK) return authenticationToken;
 
-        // 사용자 정보 가져오기
-        Optional<Users> userOptional = usersRepository.findByUserName(authRequest.getUserName());
-        if (userOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자를 찾을 수 없습니다.");
-        }
+        Company company = companyRepository.findById(authRequest.getCompanyId()).orElse(null);
+        if (company == null) return ResponseEntity.badRequest().body("회사를 찾을 수 없습니다.");
+        boolean isAdmin = company.getAdminUsername().equals(authRequest.getUserName());
 
-        Users user = userOptional.get();
-
-        try {
-            // 사용자 인증
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword())
-            );
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 정보가 올바르지 않습니다.");
-        }
-
-        // Users를 CustomUserDetails로 변환
-        UserDetails userDetails = new CustomUserDetails(user);
-
-        // JWT 토큰 생성
-        String jwtToken = jwtUtil.generateToken(tenantId, userDetails.getUsername(), user.getUserNickname(),
-                user.getCompany().getId(), null, user.getPermission().getId());
-
-        // 성공 메시지와 JWT 토큰 반환
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "로그인 성공");
-        response.put("token", jwtToken);
+        Map<Object, Object> response = new HashMap<>();
+        response.put("token", authenticationToken.getBody());
+        response.put("permission", permissionByUsername.getBody());
+        response.put("isAdmin", isAdmin);
 
         // 테넌트 컨텍스트 해제
         TenantContext.clear();
@@ -114,6 +95,7 @@ public class UsersController {
         return ResponseEntity.ok(response);
     }
 
+    // 회원가입
     @PostMapping("/auth/register")
     public ResponseEntity<String> registerUser(@RequestBody AuthRequest authRequest) throws SQLException {
 
@@ -132,16 +114,19 @@ public class UsersController {
         return tenantResponse;
     }
 
+    // 사용자 권한 조회
     @PostMapping("/users/permission/{username}")
     public ResponseEntity<Object> getPermissionByUsername(@PathVariable("username") String username) {
-        Users users = usersRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-        Permission permission = users.getPermission();
-        if (users.getPermission() == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("권한을 조회 할 수 없습니다.");
+        return usersService.getPermissionByUsername(username);
+    }
 
-        ModelMapper modelMapper = new ModelMapper();
-        PermissionDTO permissionDTO = modelMapper.map(permission, PermissionDTO.class);
-
-        return ResponseEntity.ok(permissionDTO);
+    // 사용자 권한 수정
+    @PostMapping("/users/permission/update")
+    public ResponseEntity<Object> assignPermissionToUser(@RequestBody UserPermissionUpdateRequestDTO request) {
+        return usersService.assignPermissionToUser(
+                request.getUsername(),
+                request.getPermissionDTO()
+        );
     }
 
 
@@ -154,12 +139,11 @@ public class UsersController {
 
 
 
-
-    @PostMapping("/{userId}/assign-permission/{permissionId}")
-    public ResponseEntity<UsersPermissionDTO> assignPermissionToUser(@PathVariable Long userId, @PathVariable Long permissionId) {
-        UsersPermissionDTO usersPermissionDTO = usersService.assignPermissionToUser(userId, permissionId);
-        return usersPermissionDTO != null ? ResponseEntity.ok(usersPermissionDTO) : ResponseEntity.notFound().build();
-    }
+//    @PostMapping("/{userId}/assign-permission/{permissionId}")
+//    public ResponseEntity<UsersPermissionDTO> assignPermissionToUser(@PathVariable Long userId, @PathVariable Long permissionId) {
+//        UsersPermissionDTO usersPermissionDTO = usersService.assignPermissionToUser(userId, permissionId);
+//        return usersPermissionDTO != null ? ResponseEntity.ok(usersPermissionDTO) : ResponseEntity.notFound().build();
+//    }
 
     /**
      * 모든 사용자 정보를 가져옴.
