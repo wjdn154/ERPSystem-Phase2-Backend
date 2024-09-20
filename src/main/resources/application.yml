@@ -57,7 +57,6 @@ spring:
         - classpath:initial-database/financial/common/financial_address.sql
         - classpath:initial-database/financial/common/financial_bank_account.sql
 #        - classpath:initial-database/financial/credit_card/credit_card.sql
-#        - classpath:initial-database/financial/unresolved_voucher.sql
         - classpath:initial-database/financial/vat_type.sql
         - classpath:initial-database/financial/journal_entry_type_setup.sql
         - classpath:initial-database/financial/journal_entry.sql
@@ -100,6 +99,20 @@ spring:
         - classpath:initial-database/production/resource_data/maintenanceHistory.sql
         - classpath:initial-database/production/resource_data/worker.sql
         - classpath:initial-database/production/production_schedule/common_scheduling/worker_assignment.sql
+
+
+        - classpath:initial-database/financial/client/client_contact_info.sql
+        - classpath:initial-database/financial/client/client_bank_account.sql
+        - classpath:initial-database/financial/client/client_business_info.sql
+        - classpath:initial-database/financial/client/client_financial_info.sql
+        - classpath:initial-database/financial/client/client_manager_info.sql
+        - classpath:initial-database/financial/client/client_category.sql
+        - classpath:initial-database/financial/client/client_liquor.sql
+        - classpath:initial-database/financial/common/financial_bank_account.sql
+        - classpath:initial-database/financial/client/client.sql
+        - classpath:initial-database/hr/users.sql
+
+#        - classpath:initial-database/financial/unresolvedVoucher.sql
 
 logging:
   level:

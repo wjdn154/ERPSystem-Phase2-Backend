@@ -7,6 +7,6 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.gener
 import java.util.List;
 
 public interface UnresolvedVoucherRepositoryCustom {
-    List<Long> deleteVoucherByManager(Long companyId, UnresolvedVoucherDeleteDTO dto);
-    List<UnresolvedVoucher> findApprovalTypeVoucher(Long companyId, UnresolvedVoucherApprovalDTO dto);
+    List<Long> deleteVoucherByManager(UnresolvedVoucherDeleteDTO dto);
+    List<UnresolvedVoucher> findApprovalTypeVoucher(UnresolvedVoucherApprovalDTO dto);
 }

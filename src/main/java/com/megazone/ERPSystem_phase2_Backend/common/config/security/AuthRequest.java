@@ -1,6 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.common.config.security;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
