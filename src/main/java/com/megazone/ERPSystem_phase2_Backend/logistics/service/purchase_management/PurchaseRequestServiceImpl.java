@@ -6,6 +6,7 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.purchase_management.PurchaseRequestRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,9 +21,13 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
 
 
     @Override
-    public List<PurchaseRequestResponseDto> findAllPurchaseRequests() {
+    public Object findAllPurchaseRequests() {
         // 모든 발주 요청을 가져옴
         List<PurchaseRequest> purchaseRequests = purchaseRequestRepository.findAll();
+
+        if (purchaseRequests.isEmpty()) {
+            return ResponseEntity.badRequest().body("발주요청이 없습니다.");
+        }
 
         // 각 발주 요청을 Response DTO로 변환
         return purchaseRequests.stream()

@@ -21,13 +21,15 @@ public class PurchaseRequestController {
      * @return
      */
     @PostMapping("/")
-    public ResponseEntity<List<PurchaseRequestResponseDto>> getAllPurchaseRequests() {
-        List<PurchaseRequestResponseDto> response = purchaseRequestService.findAllPurchaseRequests();
+    public ResponseEntity<Object> getAllPurchaseRequests() {
+        Object response = purchaseRequestService.findAllPurchaseRequests();
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{id}")
     public ResponseEntity<PurchaseRequestResponseDto> getPurchaseRequestById(@PathVariable("id") Long id) {
+
+//        return purchaseRequestService.findPurchaseRequestDetailById(id);
         return null;
     }
 }
