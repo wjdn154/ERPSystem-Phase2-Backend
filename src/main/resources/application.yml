@@ -99,6 +99,7 @@ spring:
         - classpath:initial-database/financial/client/client_liquor.sql
         - classpath:initial-database/financial/common/financial_bank_account.sql
         - classpath:initial-database/financial/client/client.sql
+        - classpath:initial-database/hr/users.sql
 
 logging:
   level:
