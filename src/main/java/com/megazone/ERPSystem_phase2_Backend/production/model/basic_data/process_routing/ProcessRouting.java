@@ -31,10 +31,6 @@ public class ProcessRouting {
     @Column(nullable = false)
     private Long id; // PK
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "company_id", nullable = false)
-    private Company company; // 회사 참조
-
     @Column(name = "process_routing_code", nullable = false, unique = true)
     private String code; // Routing 지정코드
 
