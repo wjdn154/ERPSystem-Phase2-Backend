@@ -1,5 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Employee;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.*;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.BankAccount.EmployeeBankAccountRepository;
@@ -14,9 +16,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -35,6 +39,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     private JobTitleRepository jobTitleRepository;
     @Autowired
     private EmployeeBankAccountRepository bankAccountRepository;
+    @Autowired
+    private CompanyRepository companyRepository;
 
     // 사원 리스트 조회
     @Override
@@ -116,6 +122,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void deleteEmployee(Long id) {
         performanceRepository.deleteByEvaluatorId(id);
         employeeRepository.deleteById(id);
+    }
+
+    @Override
+    public ResponseEntity<Object> getAdminPermissionEmployee(Long companyId) {
+        Company company = companyRepository.findById(companyId).orElse(null);
+        if (company == null) return ResponseEntity.badRequest().body("회사를 찾을 수 없습니다.");
+        return ResponseEntity.ok(company.getAdminUsername());
     }
 
     public EmployeeDTO getEmployeeDTO(Long id) {
