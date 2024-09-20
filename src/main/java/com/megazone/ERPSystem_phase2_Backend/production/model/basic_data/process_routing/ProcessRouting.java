@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,10 @@ public class ProcessRouting {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id; // PK
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company; // 회사 참조
 
     @Column(name = "process_routing_code", nullable = false, unique = true)
     private String code; // Routing 지정코드

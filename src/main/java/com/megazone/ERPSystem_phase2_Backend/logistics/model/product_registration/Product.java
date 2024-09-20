@@ -1,9 +1,14 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.PurchaseRequestDetail;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessRouting;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 품목 테이블
@@ -26,14 +31,20 @@ public class Product {
     @Column(nullable = false)
     private String code;
 
+    // 거래처 - N : 1
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
+
     // 품목 그룹 코드 참조
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_group_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_group_id")
     private ProductGroup productGroup;
 
     // 생산 라우팅 매핑
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "process_routing_id")
+    @ToString.Exclude
     private ProcessRouting processRouting;
 
     // 품목구분 (Enum)
@@ -60,5 +71,31 @@ public class Product {
     // 단위
     @Column(nullable = false)
     private String unit;
+
+    // 이미지 파일 경로
+    @Column
+    private String imagePath;
+
+    // 비고
+    @Column
+    private String remarks;
+
+    // 폼목 사용 여부
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean isActive = true;
+
+    public void deactivate() {
+        this.isActive = false;
+    }
+
+    public void reactivate() {
+        this.isActive = true;
+    }
+
+    @OneToMany(mappedBy = "product")
+    @Builder.Default
+    @ToString.Exclude
+    private List<PurchaseRequestDetail> purchaseRequestDetails = new ArrayList<>();
 
 }

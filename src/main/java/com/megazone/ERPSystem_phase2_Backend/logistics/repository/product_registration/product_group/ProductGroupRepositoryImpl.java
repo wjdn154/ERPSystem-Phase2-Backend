@@ -15,21 +15,20 @@ public class ProductGroupRepositoryImpl implements ProductGroupRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ProductGroup> findByCodeAndName(String code, String name) {
+    public List<ProductGroup> findProductGroupsBySearchTerm(String searchTerm) {
         QProductGroup productGroup = QProductGroup.productGroup;
 
-        //QueryDSL에서 조건을 동적으로 추가할 수 있도록 도와주는 클래스 이 객체에 조건을 추가하면서 쿼리를 구성
         BooleanBuilder builder = new BooleanBuilder();
 
-        if (code != null && !code.isEmpty()) {
-            builder.and(productGroup.code.containsIgnoreCase(code));
-        }
-        if (name != null && !name.isEmpty()) {
-            builder.and(productGroup.name.containsIgnoreCase(name));
+        // 검색어가 있는 경우에만 필터링
+        if (searchTerm != null && !searchTerm.isEmpty()) {
+            builder.and(productGroup.code.containsIgnoreCase(searchTerm)
+                    .or(productGroup.name.containsIgnoreCase(searchTerm)));
         }
 
+        // 쿼리 실행
         return queryFactory.selectFrom(productGroup)
-                            .where(builder)
-                            .fetch();
+                .where(builder)
+                .fetch();
     }
 }

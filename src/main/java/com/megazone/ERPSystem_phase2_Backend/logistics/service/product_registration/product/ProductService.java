@@ -1,22 +1,24 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.product;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDto;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductSaveRequestDto;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductSaveResponseDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductRequestDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductResponseDto;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
 
-    List<ProductDto> findAllProducts();
+    List<ProductResponseDto> findAllProducts();
 
-    ProductDetailDto findProductDetailById(Long id);
+    Optional<ProductResponseDto> findProductDetailById(Long id);
 
-    Optional<ProductSaveResponseDto> saveProduct(ProductSaveRequestDto productSaveRequestDto);
+    Optional<ProductResponseDto> saveProduct(ProductRequestDto productRequestDto);
 
-    Optional<ProductSaveResponseDto> updateProduct(Long id, ProductSaveRequestDto productSaveRequestDto);
+    Optional<ProductResponseDto> updateProduct(Long id, ProductRequestDto productRequestDto);
 
     String deleteProduct(Long id);
+
+    String deactivateProduct(Long id);
+
+    String reactivateProduct(Long id);
 }
