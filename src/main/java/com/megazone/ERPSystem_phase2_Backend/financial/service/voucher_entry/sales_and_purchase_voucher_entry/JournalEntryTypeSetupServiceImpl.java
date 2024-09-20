@@ -18,7 +18,7 @@ public class JournalEntryTypeSetupServiceImpl implements JournalEntryTypeSetupSe
 
 
     @Override
-    public String updateEntryTypeSetup(Long company_id, JournalEntryTypeSetupUpdateDTO dto) {
+    public String updateEntryTypeSetup(JournalEntryTypeSetupUpdateDTO dto) {
         JournalEntryTypeSetup journalEntryTypeSetup = journalEntryTypeSetupRepository.findById(
                 dto.getJournalEntryTypeId()).orElse(null);
 
@@ -29,7 +29,6 @@ public class JournalEntryTypeSetupServiceImpl implements JournalEntryTypeSetupSe
             journalEntryTypeSetup.setAccountSubject(accountSubject);
             return "분개유형 설정이 완료되었습니다.";
         }
-
 
         return null;
     }

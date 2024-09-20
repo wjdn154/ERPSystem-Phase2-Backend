@@ -14,11 +14,13 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_manageme
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.PermissionDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersPermissionDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Permission.PermissionRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Users.UsersService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -46,6 +48,7 @@ public class UsersController {
 
     private final UsersService usersService;
     private final UsersRepository usersRepository;
+    private final PermissionRepository permissionRepository;
     private final CompanyRepository companyRepository;
 
 
@@ -128,6 +131,28 @@ public class UsersController {
 
         return tenantResponse;
     }
+
+    @PostMapping("/users/permission/{username}")
+    public ResponseEntity<Object> getPermissionByUsername(@PathVariable("username") String username) {
+        Users users = usersRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        Permission permission = users.getPermission();
+        if (users.getPermission() == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("권한을 조회 할 수 없습니다.");
+
+        ModelMapper modelMapper = new ModelMapper();
+        PermissionDTO permissionDTO = modelMapper.map(permission, PermissionDTO.class);
+
+        return ResponseEntity.ok(permissionDTO);
+    }
+
+
+
+
+
+
+
+
+
+
 
 
     @PostMapping("/{userId}/assign-permission/{permissionId}")

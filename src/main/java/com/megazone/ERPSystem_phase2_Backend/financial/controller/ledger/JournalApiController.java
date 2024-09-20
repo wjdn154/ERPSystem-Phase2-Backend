@@ -6,11 +6,15 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.JournalS
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.ResolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherShowAllDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.UnresolvedVoucherShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.ledger.JournalService;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry.ResolvedVoucherService;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,15 +22,18 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.util.List;
 
+// 분개장 API Controller
 @RestController
 @RequiredArgsConstructor
 public class JournalApiController {
     private final JournalService journalService;
+    private final UsersRepository usersRepository;
 
-    @PostMapping("/api/financial/journal/show")
+    @PostMapping("/api/financial/ledger/journal/show")
     public ResponseEntity<JournalShowDTO> journalShow(@RequestBody JournalDTO dto) {
-        List<ResolvedVoucherShowDTO> ShowDTOs = journalService.journalSearch(dto.getStartDate(),dto.getEndDate())
-                .stream().map(ResolvedVoucherShowDTO::create).toList();
+
+        List<UnresolvedVoucherShowDTO> ShowDTOs = journalService.journalSearch(dto.getStartDate(),dto.getEndDate())
+                .stream().map(UnresolvedVoucherShowDTO::create).toList();
 
         List<BigDecimal> totalAmounts = journalService.journalTotalAmount(dto.getStartDate(),dto.getEndDate());
         BigDecimal totalCount = journalService.journalTotalCount(dto.getStartDate(),dto.getEndDate());
@@ -37,6 +44,5 @@ public class JournalApiController {
         return journalShowDTO != null ?
                 ResponseEntity.status(HttpStatus.OK).body(journalShowDTO) :
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-
     }
 }

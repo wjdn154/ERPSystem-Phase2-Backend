@@ -48,8 +48,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                         employee.getDepartment().getDepartmentCode(),
                         employee.getDepartment().getDepartmentName(),
                         employee.getPosition().getPositionName(),
-                        employee.getJobTitle().getTitleName(),
-                        employee.getBankAccount().getAccountNumber()
+                        employee.getJobTitle().getTitleName()
+//                        employee.getBankAccount().getAccountNumber()
                 ))
                 .collect(Collectors.toList());
     }
