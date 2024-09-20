@@ -5,5 +5,7 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registratio
 import java.util.List;
 
 public interface ProductGroupRepositoryCustom {
-    List<ProductGroup> findByCodeAndName(String code, String name);
+
+    List<ProductGroup> findProductGroupsBySearchTerm(String searchTerm);
+
 }
