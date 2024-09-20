@@ -38,7 +38,6 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
     private final EmployeeRepository employeeRepository;
     private final UnresolvedSaleAndPurchaseVoucherRepository unresolvedSaleAndPurchaseVoucherRepository;
     private final ClientRepository clientRepository;
-    private final CompanyRepository companyRepository;
 
     // 현금 자동분개 시 필요한 계정과목 코드
     private final String cashAccountCode = "101";
@@ -63,7 +62,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
 
 
     @Override
-    public List<UnresolvedVoucher> unresolvedVoucherEntry(Long companyId, List<UnresolvedVoucherEntryDTO> dtoList) {
+    public List<UnresolvedVoucher> unresolvedVoucherEntry(List<UnresolvedVoucherEntryDTO> dtoList) {
 
         List<UnresolvedVoucher> unresolvedVoucherList = new ArrayList<UnresolvedVoucher>();
         List<UnresolvedVoucher> savedVoucherList = new ArrayList<UnresolvedVoucher>();
@@ -76,7 +75,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
             LocalDateTime nowTime = LocalDateTime.now();
 
 
-            newVoucherNum = CreateUnresolvedVoucherNumber(currentDate,dtoList.get(0).getVoucherKind(),companyId);
+            newVoucherNum = CreateUnresolvedVoucherNumber(currentDate,dtoList.get(0).getVoucherKind());
 
             if(depositAndWithdrawalUnresolvedVoucherTypeCheck(dtoList.get(0))) {
 
@@ -136,7 +135,6 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
     @Override
     public UnresolvedVoucher createUnresolvedVoucher(UnresolvedVoucherEntryDTO dto, String voucherNum, LocalDateTime nowTime) {
         UnresolvedVoucher unresolvedVoucher = UnresolvedVoucher.builder()
-//                .userCompanyId(dto.getUserCompany())
                 .accountSubject(accountSubjectRepository.findByCode(dto.getAccountSubjectCode()).orElseThrow(
                         () -> new IllegalArgumentException("해당하는 코드의 계정과목이 없습니다.")))
                 .client(clientRepository.findByCode(dto.getClientCode()).orElseThrow(
@@ -176,7 +174,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
      * @return 입금,출금,차변,대변 조건에 맞게 번호 부여
      */
     @Override
-    public String CreateUnresolvedVoucherNumber(LocalDate voucherDate, VoucherKind voucherKind, Long companyId) {
+    public String CreateUnresolvedVoucherNumber(LocalDate voucherDate, VoucherKind voucherKind) {
         // 해당 조건의 날짜에 해당하는 마지막 미결전표 Entity 가져오기
 
         String lastVoucherNumber = "";
@@ -186,11 +184,11 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
 
         switch (voucherKind) {
             case GENERAL:
-                voucherBox = unresolvedVoucherRepository.findFirstByVoucherDateAndCompany_idOrderByIdDesc(voucherDate,companyId);
+                voucherBox = unresolvedVoucherRepository.findFirstByVoucherDateOrderByIdDesc(voucherDate);
                 StartNumber = "1";
                 break;
             case SALE_AND_PURCHASE:
-                voucherBox = unresolvedSaleAndPurchaseVoucherRepository.findFirstByVoucherDateAndCompany_idOrderByIdDesc(voucherDate,companyId);
+                voucherBox = unresolvedSaleAndPurchaseVoucherRepository.findFirstByVoucherDateOrderByIdDesc(voucherDate);
                 StartNumber = "50000";
                 break;
         }
@@ -242,10 +240,10 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
      * @return 해당 날짜의 모든 전표 반환
      */
     @Override
-    public List<UnresolvedVoucher> unresolvedVoucherAllSearch(Long companyId, LocalDate date) {
+    public List<UnresolvedVoucher> unresolvedVoucherAllSearch(LocalDate date) {
         List<UnresolvedVoucher> unresolvedVoucherList = new ArrayList<UnresolvedVoucher>();
         try {
-            unresolvedVoucherList = unresolvedVoucherRepository.findByVoucherDateAndCompany_idOrderByVoucherNumberAsc(date,companyId);
+            unresolvedVoucherList = unresolvedVoucherRepository.findByVoucherDateOrderByVoucherNumberAsc(date);
             if(unresolvedVoucherList.isEmpty()) {
                 throw new NoSuchElementException("해당 날짜에 등록된 미결전표가 없습니다.");
             }
@@ -261,14 +259,14 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
      * @dto 삭제할 전표의 날짜, 전표번호List, 당당자 정보 객체
      */
     @Override
-    public List<Long> deleteUnresolvedVoucher(Long companyId, UnresolvedVoucherDeleteDTO dto) {
+    public List<Long> deleteUnresolvedVoucher(UnresolvedVoucherDeleteDTO dto) {
 
         // 전표에 담당자 이거나, 승인권자면 삭제가능 << 기능구현 필요
 
         List<Long> deleteVouchers = new ArrayList<>();
         try {
             if(true) { // 전표의 담당자 이거나, 승인권자면 삭제가능 << 기능구현 필요
-                deleteVouchers.addAll(unresolvedVoucherRepository.deleteVoucherByManager(companyId, dto));
+                deleteVouchers.addAll(unresolvedVoucherRepository.deleteVoucherByManager(dto));
                 if(deleteVouchers.isEmpty()) {
                     throw new NoSuchElementException("검색조건에 해당하는 미결전표가 없습니다.");
                 }
@@ -303,8 +301,8 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
     }
 
     @Override
-    public List<UnresolvedVoucher> voucherApprovalProcessing(Long companyId, UnresolvedVoucherApprovalDTO dto) {
-        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherRepository.findApprovalTypeVoucher(companyId,dto);
+    public List<UnresolvedVoucher> voucherApprovalProcessing(UnresolvedVoucherApprovalDTO dto) {
+        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherRepository.findApprovalTypeVoucher(dto);
 
         try {
             if(dto.getApprovalStatus().equals(ApprovalStatus.PENDING)) {
