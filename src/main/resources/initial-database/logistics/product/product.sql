@@ -9,7 +9,7 @@ INSERT INTO product (code, product_group_id, client_id, process_routing_id, prod
 ('B0008', 9, 8, 2, 'GOODS', 25000, 30000, '기능성 재킷', 'M사이즈', 'EA', '/images/jacket.jpg', '의류', TRUE),
 ('B0009', 10, 9, 3, 'GOODS', 100000, 120000, '산악자전거', '1대', 'SET', '/images/bike.jpg', '전문스포츠/레저', TRUE),
 ('B0010', 11, 10, 4, 'GOODS', 7000, 10000, '가죽 지갑', '1개', 'EA', '/images/wallet.jpg', '패션잡화', TRUE),
-('B0011', 99, 1, 5, 'GOODS', 2000, 3000, '잡화 바구니', '1개', 'EA', '/images/basket.jpg', '기타', TRUE),
+('B0011', 11, 1, 5, 'GOODS', 2000, 3000, '잡화 바구니', '1개', 'EA', '/images/basket.jpg', '기타', TRUE),
 ('B0012', 1, 2, 6, 'GOODS', 1200, 1500, '라면', '120g', 'PKG', null, '가공식품', TRUE),
 ('B0013', 2, 3, 2, 'GOODS', 5000, 7000, '유기농 사과', '1kg', 'PKG', null, '신선식품', TRUE),
 ('B0014', 3, 4, 1, 'GOODS', 8000, 10000, '샴푸', '500ml', 'BOTTLE', null, '일상용품', TRUE),
