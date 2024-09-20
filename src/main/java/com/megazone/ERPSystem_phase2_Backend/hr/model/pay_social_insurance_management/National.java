@@ -1,3 +1,4 @@
+/*
 package com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management;
 
 import jakarta.persistence.*;
@@ -9,13 +10,15 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+*/
 /*
     국민연금 테이블
-*/
-@Entity
+*//*
+
 @Data
 @EntityListeners(AuditingEntityListener.class)
-@Table
+@Table(name = "social_insurance_national")
+@Entity(name = "social_insurance_national")
 public class National {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,4 +33,4 @@ public class National {
 
     @LastModifiedDate
     private LocalDateTime updateAt; // 변경이력
-}
+}*/

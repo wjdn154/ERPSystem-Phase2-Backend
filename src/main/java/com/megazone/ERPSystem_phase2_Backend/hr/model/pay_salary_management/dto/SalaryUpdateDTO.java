@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SalaryDetailDTO {
+public class SalaryUpdateDTO {
     private Long id; // 월급 아이디
     private Long employeeId; // 직원 아이디 (필요한가 ?)
     private String employeeNumber; // 직원 코드
@@ -24,6 +24,7 @@ public class SalaryDetailDTO {
     private List<AllowanceAmount> allowances; // 수당 목록
     private List<DeductionAmount> deductions; // 공제 목록
     private SocialInsuranceAmount socialInsuranceAmount; // 사회보험 amount
+    private BigDecimal grossPay; // 총급여
     private BigDecimal netPay; // 실급여
     private LocalDate month; // 급여지급월
 }

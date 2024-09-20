@@ -2,25 +2,26 @@ package com.megazone.ERPSystem_phase2_Backend.hr.model.pay_salary_management;
 
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management.SocialInsurance;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management.SocialInsuranceAmount;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
-@Entity
-@Table
+@Entity(name = "salary")
+@Table(name = "salary")
 public class Salary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "employee_id", nullable = false)
-//    private Employee employee; // 직원 참조
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id", nullable = false)
+    private Employee employee; // 직원 참조
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "severancepay_id")
@@ -34,7 +35,7 @@ public class Salary {
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "insurance_id")
-    private SocialInsurance socialInsurance; // 4대 보험 리스트
+    private SocialInsuranceAmount socialInsuranceAmount; // 4대 보험 리스트
 
     // 기본 급여
     @Column
@@ -63,4 +64,16 @@ public class Salary {
     // 산정기한
     @Column
     private LocalDate calcdate;
+
+
+    // 보수액 계산
+    public void calculateNoneTaxSalary() {
+        BigDecimal totalAllowances = allowanceAmounts.stream()
+                .filter(allowance -> allowance.getAllowance().isTaxType())
+                .map(AllowanceAmount::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        this.NoneTaxSalary = this.baseSalary.add(totalAllowances);
+        this.MonthlyIncomeSalary = this.NoneTaxSalary.setScale(-3, RoundingMode.DOWN);
+    }
 }

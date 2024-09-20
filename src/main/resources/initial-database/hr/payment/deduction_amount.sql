@@ -1,2 +1,1 @@
-insert into deduction_amount(deduction_id, amount) values
-                                                       (2, 40000);
+insert into salary_deduction_amount(deduction_id, amount) values

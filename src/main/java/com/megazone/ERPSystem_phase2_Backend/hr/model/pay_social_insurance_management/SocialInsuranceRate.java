@@ -16,15 +16,12 @@ public class SocialInsuranceRate {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column
     private InsuranceType insuranceType;
 
     @Enumerated(EnumType.STRING)
     private BusinessScale businessScale; // 사업장 규모
                                         // 회사 정보에 사업장 규모 있는데, 정보를 반환해서 요율조율 해야하니깐 ?
-
-//    @Column
-//    private BigDecimal totalRate;
 
     @Column
     private BigDecimal employeeRate;

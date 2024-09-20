@@ -1,4 +1,4 @@
-INSERT INTO allowance (code, name, tax_type) VALUES
+INSERT INTO salary_allowance (code, name, tax_type) VALUES
                                                      ('001','식대', FALSE),
                                                      ('002','자가운전보조금', FALSE),
                                                      ('003','야간근로수당', FALSE),# 생산직근로자 연 240만원 이내 금액

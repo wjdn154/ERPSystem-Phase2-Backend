@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.hr.repository.payment;
+package com.megazone.ERPSystem_phase2_Backend.hr.repository.pay_salary_management;
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_salary_management.Allowance;
 import org.springframework.data.jpa.repository.JpaRepository;

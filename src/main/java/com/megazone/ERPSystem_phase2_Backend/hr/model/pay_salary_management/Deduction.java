@@ -5,8 +5,8 @@ import lombok.Data;
 
 /********* 공제 *********/
 @Data
-@Entity(name = "deduction")
-@Table(name = "deduction")
+@Entity(name = "salary_deduction")
+@Table(name = "salary_deduction")
 public class Deduction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

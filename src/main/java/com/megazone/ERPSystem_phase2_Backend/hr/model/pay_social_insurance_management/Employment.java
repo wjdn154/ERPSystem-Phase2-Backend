@@ -1,3 +1,4 @@
+/*
 package com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management;
 
 import jakarta.persistence.*;
@@ -9,13 +10,15 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+*/
 /*
     고용보험 테이블
-*/
-@Entity
+*//*
+
 @Data
 @EntityListeners(AuditingEntityListener.class)
-@Table
+@Table(name = "social_insurance_employment")
+@Entity(name = "social_insurance_employment")
 public class Employment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,3 +48,4 @@ public class Employment {
     // 기준소득월액 = 보수월액<비과세 소득을 제외한 급여>에서 천원 미만 금액 절삭한 금액
 
 }
+*/

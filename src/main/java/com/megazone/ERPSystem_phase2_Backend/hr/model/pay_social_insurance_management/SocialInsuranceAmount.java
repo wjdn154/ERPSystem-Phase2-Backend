@@ -6,16 +6,12 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-@Entity(name = "social_insurance")
-@Table(name = "social_insurance")
-public class SocialInsurance {
+@Entity(name = "social_insurance_amount")
+@Table(name = "social_insurance_amount")
+public class SocialInsuranceAmount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "salary_id", nullable = false)
-//    private Salary salary;
 
     @Column
     private BigDecimal EmploymentAmount;
@@ -31,7 +27,4 @@ public class SocialInsurance {
 
     @Column
     private BigDecimal LongTermCareAmount;
-
-//    @Column
-//    private LocalDate dateOfBirth; // 지급년월 웝급 테이블에 중복항목 필요할까 ?
 }

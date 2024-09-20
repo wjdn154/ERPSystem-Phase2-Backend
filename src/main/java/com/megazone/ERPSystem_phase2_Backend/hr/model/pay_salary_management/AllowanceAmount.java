@@ -5,8 +5,8 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 @Data
-@Entity(name = "allowance_amount")
-@Table(name = "allowance_amount")
+@Entity(name = "salary_allowance_amount")
+@Table(name = "salary_allowance_amount")
 public class AllowanceAmount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,10 +15,6 @@ public class AllowanceAmount {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "allowance_id", nullable = false)
     private Allowance allowance;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "salary_id", nullable = false)
-//    private Salary salary;
 
     @Column(precision = 9)
     private BigDecimal amount; // 수당 금액

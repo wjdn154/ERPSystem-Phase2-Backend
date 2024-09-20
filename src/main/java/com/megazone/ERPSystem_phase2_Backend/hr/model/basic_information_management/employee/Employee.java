@@ -4,6 +4,7 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Atte
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Leaves;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.EmploymentStatus;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.EmploymentType;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_salary_management.Salary;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -59,12 +60,8 @@ public class Employee {
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // 근태 참조
     private List<Attendance> attendance;
 
-//    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
-//    private List<Salary> salaries;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "allowance_Id", nullable = false)
-//    private Allowance allowance.sql;
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
+    private List<Salary> salaries; // 월급 참조
 
     @Column(nullable = false)
     private String firstName; // 이름

@@ -1,3 +1,4 @@
+/*
 package com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management;
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.pay_social_insurance_management.enums.InsuranceType;
@@ -10,13 +11,15 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+*/
 /*
     건강보험 테이블
-*/
+*//*
+
 @Data
-@Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table
+@Table(name = "social_insurance_health")
+@Entity(name = "social_insurance_health")
 public class Health {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,3 +42,4 @@ public class Health {
     @LastModifiedDate
     private LocalDateTime updateAt;
 }
+*/

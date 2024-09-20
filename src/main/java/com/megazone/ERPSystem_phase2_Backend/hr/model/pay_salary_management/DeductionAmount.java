@@ -6,8 +6,8 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-@Entity(name = "deduction_amount")
-@Table(name = "deduction_amount")
+@Entity(name = "salary_deduction_amount")
+@Table(name = "salary_deduction_amount")
 public class DeductionAmount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

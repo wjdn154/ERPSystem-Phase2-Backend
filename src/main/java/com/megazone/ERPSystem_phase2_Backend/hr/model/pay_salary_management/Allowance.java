@@ -8,8 +8,8 @@ import java.util.List;
 
 /********* 수당 *********/
 @Data
-@Entity(name = "allowance")
-@Table(name = "allowance")
+@Entity(name = "salary_allowance")
+@Table(name = "salary_allowance")
 public class Allowance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class Allowance {
     private String code;
 
     @Column(nullable = false)
-    private boolean taxType; // 과세 비과세 구분
+    private boolean taxType; // 과세 비과세 구분 (true: 과세, false: 비과세)
 
     @Column(nullable = false)
     private String name; // 수당 이름
