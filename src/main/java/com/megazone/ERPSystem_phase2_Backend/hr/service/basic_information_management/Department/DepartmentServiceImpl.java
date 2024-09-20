@@ -3,7 +3,6 @@ package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_manag
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Department;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentCreateDTO;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Department.DepartmentRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
@@ -20,20 +19,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class DepartmentServiceImpl implements DepartmentService {
-    private DepartmentRepository departmentRepository;
-    private EmployeeRepository employeeRepository;
-
-    @Autowired
-    public DepartmentServiceImpl(DepartmentRepository departmentRepository) {
-        this.departmentRepository = departmentRepository;
-    }
+    private final DepartmentRepository departmentRepository;
+    private final EmployeeRepository employeeRepository;
 
     // 부서 리스트 조회
     @Override
-    public List<DepartmentShowDTO> findAllDepartments(Long id) {
+    public List<DepartmentShowDTO> findAllDepartments() {
         return departmentRepository.findAll().stream()
                 .map(department -> new DepartmentShowDTO(
-                        department.getId(),
                         department.getDepartmentCode(),
                         department.getDepartmentName(),
                         department.getLocation()
@@ -53,7 +46,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     private DepartmentShowDTO convertToDTO(Department department) {
         DepartmentShowDTO dto = new DepartmentShowDTO();
-        dto.setId(department.getId());
         dto.setDepartmentCode(department.getDepartmentCode());
         dto.setDepartmentName(department.getDepartmentName());
         dto.setLocation(department.getLocation());
@@ -63,7 +55,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     // 부서 등록
     @Override
-    public DepartmentCreateDTO saveDepartment(DepartmentDTO dto) {
+    public DepartmentCreateDTO saveDepartment(DepartmentCreateDTO dto) {
         // DTO를 엔티티로 변환
         Department department = new Department();
         department.setDepartmentCode(dto.getDepartmentCode());

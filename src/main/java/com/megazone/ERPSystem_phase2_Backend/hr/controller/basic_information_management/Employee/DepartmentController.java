@@ -2,9 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.hr.controller.basic_information_ma
 
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentCreateDTO;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentShowDTO;
-import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Department.DepartmentRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Department.DepartmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,26 +17,26 @@ import java.util.Optional;
 @RequestMapping("/api/hr")
 public class DepartmentController {
     private final DepartmentService departmentService;
-    private final DepartmentRepository departmentRepository;
 
     // 모든 부서 조회
     @PostMapping("/department/all")
-    public ResponseEntity<List<DepartmentShowDTO>> findAllDepartments(Long id) {
-        List<DepartmentShowDTO> departments = departmentService.findAllDepartments(id);
+    public ResponseEntity<List<DepartmentShowDTO>> findAllDepartments() {
+        List<DepartmentShowDTO> departments = departmentService.findAllDepartments();
         return ResponseEntity.ok(departments);
     }
 
     // 부서id 로 부서 조회
-    @GetMapping("/department/{id}")
+    @PostMapping("/department/{id}")
     public ResponseEntity<DepartmentShowDTO> getDepartmentById(@PathVariable("id") Long id) {
         Optional<DepartmentShowDTO> department = departmentService.findDepartmentById(id);
 
         return department.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
     // 부서 등록
     @PostMapping("/department/createDepartment")
-    public ResponseEntity<DepartmentCreateDTO> createDepartment(@RequestBody DepartmentDTO dto) {
+    public ResponseEntity<DepartmentCreateDTO> createDepartment(@RequestBody DepartmentCreateDTO dto) {
         DepartmentCreateDTO createdDepartment = departmentService.saveDepartment(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdDepartment);
     }

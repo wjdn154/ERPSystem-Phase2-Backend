@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequestMapping("/api/hr")
 public class TransferController {
 
-    private TransferService transferService;
+    private final TransferService transferService;
 
     @PostMapping("/transfer/create")
     public ResponseEntity<TransferShowDTO> createTransfer(@RequestBody TransferCreateDTO dto) {

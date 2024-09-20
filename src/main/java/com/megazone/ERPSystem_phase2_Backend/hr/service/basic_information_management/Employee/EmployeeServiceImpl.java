@@ -111,7 +111,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     public EmployeeFindDTO getEmployeeDTO(Long id) {
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Employee not found"));
+                .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다"));
 
         EmployeeFindDTO dto = new EmployeeFindDTO();
         dto.setId(employee.getId());
@@ -158,28 +158,28 @@ public class EmployeeServiceImpl implements EmployeeService {
             // Position 설정
             if (dto.getPositionId() != null) {
                 Position position = positionRepository.findById(dto.getPositionId())
-                        .orElseThrow(() -> new EntityNotFoundException("Position not found"));
+                        .orElseThrow(() -> new EntityNotFoundException("직위를 찾을 수 없습니다"));
                 employee.setPosition(position);
             }
 
             // Department 설정
             if (dto.getDepartmentId() != null) {
                 Department department = departmentRepository.findById(dto.getDepartmentId())
-                        .orElseThrow(() -> new EntityNotFoundException("Department not found"));
+                        .orElseThrow(() -> new EntityNotFoundException("부서를 찾을 수 없습니다"));
                 employee.setDepartment(department);
             }
 
             // JobTitle 설정
             if (dto.getJobTitleId() != null) {
                 JobTitle jobTitle = jobTitleRepository.findById(dto.getJobTitleId())
-                        .orElseThrow(() -> new EntityNotFoundException("JobTitle not found"));
+                        .orElseThrow(() -> new EntityNotFoundException("직책을 찾을 수 없습니다"));
                 employee.setJobTitle(jobTitle);
             }
 
             // BankAccount 설정
             if (dto.getBankAccountId() != null) {
                 BankAccount bankAccount = bankAccountRepository.findById(dto.getBankAccountId())
-                        .orElseThrow(() -> new EntityNotFoundException("BankAccount not found"));
+                        .orElseThrow(() -> new EntityNotFoundException("계좌를 찾을 수 없습니다"));
                 employee.setBankAccount(bankAccount);
             }
 

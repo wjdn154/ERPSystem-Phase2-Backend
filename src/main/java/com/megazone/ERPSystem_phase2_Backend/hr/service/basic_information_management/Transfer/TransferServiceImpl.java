@@ -25,7 +25,7 @@ public class TransferServiceImpl implements TransferService {
     public TransferShowDTO createTransfer(TransferCreateDTO dto) {
         // 사원 정보 조회 (employee_id를 통해)
         Employee employee = employeeRepository.findById(dto.getEmployee_id())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid employee ID: " + dto.getEmployee_id()));
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 사원 ID 입력: " + dto.getEmployee_id()));
 
         // 출발 부서 정보 조회
         Department fromDepartment = departmentRepository.findByDepartmentName(dto.getFromDepartmentName());
