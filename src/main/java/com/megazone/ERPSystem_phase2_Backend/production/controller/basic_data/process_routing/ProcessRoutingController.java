@@ -21,14 +21,14 @@ public class ProcessRoutingController {
     private final ProcessRoutingRepository processRoutingRepository;
 
     // 1. processRouting 전체 조회
-    @GetMapping
+    @PostMapping
     public ResponseEntity<List<ProcessRouting>> getAllProcessRoutings() {
         List<ProcessRouting> processRoutings = processRoutingRepository.findAll();
         return ResponseEntity.ok(processRoutings);
     }
 
     // 2. processRouting 개별상세조회
-    @GetMapping("/{id}")
+    @PostMapping("/{id}")
     public ResponseEntity<ProcessRouting> getProcessRoutingById(@PathVariable("id") Long id) {
         return processRoutingRepository.findById(id)
                 .map(ResponseEntity::ok)
@@ -36,41 +36,41 @@ public class ProcessRoutingController {
     }
 
     // 3. processRouting 생성(등록)
-    @PostMapping
+    @PostMapping("/new")
     public ResponseEntity<ProcessRoutingDTO> createProcessRouting(@RequestBody ProcessRoutingDTO processRoutingDTO) {
         ProcessRoutingDTO createdRouting = processRoutingService.createProcessRoutingWithSteps(processRoutingDTO);
         return ResponseEntity.ok(createdRouting);
     }
 
     // 3.1 생성 시 등록창 내에서 생산공정 검색 (RoutingStep 등록 위함)
-    @GetMapping("/searchProcessDetails")
+    @PostMapping("/searchProcessDetails")
     public ResponseEntity<List<ProcessDetailsDTO>> searchProcessDetails(@RequestParam String keyword) {
         List<ProcessDetailsDTO> processDetailsList = processRoutingService.searchProcessDetails(keyword);
         return ResponseEntity.ok(processDetailsList);
     }
 
     // 3.2 생성 시 등록창 내에서 품목Product 검색
-    @GetMapping("/searchProducts")
+    @PostMapping("/searchProducts")
     public ResponseEntity<List<ProductDetailDto>> searchProducts(@RequestParam String keyword) {
         List<ProductDetailDto> productList = processRoutingService.searchProducts(keyword);
         return ResponseEntity.ok(productList);
     }
 
     // 3.3 선택 시 각 항목을 미리보기로 상세조회
-    @GetMapping("/previewProcessDetails/{id}")
+    @PostMapping("/previewProcessDetails/{id}")
     public ResponseEntity<ProcessDetailsDTO> previewProcessDetails(@PathVariable Long id) {
         ProcessDetailsDTO processDetails = processRoutingService.getProcessDetailsById(id);
         return ResponseEntity.ok(processDetails);
     }
 
-    @GetMapping("/previewProduct/{id}")
+    @PostMapping("/previewProduct/{id}")
     public ResponseEntity<ProductDetailDto> previewProduct(@PathVariable Long id) {
         ProductDetailDto product = processRoutingService.getProductById(id);
         return ResponseEntity.ok(product);
     }
 
     // 4. 수정
-    @PutMapping("/{id}")
+    @PostMapping("update/{id}")
     public ResponseEntity<ProcessRoutingDTO> updateProcessRouting(
             @PathVariable Long id,
             @RequestBody ProcessRoutingDTO processRoutingDTO) {
@@ -80,7 +80,7 @@ public class ProcessRoutingController {
 
 
     // 5. 삭제
-    @DeleteMapping("/{id}")
+    @PostMapping("delete/{id}")
     public ResponseEntity<Void> deleteProcessRouting(@PathVariable Long id) {
         processRoutingService.deleteProcessRouting(id);
         return ResponseEntity.noContent().build();

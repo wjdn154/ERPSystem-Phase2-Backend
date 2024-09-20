@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/standardBoms")
+@RequestMapping("/api/production/standardBoms")
 @RequiredArgsConstructor
 public class StandardBomController {
 

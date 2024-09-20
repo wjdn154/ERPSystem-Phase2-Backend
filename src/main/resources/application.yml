@@ -79,6 +79,7 @@ spring:
         - classpath:initial-database/logistics/product.sql
         - classpath:initial-database/logistics/warehouse/warehouse.sql
 
+        - classpath:initial-database/production/basic_data/bom/standard_bom.sql
         - classpath:initial-database/production/basic_data/workcenter.sql
         - classpath:initial-database/production/production_schedule/common_scheduling/production_order.sql
         - classpath:initial-database/production/production_schedule/common_scheduling/shift_type.sql
@@ -87,6 +88,7 @@ spring:
         - classpath:initial-database/production/resource_data/maintenanceHistory.sql
         - classpath:initial-database/production/resource_data/worker.sql
         - classpath:initial-database/production/production_schedule/common_scheduling/worker_assignment.sql
+
 
 
         - classpath:initial-database/financial/client/client_contact_info.sql
@@ -98,6 +100,7 @@ spring:
         - classpath:initial-database/financial/client/client_liquor.sql
         - classpath:initial-database/financial/common/financial_bank_account.sql
         - classpath:initial-database/financial/client/client.sql
+
         - classpath:initial-database/hr/users.sql
 
 #        - classpath:initial-database/financial/unresolvedVoucher.sql
