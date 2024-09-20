@@ -6,16 +6,21 @@ import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.TenantSe
 import com.megazone.ERPSystem_phase2_Backend.common.config.security.AuthRequest;
 import com.megazone.ERPSystem_phase2_Backend.common.config.security.CustomUserDetails;
 import com.megazone.ERPSystem_phase2_Backend.common.config.security.JwtUtil;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Permission;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.EmployeeDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.PermissionDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersPermissionDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.UsersShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Permission.PermissionRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Users.UsersService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,6 +38,7 @@ import org.hibernate.tool.schema.internal.SchemaCreatorImpl;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,6 +48,7 @@ public class UsersController {
 
     private final UsersService usersService;
     private final UsersRepository usersRepository;
+    private final PermissionRepository permissionRepository;
     private final CompanyRepository companyRepository;
 
 
@@ -93,7 +100,8 @@ public class UsersController {
         UserDetails userDetails = new CustomUserDetails(user);
 
         // JWT 토큰 생성
-        String jwtToken = jwtUtil.generateToken(tenantId, userDetails.getUsername(), user.getUserNickname());
+        String jwtToken = jwtUtil.generateToken(tenantId, userDetails.getUsername(), user.getUserNickname(),
+                user.getCompany().getId(), null, user.getPermission().getId());
 
         // 성공 메시지와 JWT 토큰 반환
         Map<String, Object> response = new HashMap<>();
@@ -123,6 +131,28 @@ public class UsersController {
 
         return tenantResponse;
     }
+
+    @PostMapping("/users/permission/{username}")
+    public ResponseEntity<Object> getPermissionByUsername(@PathVariable("username") String username) {
+        Users users = usersRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        Permission permission = users.getPermission();
+        if (users.getPermission() == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("권한을 조회 할 수 없습니다.");
+
+        ModelMapper modelMapper = new ModelMapper();
+        PermissionDTO permissionDTO = modelMapper.map(permission, PermissionDTO.class);
+
+        return ResponseEntity.ok(permissionDTO);
+    }
+
+
+
+
+
+
+
+
+
+
 
 
     @PostMapping("/{userId}/assign-permission/{permissionId}")
