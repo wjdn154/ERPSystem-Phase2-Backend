@@ -22,12 +22,5 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
                 .where(product.productGroup.id.eq(productGroupId))
                 .execute();
     }
-
-//    @Override
-//    public void updateStatusByProductGroupId(Long id) {
-//        QProduct product = QProduct.product;
-//        queryFactory.update(product)
-//                .set(product.productGroup.id, id)
-//                .
-//    }
+    
 }

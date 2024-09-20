@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.dto;
 
+import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Attendance;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.enums.AttendanceStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,5 +19,16 @@ public class EmployeeAttendanceDTO {
     private Time checkTime;
     private Time checkoutTIme;
     private AttendanceStatus status;
+
+    public static EmployeeAttendanceDTO create(Attendance attendance) {
+        return new EmployeeAttendanceDTO(
+                attendance.getEmployee().getId(),
+                attendance.getAttendanceCode(),
+                attendance.getDate(),
+                attendance.getCheckTime(),
+                attendance.getCheckoutTime(),
+                attendance.getStatus()
+        );
+    }
 
 }

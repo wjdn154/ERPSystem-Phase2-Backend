@@ -23,8 +23,6 @@ public class EmployeeShowDTO {
     private String email;
     private LocalDate hireDate;
 
-
-
     private String departmentCode;
     private String departmentName; // 부서 이름
     private String positionName; // 직위 이름
