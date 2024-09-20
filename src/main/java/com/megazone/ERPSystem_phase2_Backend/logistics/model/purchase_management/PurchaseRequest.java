@@ -33,12 +33,12 @@ public class PurchaseRequest {
     private Long id;
 
     // 발주 요청과 발주 계획 간의 중간 엔티티와의 일대다 관계
-    @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<PurchasePlanRequest> purchasePlanRequests = new ArrayList<>();
 
     // 발주 요청 상세와의 일대다 관계
-    @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<PurchaseRequestDetail> purchaseRequestDetails = new ArrayList<>();
 
@@ -70,7 +70,7 @@ public class PurchaseRequest {
     private LocalDate deliveryDate;
 
     // 비고
-    @Column
+    @Column(nullable = true)
     private String remarks;
 
     // 진행 상태
