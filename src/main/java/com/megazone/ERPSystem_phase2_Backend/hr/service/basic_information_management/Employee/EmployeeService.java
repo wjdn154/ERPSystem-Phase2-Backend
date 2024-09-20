@@ -14,14 +14,16 @@ public interface EmployeeService {
     Optional<EmployeeOneDTO> findEmployeeById(Long id);
 
     // 사원 수정
-    Optional<EmployeeDTO> updateEmployee(Long id, EmployeeDataDTO dto);
+    Optional<EmployeeFindDTO> updateEmployee(Long id, EmployeeDataDTO dto);
 
     // 사원 등록. 저장
-    Optional<EmployeeDTO> saveEmployee(EmployeeCreateDTO dto);
+    EmployeeDTO saveEmployee(EmployeeCreateDTO dto);
 
 
     // 사원 삭제
     void deleteEmployee(Long id);
 
-    //void deleteEmployeeById(Long id);
+
+    String createEmployeeNumber(EmployeeCreateDTO dto);
+
 }
