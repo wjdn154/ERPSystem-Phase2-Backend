@@ -23,33 +23,25 @@ public class ClientLedgerServiceImpl implements ClientLedgerService {
 
     @Override
     public ClientLedgerShowAllDTO show(ClientLedgerSearchDTO dto) {
+        List<ClientLedgerShowDTO> clientLedgerShowDTOS = resolvedVoucherRepository.clientLedgerList(dto);
+        BigDecimal totalSumPreviousCash = BigDecimal.ZERO;
+        BigDecimal totalSumDebitAmount = BigDecimal.ZERO;
+        BigDecimal totalSumCreditAmount = BigDecimal.ZERO;
+        BigDecimal totalSumTotalCash = BigDecimal.ZERO;
 
-        try {
-
-            List<ClientLedgerShowDTO>  clientLedgerShowDTOS = resolvedVoucherRepository.clientLedgerList(dto);
-            BigDecimal totalSumPreviousCash = BigDecimal.ZERO;
-            BigDecimal totalSumDebitAmount = BigDecimal.ZERO;
-            BigDecimal totalSumCreditAmount = BigDecimal.ZERO;
-            BigDecimal totalSumTotalCash = BigDecimal.ZERO;
-
-            for (ClientLedgerShowDTO clientLedgerShowDTO : clientLedgerShowDTOS) {
-                BigDecimal totalCash = clientLedgerShowDTO.getDebitTotalAmount().subtract(clientLedgerShowDTO.getCreditTotalAmount());
-                clientLedgerShowDTO.setCashTotalAmount(totalCash);
-                totalSumDebitAmount = totalSumDebitAmount.add(clientLedgerShowDTO.getDebitTotalAmount());
-                totalSumCreditAmount = totalSumCreditAmount.add(clientLedgerShowDTO.getCreditTotalAmount());
-                totalSumTotalCash = totalSumTotalCash.add(totalCash);
-            }
-            return ClientLedgerShowAllDTO.create(
-                    clientLedgerShowDTOS,
-                    totalSumPreviousCash,
-                    totalSumDebitAmount,
-                    totalSumCreditAmount,
-                    totalSumTotalCash);
+        for (ClientLedgerShowDTO clientLedgerShowDTO : clientLedgerShowDTOS) {
+            BigDecimal totalCash = clientLedgerShowDTO.getDebitTotalAmount().subtract(clientLedgerShowDTO.getCreditTotalAmount());
+            clientLedgerShowDTO.setCashTotalAmount(totalCash);
+            totalSumDebitAmount = totalSumDebitAmount.add(clientLedgerShowDTO.getDebitTotalAmount());
+            totalSumCreditAmount = totalSumCreditAmount.add(clientLedgerShowDTO.getCreditTotalAmount());
+            totalSumTotalCash = totalSumTotalCash.add(totalCash);
         }
-        catch (Exception e) {
-            error("Error in show method: ", e);
-            throw e; // 또는 적절한 예외 처리
-        }
+        return ClientLedgerShowAllDTO.create(
+                clientLedgerShowDTOS,
+                totalSumPreviousCash,
+                totalSumDebitAmount,
+                totalSumCreditAmount,
+                totalSumTotalCash);
 
     }
 }
