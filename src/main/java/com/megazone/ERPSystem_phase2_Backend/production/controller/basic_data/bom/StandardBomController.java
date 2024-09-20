@@ -1,7 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.basic_data.bom;
 
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.bom.StandardBom;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.bom.dto.StandardBomDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.bom.StandardBom.StandardBomService;
 import jakarta.validation.Valid;
@@ -10,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/standardBoms")
@@ -28,22 +27,22 @@ public class StandardBomController {
 
     // 특정 BOM 조회
     @PostMapping("/{id}")
-    public ResponseEntity<StandardBomDTO> getStandardBomById(@PathVariable Long id) {
-        StandardBomDTO bomDTO = standardBomService.getStandardBomById(id);
+    public ResponseEntity<Optional<StandardBomDTO>> getStandardBomById(@PathVariable Long id) {
+        Optional<StandardBomDTO> bomDTO = standardBomService.getStandardBomById(id);
         return ResponseEntity.ok(bomDTO);
     }
 
     // 모든 BOM 목록 조회
     @PostMapping
-    public ResponseEntity<List<StandardBom>> getAllStandardBoms() {
-        List<StandardBom> boms = standardBomService.getAllStandardBoms();
+    public ResponseEntity<List<StandardBomDTO>> getAllStandardBoms() {
+        List<StandardBomDTO> boms = standardBomService.getAllStandardBoms();
         return ResponseEntity.ok(boms);
     }
 
     // BOM 업데이트
     @PostMapping("update/{id}")
     public ResponseEntity<StandardBomDTO> updateStandardBom(@PathVariable Long id, @RequestBody StandardBomDTO standardBomDTO) {
-            StandardBom updatedBom = standardBomService.updateStandardBom(id, standardBomDTO);
+            StandardBomDTO updatedBom = standardBomService.updateStandardBom(id, standardBomDTO);
             return ResponseEntity.ok(updatedBom);
     }
 
@@ -63,7 +62,7 @@ public class StandardBomController {
 
     // BOM 역전개: 상위 BOM 조회
     @PostMapping("/backward-explosion/{childProductId}")
-    public ResponseEntity<List<StandardBomDTO> getParentBoms(@PathVariable Long childProductId) {
+    public ResponseEntity<List<StandardBomDTO>> getParentBoms(@PathVariable Long childProductId) {
         List<StandardBomDTO> parentBoms = standardBomService.getParentBoms(childProductId);
         return ResponseEntity.ok(parentBoms);
     }

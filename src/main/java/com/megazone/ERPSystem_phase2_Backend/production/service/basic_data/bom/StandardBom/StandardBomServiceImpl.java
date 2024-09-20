@@ -43,19 +43,29 @@ public class StandardBomServiceImpl implements StandardBomService {
             throw new IllegalArgumentException("유효 시작일은 종료일 이전이어야 합니다.");
         }
 
-        // standardBom convertToEntity
+        StandardBom savedBom = standardBomRepository.save(convertToEntity(standardBomDTO));
 
-        StandardBom savedBom = standardBomRepository.save(this::convertToEntity);
-
-        // 자식 엔티티에 부모 엔티티 설정 및 저장
-        if (standardBomDTO.getBomMaterials() != null) {
-            standardBomDTO.getBomMaterials().forEach(material -> {
-                material.setBom(savedBom); // 부모와 연관 설정 - bom_id 가 null로 저장되는 일 방지
-                standardBomMaterialRepository.save(material); // 자식 엔티티 저장
-            });
-        }
-
-        return savedBom;
+//        // 자재 레포지토리 필요
+//        if (standardBomDTO.getBomMaterials() != null) {
+//            List<StandardBomMaterial> bomMaterials = standardBomDTO.getBomMaterials().stream()
+//                    .map(bomMaterialDTO -> {
+//                        MaterialData materialData = materialDataRepository.findById(bomMaterialDTO.getMaterialId())
+//                                .orElseThrow(() -> new EntityNotFoundException("자재를 찾을 수 없습니다."));
+//
+//                        return StandardBomMaterial.builder()
+//                                .bom(savedBom)
+//                                .material(materialData)
+//                                .quantity(bomMaterialDTO.getQuantity())
+//                                .lossRate(bomMaterialDTO.getLossRate())
+//                                .build();
+//                    }).toList();
+//
+//            standardBomMaterialRepository.saveAll(bomMaterials);
+//            savedBom.setBomMaterials(bomMaterials);
+//        }
+//
+//
+        return convertToDTO(savedBom);
     }
 
 
@@ -64,17 +74,18 @@ public class StandardBomServiceImpl implements StandardBomService {
     public Optional<StandardBomDTO> getStandardBomById(Long id) {
         return standardBomRepository.findById(id)
                 .map(bom -> {
-                    // 자재 목록을 함께 조회
                     List<StandardBomMaterial> materials = standardBomMaterialRepository.findByBomId(bom.getId());
                     bom.setBomMaterials(materials);
-                    return bom;
+                    return convertToDTO(bom);
                 });
     }
 
 
     @Override
     public List<StandardBomDTO> getAllStandardBoms() {
-        return standardBomRepository.findAll();
+        List<StandardBom> standardBoms = standardBomRepository.findAll();
+
+        return standardBoms.stream().map(this::convertToDTO).toList();
     }
 
     @Override
