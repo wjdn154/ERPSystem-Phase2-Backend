@@ -8,9 +8,7 @@ import java.util.Optional;
 
 public interface ProductGroupService {
 
-    List<ProductGroupDto> findAllProductGroups();
-
-    ProductGroupDto getProductGroupById(Long id);
+    List<ProductGroupDto> findAllProductGroups(String searchTerm);
 
     Optional<ProductGroupDto> saveProductGroup(ProductGroupDto productGroupDto);
 

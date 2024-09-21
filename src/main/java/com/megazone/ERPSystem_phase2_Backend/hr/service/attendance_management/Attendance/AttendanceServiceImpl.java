@@ -2,7 +2,6 @@ package com.megazone.ERPSystem_phase2_Backend.hr.service.attendance_management.A
 
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Attendance;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.dto.AttendanceDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.dto.AttendanceShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.dto.EmployeeAttendanceDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.attendance_management.Attendance.AttendanceRepository;
@@ -30,14 +29,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         // Attendance를 EmployeeAttendanceDTO로 변환
         return attendanceRecords.stream()
-                .map(attendance -> new EmployeeAttendanceDTO(
-                        attendance.getEmployee().getId(),
-                        attendance.getAttendanceCode(),
-                        attendance.getDate(),
-                        attendance.getCheckTime(),
-                        attendance.getCheckoutTime(),
-                        attendance.getStatus()
-                ))
+                .map(EmployeeAttendanceDTO::create)
                 .collect(Collectors.toList());
     }
 
@@ -46,14 +38,9 @@ public class AttendanceServiceImpl implements AttendanceService {
         List<Attendance> attendanceList = attendanceRepository.findAll();
 
         // Attendance 엔티티를 AttendanceDTO로 변환
-        return attendanceList.stream().map(attendance -> new AttendanceShowDTO(
-                attendance.getEmployee().getId(),
-                attendance.getAttendanceCode(),
-                attendance.getDate(),
-                attendance.getCheckTime(),
-                attendance.getCheckoutTime(),
-                attendance.getStatus().toString()
-        )).collect(Collectors.toList());
+        return attendanceList.stream()
+                .map(AttendanceShowDTO::create)
+            .collect(Collectors.toList());
     }
 }
 

@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,9 +25,6 @@ public class ProductGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "productGroup")
-    private List<Product> products;
-
     // 품목 그룹 코드
     @Column(nullable = false, unique = true)
     private String code;
@@ -35,7 +33,7 @@ public class ProductGroup {
     @Column(nullable = false)
     private String name;
 
-    // 폼목 그룹 활성화 여부
+    // 폼목 그룹 사용 여부
     @Column(nullable = false)
     @Builder.Default
     private boolean isActive = true;
@@ -47,6 +45,4 @@ public class ProductGroup {
     public void reactivate() {
         this.isActive = true;
     }
-
-
 }

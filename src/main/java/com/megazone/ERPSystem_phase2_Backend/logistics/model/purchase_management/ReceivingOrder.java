@@ -1,5 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.Currency;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +11,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 /**
- * 구매서 테이블
- * 구매서에 대한 정보가 있는 테이블
+ * 입고 지시서 테이블
+ * 입고 지시서에 대한 정보가 있는 테이블
  */
 @Entity
 @Getter
@@ -24,9 +26,10 @@ public class ReceivingOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 구매_id 참조
-    @Column
-    private Long purchaseId;
+    // 입고 지시서와 구매서 간의 일대일 관계
+    @OneToOne
+    @JoinColumn(name = "purchase_id")
+    private Purchase purchase;
 
     // 거래처_id - N : 1
     @Column(nullable = false)
@@ -40,9 +43,10 @@ public class ReceivingOrder {
     @Column
     private String contact;
 
-    // 입고될 창고_id - N : 1
-    @Column(nullable = false)
-    private Long warehouseId;
+    // 창고_id - 입고될 창고
+    @ManyToOne
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse warehouse;
 
     // 품목_id - 1 : N
     @Column
