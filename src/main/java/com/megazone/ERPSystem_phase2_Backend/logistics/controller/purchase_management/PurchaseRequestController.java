@@ -22,14 +22,17 @@ public class PurchaseRequestController {
      */
     @PostMapping("/")
     public ResponseEntity<Object> getAllPurchaseRequests() {
-        Object response = purchaseRequestService.findAllPurchaseRequests();
-        return ResponseEntity.ok(response);
+        ResponseEntity<Object> response = purchaseRequestService.findAllPurchaseRequests();
+
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            return ResponseEntity.status(response.getStatusCode()).body(response);
+        }
+        return ResponseEntity.ok(response.getBody());
     }
 
     @PostMapping("/{id}")
     public ResponseEntity<PurchaseRequestResponseDto> getPurchaseRequestById(@PathVariable("id") Long id) {
 
-//        return purchaseRequestService.findPurchaseRequestDetailById(id);
         return null;
     }
 }

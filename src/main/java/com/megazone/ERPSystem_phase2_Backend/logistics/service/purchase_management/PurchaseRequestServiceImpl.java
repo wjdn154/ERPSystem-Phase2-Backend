@@ -21,7 +21,7 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
 
 
     @Override
-    public Object findAllPurchaseRequests() {
+    public ResponseEntity<Object> findAllPurchaseRequests() {
         // 모든 발주 요청을 가져옴
         List<PurchaseRequest> purchaseRequests = purchaseRequestRepository.findAll();
 
@@ -29,10 +29,11 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
             return ResponseEntity.badRequest().body("발주요청이 없습니다.");
         }
 
+        List<PurchaseRequestResponseDto> dto = purchaseRequests.stream()
+                                                .map(this::toDto)  // 각 발주 요청을 Response DTO로 변환
+                                                .toList();
         // 각 발주 요청을 Response DTO로 변환
-        return purchaseRequests.stream()
-                .map(this::toDto)  // 각 발주 요청을 Response DTO로 변환
-                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(dto);
     }
 
     // Entity -> DTO 변환 메소드
