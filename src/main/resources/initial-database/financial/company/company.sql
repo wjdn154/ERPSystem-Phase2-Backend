@@ -1,8 +1,8 @@
 -- 회사(Company) 테이블 초기 데이터
-INSERT INTO company (corporate_type_id, corporate_kinds_id, representative_id, address_id, contact_id, main_business_id, business_tax_office_id, headquarter_tax_office_id, local_income_tax_office, is_sme, business_registration_number, corporate_registration_number, business_type, business_item, establishment_date, opening_date, closing_date, name, entity_type, fiscal_year_start, fiscal_year_end, fiscal_cardinal_number)
+INSERT INTO company (admin_username, corporate_type_id, corporate_kinds_id, representative_id, address_id, contact_id, main_business_id, business_tax_office_id, headquarter_tax_office_id, local_income_tax_office, is_sme, business_registration_number, corporate_registration_number, business_type, business_item, establishment_date, opening_date, closing_date, name, entity_type, fiscal_year_start, fiscal_year_end, fiscal_cardinal_number)
 VALUES
-    (1, 1, 1, 1, 1, 1, 1, 2, '서울시 강남구청', true, '123-45-67890', '987-65-43210', '제조업', '전자부품', '2000-01-01', '2000-02-01', '9999-12-31', 'ABC 전자', 'INCORPORATED', '2023-01-01', '2023-12-31', 1),
-    (2, 2, 2, 2, 2, 2, 3, 1, '서울시 서초구청', false, '234-56-78901', '876-54-32109', '제조업', '자동차 부품', '2001-03-01', '2001-04-01', '9999-12-31', 'XYZ 자동차', 'INDIVIDUAL', '2023-01-01', '2023-12-31', 2),
-    (1, 3, 3, 3, 3, 3, 4, 2, '서울시 마포구청', true, '345-67-89012', '765-43-21098', '서비스업', 'IT 컨설팅', '2010-05-01', '2010-06-01', '9999-12-31', 'MNO IT', 'INCORPORATED', '2023-01-01', '2023-12-31', 1),
-    (2, 4, 4, 4, 4, 4, 5, 3, '서울시 송파구청', false, '456-78-90123', '654-32-10987', '서비스업', '광고', '2015-07-01', '2015-08-01', '9999-12-31', 'STU 광고', 'INDIVIDUAL', '2023-01-01', '2023-12-31', 2),
-    (1, 5, 5, 5, 5, 5, 6, 4, '서울시 노원구청', true, '567-89-01234', '543-21-09876', '제조업', '화장품 제조', '1995-09-01', '1995-10-01', '9999-12-31', 'PQR 화장품', 'INCORPORATED', '2023-01-01', '2023-12-31', 1);
+    ('gj1563@naver.com', 1, 1, 1, 1, 1, 1, 1, 2, '서울시 강남구청', true, '123-45-67890', '987-65-43210', '제조업', '전자부품', '2000-01-01', '2000-02-01', '9999-12-31', 'ABC 전자', 'INCORPORATED', '2023-01-01', '2023-12-31', 1),
+    ('gj1563@naver.com', 2, 2, 2, 2, 2, 2, 3, 1, '서울시 서초구청', false, '234-56-78901', '876-54-32109', '제조업', '자동차 부품', '2001-03-01', '2001-04-01', '9999-12-31', 'XYZ 자동차', 'INDIVIDUAL', '2023-01-01', '2023-12-31', 2),
+    ('gj1563@naver.com', 1, 3, 3, 3, 3, 3, 4, 2, '서울시 마포구청', true, '345-67-89012', '765-43-21098', '서비스업', 'IT 컨설팅', '2010-05-01', '2010-06-01', '9999-12-31', 'MNO IT', 'INCORPORATED', '2023-01-01', '2023-12-31', 1),
+    ('gj1563@naver.com', 2, 4, 4, 4, 4, 4, 5, 3, '서울시 송파구청', false, '456-78-90123', '654-32-10987', '서비스업', '광고', '2015-07-01', '2015-08-01', '9999-12-31', 'STU 광고', 'INDIVIDUAL', '2023-01-01', '2023-12-31', 2),
+    ('gj1563@naver.com', 1, 5, 5, 5, 5, 5, 6, 4, '서울시 노원구청', true, '567-89-01234', '543-21-09876', '제조업', '화장품 제조', '1995-09-01', '1995-10-01', '9999-12-31', 'PQR 화장품', 'INCORPORATED', '2023-01-01', '2023-12-31', 1);
