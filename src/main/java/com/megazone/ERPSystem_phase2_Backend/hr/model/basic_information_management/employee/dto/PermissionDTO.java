@@ -21,7 +21,6 @@ public class PermissionDTO {
     private UserPermission clientRegistrationPermission = UserPermission.NO_ACCESS;  // 거래처등록 권한
     private UserPermission accountSubjectPermission = UserPermission.NO_ACCESS;  // 계정과목 및 적요 등록 권한
     private UserPermission environmentPermission = UserPermission.NO_ACCESS;  // 환경등록 권한
-    private UserPermission companyCarPermission = UserPermission.NO_ACCESS;  // 업무용승용차등록 권한
     // 전표관리 관련 권한
     private UserPermission generalVoucherPermission = UserPermission.NO_ACCESS;  // 일반전표입력 권한
     private UserPermission salesPurchaseVoucherPermission = UserPermission.NO_ACCESS;  // 매입매출전표입력 권한
