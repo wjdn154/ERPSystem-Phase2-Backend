@@ -22,7 +22,6 @@ public class EmployeeController {
 
     @PostMapping("/employee/permission/admin/{companyId}")
     public ResponseEntity<Object> getAdminPermissionEmployee(@PathVariable("companyId") Long companyId) {
-        System.out.println("companyId = " + companyId);
         return employeeService.getAdminPermissionEmployee(companyId);
     }
 

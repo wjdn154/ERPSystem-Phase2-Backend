@@ -38,7 +38,6 @@ public class CompanyController {
     @PostMapping("/")
     public ResponseEntity<List<CompanyDTO>> findCompany() {
         List<CompanyDTO> allCompany = companyService.findAllCompany();
-        System.out.println(allCompany);
         return ResponseEntity.ok(allCompany);
     }
 
