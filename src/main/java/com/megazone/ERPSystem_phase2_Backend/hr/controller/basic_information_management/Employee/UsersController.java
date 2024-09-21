@@ -82,7 +82,9 @@ public class UsersController {
 
         Company company = companyRepository.findById(authRequest.getCompanyId()).orElse(null);
         if (company == null) return ResponseEntity.badRequest().body("회사를 찾을 수 없습니다.");
+        System.out.println("authRequest.getUserName() = " + authRequest.getUserName());
         boolean isAdmin = company.getAdminUsername().equals(authRequest.getUserName());
+        System.out.println("isAdmin = " + isAdmin);
 
         Map<Object, Object> response = new HashMap<>();
         response.put("token", authenticationToken.getBody());
