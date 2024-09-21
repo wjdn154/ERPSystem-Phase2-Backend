@@ -82,12 +82,13 @@ public class UsersController {
 
         Company company = companyRepository.findById(authRequest.getCompanyId()).orElse(null);
         if (company == null) return ResponseEntity.badRequest().body("회사를 찾을 수 없습니다.");
-        System.out.println("authRequest.getUserName() = " + authRequest.getUserName());
         boolean isAdmin = company.getAdminUsername().equals(authRequest.getUserName());
-        System.out.println("isAdmin = " + isAdmin);
+
+        String refreshToken = jwtUtil.generateRefreshToken(authRequest.getUserName());
 
         Map<Object, Object> response = new HashMap<>();
         response.put("token", authenticationToken.getBody());
+        response.put("refreshToken", refreshToken);
         response.put("permission", permissionByUsername.getBody());
         response.put("isAdmin", isAdmin);
 
@@ -96,6 +97,13 @@ public class UsersController {
 
         return ResponseEntity.ok(response);
     }
+
+    // 리프레시 토큰
+    @PostMapping("/auth/refresh-token")
+    public ResponseEntity<Object> refreshAuthenticationToken(@RequestBody Map<String, String> refreshTokenRequest) {
+        return usersService.createRefreshToken(refreshTokenRequest);
+    }
+
 
     // 회원가입
     @PostMapping("/auth/register")
