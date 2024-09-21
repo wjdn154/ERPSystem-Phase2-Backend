@@ -109,3 +109,4 @@ logging:
 jwt:
   secret: dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234
   expiration: 3600
+  refresh-expiration: 604800

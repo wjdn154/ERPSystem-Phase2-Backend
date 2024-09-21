@@ -28,6 +28,9 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private long expiration;  // 토큰 만료 시간 (초 단위)
 
+    @Value("${jwt.refresh-expiration}")
+    private long refreshTokenExpiration;
+
     /**
      * JWT 토큰에서 사용자 이름을 추출
      *
@@ -36,6 +39,27 @@ public class JwtUtil {
      */
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+
+    public String extractTenantId(String token) {
+        return extractClaim(token, claims -> claims.get("X-Tenant-ID", String.class));
+    }
+
+    public Long extractCompanyId(String token) {
+        return extractClaim(token, claims -> claims.get("companyId", Long.class));
+    }
+
+    public Long extractEmployeeId(String token) {
+        return extractClaim(token, claims -> claims.get("employeeId", Long.class));
+    }
+
+    public Long extractPermissionId(String token) {
+        return extractClaim(token, claims -> claims.get("permissionId", Long.class));
+    }
+
+    public String extractUserNickname(String token) {
+        return extractClaim(token, claims -> claims.get("userNickname", String.class));
     }
 
     /**
@@ -143,9 +167,17 @@ public class JwtUtil {
         return null;  // 토큰이 없을 경우 null 반환
     }
 
-    public String extractTenantId(String token) {
-        return extractClaim(token, claims -> claims.get("X-Tenant-ID", String.class));
+    public String generateRefreshToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiration * 1000))  // 설정된 시간으로 만료
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
     }
 
+    public Boolean validateRefreshToken(String token) {
+        return !isTokenExpired(token);  // 리프레시 토큰은 만료 여부만 확인
+    }
 
 }
