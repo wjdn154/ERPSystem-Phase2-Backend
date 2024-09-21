@@ -22,6 +22,5 @@ public class ClientLedgerApiController {
 
         return clientLedgerShowAllDTO != null ? ResponseEntity.status(HttpStatus.OK).body(clientLedgerShowAllDTO) :
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-
     }
 }
