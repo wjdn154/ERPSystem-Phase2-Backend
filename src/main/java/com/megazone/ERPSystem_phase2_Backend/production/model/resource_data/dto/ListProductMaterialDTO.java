@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * 두번째 페이지 해당 자재의 품목 리스트, 삭제 dto
+ * */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

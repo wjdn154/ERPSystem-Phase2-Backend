@@ -59,15 +59,16 @@ public class MaterialData {
     private Client supplier;                         // 공급자 / 외주 작업을 수행하는 공급업체(supplier) from 회계
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;                 //회사 테이블(회사 아이디)
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "material_input_status_id", nullable = false)
     private MaterialInputStatus materialInputStatus;
 
     @OneToMany(mappedBy = "material", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StandardBomMaterial> bomMaterials = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    private Company company;                 //회사 테이블(회사 아이디)
 
 //    @OneToMany(mappedBy = "substituteMaterial", fetch = FetchType.LAZY)
 //    private List<MaterialData> parent;        //자기참조 부모값? fk값이 들어감? db에는 컬럼이 안생기긴 했음.
