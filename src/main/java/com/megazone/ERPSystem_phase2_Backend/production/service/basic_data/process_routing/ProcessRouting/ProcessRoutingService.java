@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.process_routing.ProcessRouting;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDto;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessRouting;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessDetailsDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessRoutingDTO;
@@ -27,10 +28,10 @@ public interface ProcessRoutingService {
 
     // Search
     List<ProcessDetailsDTO> searchProcessDetails(String keyword);
-    List<ProductDetailDto> searchProducts(String keyword);
+    List<ProductDto> searchProducts(String keyword);
 
-    // Get
-    ProductDetailDto getProductById(Long id);
+
+//    ProductDetailDto getProductById(Long id);
     ProcessDetailsDTO getProcessDetailsById(Long id);
 
 }

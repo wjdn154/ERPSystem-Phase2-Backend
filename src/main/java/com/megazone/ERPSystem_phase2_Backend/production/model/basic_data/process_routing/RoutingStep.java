@@ -1,5 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class RoutingStep {
 
     @EmbeddedId
@@ -31,6 +35,7 @@ public class RoutingStep {
     @ManyToOne
     @MapsId("processId") // 복합키의 일부인 processId를 사용하여 연관관계를 맺음
     @JoinColumn(name = "process_id")
+    @JsonBackReference
     private ProcessDetails processDetails;
 
     @Column(name = "step_order")
