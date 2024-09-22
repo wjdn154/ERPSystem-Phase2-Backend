@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.proc
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessRoutingBasicDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.dto.WorkcenterDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessDetails;
@@ -215,7 +216,15 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
                 .routingId(id.getProcessRoutingId())
                 .processId(id.getProcessId())
                 .stepOrder(routingStep.getStepOrder())
-                .processRoutingDTO(convertToProcessRoutingDTO(routingStep.getProcessRouting()))  // ProcessRouting을 ProcessRoutingDTO로 변환하여 설정
+                .processRoutingBasicDTO(convertToProcessRoutingBasicDTO(routingStep.getProcessRouting()))  // ProcessRouting의 기본 정보만 변환
+                .build();
+    }
+
+    private ProcessRoutingBasicDTO convertToProcessRoutingBasicDTO(ProcessRouting processRouting) {
+        return ProcessRoutingBasicDTO.builder()
+                .id(processRouting.getId())
+                .code(processRouting.getCode())
+                .name(processRouting.getName())
                 .build();
     }
 
