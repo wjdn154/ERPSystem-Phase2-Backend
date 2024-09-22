@@ -41,6 +41,10 @@ public class StandardBomDTO {
     private OutsourcingType outsourcingType;  // 외주 구분 (enum 사용)
     private String remarks;
     private Boolean isActive;             // BOM 사용 여부 (활성화 상태)
+
+    // 순환 참조 방지 필드
+    private boolean isParent = false;
+
 }
 
 

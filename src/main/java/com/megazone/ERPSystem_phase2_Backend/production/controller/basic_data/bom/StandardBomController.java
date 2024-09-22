@@ -30,7 +30,6 @@ public class StandardBomController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("서버 오류 발생: " + e.getMessage());
         }
-
     }
 
     // 특정 BOM 조회

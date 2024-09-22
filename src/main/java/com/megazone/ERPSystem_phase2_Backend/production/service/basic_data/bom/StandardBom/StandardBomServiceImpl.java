@@ -69,6 +69,11 @@ public class StandardBomServiceImpl implements StandardBomService {
         return convertToDTO(savedBom);
     }
 
+    // 기본적으로 부모-자식 관계에서 false로 시작
+    private StandardBomDTO convertToDTO(StandardBom standardBom) {
+        return convertToDTO(standardBom, false);  // 부모가 아닌 경우
+    }
+
 
 
     @Override
@@ -260,7 +265,8 @@ public class StandardBomServiceImpl implements StandardBomService {
                 .build();
     }
 
-    private StandardBomDTO convertToDTO(StandardBom standardBom) {
+    // 부모와 자식 관계를 관리하는 메서드
+    private StandardBomDTO convertToDTO(StandardBom standardBom, boolean isParent) {
         List<BomMaterialDTO> materialDTOs = Optional.ofNullable(standardBom.getBomMaterials())
                 .orElse(Collections.emptyList())
                 .stream()
@@ -272,9 +278,21 @@ public class StandardBomServiceImpl implements StandardBomService {
                         .build())
                 .toList();
 
-        StandardBomDTO parentBomDTO = Optional.ofNullable(standardBom.getParentBom()).map(this::convertToDTO).orElse(null);
+        StandardBomDTO parentBomDTO = Optional.ofNullable(standardBom.getParentBom())
+                .map(bom -> convertToDTO(bom, true)) // 부모 BOM을 처리할 때는 자식 호출을 막음
+                .orElse(null);
 
-        List<StandardBomDTO> childBomDTOs = Optional.ofNullable(standardBom.getChildBoms()).orElse(Collections.emptyList()).stream().map(this::convertToDTO).toList();
+        List<StandardBomDTO> childBomDTOs = Collections.emptyList();
+//        List<StandardBomDTO> childBomDTOs = Optional.ofNullable(standardBom.getChildBoms()).orElse(Collections.emptyList()).stream().map(this::convertToDTO).toList();
+
+        // 부모 객체가 아닌 경우에만 자식 BOM을 처리
+        if (!isParent) {
+            childBomDTOs = Optional.ofNullable(standardBom.getChildBoms())
+                    .orElse(Collections.emptyList())
+                    .stream()
+                    .map(bom -> convertToDTO(bom, false))
+                    .toList();
+        }
 
         return StandardBomDTO.builder()
                 .id(standardBom.getId())
@@ -286,7 +304,8 @@ public class StandardBomServiceImpl implements StandardBomService {
                 .startDate(standardBom.getStartDate())
                 .expiredDate(standardBom.getExpiredDate())
                 .isActive(standardBom.getIsActive())
-                .parentProductId(standardBom.getParentProduct().getId())
+                // parentProduct가 null일 수 있으므로 안전하게 처리
+                .parentProductId(Optional.ofNullable(standardBom.getParentProduct()).map(Product::getId).orElse(null))
 //                .bomMaterials(materialDTOs)
                 .parentBom(parentBomDTO)
                 .childBoms(childBomDTOs)
