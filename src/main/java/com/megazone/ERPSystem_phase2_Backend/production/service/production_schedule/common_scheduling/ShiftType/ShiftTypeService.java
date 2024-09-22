@@ -5,9 +5,9 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedul
 import java.util.List;
 
 public interface ShiftTypeService {
-    List<ShiftTypeDTO> getAllShiftTypes(Long companyId);
-    ShiftTypeDTO getShiftTypeById(Long id, Long companyId);
-    ShiftTypeDTO createShiftType(ShiftTypeDTO shiftTypeDTO, Long companyId);
-    ShiftTypeDTO updateShiftType(ShiftTypeDTO shiftTypeDTO, Long companyId);
-    void deleteShiftType(Long id, Long companyId);
+    List<ShiftTypeDTO> getAllShiftTypes();
+    ShiftTypeDTO getShiftTypeById(Long id);
+    ShiftTypeDTO createShiftType(ShiftTypeDTO shiftTypeDTO);
+    ShiftTypeDTO updateShiftType(ShiftTypeDTO shiftTypeDTO);
+    void deleteShiftType(Long id);
 }
