@@ -1,12 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +25,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(exclude = {"routingSteps"})
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ProcessRouting {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,6 +51,7 @@ public class ProcessRouting {
     @OneToMany(mappedBy = "processRouting", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("stepOrder ASC") // stepOrder 필드를 기준으로 오름차순 정렬
     @Builder.Default
+    @JsonManagedReference
     private List<RoutingStep> routingSteps = new ArrayList<>(); // 연관 RoutingStep 목록
 
     @OneToMany(mappedBy = "processRouting")

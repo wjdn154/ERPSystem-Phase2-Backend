@@ -1,5 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.basic_data.process_routing;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessRouting;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessDetailsDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessRoutingDTO;
@@ -11,18 +14,21 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/production/processRouting")
+@RequestMapping("/api/production/processRouting")
 @RequiredArgsConstructor
 public class ProcessRoutingController {
 
     private final ProcessRoutingService processRoutingService;
     private final ProcessRoutingRepository processRoutingRepository;
+    private final ProductRepository productRepository;
 
     // 1. processRouting 전체 조회
     @PostMapping
     public ResponseEntity<List<ProcessRouting>> getAllProcessRoutings() {
+
         List<ProcessRouting> processRoutings = processRoutingRepository.findAll();
         return ResponseEntity.ok(processRoutings);
     }
@@ -51,8 +57,8 @@ public class ProcessRoutingController {
 
     // 3.2 생성 시 등록창 내에서 품목Product 검색
     @PostMapping("/searchProducts")
-    public ResponseEntity<List<ProductDetailDto>> searchProducts(@RequestParam String keyword) {
-        List<ProductDetailDto> productList = processRoutingService.searchProducts(keyword);
+    public ResponseEntity<List<ProductDto>> searchProducts(@RequestParam String keyword) {
+        List<ProductDto> productList = processRoutingService.searchProducts(keyword);
         return ResponseEntity.ok(productList);
     }
 
@@ -63,11 +69,11 @@ public class ProcessRoutingController {
         return ResponseEntity.ok(processDetails);
     }
 
-    @PostMapping("/previewProduct/{id}")
-    public ResponseEntity<ProductDetailDto> previewProduct(@PathVariable Long id) {
-        ProductDetailDto product = processRoutingService.getProductById(id);
-        return ResponseEntity.ok(product);
-    }
+//    @PostMapping("/previewProduct/{id}")
+//    public ResponseEntity<Optional<Product>> previewProduct(@PathVariable Long id) {
+//        Optional<Product> product = productRepository.findById(id);
+//        return ResponseEntity.ok(product);
+//    }
 
     // 4. 수정
     @PostMapping("update/{id}")

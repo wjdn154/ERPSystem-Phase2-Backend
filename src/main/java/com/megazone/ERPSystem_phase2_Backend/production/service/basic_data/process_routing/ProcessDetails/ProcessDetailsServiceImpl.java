@@ -204,8 +204,10 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
                                 .map(this::convertToWorkcenterDTO)  // Workcenter를 WorkcenterDTO로 변환
                                 .collect(Collectors.toList())
                 )
-                .routingStepDTOList(
-                        processDetails.getRoutingSteps().stream().map(this::convertToRoutingStepDTO).toList()
+                .routingStepIdList(
+                        processDetails.getRoutingSteps().stream()
+                                .map(RoutingStep::getId)
+                                .collect(Collectors.toList())
                 )
                 .build();
     }
@@ -213,48 +215,49 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
     private RoutingStepDTO convertToRoutingStepDTO(RoutingStep routingStep) {
         RoutingStepId id = routingStep.getId();
         return RoutingStepDTO.builder()
-                .routingId(id.getProcessRoutingId())
-                .processId(id.getProcessId())
+                .id(routingStep.getId())
+//                .routingId(id.getProcessRoutingId())
+//                .processId(id.getProcessId())
                 .stepOrder(routingStep.getStepOrder())
-                .processRoutingBasicDTO(convertToProcessRoutingBasicDTO(routingStep.getProcessRouting()))  // ProcessRouting의 기본 정보만 변환
+//                .processRoutingBasicDTO(convertToProcessRoutingBasicDTO(routingStep.getProcessRouting()))  // ProcessRouting의 기본 정보만 변환
                 .build();
     }
 
-    private ProcessRoutingBasicDTO convertToProcessRoutingBasicDTO(ProcessRouting processRouting) {
-        return ProcessRoutingBasicDTO.builder()
-                .id(processRouting.getId())
-                .code(processRouting.getCode())
-                .name(processRouting.getName())
-                .build();
-    }
+//    private ProcessRoutingBasicDTO convertToProcessRoutingBasicDTO(ProcessRouting processRouting) {
+//        return ProcessRoutingBasicDTO.builder()
+//                .id(processRouting.getId())
+//                .code(processRouting.getCode())
+//                .name(processRouting.getName())
+//                .build();
+//    }
+//
+//    private ProcessRoutingDTO convertToProcessRoutingDTO(ProcessRouting processRouting) {
+//        return ProcessRoutingDTO.builder()
+//                .id(processRouting.getId())
+//                .code(processRouting.getCode())
+//                .name(processRouting.getName())
+//                .isStandard(processRouting.isStandard())
+//                .isActive(processRouting.isActive())
+//                .routingStepDTOList(
+//                        processRouting.getRoutingSteps() != null ?
+//                                processRouting.getRoutingSteps().stream()
+//                                        .map(this::convertToRoutingStepDTO)
+//                                        .collect(Collectors.toList())
+//                                : Collections.emptyList()
+//                )
+//                .products(
+//                        processRouting.getProducts() != null ?
+//                                processRouting.getProducts().stream()
+//                                        .map(this::convertToProductDetailDto)
+//                                        .collect(Collectors.toList())
+//                                : Collections.emptyList()
+//                )
+//                .build();
+//    }
 
-    private ProcessRoutingDTO convertToProcessRoutingDTO(ProcessRouting processRouting) {
-        return ProcessRoutingDTO.builder()
-                .id(processRouting.getId())
-                .code(processRouting.getCode())
-                .name(processRouting.getName())
-                .isStandard(processRouting.isStandard())
-                .isActive(processRouting.isActive())
-                .routingStepDTOList(
-                        processRouting.getRoutingSteps() != null ?
-                                processRouting.getRoutingSteps().stream()
-                                        .map(this::convertToRoutingStepDTO)
-                                        .collect(Collectors.toList())
-                                : Collections.emptyList()
-                )
-                .products(
-                        processRouting.getProducts() != null ?
-                                processRouting.getProducts().stream()
-                                        .map(this::convertToProductDetailDto)
-                                        .collect(Collectors.toList())
-                                : Collections.emptyList()
-                )
-                .build();
-    }
-
-    private ProductDetailDto convertToProductDetailDto(Product product) {
-        return ProductDetailDto.createProductDetailDto(product);
-    }
+//    private ProductDetailDto convertToProductDetailDto(Product product) {
+//        return ProductDetailDto.createProductDetailDto(product);
+//    }
 
     private WorkcenterDTO convertToWorkcenterDTO(Workcenter workcenter) {
         return WorkcenterDTO.builder()
