@@ -29,6 +29,9 @@ public class Leaves {
     @JoinColumn(name="leavestype_id", nullable = false) // 휴가 유형 참조
     private LeavesType leavesType;
 
+    @Column(nullable = false, unique = true)
+    private String code; // 휴가코드
+
     @Column(nullable = false)
     private LocalDate startDate; // 휴가 시작일
 

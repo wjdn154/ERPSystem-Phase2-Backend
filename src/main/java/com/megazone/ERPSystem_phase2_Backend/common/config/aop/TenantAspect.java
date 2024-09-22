@@ -4,6 +4,7 @@ import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.TenantCo
 import com.megazone.ERPSystem_phase2_Backend.common.config.security.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -52,7 +53,7 @@ public class TenantAspect {
      * 요청 후에 JWT 토큰에서 X-Tenant-ID가 있으면 TenantContext를 비움
      * @throws Throwable 오류 발생 시 던짐
      */
-    @Before("@annotation(org.springframework.web.bind.annotation.RequestMapping) || " +
+    @After("@annotation(org.springframework.web.bind.annotation.RequestMapping) || " +
             "@annotation(org.springframework.web.bind.annotation.PostMapping) || " +
             "@annotation(org.springframework.web.bind.annotation.GetMapping) || " +
             "@annotation(org.springframework.web.bind.annotation.PutMapping) || " +

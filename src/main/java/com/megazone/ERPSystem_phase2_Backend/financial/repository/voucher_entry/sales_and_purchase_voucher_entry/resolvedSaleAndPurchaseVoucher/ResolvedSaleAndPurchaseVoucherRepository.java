@@ -8,10 +8,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ResolvedSaleAndPurchaseVoucherRepository extends JpaRepository<ResolvedSaleAndPurchaseVoucher, Long> {
-    List<ResolvedSaleAndPurchaseVoucher> findByVoucherDateAndCompany_idOrderByVoucherNumberAsc(LocalDate date,Long companyId);
+    List<ResolvedSaleAndPurchaseVoucher> findByVoucherDateOrderByVoucherNumberAsc(LocalDate date);
 
-    ResolvedSaleAndPurchaseVoucher findByVoucherNumberAndCompany_id(String voucherNumber,Long companyId);
+    ResolvedSaleAndPurchaseVoucher findByVoucherNumber(String voucherNumber);
 
     // 승인권자 Id 필요
-    void deleteByVoucherNumberAndVoucherDateAndCompany_id(String voucherNumber, LocalDate searchDate,Long companyId);
+    void deleteByVoucherNumberAndVoucherDate(String voucherNumber, LocalDate searchDate);
 }

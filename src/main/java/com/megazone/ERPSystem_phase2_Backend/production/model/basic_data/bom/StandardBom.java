@@ -15,10 +15,7 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registratio
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.planning.mrp.Mrp;
 import com.megazone.ERPSystem_phase2_Backend.production.model.outsourcing.OutsourcingType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,6 +27,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder(toBuilder = true)
 @ToString(exclude = {"parentBom", "parentProduct", "childProduct", "childBoms", "bomMaterials", "mrps"})
 public class StandardBom {
 
@@ -46,9 +44,6 @@ public class StandardBom {
 
     @Column(nullable = false)
     private LocalDateTime createdDate; // BOM 생성일자
-
-    @Column(nullable = true)
-    private String description; // 설명
 
     @Column(nullable = true)
     private String remarks; // 비고
@@ -82,12 +77,15 @@ public class StandardBom {
     private StandardBom parentBom; // 재귀적 관계 설정 : 순환 참조가 발생하지 않도록 유효성 검사를 구현해야 함 (상위 BOM이 하위 BOM의 자식 중 하나라면 순환 참조가 발생한 것 or DFS 활용)
 
     @OneToMany(mappedBy = "parentBom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Builder.Default
     private List<StandardBom> childBoms = new ArrayList<>();
 
     @OneToMany(mappedBy = "bom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Builder.Default
     private List<StandardBomMaterial> bomMaterials = new ArrayList<>(); // 중간 엔티티 리스트
 
     @OneToMany(mappedBy = "standardBom", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<Mrp> mrps = new ArrayList<>(); // 연관 MRP
 
 }

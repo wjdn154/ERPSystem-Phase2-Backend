@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.proc
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessRoutingBasicDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.dto.WorkcenterDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessDetails;
@@ -203,8 +204,10 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
                                 .map(this::convertToWorkcenterDTO)  // Workcenter를 WorkcenterDTO로 변환
                                 .collect(Collectors.toList())
                 )
-                .routingStepDTOList(
-                        processDetails.getRoutingSteps().stream().map(this::convertToRoutingStepDTO).toList()
+                .routingStepIdList(
+                        processDetails.getRoutingSteps().stream()
+                                .map(RoutingStep::getId)
+                                .collect(Collectors.toList())
                 )
                 .build();
     }
@@ -212,40 +215,49 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
     private RoutingStepDTO convertToRoutingStepDTO(RoutingStep routingStep) {
         RoutingStepId id = routingStep.getId();
         return RoutingStepDTO.builder()
-                .routingId(id.getProcessRoutingId())
-                .processId(id.getProcessId())
+                .id(routingStep.getId())
+//                .routingId(id.getProcessRoutingId())
+//                .processId(id.getProcessId())
                 .stepOrder(routingStep.getStepOrder())
-                .processRoutingDTO(convertToProcessRoutingDTO(routingStep.getProcessRouting()))  // ProcessRouting을 ProcessRoutingDTO로 변환하여 설정
+//                .processRoutingBasicDTO(convertToProcessRoutingBasicDTO(routingStep.getProcessRouting()))  // ProcessRouting의 기본 정보만 변환
                 .build();
     }
 
-    private ProcessRoutingDTO convertToProcessRoutingDTO(ProcessRouting processRouting) {
-        return ProcessRoutingDTO.builder()
-                .id(processRouting.getId())
-                .code(processRouting.getCode())
-                .name(processRouting.getName())
-                .isStandard(processRouting.isStandard())
-                .isActive(processRouting.isActive())
-                .routingStepDTOList(
-                        processRouting.getRoutingSteps() != null ?
-                                processRouting.getRoutingSteps().stream()
-                                        .map(this::convertToRoutingStepDTO)
-                                        .collect(Collectors.toList())
-                                : Collections.emptyList()
-                )
-                .products(
-                        processRouting.getProducts() != null ?
-                                processRouting.getProducts().stream()
-                                        .map(this::convertToProductDetailDto)
-                                        .collect(Collectors.toList())
-                                : Collections.emptyList()
-                )
-                .build();
-    }
+//    private ProcessRoutingBasicDTO convertToProcessRoutingBasicDTO(ProcessRouting processRouting) {
+//        return ProcessRoutingBasicDTO.builder()
+//                .id(processRouting.getId())
+//                .code(processRouting.getCode())
+//                .name(processRouting.getName())
+//                .build();
+//    }
+//
+//    private ProcessRoutingDTO convertToProcessRoutingDTO(ProcessRouting processRouting) {
+//        return ProcessRoutingDTO.builder()
+//                .id(processRouting.getId())
+//                .code(processRouting.getCode())
+//                .name(processRouting.getName())
+//                .isStandard(processRouting.isStandard())
+//                .isActive(processRouting.isActive())
+//                .routingStepDTOList(
+//                        processRouting.getRoutingSteps() != null ?
+//                                processRouting.getRoutingSteps().stream()
+//                                        .map(this::convertToRoutingStepDTO)
+//                                        .collect(Collectors.toList())
+//                                : Collections.emptyList()
+//                )
+//                .products(
+//                        processRouting.getProducts() != null ?
+//                                processRouting.getProducts().stream()
+//                                        .map(this::convertToProductDetailDto)
+//                                        .collect(Collectors.toList())
+//                                : Collections.emptyList()
+//                )
+//                .build();
+//    }
 
-    private ProductDetailDto convertToProductDetailDto(Product product) {
-        return ProductDetailDto.createProductDetailDto(product);
-    }
+//    private ProductDetailDto convertToProductDetailDto(Product product) {
+//        return ProductDetailDto.createProductDetailDto(product);
+//    }
 
     private WorkcenterDTO convertToWorkcenterDTO(Workcenter workcenter) {
         return WorkcenterDTO.builder()

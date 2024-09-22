@@ -18,54 +18,39 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ShiftTypeController {
     private final ShiftTypeService shiftTypeService;
-    private final CompanyRepository companyRepository;
-    private final UsersRepository usersRepository;
-
-    // JWT 인증에서 사용자 정보를 가져오는 메서드
-    private Long getCurrentCompanyId() {
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        return user.getCompany().getId();
-    }
-
 
     // POST: 교대유형 전체조회
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<List<ShiftTypeDTO>> getAllShiftTypes() {
-        Long companyId = getCurrentCompanyId();
-        List<ShiftTypeDTO> shiftTypes = shiftTypeService.getAllShiftTypes(companyId);
+        List<ShiftTypeDTO> shiftTypes = shiftTypeService.getAllShiftTypes();
         return ResponseEntity.ok(shiftTypes);
     }
 
     // POST: 교대유형 상세조회
-    @PostMapping("/{id}/")
+    @PostMapping("/{id}")
     public ResponseEntity<ShiftTypeDTO> getShiftTypeById(@PathVariable Long id) {
-        Long companyId = getCurrentCompanyId();
-        ShiftTypeDTO shiftType = shiftTypeService.getShiftTypeById(id, companyId);
+        ShiftTypeDTO shiftType = shiftTypeService.getShiftTypeById(id);
         return ResponseEntity.ok(shiftType);
     }
 
     // POST: 교대유형 새로 등록
-    @PostMapping("/new/")
+    @PostMapping("/new")
     public ResponseEntity<ShiftTypeDTO> createShiftType(@RequestBody ShiftTypeDTO shiftTypeDTO) {
-        Long companyId = getCurrentCompanyId();
-        ShiftTypeDTO createdShiftType = shiftTypeService.createShiftType(shiftTypeDTO, companyId);
+        ShiftTypeDTO createdShiftType = shiftTypeService.createShiftType(shiftTypeDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdShiftType);
     }
 
     // POST: 교대유형 수정 - 유형이름 같으면 예외
-    @PostMapping("/update/")
+    @PostMapping("/update/{id}")
     public ResponseEntity<ShiftTypeDTO> updateShiftType(@RequestBody ShiftTypeDTO shiftTypeDTO) {
-        Long companyId = getCurrentCompanyId();
-        ShiftTypeDTO updatedShiftType = shiftTypeService.updateShiftType(shiftTypeDTO, companyId);
+        ShiftTypeDTO updatedShiftType = shiftTypeService.updateShiftType(shiftTypeDTO);
         return ResponseEntity.ok(updatedShiftType);
     }
 
     // POST: 교대유형 삭제 - 사용 중이면 삭제불가
     @PostMapping("/delete/{id}")
     public ResponseEntity<Void> deleteShiftType(@PathVariable Long id) {
-        Long companyId = getCurrentCompanyId();
-        shiftTypeService.deleteShiftType(id, companyId);
+        shiftTypeService.deleteShiftType(id);
         return ResponseEntity.noContent().build();
     }
 }

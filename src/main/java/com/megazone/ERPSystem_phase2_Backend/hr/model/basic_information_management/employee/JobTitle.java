@@ -17,9 +17,12 @@ public class JobTitle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
+    private String code; // 직책번호
+    
     @Column(nullable = false)
     private String titleName; // 직책 이름 ( 예 : 소프트웨어 개발자 )
-
+    
     @Column
     private String description; // 직책 설명
 
