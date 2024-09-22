@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.function.Function;
 
 public interface UnresolvedSaleAndPurchaseVoucherService {
-    UnresolvedSaleAndPurchaseVoucher save(UnresolvedSaleAndPurchaseVoucherEntryDTO dto, Long companyId);
+    UnresolvedSaleAndPurchaseVoucher save(UnresolvedSaleAndPurchaseVoucherEntryDTO dto);
 
-    List<UnresolvedSaleAndPurchaseVoucher> searchAllVoucher(LocalDate date,Long companyId);
+    List<UnresolvedSaleAndPurchaseVoucher> searchAllVoucher(LocalDate date);
 
-    String deleteVoucher(UnresolvedSaleAndPurchaseVoucherDeleteDTO dto,Long companyId);
+    String deleteVoucher(UnresolvedSaleAndPurchaseVoucherDeleteDTO dto);
 
     BigDecimal totalDebit(List<UnresolvedVoucher> vouchers);
 
@@ -27,7 +27,7 @@ public interface UnresolvedSaleAndPurchaseVoucherService {
 
 //    List<UnresolvedVoucher> searchVoucher(String voucherNumber);
 
-    List<UnresolvedVoucher> searchVoucher(String voucherNumber, Long companyId);
+    List<UnresolvedVoucher> searchVoucher(String voucherNumber);
 
-    List<UnresolvedSaleAndPurchaseVoucher> ApprovalProcessing(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto,Long companyId);
+    List<UnresolvedSaleAndPurchaseVoucher> ApprovalProcessing(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto);
 }

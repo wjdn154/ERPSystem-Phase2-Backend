@@ -1,4 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.common.config.security;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Permission;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -26,6 +28,9 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private long expiration;  // 토큰 만료 시간 (초 단위)
 
+    @Value("${jwt.refresh-expiration}")
+    private long refreshTokenExpiration;
+
     /**
      * JWT 토큰에서 사용자 이름을 추출
      *
@@ -34,6 +39,27 @@ public class JwtUtil {
      */
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+
+    public String extractTenantId(String token) {
+        return extractClaim(token, claims -> claims.get("X-Tenant-ID", String.class));
+    }
+
+    public Long extractCompanyId(String token) {
+        return extractClaim(token, claims -> claims.get("companyId", Long.class));
+    }
+
+    public Long extractEmployeeId(String token) {
+        return extractClaim(token, claims -> claims.get("employeeId", Long.class));
+    }
+
+    public Long extractPermissionId(String token) {
+        return extractClaim(token, claims -> claims.get("permissionId", Long.class));
+    }
+
+    public String extractUserNickname(String token) {
+        return extractClaim(token, claims -> claims.get("userNickname", String.class));
     }
 
     /**
@@ -90,10 +116,13 @@ public class JwtUtil {
      * @param userNickname 사용자 닉네임
      * @return 생성된 JWT 토큰
      */
-    public String generateToken(String tenantId, String username, String userNickname) {
+    public String generateToken(String tenantId, String username, String userNickname, Long companyId, Long employeeId, Long permissionId) {
         Map<String, Object> claims = new HashMap<>();  // 기본 클레임 설정
         claims.put("X-Tenant-ID", tenantId);  // 테넌트 ID 추가
         claims.put("userNickname", userNickname);  // 사용자 닉네임 추가
+        claims.put("companyId", companyId);
+        claims.put("employeeId", employeeId);
+        claims.put("permissionId", permissionId);
         return createToken(claims, username);  // 토큰 생성
     }
 
@@ -138,9 +167,17 @@ public class JwtUtil {
         return null;  // 토큰이 없을 경우 null 반환
     }
 
-    public String extractTenantId(String token) {
-        return extractClaim(token, claims -> claims.get("X-Tenant-ID", String.class));
+    public String generateRefreshToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiration * 1000))  // 설정된 시간으로 만료
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
     }
 
+    public Boolean validateRefreshToken(String token) {
+        return !isTokenExpired(token);  // 리프레시 토큰은 만료 여부만 확인
+    }
 
 }

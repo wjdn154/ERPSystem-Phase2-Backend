@@ -21,14 +21,13 @@ public class Permission  {
     private Long id;
 
     // 회사관리 권한
-    @Enumerated(EnumType.STRING) private UserPermission adminPermission = UserPermission.Admin;  // 관리자 권한
+    @Enumerated(EnumType.STRING) private UserPermission adminPermission = UserPermission.NO_ACCESS;  // 관리자 권한
 
     // 재무회계 권한
     // 기초정보관리 관련 권한
     @Enumerated(EnumType.STRING) private UserPermission clientRegistrationPermission = UserPermission.NO_ACCESS;  // 거래처등록 권한
     @Enumerated(EnumType.STRING) private UserPermission accountSubjectPermission = UserPermission.NO_ACCESS;  // 계정과목 및 적요 등록 권한
     @Enumerated(EnumType.STRING) private UserPermission environmentPermission = UserPermission.NO_ACCESS;  // 환경등록 권한
-    @Enumerated(EnumType.STRING) private UserPermission companyCarPermission = UserPermission.NO_ACCESS;  // 업무용승용차등록 권한
     // 전표관리 관련 권한
     @Enumerated(EnumType.STRING) private UserPermission generalVoucherPermission = UserPermission.NO_ACCESS;  // 일반전표입력 권한
     @Enumerated(EnumType.STRING) private UserPermission salesPurchaseVoucherPermission = UserPermission.NO_ACCESS;  // 매입매출전표입력 권한

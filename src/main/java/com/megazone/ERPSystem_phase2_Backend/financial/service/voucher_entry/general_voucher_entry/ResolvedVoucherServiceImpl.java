@@ -47,7 +47,6 @@ public class ResolvedVoucherServiceImpl implements ResolvedVoucherService {
     @Override
     public ResolvedVoucher createResolvedVoucher(UnresolvedVoucher unresolvedVoucher, LocalDateTime approvalTime) {
         return ResolvedVoucher.builder()
-                .company(unresolvedVoucher.getCompany())
                 .accountSubject(unresolvedVoucher.getAccountSubject())
                 .client(unresolvedVoucher.getClient())
                 .voucherManager(unresolvedVoucher.getVoucherManager())
@@ -63,10 +62,10 @@ public class ResolvedVoucherServiceImpl implements ResolvedVoucherService {
     }
 
     @Override
-    public List<ResolvedVoucher> resolvedVoucherAllSearch(Long companyId, LocalDate date) {
+    public List<ResolvedVoucher> resolvedVoucherAllSearch(LocalDate date) {
         List<ResolvedVoucher> resolvedVoucherList = new ArrayList<ResolvedVoucher>();
         try {
-            resolvedVoucherList = resolvedVoucherRepository.findByVoucherDateAndCompany_IdOrderByVoucherNumberAsc(date,companyId);
+            resolvedVoucherList = resolvedVoucherRepository.findByVoucherDateOrderByVoucherNumberAsc(date);
             if(resolvedVoucherList.isEmpty()) {
                 throw new NoSuchElementException("해당 날짜에 등록된 전표가 없습니다.");
             }
@@ -84,11 +83,11 @@ public class ResolvedVoucherServiceImpl implements ResolvedVoucherService {
      * @return 차변 또는 대변의 합계를 반환
      */
     @Override
-    public BigDecimal calculateTotalAmount(Long companyId, LocalDate date, Function<ResolvedVoucher, BigDecimal> amount) {
+    public BigDecimal calculateTotalAmount(LocalDate date, Function<ResolvedVoucher, BigDecimal> amount) {
         BigDecimal totalAmount = BigDecimal.ZERO;
 
         List<ResolvedVoucher> resolvedvoucherList =
-                resolvedVoucherRepository.findByVoucherDateAndCompany_IdOrderByVoucherNumberAsc(date,companyId);
+                resolvedVoucherRepository.findByVoucherDateOrderByVoucherNumberAsc(date);
 
         for (ResolvedVoucher voucher : resolvedvoucherList) {
             totalAmount = totalAmount.add(amount.apply(voucher));
@@ -98,24 +97,24 @@ public class ResolvedVoucherServiceImpl implements ResolvedVoucherService {
     }
 
     @Override
-    public BigDecimal totalDebit(LocalDate date, Long companyId) {
-        return calculateTotalAmount(companyId, date, ResolvedVoucher::getDebitAmount);
+    public BigDecimal totalDebit(LocalDate date) {
+        return calculateTotalAmount(date, ResolvedVoucher::getDebitAmount);
     }
 
     @Override
-    public BigDecimal totalCredit(LocalDate date, Long companyId) {
-        return calculateTotalAmount(companyId, date, ResolvedVoucher::getCreditAmount);
+    public BigDecimal totalCredit(LocalDate date) {
+        return calculateTotalAmount(date, ResolvedVoucher::getCreditAmount);
     }
 
     @Override
-    public List<Long> deleteResolvedVoucher(ResolvedVoucherDeleteDTO dto, Long companyId) {
+    public List<Long> deleteResolvedVoucher(ResolvedVoucherDeleteDTO dto) {
 
         // 승인권자면 삭제가능 << 기능구현 필요
 
         List<Long> deleteVouchers = new ArrayList<>();
         try {
             if(true) { // 승인권자면 삭제가능 << 기능구현 필요
-                deleteVouchers.addAll(resolvedVoucherRepository.deleteVoucherByManager(dto,companyId));
+                deleteVouchers.addAll(resolvedVoucherRepository.deleteVoucherByManager(dto));
                 if(deleteVouchers.isEmpty()) {
                     throw new NoSuchElementException("검색조건에 해당하는 전표가 없습니다.");
                 }

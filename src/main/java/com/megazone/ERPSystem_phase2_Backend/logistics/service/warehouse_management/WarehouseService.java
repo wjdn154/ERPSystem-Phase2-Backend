@@ -1,7 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.warehouse_management;
 
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.test.WarehouseListResponseDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.test.WarehouseResponseListDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.test.WarehouseRequestTestDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.test.WarehouseResponseTestDTO;
 
@@ -9,13 +9,13 @@ import java.util.List;
 
 public interface WarehouseService {
 
-    List<WarehouseListResponseDTO> getWarehouseListByCompany(Long companyId);
+    List<WarehouseResponseListDTO> getWarehouseList();
 
-    WarehouseResponseTestDTO getWarehouseDetailTest(Long id);
+    WarehouseResponseTestDTO getWarehouseDetail(Long warehouseId);
 
-    WarehouseResponseTestDTO saveTestWarehouse(WarehouseRequestTestDTO warehouseRequestTestDTO, Long companyId);
+    WarehouseResponseTestDTO createWarehouse(WarehouseRequestTestDTO requestDTO);
 
-    WarehouseResponseTestDTO updateTestWarehouse(Long id, WarehouseRequestTestDTO dto);
+    WarehouseResponseTestDTO updateWarehouse(Long warehouseId, WarehouseRequestTestDTO requestDTO);
 
     String deleteWarehouse(Long id);
 

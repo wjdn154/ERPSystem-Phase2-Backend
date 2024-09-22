@@ -1,6 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.Currency;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 발주계획 테이블
@@ -26,9 +30,15 @@ public class PurchasePlan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 발주 요청_id 참조
-    @Column
-    private Long purchaseRequestId;
+    // 발주 계획과 발주 요청 간의 중간 엔티티와의 일대다 관계
+    @OneToMany(mappedBy = "purchasePlan")
+    @Builder.Default
+    private List<PurchasePlanRequest> purchasePlanRequests = new ArrayList<>();
+
+    // 발주 계획과 발주서 간의 일대다 관계
+    @OneToMany(mappedBy = "purchasePlan")
+    @Builder.Default
+    private List<PurchaseOrder> purchaseOrders = new ArrayList<>();
 
     // 거래처_id - N : 1
     @Column(nullable = false)
@@ -39,13 +49,14 @@ public class PurchasePlan {
     private Long employeeId;
 
     // 창고_id - 입고될 창고
-    @Column(nullable = false)
-    private Long warehouseId;
+    @ManyToOne
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse warehouse;
 
-    // 통화_id - N : 1
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "currency_id", nullable = false)
-    private Long currencyId;
+    // 통화_id
+    @ManyToOne
+    @JoinColumn(name = "currency_id")
+    private Currency currency;
 
     // 품목_id
     @Column

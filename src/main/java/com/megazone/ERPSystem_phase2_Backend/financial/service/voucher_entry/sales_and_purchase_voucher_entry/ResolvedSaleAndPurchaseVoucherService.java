@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.function.Function;
 
 public interface ResolvedSaleAndPurchaseVoucherService {
-    List<ResolvedSaleAndPurchaseVoucher> searchAllVoucher(LocalDate date,Long companyId);
+    List<ResolvedSaleAndPurchaseVoucher> searchAllVoucher(LocalDate date);
 
     void resolvedVoucherEntry(List<UnresolvedSaleAndPurchaseVoucher> unresolvedVoucherList);
 
-    List<ResolvedVoucher> searchEntryVoucher(String voucherNumber,Long companyId);
+    List<ResolvedVoucher> searchEntryVoucher(String voucherNumber);
 
     BigDecimal calculateTotalAmount(List<ResolvedVoucher> vouchers, Function<ResolvedVoucher, BigDecimal> amount);
 
@@ -27,5 +27,5 @@ public interface ResolvedSaleAndPurchaseVoucherService {
 
     BigDecimal totalCredit(List<ResolvedVoucher> vouchers);
 
-    String deleteVoucher(ResolvedSaleAndPurchaseVoucherDeleteDTO dto,Long companyId);
+    String deleteVoucher(ResolvedSaleAndPurchaseVoucherDeleteDTO dto);
 }

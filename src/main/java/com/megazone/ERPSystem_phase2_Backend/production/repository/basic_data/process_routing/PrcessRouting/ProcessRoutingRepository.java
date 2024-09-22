@@ -30,5 +30,6 @@ public interface ProcessRoutingRepository extends JpaRepository<ProcessRouting, 
     // 활성 상태만 사용한 검색
     List<ProcessRouting> findByIsActive(Boolean isActive);
 
+    Optional<ProcessRouting> findByCompanyIdAndId(Long companyId, Long id);
 
 }

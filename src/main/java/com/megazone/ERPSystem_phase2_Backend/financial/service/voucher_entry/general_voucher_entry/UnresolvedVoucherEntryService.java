@@ -14,25 +14,19 @@ import java.util.function.Function;
 
 public interface UnresolvedVoucherEntryService {
 
-    List<UnresolvedVoucher> unresolvedVoucherEntry(Long companyId, List<UnresolvedVoucherEntryDTO> dtoList);
-
-//    UnresolvedVoucher createUnresolvedVoucher(UnresolvedVoucherEntryDTO dto, String voucherNum, LocalDateTime nowTime);
+    List<UnresolvedVoucher> unresolvedVoucherEntry(List<UnresolvedVoucherEntryDTO> dtoList);
 
     UnresolvedVoucher createUnresolvedVoucher(UnresolvedVoucherEntryDTO dto, String voucherNum, LocalDateTime nowTime);
 
     boolean depositAndWithdrawalUnresolvedVoucherTypeCheck(UnresolvedVoucherEntryDTO dto);
 
-//    String CreateUnresolvedVoucherNumber(LocalDate voucherDate, VoucherKind voucherKind);
-
-    String CreateUnresolvedVoucherNumber(LocalDate voucherDate, VoucherKind voucherKind, Long companyId);
+    String CreateUnresolvedVoucherNumber(LocalDate voucherDate, VoucherKind voucherKind);
 
     UnresolvedVoucherEntryDTO autoCreateUnresolvedVoucherDto(UnresolvedVoucherEntryDTO dto) throws CloneNotSupportedException;
 
-//    List<UnresolvedVoucher> unresolvedVoucherAllSearch(LocalDate date);
+    List<UnresolvedVoucher> unresolvedVoucherAllSearch(LocalDate date);
 
-    List<UnresolvedVoucher> unresolvedVoucherAllSearch(Long companyId, LocalDate date);
-
-    List<Long> deleteUnresolvedVoucher(Long companyId, UnresolvedVoucherDeleteDTO dto);
+    List<Long> deleteUnresolvedVoucher(UnresolvedVoucherDeleteDTO dto);
 
     BigDecimal calculateTotalAmount(List<UnresolvedVoucher> vouchers, Function<UnresolvedVoucher, BigDecimal> amount);
 
@@ -40,5 +34,5 @@ public interface UnresolvedVoucherEntryService {
 
     BigDecimal totalCredit(List<UnresolvedVoucher> vouchers);
 
-    List<UnresolvedVoucher> voucherApprovalProcessing(Long companyId, UnresolvedVoucherApprovalDTO dto);
+    List<UnresolvedVoucher> voucherApprovalProcessing(UnresolvedVoucherApprovalDTO dto);
 }

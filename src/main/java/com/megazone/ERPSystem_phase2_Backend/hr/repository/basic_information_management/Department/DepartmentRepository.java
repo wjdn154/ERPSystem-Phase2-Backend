@@ -4,5 +4,7 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_manageme
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
+
 public interface DepartmentRepository extends JpaRepository<Department, Long>, DepartmentRepositoryCustom {
+    Department findByDepartmentName(String fromDepartmentName);
 }

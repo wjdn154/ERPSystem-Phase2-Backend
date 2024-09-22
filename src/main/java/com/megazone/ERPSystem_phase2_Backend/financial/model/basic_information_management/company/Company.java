@@ -96,6 +96,9 @@ public class Company {
     @Column(nullable = false) // 회계연도 기수
     private Long fiscalCardinalNumber;
 
+    @Column(nullable = false) // 관리자 이메일
+    private String adminUsername;
+
     public Company(CorporateType corporateType, CorporateKind corporateKind, Representative representative, Address address, Contact contact, MainBusiness mainBusiness, TaxOffice businessTaxOffice, TaxOffice headquarterTaxOffice, String localIncomeTaxOffice, Boolean isSme, String businessRegistrationNumber, String corporateRegistrationNumber, String businessType, String businessItem, LocalDate establishmentDate, LocalDate openingDate, LocalDate closingDate, String name, EntityType entityType, LocalDate fiscalYearStart, LocalDate fiscalYearEnd, Long fiscalCardinalNumber) {
         this.corporateType = corporateType;
         this.corporateKind = corporateKind;
@@ -120,4 +123,5 @@ public class Company {
         this.fiscalYearEnd = fiscalYearEnd;
         this.fiscalCardinalNumber = fiscalCardinalNumber;
     }
+
 }

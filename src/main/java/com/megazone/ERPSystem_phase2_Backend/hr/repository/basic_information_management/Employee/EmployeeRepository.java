@@ -10,4 +10,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, Emplo
     Optional<Employee> findByEmployeeNumber(String employeeNumber);
     // 해당 부서에 속한 사원이 존재하는지 확인하는 메서드
     boolean existsByDepartmentId(Long departmentId);
+
+    Optional<Employee> findByEmail(String email);
+
+    Optional<Employee> findFirstByOrderByIdDesc();
 }

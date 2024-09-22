@@ -22,21 +22,24 @@ public class WarehouseResponseTestDTO {
     private List<WarehouseHierarchyGroupDTO> hierarchyGroups; // 계층 그룹 코드만 보여주기
     private Boolean isActive;
 
-    public WarehouseResponseTestDTO(Warehouse warehouse) {
-        this.id = warehouse.getId();
-        this.code = warehouse.getCode();
-        this.name = warehouse.getName();
-        this.warehouseType = warehouse.getWarehouseType();
+    public static WarehouseResponseTestDTO mapToDTO(Warehouse warehouse) {
+        WarehouseResponseTestDTO dto = new WarehouseResponseTestDTO();
+        dto.setId(warehouse.getId());
+        dto.setCode(warehouse.getCode());
+        dto.setName(warehouse.getName());
+        dto.setWarehouseType(warehouse.getWarehouseType());
 
-        if (warehouse.getWarehouseType() == WarehouseType.FACTORY && warehouse.getProcessDetail() != null) {
-            this.productionProcess = new ProductionProcessDTO(warehouse.getProcessDetail());
+        // 생산 공정 정보가 있을 경우만 추가
+        if (warehouse.getProcessDetail() != null) {
+            dto.setProductionProcess(new ProductionProcessDTO(warehouse.getProcessDetail()));
         }
 
-        this.hierarchyGroups = warehouse.getWarehouseHierarchyGroup()
-                .stream()
+        // 계층 그룹 정보가 있을 경우만 추가
+        dto.setHierarchyGroups(warehouse.getWarehouseHierarchyGroup().stream()
                 .map(whg -> new WarehouseHierarchyGroupDTO(whg.getHierarchyGroup()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
 
-        this.isActive = warehouse.getIsActive();
+        dto.setIsActive(warehouse.getIsActive());
+        return dto;
     }
 }
