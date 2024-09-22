@@ -247,14 +247,14 @@ public class ProcessRoutingServiceImpl implements ProcessRoutingService {
         existingRouting.getRoutingSteps().clear();
         existingRouting.getRoutingSteps().addAll(updatedRoutingSteps);
 
-        // 4. 연관된 Products 업데이트
-        List<Product> updatedProducts = processRoutingDTO.getProducts().stream()
-                .map(this::convertProductDtoToEntity)
-                .collect(Collectors.toList());
+//        // 4. 연관된 Products 업데이트
+//        List<Product> updatedProducts = processRoutingDTO.getProducts().stream()
+//                .map(this::convertProductDtoToEntity)
+//                .collect(Collectors.toList());
 
         // 기존의 Products를 제거하고 새로 추가
         existingRouting.getProducts().clear();
-        existingRouting.getProducts().addAll(updatedProducts);
+//        existingRouting.getProducts().addAll(updatedProducts);
 
         // 5. 변경된 엔티티 저장 및 반환
         ProcessRouting savedRouting = processRoutingRepository.save(existingRouting);
@@ -389,14 +389,14 @@ public class ProcessRoutingServiceImpl implements ProcessRoutingService {
 //                .map(stepDTO -> convertDTOToRoutingStep(stepDTO, processRouting)) // 각 RoutingStepDTO를 RoutingStep으로 변환
 //                .collect(Collectors.toList());
 
-        // DTO의 ProductDto 리스트를 Product 엔티티 리스트로 변환
-        List<Product> products = dto.getProducts().stream()
-                .map(this::convertProductDtoToEntity)
-                .collect(Collectors.toList());
+//        // DTO의 ProductDto 리스트를 Product 엔티티 리스트로 변환
+//        List<Product> products = dto.getProducts().stream()
+//                .map(this::convertProductDtoToEntity)
+//                .collect(Collectors.toList());
 
         // 변환된 엔티티 리스트들을 ProcessRouting 엔티티에 설정
 //        processRouting.setRoutingSteps(routingSteps); // 변환된 RoutingStep 목록 설정
-        processRouting.setProducts(products); // 변환된 Product 목록 설정
+//        processRouting.setProducts(products); // 변환된 Product 목록 설정 // TODO emp 순환참조로 인해 주석처리(임시)
 
         return processRouting;
     }
