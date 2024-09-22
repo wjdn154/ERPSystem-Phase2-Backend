@@ -48,8 +48,8 @@ public class TenantService {
      */
     private void handlePublicSchema() throws Exception {
         dropAndCreatePublicSchema();
-        generateTablesForSchema("public");
-        insertInitialDataForSchema("public");
+        generateTablesForSchema("PUBLIC");
+        insertInitialDataForSchema("PUBLIC");
     }
 
     /**
@@ -70,8 +70,8 @@ public class TenantService {
      * @throws Exception 스키마 삭제 및 생성 중 발생하는 예외 처리
      */
     private void dropAndCreatePublicSchema() throws Exception {
-        dropSchema("public");
-        createSchema("public");
+        dropSchema("PUBLIC");
+        createSchema("PUBLIC");
     }
 
     /**

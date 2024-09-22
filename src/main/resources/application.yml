@@ -102,11 +102,14 @@ spring:
 
 logging:
   level:
-    #    org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)
-    #    org.hibernate.type.descriptor.sql.BasicBinder: TRACE # Hibernate SQL 바인딩 로그 레벨 설정 (TRACE)
+#    org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)
+#    org.hibernate.type.descriptor.sql.BasicBinder: TRACE # Hibernate SQL 바인딩 로그 레벨 설정 (TRACE)
+#    org.flywaydb: DEBUG  # Flyway 관련 로그
+#    com.zaxxer.hikari: DEBUG  # 데이터소스 관련 로그
     org.hibernate.SQL: OFF # SQL 쿼리 로그 비활성화
     org.hibernate.type.descriptor.sql.BasicBinder: ERROR # SQL 바인딩 로그 비활성화
 
 jwt:
   secret: dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234
-  expiration: 3600
+  expiration: 86400
+  refresh-expiration: 604800
