@@ -19,9 +19,6 @@ public class CashJournalServiceImpl implements CashJournalService {
 
     @Override
     public CashJournalShowAllDTO showAll(CashJournalSearchDTO dto) {
-        BigDecimal previousTotalDebitAmount;
-        BigDecimal previousTotalCreditAmount;
-        BigDecimal previousTotalCashAmount;
 
 //        CashJournalShowAllDTO result = resolvedVoucherRepository.cashJournalShow(dto);
         List<CashJournalShowDTO> result = resolvedVoucherRepository.cashJournalShow(dto);
