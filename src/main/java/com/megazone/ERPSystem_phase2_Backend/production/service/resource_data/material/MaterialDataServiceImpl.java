@@ -175,8 +175,11 @@ public class MaterialDataServiceImpl implements MaterialDataService{
                     return materialHazardous;
                 }).collect(Collectors.toList());
 
-        //중간 엔티티 리스트에 저장.
+        //중간 엔티티 리스트에 저장. 자바 객체 내부에서 리스트에 엔티티 객체를 추가. db와 관계 없음.
         materialData.getMaterialHazardous().addAll(materialHazardousList);
+
+        //중간 엔티티 저장. db에 실제로 저장.
+        materialHazardousRepository.saveAll(materialHazardousList);
 
         //자재 저장
         materialDataRepository.save(materialData);
@@ -279,6 +282,9 @@ public class MaterialDataServiceImpl implements MaterialDataService{
         //중간 엔티티 리스트에 추가
         materialData.getMaterialProducts().addAll(materialProductList);
 
+        //중간 엔티티 저장
+        materialProductRepository.saveAll(materialProductList);
+
         //자재 저장
         materialDataRepository.save(materialData);
 
@@ -341,6 +347,9 @@ public class MaterialDataServiceImpl implements MaterialDataService{
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 거래처 코드가 없습니다."));
         materialData.setSupplier(client);
 
+        //자재 엔티티 먼저 저장(id 자동 생성)
+        MaterialData saveMaterialData = materialDataRepository.save(materialData);
+
         List<HazardousMaterial> hazardousMaterials = dto.getHazardousMaterial().stream()
                 .map(hazardousMaterialDTO -> hazardousMaterialRepository.findByHazardousMaterialCode(hazardousMaterialDTO.getHazardousMaterialCode())
                         .orElseThrow(() -> new IllegalArgumentException("해당 유해물질 코드가 존재하지 않습니다." + hazardousMaterialDTO.getHazardousMaterialCode())))
@@ -350,14 +359,14 @@ public class MaterialDataServiceImpl implements MaterialDataService{
         List<MaterialHazardous> materialHazardousList = hazardousMaterials.stream()
                 .map(hazardousMaterial -> {
                     MaterialHazardous materialHazardous = new MaterialHazardous();
-                    materialHazardous.setMaterialData(materialData);
+                    materialHazardous.setMaterialData(saveMaterialData);
                     materialHazardous.setHazardousMaterial(hazardousMaterial);
                     return materialHazardous;
                 })
                 .collect(Collectors.toList());
 
-        //유해물질 중간 엔티티 추가
-        materialData.setMaterialHazardous(materialHazardousList);
+        //명시적으로 중간 엔티티 저장
+        materialHazardousRepository.saveAll(materialHazardousList);
 
         List<Product> productMaterials  = dto.getProduct().stream()
                 .map(productMaterialDTO -> productRepository.findByCode(productMaterialDTO.getProductCode())
@@ -368,15 +377,21 @@ public class MaterialDataServiceImpl implements MaterialDataService{
         List<MaterialProduct> materialProductList = productMaterials.stream()
                 .map(product -> {
                     MaterialProduct materialProduct = new MaterialProduct();
-                    materialProduct.setMaterialData(materialData);
+                    materialProduct.setMaterialData(saveMaterialData);
                     materialProduct.setProduct(product);
                     return materialProduct;
                 }).collect(Collectors.toList());
 
-        //품목 중간 엔티티 추가
-        materialData.setMaterialProducts(materialProductList);
+        //명시적으로 중간 엔티티 저장
+        materialProductRepository.saveAll(materialProductList);
 
-        return materialData;
+        saveMaterialData.setMaterialHazardous(materialHazardousList);
+        saveMaterialData.setMaterialProducts(materialProductList);
+
+        //최종적으로 모든 연관된 엔티티 저장
+        materialDataRepository.save(saveMaterialData);
+
+        return saveMaterialData;
     }
 
     //자재 엔티티를 MaterialDataShowDTO로 변환
