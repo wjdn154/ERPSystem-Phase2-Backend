@@ -35,6 +35,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.function.Function;
 
 @Slf4j
@@ -57,7 +58,15 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
     }
 
     public UnresolvedSaleAndPurchaseVoucher create(UnresolvedSaleAndPurchaseVoucherEntryDTO dto) {
-        BigDecimal supplyAmount = createSupplyAmount(dto.getQuantity(),dto.getUnitPrice());
+
+        BigDecimal supplyAmount;
+        if(!dto.getQuantity().equals(BigDecimal.ZERO) && !dto.getUnitPrice().equals(BigDecimal.ZERO)) {
+            supplyAmount = createSupplyAmount(dto.getQuantity(),dto.getUnitPrice()); // 원래로직 <
+        }
+        else {
+            supplyAmount = dto.getSupplyAmount();
+        }
+
 
         VatType vatType = vatTypeRepository.findByCode(dto.getVatTypeCode());
         // 분개유형설정 회사별로 달라야함

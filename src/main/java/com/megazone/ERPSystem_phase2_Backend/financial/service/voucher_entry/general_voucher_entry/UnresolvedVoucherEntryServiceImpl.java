@@ -41,6 +41,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
 
     // 현금 자동분개 시 필요한 계정과목 코드
     private final String cashAccountCode = "101";
+    private final String cashTransactionDescription = "현금";
 
     // 거래처 레포지토리
     // 적요 레포지토리
@@ -230,6 +231,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
             autoCreateDto.setCreditAmount(dto.getDebitAmount());
         }
         autoCreateDto.setAccountSubjectCode(cashAccountCode);
+        autoCreateDto.setTransactionDescription(cashTransactionDescription);
 
         return autoCreateDto;
     }
