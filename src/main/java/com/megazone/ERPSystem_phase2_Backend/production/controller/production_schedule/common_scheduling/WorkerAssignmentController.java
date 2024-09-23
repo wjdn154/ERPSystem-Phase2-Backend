@@ -71,7 +71,7 @@ public class WorkerAssignmentController {
 
     // 작업장별 오늘의 배정인원 상세명단 조회 + 작업자수 조회 (프론트에서 전체조회 시 작업자수 반환, 상세조회 시 상세명단 반환)
     // 작업장별 오늘의 배정인원 상세명단과 인원수 조회
-    @PostMapping("/today/summary/")
+    @PostMapping("/today/summary")
     public WorkerAssignmentSummaryDTO getTodayWorkerAssignmentsSummary(
             @RequestParam("includeShiftType") boolean includeShiftType,
             @RequestParam("shiftType") Long shiftTypeId) {
