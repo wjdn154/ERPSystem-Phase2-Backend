@@ -1,23 +1,28 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.bom.StandardBom;
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.bom.StandardBom;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.bom.dto.StandardBomDTO;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface StandardBomService {
-    StandardBom createStandardBom(StandardBom standardBom);
 
-    Optional<StandardBom> getStandardBomById(Long id);
+    StandardBomDTO createStandardBom(@Valid StandardBomDTO standardBomDTO);
 
-    List<StandardBom> getAllStandardBoms();
+    StandardBomDTO getStandardBomById(Long id);
 
-    StandardBom updateStandardBom(Long id, StandardBom standardBom);
+    List<StandardBomDTO> getAllStandardBoms();
 
-    void deleteStandardBom(Long id);
+    StandardBomDTO updateStandardBom(Long id, StandardBomDTO standardBomDTO);
 
-    List<StandardBom> getChildBoms(Long parentProductId);
+    StandardBomDTO deleteStandardBom(Long id);
 
-    List<StandardBom> getParentBoms(Long childProductId);
+    //    List<StandardBomDTO> getChildBoms(Long parentProductId);
+    List<StandardBomDTO> getChildBoms(Long parentProductId, Set<Long> checkedBomIds);
+//    List<StandardBomDTO> getParentBoms(Long childProductId);
 
+    StandardBomDTO getParentBom(Long childProductId);
 }

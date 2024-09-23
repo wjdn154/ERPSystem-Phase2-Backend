@@ -30,7 +30,7 @@ public class WorkcenterController {
     private final UsersRepository usersRepository;
 
     // 1. 전체 작업장 조회
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<List<WorkcenterDTO>> getAllWorkcenters() {
 
         List<WorkcenterDTO> workcenterDTOs = workcenterService.findAll();
@@ -39,7 +39,7 @@ public class WorkcenterController {
 
 
 //    // 2. 이름으로 작업장 리스트 검색 조회
-//    @PostMapping("/search/")
+//    @PostMapping("/search")
 //    public ResponseEntity<List<WorkcenterDTO>> getWorkcentersByName(
 //            @RequestParam("name") String name) {
 //
@@ -51,7 +51,7 @@ public class WorkcenterController {
 //    }
 
     // 3. 코드로 작업장 세부 정보 조회
-    @PostMapping("/details/{code}/")
+    @PostMapping("/details/{code}")
     public ResponseEntity<WorkcenterDTO> getWorkcenterDetailByCode(
             @PathVariable("code") String code) {
 
@@ -60,7 +60,7 @@ public class WorkcenterController {
         return workcenterDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @PostMapping("/create/")
+    @PostMapping("/new")
     public ResponseEntity<String> saveWorkcenter(@RequestBody WorkcenterDTO workcenterDTO) {
 
         try {
@@ -75,7 +75,7 @@ public class WorkcenterController {
 
 
     // 5. 코드로 수정
-    @PostMapping("/update/{code}/")
+    @PostMapping("/update/{code}")
     public ResponseEntity<String> updateWorkcenter(
             @PathVariable("code") String code,
             @RequestBody WorkcenterDTO workcenterDTO) {
@@ -112,7 +112,7 @@ public class WorkcenterController {
     }
 
     // 7. 작업장 관리 내에서 공장 리스트 조회
-    @PostMapping("/factories/")
+    @PostMapping("/factories")
     public ResponseEntity<List<WarehouseResponseDTO>> getWorkcenterFactories() {
 
         List<WarehouseResponseDTO> factoryDTOs = workcenterService.findAllFactories();
@@ -124,7 +124,7 @@ public class WorkcenterController {
      */
 
     // 8-1. 생산 공정 전체 조회
-    @PostMapping("/processes/")
+    @PostMapping("/processes")
     public ResponseEntity<List<ProcessDetailsDTO>> getAllProcessDetails() {
 
         List<ProcessDetailsDTO> processDetailsDTOs = processDetailsService.getAllProcessDetails();
@@ -132,7 +132,7 @@ public class WorkcenterController {
     }
 
     // 8. 생산 공정 정보 조회
-    @PostMapping("/processes/{processCode}/")
+    @PostMapping("/processes/{processCode}")
     public ResponseEntity<ProcessDetailsDTO> getProcessByCode(@PathVariable String processCode) {
 
         Optional<ProcessDetailsDTO> processDetailsDTO = processDetailsService.getProcessDetailsByCode(processCode);
@@ -148,7 +148,7 @@ public class WorkcenterController {
 //    }
 
     // 10. 작업자 배정 이력 조회
-    @PostMapping("/workerAssignments/{workcenterCode}/")
+    @PostMapping("/workerAssignments/{workcenterCode}")
     public ResponseEntity<List<WorkerAssignmentDTO>> getWorkerAssignmentsByWorkcenterCode(@PathVariable("workcenterCode") String workcenterCode) {
 
        List<WorkerAssignmentDTO> workerAssignmentDTOs = workcenterService.findWorkerAssignmentsByWorkcenterCode(workcenterCode);

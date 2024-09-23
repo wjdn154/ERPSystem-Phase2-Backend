@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeCreateDTO {
-    private String employeeNumber; // 사원 번호
     private String firstName;      // 이름
     private String lastName;       // 성
     private LocalDate dateOfBirth; // 생년월일
@@ -27,5 +26,6 @@ public class EmployeeCreateDTO {
     private Long departmentId;     // 부서 ID
     private Long positionId;       // 직책 ID
     private Long jobTitleId;       // 직무명 ID
-    private Long bankAccountId;    // 은행 계좌 ID
+    //private Long bankAccountId;    // 은행 계좌 ID
+    private BankAccountDTO bankAccountDTO;
 }

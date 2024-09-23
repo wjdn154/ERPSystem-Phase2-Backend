@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * 자재 리스트, 수정, 삭제 dto
+ * */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

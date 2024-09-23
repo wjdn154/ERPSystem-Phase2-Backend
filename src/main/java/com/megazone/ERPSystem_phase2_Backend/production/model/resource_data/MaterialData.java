@@ -20,8 +20,8 @@ import java.util.List;
 * 자재 정보 관리
 * */
 
-@Entity(name = "production_materialData")
-@Table(name = "production_materialData")
+@Entity(name = "production_material_data")
+@Table(name = "production_material_data")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -48,33 +48,23 @@ public class MaterialData {
     @Column(nullable = false)
     private BigDecimal purchasePrice;        //구매 가격
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client supplier;                         // 공급자 / 외주 작업을 수행하는 공급업체(supplier) from 회계
+
     @OneToMany(mappedBy = "materialData", fetch = FetchType.LAZY)
     private List<HazardousMaterial> hazardousMaterial;     //유해물질
 
     @OneToMany(mappedBy = "materialData", fetch = FetchType.LAZY)
     private List<Product> product;                         //품목 테이블 참조   하나의 자재에 여러개 품목
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "supplier_id", nullable = false)
-    private Client supplier;                         // 공급자 / 외주 작업을 수행하는 공급업체(supplier) from 회계
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "material_input_status_id", nullable = false)
+    @JoinColumn(name = "material_input_status_id")
     private MaterialInputStatus materialInputStatus;
 
     @OneToMany(mappedBy = "material", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StandardBomMaterial> bomMaterials = new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    private Company company;                 //회사 테이블(회사 아이디)
-
-//    @OneToMany(mappedBy = "substituteMaterial", fetch = FetchType.LAZY)
-//    private List<MaterialData> parent;        //자기참조 부모값? fk값이 들어감? db에는 컬럼이 안생기긴 했음.
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "substituteMaterial_id")
-//    private MaterialData substituteMaterial;      //대체자재
 
 
 }

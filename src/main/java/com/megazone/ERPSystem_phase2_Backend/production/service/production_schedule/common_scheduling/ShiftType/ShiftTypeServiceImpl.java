@@ -16,7 +16,7 @@ public class ShiftTypeServiceImpl implements ShiftTypeService {
     private final ShiftTypeRepository shiftTypeRepository;
 
     @Override
-    public List<ShiftTypeDTO> getAllShiftTypes(Long companyId) {
+    public List<ShiftTypeDTO> getAllShiftTypes() {
         // 모든 ShiftType 엔티티를 조회한 후 DTO로 변환하여 반환
         return shiftTypeRepository.findAll().stream()
                 .map(this::convertToDTO) // 엔티티를 DTO로 변환
@@ -24,7 +24,7 @@ public class ShiftTypeServiceImpl implements ShiftTypeService {
     }
 
     @Override
-    public ShiftTypeDTO getShiftTypeById(Long id, Long companyId) {
+    public ShiftTypeDTO getShiftTypeById(Long id) {
         // ID로 ShiftType 엔티티를 조회하고 없으면 예외를 던짐
         ShiftType shiftType = shiftTypeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 교대근무 유형을 찾을 수 없습니다."));
@@ -33,7 +33,7 @@ public class ShiftTypeServiceImpl implements ShiftTypeService {
     }
 
     @Override
-    public ShiftTypeDTO createShiftType(ShiftTypeDTO shiftTypeDTO, Long companyId) {
+    public ShiftTypeDTO createShiftType(ShiftTypeDTO shiftTypeDTO) {
         // 동일한 이름을 가진 ShiftType이 존재하는지 확인
         if (shiftTypeRepository.findByName(shiftTypeDTO.getName()).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 교대근무 유형입니다: " + shiftTypeDTO.getName());
@@ -51,7 +51,7 @@ public class ShiftTypeServiceImpl implements ShiftTypeService {
     }
 
     @Override
-    public ShiftTypeDTO updateShiftType(ShiftTypeDTO shiftTypeDTO, Long companyId) {
+    public ShiftTypeDTO updateShiftType(ShiftTypeDTO shiftTypeDTO) {
         // ID로 기존 ShiftType 엔티티를 조회하고 없으면 예외를 던짐
         ShiftType existingShiftType = shiftTypeRepository.findById(shiftTypeDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 교대근무 유형을 찾을 수 없습니다."));
@@ -74,7 +74,7 @@ public class ShiftTypeServiceImpl implements ShiftTypeService {
     }
 
     @Override
-    public void deleteShiftType(Long id, Long companyId) {
+    public void deleteShiftType(Long id) {
         // ID로 ShiftType 엔티티를 조회하고 없으면 예외를 던짐
         ShiftType shiftType = shiftTypeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 교대근무 유형을 찾을 수 없습니다."));

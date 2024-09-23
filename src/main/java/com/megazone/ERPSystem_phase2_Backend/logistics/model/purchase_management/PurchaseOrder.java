@@ -1,5 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.Currency;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,9 +26,14 @@ public class PurchaseOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 발주 계획_id 참조
-    @Column
-    private Long purchasePlanId;
+    // 발주 계획 외래 키
+    @ManyToOne
+    @JoinColumn(name = "purchase_plan_id")
+    private PurchasePlan purchasePlan;
+
+    // 발주서와 구매서 간의 일대일 관계
+    @OneToOne(mappedBy = "purchaseOrder")
+    private Purchase purchase;
 
     // 거래처_id - N : 1
     @Column(nullable = false)
@@ -37,13 +44,14 @@ public class PurchaseOrder {
     private Long employeeId;
 
     // 창고_id - 입고될 창고
-    @Column(nullable = false)
-    private Long warehouseId;
+    @ManyToOne
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse warehouse;
 
-    // 통화_id - N : 1
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "currency_id", nullable = false)
-    private Long currencyId;
+    // 통화_id
+    @ManyToOne
+    @JoinColumn(name = "currency_id")
+    private Currency currency;
 
     // 품목_id
     @Column

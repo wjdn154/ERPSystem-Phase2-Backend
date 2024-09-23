@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "production_hazardousMaterial")
-@Table(name = "production_hazardousMaterial")
+@Entity(name = "production_hazardous_material")
+@Table(name = "production_hazardous_material")
 public class HazardousMaterial {
 
     @Id
@@ -35,9 +35,6 @@ public class HazardousMaterial {
     @JoinColumn(name = "materialData_id")
     private MaterialData materialData;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    private Company company;                 //회사 테이블(회사 아이디)
 
 
 }

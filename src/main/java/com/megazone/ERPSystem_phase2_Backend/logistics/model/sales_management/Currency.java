@@ -4,6 +4,7 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public class Currency {
     private Long id;
 
     // 통화 코드
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String code;
 
     // 통화명
@@ -34,6 +35,8 @@ public class Currency {
     @Column(nullable = false)
     private Double exchangeRate;
 
-    @OneToMany(mappedBy = "currency")
-    private List<PurchaseRequest> purchaseRequests;
+    // 날짜
+    @Column(nullable = false)
+    private LocalDate date;
+
 }

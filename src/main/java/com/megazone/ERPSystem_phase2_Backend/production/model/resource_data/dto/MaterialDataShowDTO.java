@@ -9,6 +9,11 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * 자재 등록 dto
+ * 품목 : 등록되어 있는 품목의 이름들을 checkbox로 선택하여 등록
+ * 유해물질 : 등록되어 있는 유해물질의 이름들을 checkbox로 선택하여 등록
+ * */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

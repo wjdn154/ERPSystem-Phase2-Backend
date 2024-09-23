@@ -8,7 +8,8 @@ import java.util.List;
 
 public interface MaterialDataRepository extends JpaRepository<MaterialData, Long> , MaterialDataRepositoryCustom{
 
-    List<MaterialData> findAllByCompanyId(Long companyId);
 
     boolean existsByMaterialCode(String materialCode);
+
+    boolean existsByMaterialCodeAndIdNot(String materialCode, Long id);
 }
