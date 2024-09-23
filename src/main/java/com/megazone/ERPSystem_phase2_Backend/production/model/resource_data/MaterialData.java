@@ -53,10 +53,10 @@ public class MaterialData {
     private Client supplier;                         // 공급자 / 외주 작업을 수행하는 공급업체(supplier) from 회계
 
     @OneToMany(mappedBy = "materialData", fetch = FetchType.LAZY)
-    private List<HazardousMaterial> hazardousMaterial;     //유해물질
+    private List<MaterialHazardous> materialHazardous = new ArrayList<>();     //자재와 유해물질 다대다 중간 엔티티
 
-    @OneToMany(mappedBy = "materialData", fetch = FetchType.LAZY)
-    private List<Product> product;                         //품목 테이블 참조   하나의 자재에 여러개 품목
+    @OneToMany(mappedBy = "materialData", fetch = FetchType.LAZY)          //자재와 품목 다대다 중간 엔티티
+    private List<MaterialProduct> materialProducts = new ArrayList<>();
 
 
     @ManyToOne(fetch = FetchType.LAZY)

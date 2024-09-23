@@ -14,7 +14,8 @@ public interface HazardousMaterialRepository extends JpaRepository<HazardousMate
 
     Optional<HazardousMaterial> findByHazardousMaterialCode(String hazardousMaterialCode);
 
-    void deleteByMaterialData(MaterialData materialData);
 
     boolean existsByHazardousMaterialCodeAndIdNot(String hazardousMaterialCode, Long id);
+
+
 }

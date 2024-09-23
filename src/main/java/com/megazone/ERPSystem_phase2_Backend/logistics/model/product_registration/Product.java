@@ -5,6 +5,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.PurchaseRequestDetail;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessRouting;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.MaterialData;
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.MaterialProduct;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -99,9 +100,8 @@ public class Product {
     @ToString.Exclude
     private List<PurchaseRequestDetail> purchaseRequestDetails = new ArrayList<>();
 
-    //생산 자재 매핑 (하나의 자재에 여러개 품목)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "materialData_id")
-    private MaterialData materialData;
+    //자재와 품목 다대다 중간 엔티티
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<MaterialProduct> materialProducts = new ArrayList<>();
 
 }

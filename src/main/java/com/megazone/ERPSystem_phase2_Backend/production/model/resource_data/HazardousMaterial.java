@@ -8,6 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,12 +35,21 @@ public class HazardousMaterial {
 
     private String description;              //추가 설명
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "materialData_id")
-    private MaterialData materialData;
+    @OneToMany(mappedBy = "hazardousMaterial", fetch = FetchType.LAZY)        //자재와 유해물질 다대다 중간 엔티티
+    private List<MaterialHazardous> materialHazardous = new ArrayList<>();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HazardousMaterial that = (HazardousMaterial) o;
+        return Objects.equals(id, that.id);
+    }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
 /**
  중금속류 (Heavy Metals)
