@@ -1,15 +1,9 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.Currency;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,7 +15,7 @@ import java.util.List;
  * 각 부서 담당자는 구매 관리 부서에 발주를 요청하기 위해 발주 요청을 한다.
  */
 @Entity
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -78,4 +72,16 @@ public class PurchaseRequest {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private State status = State.IN_PROGRESS;
+
+    // 발주 요청 상세 항목 추가 메서드
+    public void addPurchaseRequestDetail(PurchaseRequestDetail detail) {
+        purchaseRequestDetails.add(detail);
+        detail.setPurchaseRequest(this);  // 양방향 관계 설정
+    }
+
+    // 발주 요청 상세 항목 삭제 메서드
+    public void removePurchaseRequestDetail(PurchaseRequestDetail detail) {
+        purchaseRequestDetails.remove(detail);
+        detail.setPurchaseRequest(null);
+    }
 }

@@ -1,8 +1,17 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.purchase_management;
 
-import org.springframework.http.ResponseEntity;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestCreateDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestResponseDetailDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestResponseDto;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface PurchaseRequestService {
 
-    ResponseEntity<Object> findAllPurchaseRequests();
+    List<PurchaseRequestResponseDto> findAllPurchaseRequests();
+
+    Optional<PurchaseRequestResponseDetailDto> findPurchaseRequestDetailById(Long id);
+
+    PurchaseRequestResponseDetailDto createPurchaseRequest(PurchaseRequestCreateDto creationDto);
 }

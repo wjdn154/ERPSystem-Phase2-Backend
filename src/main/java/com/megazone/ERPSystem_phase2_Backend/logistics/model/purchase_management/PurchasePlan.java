@@ -1,7 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.Currency;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
