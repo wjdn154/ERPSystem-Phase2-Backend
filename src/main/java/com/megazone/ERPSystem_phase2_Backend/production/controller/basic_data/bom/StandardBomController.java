@@ -1,79 +1,153 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.basic_data.bom;
 
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.bom.StandardBom;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.bom.dto.StandardBomDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.bom.StandardBom.StandardBomService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @RestController
-@RequestMapping("/api/standard-boms")
+@RequestMapping("/api/production/standardBoms")
+@RequiredArgsConstructor
 public class StandardBomController {
 
     private final StandardBomService standardBomService;
 
-    @Autowired
-    public StandardBomController(StandardBomService standardBomService) {
-        this.standardBomService = standardBomService;
-    }
-
     // BOM 생성
-    @PostMapping
-    public ResponseEntity<StandardBom> createStandardBom(@RequestBody StandardBom standardBom) {
-        StandardBom createdBom = standardBomService.createStandardBom(standardBom);
-        return ResponseEntity.ok(createdBom);
-    }
-
-    // 특정 BOM 조회
-    @GetMapping("/{id}")
-    public ResponseEntity<StandardBom> getStandardBomById(@PathVariable Long id) {
-        return standardBomService.getStandardBomById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    // 모든 BOM 목록 조회
-    @GetMapping
-    public ResponseEntity<List<StandardBom>> getAllStandardBoms() {
-        List<StandardBom> boms = standardBomService.getAllStandardBoms();
-        return ResponseEntity.ok(boms);
-    }
-
-    // BOM 업데이트
-    @PutMapping("/{id}")
-    public ResponseEntity<StandardBom> updateStandardBom(@PathVariable Long id, @RequestBody StandardBom standardBom) {
+    @PostMapping("/new")
+    public ResponseEntity<?> createStandardBom(@Valid @RequestBody StandardBomDTO standardBomDTO) {
         try {
-            StandardBom updatedBom = standardBomService.updateStandardBom(id, standardBom);
-            return ResponseEntity.ok(updatedBom);
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
+            StandardBomDTO createdBom = standardBomService.createStandardBom(standardBomDTO);
+            return ResponseEntity.ok(createdBom);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("서버 오류 발생: " + e.getMessage());
         }
     }
 
+    // 특정 BOM 조회
+    @PostMapping("/{id}")
+    public ResponseEntity<?> getStandardBomById(@PathVariable Long id) {
+
+        try {
+            StandardBomDTO bomDTO = standardBomService.getStandardBomById(id);
+            return ResponseEntity.ok(bomDTO);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+
+    }
+
+    // 모든 BOM 목록 조회
+    @PostMapping
+    public ResponseEntity<?> getAllStandardBoms() {
+
+        try {
+            List<StandardBomDTO> boms = standardBomService.getAllStandardBoms();
+            return ResponseEntity.ok(boms);
+
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("서버 오류 발생: " + e.getMessage());
+        }
+
+    }
+
+    // BOM 업데이트
+    @PostMapping("update/{id}")
+    public ResponseEntity<Map<String, ?>> updateStandardBom(@PathVariable Long id, @RequestBody StandardBomDTO updatedBomDTO) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+
+            StandardBomDTO updatedBom = standardBomService.updateStandardBom(id, updatedBomDTO);
+            String parentProductMessage = (updatedBom.getParentProductId() == null)
+                    ? "등록된 상위 품목이 없습니다." : "상위 품목이 설정되었습니다.";
+
+            response.put("message", parentProductMessage);
+            response.put("data", updatedBom);
+
+            return ResponseEntity.ok(response);
+
+        } catch (EntityNotFoundException e) {
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (IllegalArgumentException e) {
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch(Exception e) {
+            response.put("message", "서버 오류 발생: " + e.getMessage());
+            return ResponseEntity.status(500).body(response);
+        }
+
+    }
+
     // BOM 삭제
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStandardBom(@PathVariable Long id) {
-        standardBomService.deleteStandardBom(id);
-        return ResponseEntity.noContent().build();
+    @PostMapping("delete/{id}")
+    public ResponseEntity<?> deleteStandardBom(@PathVariable Long id) {
+        try {
+            StandardBomDTO deletedBom = standardBomService.deleteStandardBom(id);
+            return ResponseEntity.ok("성공적으로 삭제되었습니다: " + deletedBom);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("서버 오류 발생: " + e.getMessage());
+        }
     }
 
     // BOM 정전개: 하위 BOM 조회
-    @GetMapping("/forward-explosion/{parentProductId}")
-    public ResponseEntity<List<StandardBom>> getChildBoms(@PathVariable Long parentProductId) {
-        List<StandardBom> childBoms = standardBomService.getChildBoms(parentProductId);
-        return ResponseEntity.ok(childBoms);
+    @PostMapping("/forward-explosion/{parentProductId}")
+    public ResponseEntity<?> getChildBoms(@PathVariable Long parentProductId) {
+
+        try {
+            List<StandardBomDTO> childBoms = standardBomService.getChildBoms(parentProductId, new HashSet<>());
+            return ResponseEntity.ok(childBoms);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("서버 오류 발생: " + e.getMessage());
+        }
+
+
     }
 
-    // BOM 역전개: 상위 BOM 조회
-    @GetMapping("/backward-explosion/{childProductId}")
-    public ResponseEntity<List<StandardBom>> getParentBoms(@PathVariable Long childProductId) {
-        List<StandardBom> parentBoms = standardBomService.getParentBoms(childProductId);
-        return ResponseEntity.ok(parentBoms);
+    @PostMapping("/backward-explosion/{childProductId}")
+    public ResponseEntity<?> getParentBom(@PathVariable Long childProductId) {
+        try {
+            StandardBomDTO parentBom = standardBomService.getParentBom(childProductId);
+            return ResponseEntity.ok(parentBom);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
     }
+
+//    // BOM 역전개: 상위 BOM 조회
+//    @PostMapping("/backward-explosion/{childProductId}")
+//    public ResponseEntity<?> getParentBoms(@PathVariable Long childProductId) {
+//
+//        try {
+//            List<StandardBomDTO> parentBoms = standardBomService.getParentBoms(childProductId);
+//            return ResponseEntity.ok(parentBoms);
+//        } catch (IllegalArgumentException e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        } catch (EntityNotFoundException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//        } catch (Exception e) {
+//            return ResponseEntity.status(500).body("서버 오류 발생: " + e.getMessage());
+//        }
+//    }
 }

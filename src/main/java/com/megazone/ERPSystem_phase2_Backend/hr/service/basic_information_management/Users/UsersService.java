@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public interface UsersService {
     List<UsersShowDTO> findAllUsers();
@@ -29,5 +30,7 @@ public interface UsersService {
     //Role assignPermissionToRole(Long roleId, Long permissionId);
 
     ResponseEntity<Object> createAuthenticationToken(AuthRequest authRequest, String tenantId);
+
+    ResponseEntity<Object> createRefreshToken(Map<String, String> refreshTokenRequest);
 
 }

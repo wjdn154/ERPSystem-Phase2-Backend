@@ -20,15 +20,6 @@ import java.util.List;
 public class WorkerAssignmentController {
 
     private final WorkerAssignmentService workerAssignmentService;
-    private final CompanyRepository companyRepository;
-    private final UsersRepository usersRepository;
-
-    // JWT 인증에서 사용자 정보를 가져오는 메서드
-    private Long getCurrentCompanyId() {
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        return user.getCompany().getId();
-    }
 
     // 전체 작업장별 배정된 인원수 조회
     @PostMapping("/workcenters/count")

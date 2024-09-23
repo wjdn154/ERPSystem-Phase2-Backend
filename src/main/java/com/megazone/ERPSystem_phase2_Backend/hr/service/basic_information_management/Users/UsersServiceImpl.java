@@ -95,6 +95,25 @@ public class UsersServiceImpl implements UsersService{
     }
 
     @Override
+    public ResponseEntity<Object> createRefreshToken(Map<String, String> refreshTokenRequest) {
+
+        String refreshToken = refreshTokenRequest.get("refreshToken");
+        if (!jwtUtil.validateRefreshToken(refreshToken)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("리프레시 토큰이 유효하지 않음.");
+
+        String tenantId = jwtUtil.extractTenantId(refreshToken);
+        String username = jwtUtil.extractUsername(refreshToken);
+        String userNickname = jwtUtil.extractUserNickname(refreshToken);
+        Long companyId = jwtUtil.extractCompanyId(refreshToken);
+        Long permissionId = jwtUtil.extractPermissionId(refreshToken);
+
+        Map<String, String> response = new HashMap<>();
+        String jwtToken = jwtUtil.generateToken(tenantId, username, userNickname, companyId, null, permissionId);
+        response.put("token", jwtToken);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
     public ResponseEntity<String> registerUser(AuthRequest authRequest) throws SQLException {
 
         // 이메일 형식 검증 정규식
