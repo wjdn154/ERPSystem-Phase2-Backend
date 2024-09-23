@@ -22,8 +22,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         Exception exception = (Exception) request.getAttribute("ExpiredJwtException");
 
-        System.out.println("exception = " + exception);
-
         if (exception instanceof ExpiredJwtException) {
             // 토큰 만료에 대한 응답 처리
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
