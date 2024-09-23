@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.common.config.security;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Users.UsersService;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,8 +73,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwt = authorizationHeader.substring(7);  // "Bearer " 부분을 제거하고 토큰만 추출
             try {
                 userName = jwtUtil.extractUsername(jwt);  // JWT에서 사용자 ID 추출
+            } catch (ExpiredJwtException e) {
+                System.out.println("ExpiredJwtException 발생: " + e.getMessage());
+                request.setAttribute("ExpiredJwtException", e);  // 예외를 request에 저장
+                chain.doFilter(request, response);  // 필터 체인을 계속 진행
+                return;
             } catch (Exception e) {
-                e.printStackTrace();  // 예외 발생 시 로그 출력
+                e.printStackTrace();
             }
         }
 
