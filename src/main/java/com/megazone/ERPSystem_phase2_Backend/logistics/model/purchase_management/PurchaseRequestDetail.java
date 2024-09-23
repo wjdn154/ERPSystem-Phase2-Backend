@@ -34,6 +34,10 @@ public class PurchaseRequestDetail {
     @Column(nullable = false)
     private Integer quantity;
 
+    // 단가(입고단가)
+    @Column(nullable = false)
+    private Double price;
+
     // 공급가액 (수량 * 단가)
     @Column(nullable = false)
     private Double supplyPrice;

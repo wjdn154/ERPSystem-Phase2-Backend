@@ -14,4 +14,8 @@ public interface PurchaseRequestService {
     Optional<PurchaseRequestResponseDetailDto> findPurchaseRequestDetailById(Long id);
 
     PurchaseRequestResponseDetailDto createPurchaseRequest(PurchaseRequestCreateDto creationDto);
+
+    PurchaseRequestResponseDetailDto updatePurchaseRequest(Long id, PurchaseRequestCreateDto updateDto);
+
+    String deletePurchaseRequest(Long id);
 }

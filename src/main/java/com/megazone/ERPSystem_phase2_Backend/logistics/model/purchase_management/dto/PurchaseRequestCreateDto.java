@@ -33,6 +33,7 @@ public class PurchaseRequestCreateDto {
     public static class PurchaseRequestItemCreateDto {
         private Long productId;
         private Integer quantity;
+        private Double price; // 사용자가 단가를 변경한 경우에만 전달
         private Double supplyPrice;
         private Double localAmount;  // 원화 금액
         private Double vat;

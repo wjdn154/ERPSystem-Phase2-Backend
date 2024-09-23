@@ -61,6 +61,9 @@ public class PurchaseRequestResponseDetailDto {
         // 품목 수량
         private Integer quantity;
 
+        // 품목 단가(입고단가)
+        private Double price;
+
         // 품목 공급가액
         private Double supplyPrice;
 

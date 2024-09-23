@@ -47,11 +47,33 @@ public class PurchaseRequestController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
+    /**
+     * 발주요청 등록
+     * @param createDto
+     * @return
+     */
     @PostMapping("/create")
-    public ResponseEntity<?> createPurchaseRequest(@RequestBody PurchaseRequestCreateDto creationDto) {
-        PurchaseRequestResponseDetailDto savedRequest = purchaseRequestService.createPurchaseRequest(creationDto);
+    public ResponseEntity<?> createPurchaseRequest(@RequestBody PurchaseRequestCreateDto createDto) {
+        PurchaseRequestResponseDetailDto savedRequest = purchaseRequestService.createPurchaseRequest(createDto);
         return savedRequest != null ?
                 ResponseEntity.status(HttpStatus.CREATED).body(savedRequest) :
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("발주 요청 생성에 실패했습니다.");
+    }
+
+    /**
+     * 발주요청 수정
+     * @param updateDto
+     * @return
+     */
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updatePurchaseRequest(@PathVariable("id") Long id, @RequestBody PurchaseRequestCreateDto updateDto) {
+        PurchaseRequestResponseDetailDto updatedRequest = purchaseRequestService.updatePurchaseRequest(id, updateDto);
+        return ResponseEntity.ok(updatedRequest);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deletePurchaseRequest(@PathVariable("id") Long id) {
+        String result = purchaseRequestService.deletePurchaseRequest(id);
+        return ResponseEntity.ok(result);
     }
 }
