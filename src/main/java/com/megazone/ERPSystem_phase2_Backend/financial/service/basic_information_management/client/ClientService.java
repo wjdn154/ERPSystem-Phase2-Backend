@@ -5,9 +5,11 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto.ClientDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.dto.CompanyDTO;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ClientService {
     Optional<ClientDTO> saveClient(ClientDTO clientDTO);
     Optional<ClientDTO> updateClient(Long id, ClientDTO clientDTO);
+    List<ClientDTO> searchClient(String searchText);
 }

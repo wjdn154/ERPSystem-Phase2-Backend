@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -40,6 +42,11 @@ public class ClientController {
         return savedClient
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+    }
+
+    @PostMapping("/search")
+    public List<ClientDTO> searchClient(@RequestBody Map<String, String> searchText) {
+        return clientService.searchClient(searchText.get("searchText"));
     }
 
     /**

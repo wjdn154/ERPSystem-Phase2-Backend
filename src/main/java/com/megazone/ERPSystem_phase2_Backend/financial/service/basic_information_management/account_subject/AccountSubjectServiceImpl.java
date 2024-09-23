@@ -2,6 +2,8 @@ package com.megazone.ERPSystem_phase2_Backend.financial.service.basic_informatio
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.*;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.dto.CompanyDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.NatureRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.StructureRepository;
@@ -182,6 +184,23 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
         AccountSubjectDTO accountSubjectDTO = convertToDTO(savedAccountSubject);
 
         return Optional.of(accountSubjectDTO);
+    }
+
+    @Override
+    public List<AccountSubjectDTO> searchAccountSubject(String searchText) {
+        List<AccountSubject> accountSubjects;
+
+
+        // 검색 텍스트가 없으면 모든 계정과목 조회
+        if(searchText != null) {
+            accountSubjects = accountSubjectRepository.findByNameContaining(searchText); // 검색어로 계정과목 조회
+        }else {
+            accountSubjects = accountSubjectRepository.findAll(); // 모든 계정과목 조회
+        }
+
+        return accountSubjects.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     /**
