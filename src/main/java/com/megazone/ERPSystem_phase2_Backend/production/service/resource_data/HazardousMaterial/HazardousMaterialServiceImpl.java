@@ -23,9 +23,9 @@ public class HazardousMaterialServiceImpl implements HazardousMaterialService{
 
     //유해물질 리스트 조회
     @Override
-    public List<HazardousMaterialDTO> findAllHazardousMaterial(Long companyId) {
+    public List<HazardousMaterialDTO> findAllHazardousMaterial() {
 
-        return hazardousMaterialRepository.findAllByCompanyId(companyId).stream()
+        return hazardousMaterialRepository.findAll().stream()
                 .map(hazardousMaterial -> HazardousMaterialDTO.builder()  //빌더패턴 사용
                         .id(hazardousMaterial.getId())
                         .hazardousMaterialCode(hazardousMaterial.getHazardousMaterialCode())
@@ -38,14 +38,14 @@ public class HazardousMaterialServiceImpl implements HazardousMaterialService{
 
     //유해물질 등록
     @Override
-    public Optional<HazardousMaterialDTO> createHazardousMaterial(Long companyId, HazardousMaterialDTO dto) {
+    public Optional<HazardousMaterialDTO> createHazardousMaterial(HazardousMaterialDTO dto) {
 
         //유해물질 코드 중복 확인
-        if(hazardousMaterialRepository.existsHazardousMaterialCode(dto.getHazardousMaterialCode())){
+        if(hazardousMaterialRepository.existsByHazardousMaterialCode(dto.getHazardousMaterialCode())){
             throw new IllegalArgumentException(("이미 존재하는 코드입니다."));
         }
         //dto를 엔티티로 변환
-        HazardousMaterial hazardousMaterial = hazardousMaterialToEntity(companyId, dto);
+        HazardousMaterial hazardousMaterial = hazardousMaterialToEntity(dto);
 
         HazardousMaterial createHazardousMaterial = hazardousMaterialRepository.save(hazardousMaterial);
 
@@ -63,9 +63,9 @@ public class HazardousMaterialServiceImpl implements HazardousMaterialService{
         HazardousMaterial hazardousMaterial = hazardousMaterialRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 아이디가 존재하지 않습니다."));
 
-        //유해물질 코드 중복 확인
-        if(hazardousMaterialRepository.existsHazardousMaterialCode(dto.getHazardousMaterialCode())){
-            throw new IllegalArgumentException(("이미 존재하는 코드입니다."));
+        // 중복된 HazardousMaterialCode 체크 (자신의 HazardousMaterialCode는 제외)
+        if (hazardousMaterialRepository.existsByHazardousMaterialCodeAndIdNot(dto.getHazardousMaterialCode(), id)) {
+            throw new IllegalArgumentException("이미 존재하는 코드입니다.");
         }
 
         //dto를 기존 엔티티에 업데이트
@@ -108,16 +108,13 @@ public class HazardousMaterialServiceImpl implements HazardousMaterialService{
     }
 
     //dto 를 엔티티로 변환
-    private HazardousMaterial hazardousMaterialToEntity(Long companyId,HazardousMaterialDTO dto) {
+    private HazardousMaterial hazardousMaterialToEntity(HazardousMaterialDTO dto) {
 
         HazardousMaterial hazardousMaterial = new HazardousMaterial();
         hazardousMaterial.setHazardousMaterialCode(dto.getHazardousMaterialCode());
         hazardousMaterial.setHazardousMaterialName(dto.getHazardousMaterialName());
         hazardousMaterial.setHazardLevel(dto.getHazardLevel());
         hazardousMaterial.setDescription(dto.getDescription());
-
-        Company company = companyRepository.findById(companyId).orElseThrow(() -> new IllegalArgumentException("회사아이디가 존재하지 않습니다."));
-        hazardousMaterial.setCompany(company);
 
         return hazardousMaterial;
     }

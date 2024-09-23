@@ -28,12 +28,8 @@ public class MaterialDataController {
     @PostMapping("/materials")
     public ResponseEntity<List<ListMaterialDataDTO>> getMaterials() {
 
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = user.getCompany().getId();
-
-        //서비스에서 회사아이디에 해당하는 자재 리스트 정보를 가져옴
-        List<ListMaterialDataDTO> result = materialService.findAllMaterial(companyId);
+        //서비스에서 자재 리스트 정보를 가져옴
+        List<ListMaterialDataDTO> result = materialService.findAllMaterial();
         return (result != null)?
                 ResponseEntity.status(HttpStatus.OK).body(result):
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -52,12 +48,8 @@ public class MaterialDataController {
     @PostMapping("/material/createMaterial")
     public ResponseEntity<MaterialDataShowDTO> createMaterial(@RequestBody MaterialDataShowDTO dto){
 
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = user.getCompany().getId();
-
         //서비스에서 자재 상세 정보를 등록함.
-        Optional<MaterialDataShowDTO> result = materialService.createMaterial(companyId, dto);
+        Optional<MaterialDataShowDTO> result = materialService.createMaterial(dto);
         return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
@@ -111,7 +103,7 @@ public class MaterialDataController {
     }
 
     //해당 자재 품목 리스트 조회
-    @PostMapping("/material/productMaterial/{id}")
+    @PostMapping("/material/{id}/productMaterials")
     public ResponseEntity<ListProductMaterialDTO> productMaterials(@PathVariable("id") Long id){
 
         //아이디에 해당하는 품목 리스트 조회

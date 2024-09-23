@@ -32,9 +32,9 @@ public class MaterialDataServiceImpl implements MaterialDataService{
     private final ProductRepository productRepository;
     //자재 리스트 조회
     @Override
-    public List<ListMaterialDataDTO> findAllMaterial(Long companyId) {
+    public List<ListMaterialDataDTO> findAllMaterial() {
 
-        return materialDataRepository.findAllByCompanyId(companyId).stream()
+        return materialDataRepository.findAll().stream()
                 .map(material -> new ListMaterialDataDTO(
                         material.getId(),
                         material.getMaterialCode(),
@@ -53,10 +53,11 @@ public class MaterialDataServiceImpl implements MaterialDataService{
     public Optional<ListMaterialDataDTO> updateMaterial(Long id, ListMaterialDataDTO dto) {
 
         MaterialData materialData = materialDataRepository.findById(id)
-                .orElseThrow( () -> new IllegalArgumentException("해당 아이디를 조회할 수 없습니다."));
+                .orElseThrow( () -> new IllegalArgumentException("해당 아이디를 조회할 수 없습니다."+id));
 
-        if(materialDataRepository.existsByMaterialCode(dto.getMaterialCode())){
-            throw new IllegalArgumentException(("이미 존재하는 코드 입니다."));
+        // 중복된 material_code 체크 (자신의 material_code는 제외)
+        if (materialDataRepository.existsByMaterialCodeAndIdNot(dto.getMaterialCode(), id)) {
+            throw new IllegalArgumentException("이미 존재하는 코드입니다.");
         }
 
         //새로 들어온 dto 기존 엔티티에 업데이트.
@@ -66,7 +67,7 @@ public class MaterialDataServiceImpl implements MaterialDataService{
         materialData.setStockQuantity(dto.getStockQuantity());
         materialData.setPurchasePrice(dto.getPurchasePrice());
 
-        Client client =clientRepository.findByCode(dto.getMaterialCode())
+        Client client =clientRepository.findByCode(dto.getRepresentativeCode())
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 거래처 코드가 없습니다."));
 
         materialData.setSupplier(client);
@@ -80,14 +81,14 @@ public class MaterialDataServiceImpl implements MaterialDataService{
 
     //자재 상세내용 등록
     @Override
-    public Optional<MaterialDataShowDTO> createMaterial(Long companyId, MaterialDataShowDTO dto) {
+    public Optional<MaterialDataShowDTO> createMaterial(MaterialDataShowDTO dto) {
 
         //자재 코드 중복 확인
         if(materialDataRepository.existsByMaterialCode(dto.getMaterialCode())){
             throw new IllegalArgumentException(("이미 존재하는 코드 입니다."));
         }
        //dto를 엔티티로 변환
-        MaterialData materialData = materialToEntity(companyId,dto);
+        MaterialData materialData = materialToEntity(dto);
 
         //엔티티 저장
         MaterialData createMaterial = materialDataRepository.save(materialData);
@@ -105,6 +106,8 @@ public class MaterialDataServiceImpl implements MaterialDataService{
         MaterialData materialData = materialDataRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("해당 아이디를 조회할 수 없습니다."));
 
+        //자재와 연관된 유해물질 먼저 삭제. 유해물질이 특정 자재를 참조하고 있는 데이터를 삭제.
+        hazardousMaterialRepository.deleteByMaterialData(materialData);
         //해당 아이디 자재 삭제
         materialDataRepository.delete(materialData);
     }
@@ -192,6 +195,12 @@ public class MaterialDataServiceImpl implements MaterialDataService{
 
         //자재의 유해물질 리스트에 존재하는지 확인
         if(!removed) throw new IllegalArgumentException("유해물질이 자재에 존재하지 않습니다.");
+
+        //유해물질의 materialData 필드에서 자재와의 연관 끊기
+        hazardousMaterial.setMaterialData(null);
+
+        // 유해물질 저장 (유해물질 상태 업데이트)
+        hazardousMaterialRepository.save(hazardousMaterial);
 
         //자재 저장
         materialDataRepository.save(materialData);
@@ -284,7 +293,7 @@ public class MaterialDataServiceImpl implements MaterialDataService{
     }
 
     //MaterialDataShowDTO 를 엔티티로 변환
-    private MaterialData materialToEntity(Long companyId, MaterialDataShowDTO dto) {
+    private MaterialData materialToEntity(MaterialDataShowDTO dto) {
 
         MaterialData materialData = new MaterialData();
         materialData.setMaterialCode(dto.getMaterialCode());
@@ -296,10 +305,6 @@ public class MaterialDataServiceImpl implements MaterialDataService{
         Client client =clientRepository.findByCode(dto.getMaterialCode())
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 거래처 코드가 없습니다."));
         materialData.setSupplier(client);
-
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 회사 아이디가 존재하지 않습니다."));
-        materialData.setCompany(company);
 
         List<HazardousMaterial> hazardousMaterials = dto.getHazardousMaterial().stream()
                 .map(hazardousMaterialDTO -> hazardousMaterialRepository.findByHazardousMaterialCode(hazardousMaterialDTO.getHazardousMaterialCode())

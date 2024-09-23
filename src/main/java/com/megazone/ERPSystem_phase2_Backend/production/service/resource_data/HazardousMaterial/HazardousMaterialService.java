@@ -9,9 +9,9 @@ import java.util.Optional;
 
 public interface HazardousMaterialService {
 
-    List<HazardousMaterialDTO> findAllHazardousMaterial(Long companyId);
+    List<HazardousMaterialDTO> findAllHazardousMaterial();
 
-    Optional<HazardousMaterialDTO> createHazardousMaterial(Long companyId, HazardousMaterialDTO dto);
+    Optional<HazardousMaterialDTO> createHazardousMaterial(HazardousMaterialDTO dto);
 
     Optional<HazardousMaterialDTO> updateHazardousMaterial(Long id, HazardousMaterialDTO dto);
 

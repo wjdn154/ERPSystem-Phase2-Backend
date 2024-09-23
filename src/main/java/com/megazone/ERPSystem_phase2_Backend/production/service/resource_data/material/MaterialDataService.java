@@ -9,13 +9,13 @@ import java.util.Optional;
 public interface MaterialDataService {
 
     //자재 리스트 조회
-    List<ListMaterialDataDTO> findAllMaterial(Long companyId);
+    List<ListMaterialDataDTO> findAllMaterial();
 
     //자재 상세 수정
     Optional<ListMaterialDataDTO> updateMaterial(Long id, ListMaterialDataDTO dto);
 
     //자재 상세 등록
-    Optional<MaterialDataShowDTO> createMaterial(Long companyId, MaterialDataShowDTO dto);
+    Optional<MaterialDataShowDTO> createMaterial(MaterialDataShowDTO dto);
 
     //자재 상세 삭제
     void deleteMaterial(Long id);

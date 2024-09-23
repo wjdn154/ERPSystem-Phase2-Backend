@@ -25,12 +25,8 @@ public class HazardousMaterialController {
     @PostMapping("/hazardousMaterials")
     public ResponseEntity<List<HazardousMaterialDTO>> getHazardousMaterials(){
 
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = user.getCompany().getId();
-
         //서비스에서 회사아이디에 해당하는 유해물질 리스트 조회
-        List<HazardousMaterialDTO> result = hazardousMaterialService.findAllHazardousMaterial(companyId);
+        List<HazardousMaterialDTO> result = hazardousMaterialService.findAllHazardousMaterial();
 
         return (result != null)?
                 ResponseEntity.status(HttpStatus.OK).body(result):
@@ -41,12 +37,8 @@ public class HazardousMaterialController {
     @PostMapping("/hazardousMaterial/createMaterial")
     public ResponseEntity<HazardousMaterialDTO> createHazardousMaterial(@RequestBody HazardousMaterialDTO dto){
 
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = user.getCompany().getId();
-
         //서비스에서 유해물질 정보를 등록함
-        Optional<HazardousMaterialDTO> result = hazardousMaterialService.createHazardousMaterial(companyId, dto);
+        Optional<HazardousMaterialDTO> result = hazardousMaterialService.createHazardousMaterial(dto);
 
         return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }

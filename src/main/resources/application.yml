@@ -99,6 +99,8 @@ spring:
         - classpath:initial-database/production/resource_data/maintenanceHistory.sql
         - classpath:initial-database/production/resource_data/worker.sql
         - classpath:initial-database/production/production_schedule/common_scheduling/worker_assignment.sql
+        - classpath:initial-database/production/resource_data/materialData.sql
+        - classpath:initial-database/production/resource_data/hazardousMaterial.sql
 
 logging:
   level:
