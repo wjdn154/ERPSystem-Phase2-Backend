@@ -54,6 +54,19 @@ public class MaterialDataServiceImpl implements MaterialDataService{
                 )).collect(Collectors.toList());
     }
 
+    //자재 상세 조회
+    @Override
+    public Optional<MaterialDataShowDTO> findMaterialById(Long id) {
+
+        MaterialData materialData = materialDataRepository.findById(id)
+                .orElseThrow( () -> new IllegalArgumentException("해당 아이디를 조회할 수 없습니다."+id));
+
+        //엔티티를 materialDataShowDTO로 변환
+        MaterialDataShowDTO materialDataShowDTO = materialCreateDTO(materialData);
+
+        return Optional.of(materialDataShowDTO);
+    }
+
     //자재 리스트 수정
     @Override
     public Optional<ListMaterialDataDTO> updateMaterial(Long id, ListMaterialDataDTO dto) {

@@ -35,6 +35,15 @@ public class MaterialDataController {
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
+    //자재 상세 조회
+    @PostMapping("/material/{id}")
+    public ResponseEntity<MaterialDataShowDTO> getMaterial(@PathVariable("id") Long id){
+
+        //서비스에서 특정 자재 정보를 가져옴
+        Optional<MaterialDataShowDTO> result = materialService.findMaterialById(id);
+
+        return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+    }
     //자재 리스트 수정
     @PutMapping("/material/updateMaterial/{id}")
     public ResponseEntity<ListMaterialDataDTO> updateMaterial(@PathVariable("id") Long id, @RequestBody ListMaterialDataDTO dto){
@@ -77,12 +86,12 @@ public class MaterialDataController {
     }
 
     //해당 자재 유해물질 추가(수정)
-    @PostMapping("/material/hazardousMaterial/add/{id}")
+    @PostMapping("/material/hazardousMaterial/add/{materialId}")
     public ResponseEntity<ListHazardousMaterialDTO> addHazardousMaterial(
-            @PathVariable("id") Long id, @RequestBody List<HazardousMaterialDTO> hazardousMaterialDTOs){
+            @PathVariable("materialId") Long materialId, @RequestBody List<HazardousMaterialDTO> hazardousMaterialDTOs){
 
         //서비스에서 아이디에 해당하는 유해물질 추가 등록
-        Optional<ListHazardousMaterialDTO> result = materialService.addHazardousMaterial(id, hazardousMaterialDTOs);
+        Optional<ListHazardousMaterialDTO> result = materialService.addHazardousMaterial(materialId, hazardousMaterialDTOs);
 
         return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
@@ -103,22 +112,22 @@ public class MaterialDataController {
     }
 
     //해당 자재 품목 리스트 조회
-    @PostMapping("/material/{id}/productMaterials")
-    public ResponseEntity<ListProductMaterialDTO> productMaterials(@PathVariable("id") Long id){
+    @PostMapping("/material/{materialId}/productMaterials")
+    public ResponseEntity<ListProductMaterialDTO> productMaterials(@PathVariable("materialId") Long materialId){
 
         //아이디에 해당하는 품목 리스트 조회
-        ListProductMaterialDTO result = materialService.findAllProductMaterialById(id);
+        ListProductMaterialDTO result = materialService.findAllProductMaterialById(materialId);
 
         return ResponseEntity.ok(result);
     }
 
     //해당 자재 품목 추가
-    @PostMapping("/material/productMaterial/add/{id}")
+    @PostMapping("/material/productMaterial/add/{materialId}")
     public ResponseEntity<ListProductMaterialDTO> addProductMaterial(
-            @PathVariable("id") Long id, @RequestBody List<ProductMaterialDTO> productMaterialDTOs){
+            @PathVariable("materialId") Long materialId, @RequestBody List<ProductMaterialDTO> productMaterialDTOs){
 
         //서비스에서 아이디에 해당하는 자재 품목 추가 등록
-        Optional<ListProductMaterialDTO> result = materialService.addProductMaterial(id, productMaterialDTOs);
+        Optional<ListProductMaterialDTO> result = materialService.addProductMaterial(materialId, productMaterialDTOs);
 
         return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }

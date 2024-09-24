@@ -11,6 +11,9 @@ public interface MaterialDataService {
     //자재 리스트 조회
     List<ListMaterialDataDTO> findAllMaterial();
 
+    //특정 자재 상세 조회
+    Optional<MaterialDataShowDTO> findMaterialById(Long id);
+
     //자재 상세 수정
     Optional<ListMaterialDataDTO> updateMaterial(Long id, ListMaterialDataDTO dto);
 
@@ -37,4 +40,6 @@ public interface MaterialDataService {
 
     //해당 자재의 품목 목록 제거
     void deleteProductMaterial(Long materialId, String productCode);
+
+
 }
