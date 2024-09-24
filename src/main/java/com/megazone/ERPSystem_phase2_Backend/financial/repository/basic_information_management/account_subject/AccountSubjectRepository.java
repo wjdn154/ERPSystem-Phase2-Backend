@@ -23,5 +23,5 @@ public interface AccountSubjectRepository extends JpaRepository<AccountSubject, 
      */
     Optional<AccountSubject> findByCode(String code);
 
-    List<AccountSubject> findByNameContaining(String name);
+    List<AccountSubject> findByNameOrCodeContaining(String name, String code);
 }

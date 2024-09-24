@@ -193,7 +193,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
 
         // 검색 텍스트가 없으면 모든 계정과목 조회
         if(searchText != null) {
-            accountSubjects = accountSubjectRepository.findByNameContaining(searchText); // 검색어로 계정과목 조회
+            accountSubjects = accountSubjectRepository.findByNameOrCodeContaining(searchText, searchText); // 검색어로 계정과목 조회
         }else {
             accountSubjects = accountSubjectRepository.findAll(); // 모든 계정과목 조회
         }
