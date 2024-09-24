@@ -36,5 +36,5 @@ public interface MaterialDataService {
     Optional<ListProductMaterialDTO> addProductMaterial(Long id, List<ProductMaterialDTO> productMaterialDTOs);
 
     //해당 자재의 품목 목록 제거
-    void deleteProductMaterial(Long materialId, Long productId);
+    void deleteProductMaterial(Long materialId, String productCode);
 }

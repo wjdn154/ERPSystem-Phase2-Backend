@@ -124,13 +124,13 @@ public class MaterialDataController {
     }
 
     //해당 자재 품목 삭제
-    @DeleteMapping("/material/{materialId}/productMaterial/{productId}")
+    @DeleteMapping("/material/{materialId}/productMaterial/{productCode}")
     public ResponseEntity<String> deleteProductMaterial(
-            @PathVariable("materialId") Long materialId, @PathVariable("productId") Long productId){
+            @PathVariable("materialId") Long materialId, @PathVariable("productCode") String productCode){
 
         //서비스에서 아이디에 해당하는 자재 품목 제거
         try {
-            materialService.deleteProductMaterial(materialId,productId);
+            materialService.deleteProductMaterial(materialId,productCode);
             return ResponseEntity.noContent().build();
         }catch (RuntimeException e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

@@ -166,24 +166,36 @@ public class MaterialDataServiceImpl implements MaterialDataService{
                         .orElseThrow(() -> new IllegalArgumentException("해당 유해물질이 존재하지 않습니다: " + dto.getHazardousMaterialCode())
                         )).collect(Collectors.toList());
 
-        //기존 자재의 유해물질 중간 엔티티 리스트에 새로 추가할 유해물질을 더함.
-        List<MaterialHazardous> materialHazardousList = newHazardousMaterials.stream()
-                .map(hazardousMaterial -> {
-                    MaterialHazardous materialHazardous = new MaterialHazardous();
-                    materialHazardous.setMaterialData(materialData);
-                    materialHazardous.setHazardousMaterial(hazardousMaterial);
-                    return materialHazardous;
-                }).collect(Collectors.toList());
+        //기존 자재의 유해물질 목록 가져오기
+        List<HazardousMaterial> existingHazardousMaterials = materialData.getMaterialHazardous().stream()
+                .map(MaterialHazardous::getHazardousMaterial)
+                .collect(Collectors.toList());
 
-        //중간 엔티티 리스트에 저장. 자바 객체 내부에서 리스트에 엔티티 객체를 추가. db와 관계 없음.
-        materialData.getMaterialHazardous().addAll(materialHazardousList);
+        //중복되지 않는 유해물질만 추가하기 위해 필터링
+        List<HazardousMaterial> filteredNewHazardousMaterials = newHazardousMaterials.stream()
+                .filter(hazardousMaterial -> !existingHazardousMaterials.contains(hazardousMaterial))
+                .collect(Collectors.toList());
 
-        //중간 엔티티 저장. db에 실제로 저장.
-        materialHazardousRepository.saveAll(materialHazardousList);
+        //중복된 것이 없을 때만 새로 추가
+        if(!filteredNewHazardousMaterials.isEmpty()) {
+            //기존 자재의 유해물질 중간 엔티티 리스트에 새로 추가할 유해물질을 더함.
+            List<MaterialHazardous> materialHazardousList = filteredNewHazardousMaterials.stream()
+                    .map(hazardousMaterial -> {
+                        MaterialHazardous materialHazardous = new MaterialHazardous();
+                        materialHazardous.setMaterialData(materialData);
+                        materialHazardous.setHazardousMaterial(hazardousMaterial);
+                        return materialHazardous;
+                    }).collect(Collectors.toList());
 
-        //자재 저장
-        materialDataRepository.save(materialData);
+            //중간 엔티티 리스트에 저장. 자바 객체 내부에서 리스트에 엔티티 객체를 추가. db와 관계 없음.
+            materialData.getMaterialHazardous().addAll(materialHazardousList);
 
+            //중간 엔티티 저장. db에 실제로 저장.
+            materialHazardousRepository.saveAll(materialHazardousList);
+
+            //자재 저장
+            materialDataRepository.save(materialData);
+        }
         //유해물질 리스트를 dto 리스트로 변환
         List<HazardousMaterialDTO> hazardousMaterialDTOList = materialData.getMaterialHazardous().stream()
                 .map(entity -> new HazardousMaterialDTO(
@@ -270,24 +282,37 @@ public class MaterialDataServiceImpl implements MaterialDataService{
                         .orElseThrow(() -> new IllegalArgumentException("해당 품목이 존재하지 않습니다.")))
         .collect(Collectors.toList());
 
-        //기존 자재의 품목 중간 엔티티 리스트에 새로 추가할 품목을 더함.
-        List<MaterialProduct> materialProductList = products.stream()
-                        .map(product -> {
-                            MaterialProduct materialProduct = new MaterialProduct();
-                            materialProduct.setMaterialData(materialData);
-                            materialProduct.setProduct(product);
-                            return materialProduct;
-                        }).collect(Collectors.toList());
+        //기존 자재의 품목 목록 가져오기
+        List<Product> existingProducts = materialData.getMaterialProducts().stream()
+                .map(MaterialProduct::getProduct)
+                .collect(Collectors.toList());
 
-        //중간 엔티티 리스트에 추가
-        materialData.getMaterialProducts().addAll(materialProductList);
+        //중복되지 않는 품목만 추가하기 위해 필터링
+        List<Product> filterNewProducts = products.stream()
+                .filter(product -> !existingProducts.contains(product))
+                .collect(Collectors.toList());
 
-        //중간 엔티티 저장
-        materialProductRepository.saveAll(materialProductList);
+        //중복된 것이 없을 때만 새로 추가
+        if(!filterNewProducts.isEmpty()) {
 
-        //자재 저장
-        materialDataRepository.save(materialData);
+            //기존 자재의 품목 중간 엔티티 리스트에 새로 추가할 품목을 더함.
+            List<MaterialProduct> materialProductList = filterNewProducts.stream()
+                    .map(product -> {
+                        MaterialProduct materialProduct = new MaterialProduct();
+                        materialProduct.setMaterialData(materialData);
+                        materialProduct.setProduct(product);
+                        return materialProduct;
+                    }).collect(Collectors.toList());
 
+            //중간 엔티티 리스트에 추가
+            materialData.getMaterialProducts().addAll(materialProductList);
+
+            //중간 엔티티 저장
+            materialProductRepository.saveAll(materialProductList);
+
+            //자재 저장
+            materialDataRepository.save(materialData);
+        }
         //전체 품목 리스트를 dto 리스트로 변환
         List<ProductMaterialDTO> productMaterialDTOList = materialData.getMaterialProducts().stream()
                 .map(entity -> new ProductMaterialDTO(
@@ -309,25 +334,28 @@ public class MaterialDataServiceImpl implements MaterialDataService{
 
     //해당 자재의 품목 목록 제거
     @Override
-    public void deleteProductMaterial(Long materialId, Long productId) {
+    public void deleteProductMaterial(Long materialId, String productCode) {
 
         //자재 아이디 조회
         MaterialData materialData = materialDataRepository.findById(materialId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 자재가 존재하지 않습니다."));
 
         //품목 아이디 조회
-        Product product = productRepository.findById(productId)
+        Product product = productRepository.findByCode(productCode)
                 .orElseThrow(() -> new IllegalArgumentException("해당 품목이 존재하지 않습니다."));
 
         //중간 엔티티에서 해당 자재와 품목의 관계 제거
         List<MaterialProduct> materialProductList = materialData.getMaterialProducts();
         MaterialProduct materialProductToRemove = materialProductList.stream()
-                        .filter(mp -> mp.getId().equals(productId))
+                        .filter(mp -> mp.getProduct().getCode().equals(productCode))
                         .findFirst()
                         .orElseThrow(() -> new IllegalArgumentException("품목이 자재에 존재하지 않습니다."));
 
         //중간 엔티티에서 제거
         materialProductList.remove(materialProductToRemove);
+        
+        //중간엔티티 저장
+        materialProductRepository.saveAll(materialProductList);
 
         //자재 저장
         materialDataRepository.save(materialData);
