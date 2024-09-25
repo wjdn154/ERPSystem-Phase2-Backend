@@ -24,10 +24,12 @@ public class SecurityConfig {
 
 
     private final JwtRequestFilter jwtRequestFilter;  // JWT 요청 필터 주입 변수 선언
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;  // JWT 인증 진입점 주입 변수 선언
 
     // JwtRequestFilter 주입하는 생성자
-    public SecurityConfig(JwtRequestFilter jwtRequestFilter) {
+    public SecurityConfig(JwtRequestFilter jwtRequestFilter, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
         this.jwtRequestFilter = jwtRequestFilter;
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
     }
 
     /**
@@ -44,6 +46,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/financial/company/**").permitAll()  // 인증 없이 접근 가능한 경로 설정함.
                         .anyRequest().authenticated()  // 나머지 모든 요청은 인증이 필요함.
                 )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));  // 세션을 사용하지 않고 JWT로 인증함.
 
