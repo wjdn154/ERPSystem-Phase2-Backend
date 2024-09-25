@@ -43,6 +43,7 @@ public class StandardBomDTO {
     private Boolean isActive;             // BOM 사용 여부 (활성화 상태)
 
     // 순환 참조 방지 필드
+    @Builder.Default
     private boolean isParent = false;
 
 }
