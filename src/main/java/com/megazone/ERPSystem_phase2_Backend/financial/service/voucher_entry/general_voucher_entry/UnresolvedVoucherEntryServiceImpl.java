@@ -104,7 +104,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
                     totalCredit = totalCredit.add(dto.getCreditAmount());
                 }
 
-                if(!totalDebit.equals(totalCredit)) {
+                if(totalDebit.compareTo(totalCredit) != 0) {
                     throw new IllegalArgumentException("저장할 전표에 차액이 발생하였습니다.");
                 }
 
@@ -304,7 +304,8 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
 
     @Override
     public List<UnresolvedVoucher> voucherApprovalProcessing(UnresolvedVoucherApprovalDTO dto) {
-        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherRepository.findApprovalTypeVoucher(dto);
+        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherRepository.findAll(); // 초기 데이터 등록용
+//        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherRepository.findApprovalTypeVoucher(dto);
 
         try {
             if(dto.getApprovalStatus().equals(ApprovalStatus.PENDING)) {
