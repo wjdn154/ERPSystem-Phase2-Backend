@@ -78,8 +78,6 @@ spring:
         - classpath:initial-database/financial/client/client.sql
         - classpath:initial-database/hr/users.sql
 
-#        - classpath:initial-database/financial/unresolvedVoucher.sql
-
         - classpath:initial-database/production/basic_data/process_routing/process_details.sql
         - classpath:initial-database/production/basic_data/process_routing/process_routing.sql
         - classpath:initial-database/production/basic_data/process_routing/routing_step.sql
@@ -100,6 +98,12 @@ spring:
         - classpath:initial-database/production/resource_data/worker.sql
         - classpath:initial-database/production/production_schedule/common_scheduling/worker_assignment.sql
 
+        - classpath:initial-database/financial/unresolved_sale_and_purchase_voucher.sql
+        - classpath:initial-database/financial/unresolved_voucher.sql
+        - classpath:initial-database/financial/resolved_sale_and_purchase_voucher.sql
+        - classpath:initial-database/financial/resolved_voucher.sql
+
+
 logging:
   level:
 #    org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)
@@ -108,6 +112,16 @@ logging:
 #    com.zaxxer.hikari: DEBUG  # 데이터소스 관련 로그
     org.hibernate.SQL: OFF # SQL 쿼리 로그 비활성화
     org.hibernate.type.descriptor.sql.BasicBinder: ERROR # SQL 바인딩 로그 비활성화
+    com:
+      megazone:
+        ERPSystem_phase2_Backend: DEBUG
+        financial: DEBUG # financial 서브 패키지
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql: TRACE
 
 jwt:
   secret: dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234
