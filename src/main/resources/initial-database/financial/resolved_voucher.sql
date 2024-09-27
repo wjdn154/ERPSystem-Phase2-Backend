@@ -1,4 +1,4 @@
-CREATE TABLE `resolved_voucher` (
+INSERT INTO `resolved_voucher` (
                                     `credit_amount`,
                                     `debit_amount`,
                                     `transaction_description`,
