@@ -6,9 +6,15 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.QResolvedVoucher;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.QDepartment;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.QEmployee;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -98,249 +104,122 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
 
     @Override
     public List<ClientLedgerShowDTO> clientLedgerList(ClientLedgerSearchDTO dto) {
-//        QResolvedVoucher qResolvedVoucher = QResolvedVoucher.resolvedVoucher;
-//
-//        return queryFactory
-//                .select(
-//                        qResolvedVoucher.client.code,
-//                        qResolvedVoucher.client.printClientName,
-//                        qResolvedVoucher.client.businessRegistrationNumber,
-//                        qResolvedVoucher.client.representativeName,
-//                        qResolvedVoucher.debitAmount.sum().castToNum(BigDecimal.class),
-//                        qResolvedVoucher.creditAmount.sum().castToNum(BigDecimal.class),
-//                        qResolvedVoucher.voucherManager.department.departmentName,
-//                        qResolvedVoucher.voucherManager.firstName,
-//                        qResolvedVoucher.voucherManager.lastName
-//                )
-//                .from(qResolvedVoucher)
-//                .where(qResolvedVoucher.voucherDate.between(dto.getStartDate(), dto.getEndDate()) // 날짜 범위 조건 추가
-//                        .and(qResolvedVoucher.client.code.between(dto.getClientStartCode(), dto.getClientEndCode()))
-//                        .and(qResolvedVoucher.accountSubject.code.eq(dto.getAccountCode())))
-//                .groupBy(qResolvedVoucher.client.code, qResolvedVoucher.client.printClientName, qResolvedVoucher.client.businessRegistrationNumber,
-//                        qResolvedVoucher.client.representativeName, qResolvedVoucher.voucherManager.department.departmentName,
-//                        qResolvedVoucher.voucherManager.firstName,qResolvedVoucher.voucherManager.lastName)
-//                .orderBy(qResolvedVoucher.client.code.asc())
-//                .fetch()
-//                .stream()
-//                .map(tuple -> ClientLedgerShowDTO.create(
-//                        tuple.get(qResolvedVoucher.client.code),
-//                        tuple.get(qResolvedVoucher.client.printClientName),
-//                        tuple.get(qResolvedVoucher.client.businessRegistrationNumber),
-//                        tuple.get(qResolvedVoucher.client.representativeName),
-//                        BigDecimal.ZERO, // 전기이월 (추가 로직 필요)
-//                        tuple.get(qResolvedVoucher.debitAmount.sum().castToNum(BigDecimal.class)),
-//                        tuple.get(qResolvedVoucher.creditAmount.sum().castToNum(BigDecimal.class)),
-//                        BigDecimal.ZERO, // 잔액 (추가 로직 필요)
-//                        tuple.get(qResolvedVoucher.voucherManager.department.departmentName),
-//                        tuple.get(qResolvedVoucher.voucherManager.firstName.concat(qResolvedVoucher.voucherManager.lastName))
-//                ))
-//                .toList();
-//
 
-        QResolvedVoucher qResolvedVoucher = QResolvedVoucher.resolvedVoucher;
-        QClient qClient = QClient.client;
-        QEmployee qEmployee = QEmployee.employee;
-        QDepartmentEmployee qDepartmentEmployee = QDepartmentEmployee.departmentEmployee;
-        QAccountSubject qAccountSubject = QAccountSubject.accountSubject;
-//
-//        return queryFactory
-//                .select(
-//                        qClient.code,
-//                        qClient.printClientName,
-//                        qClient.businessRegistrationNumber,
-//                        qClient.representativeName,
-//                        qResolvedVoucher.debitAmount.sum().castToNum(BigDecimal.class),
-//                        qResolvedVoucher.creditAmount.sum().castToNum(BigDecimal.class),
-//                        qDepartmentEmployee.departmentName,
-//                        qEmployee.firstName,
-//                        qEmployee.lastName
-//                )
-//                .from(qResolvedVoucher)
-//                .join(qClient).on(qResolvedVoucher.client.id.eq(qClient.id))
-//                .join(qEmployee).on(qResolvedVoucher.voucherManager.id.eq(qEmployee.id))
-//                .join(qDepartmentEmployee).on(qEmployee.department.id.eq(qDepartmentEmployee.id))
-//                .join(qAccountSubject).on(qResolvedVoucher.accountSubject.id.eq(qAccountSubject.id))
-//                .where(qResolvedVoucher.voucherDate.between(dto.getStartDate(), dto.getEndDate())
-//                        .and(qClient.code.between(dto.getClientStartCode(), dto.getClientEndCode()))
-//                        .and(qAccountSubject.code.eq(dto.getAccountCode()))
-//                )
-//                .groupBy(
-//                        qClient.code,
-//                        qClient.printClientName,
-//                        qClient.businessRegistrationNumber,
-//                        qClient.representativeName,
-//                        qDepartmentEmployee.departmentName,
-//                        qEmployee.firstName,
-//                        qEmployee.lastName
-//                )
-//                .orderBy(qClient.code.asc())
-//                .fetch()
-//                .stream()
-//                .map(tuple -> new ClientLedgerShowDTO(
-//                        tuple.get(qClient.code),
-//                        tuple.get(qClient.printClientName),
-//                        tuple.get(qClient.businessRegistrationNumber),
-//                        tuple.get(qClient.representativeName),
-//                        BigDecimal.ZERO, // 전기이월 (추가 로직 필요)
-//                        tuple.get(qResolvedVoucher.debitAmount.sum()),
-//                        tuple.get(qResolvedVoucher.creditAmount.sum()),
-//                        BigDecimal.ZERO, // 잔액 (추가 로직 필요)
-//                        tuple.get(qDepartmentEmployee.departmentName),
-//                        tuple.get(qEmployee.firstName) + " " + tuple.get(qEmployee.lastName)
-//                ))
-//                .toList();
+        QResolvedVoucher voucher = QResolvedVoucher.resolvedVoucher;
+        QClient client = QClient.client;
+        QEmployee employee = QEmployee.employee;
+        QDepartment department = QDepartment.department;
+        QAccountSubject accountSubject = QAccountSubject.accountSubject;
 
-//        return queryFactory
-//                .select(
-//                        qClient.code,
-//                        qClient.printClientName,
-//                        qClient.businessRegistrationNumber,
-//                        qClient.representativeName,
-//                        qResolvedVoucher.debitAmount.sum().castToNum(BigDecimal.class),
-//                        qResolvedVoucher.creditAmount.sum().castToNum(BigDecimal.class),
-//                        qDepartmentEmployee.departmentName,
-//                        qEmployee.firstName,
-//                        qEmployee.lastName
-//                )
-//                .from(qResolvedVoucher)
-//                .join(qClient).on(qResolvedVoucher.client.id.eq(qClient.id))
-//                .join(qEmployee).on(qResolvedVoucher.voucherManager.id.eq(qEmployee.id))
-//                .join(qDepartmentEmployee).on(qEmployee.department.id.eq(qDepartmentEmployee.id))
-//                .join(qAccountSubject).on(qResolvedVoucher.accountSubject.id.eq(qAccountSubject.id))
-//                .where(qResolvedVoucher.voucherDate.between(dto.getStartDate(), dto.getEndDate())
-//                        .and(Expressions.numberTemplate(Integer.class, "CAST({0} AS SIGNED)", qClient.code)
-//                                .between(Integer.parseInt(dto.getClientStartCode()), Integer.parseInt(dto.getClientEndCode())))
-//                        .and(qAccountSubject.code.eq(dto.getAccountCode()))
-//                )
-//                .groupBy(
-//                        qClient.code,
-//                        qClient.printClientName,
-//                        qClient.businessRegistrationNumber,
-//                        qClient.representativeName,
-//                        qDepartmentEmployee.departmentName,
-//                        qEmployee.firstName,
-//                        qEmployee.lastName
-//                )
-//                .orderBy(Expressions.numberTemplate(Integer.class, "CAST({0} AS SIGNED)", qClient.code).asc())
-//                .fetch()
-//                .stream()
-//                .map(tuple -> new ClientLedgerShowDTO(
-//                        tuple.get(qClient.code),
-//                        tuple.get(qClient.printClientName),
-//                        tuple.get(qClient.businessRegistrationNumber),
-//                        tuple.get(qClient.representativeName),
-//                        BigDecimal.ZERO, // 전기이월 (추가 로직 필요)
-//                        tuple.get(qResolvedVoucher.debitAmount.sum()),
-//                        tuple.get(qResolvedVoucher.creditAmount.sum()),
-//                        BigDecimal.ZERO, // 잔액 (추가 로직 필요)
-//                        tuple.get(qDepartmentEmployee.departmentName),
-//                        tuple.get(qEmployee.firstName) + " " + tuple.get(qEmployee.lastName)
-//                ))
-//                .toList();
-
-
-//        return queryFactory
-//                .select(
-//                        qClient.code,
-//                        qClient.printClientName,
-//                        qClient.businessRegistrationNumber,
-//                        qClient.representativeName,
-//                        qResolvedVoucher.debitAmount.sum().castToNum(BigDecimal.class),
-//                        qResolvedVoucher.creditAmount.sum().castToNum(BigDecimal.class),
-//                        qDepartmentEmployee.departmentName,
-//                        qEmployee.firstName,
-//                        qEmployee.lastName
-//                )
-//                .from(qResolvedVoucher)
-//                .join(qClient).on(qResolvedVoucher.client.id.eq(qClient.id))
-//                .join(qEmployee).on(qResolvedVoucher.voucherManager.id.eq(qEmployee.id))
-//                .join(qDepartmentEmployee).on(qEmployee.department.id.eq(qDepartmentEmployee.id))
-//                .join(qAccountSubject).on(qResolvedVoucher.accountSubject.id.eq(qAccountSubject.id))
-//                        .where(Expressions.numberTemplate(Integer.class, "CAST({0} AS INTEGER)", qClient.code)
-//                                .between(Expressions.numberTemplate(Integer.class, "CAST({0} AS INTEGER)", dto.getClientStartCode()),
-//                                                Expressions.numberTemplate(Integer.class, "CAST({0} AS INTEGER)", dto.getClientEndCode()))
-//                        .and(qAccountSubject.code.eq(dto.getAccountCode())))
-//                .groupBy(
-//                        qClient.code,
-//                        qClient.printClientName,
-//                        qClient.businessRegistrationNumber,
-//                        qClient.representativeName,
-//                        qDepartmentEmployee.departmentName,
-//                        qEmployee.firstName,
-//                        qEmployee.lastName
-//                )
-//                .orderBy(qClient.code.asc())
-//                .fetch()
-//                .stream()
-//                .map(tuple -> new ClientLedgerShowDTO(
-//                        tuple.get(qClient.code),
-//                        tuple.get(qClient.printClientName),
-//                        tuple.get(qClient.businessRegistrationNumber),
-//                        tuple.get(qClient.representativeName),
-//                        BigDecimal.ZERO, // 전기이월 (추가 로직 필요)
-//                        tuple.get(qResolvedVoucher.debitAmount.sum()),
-//                        tuple.get(qResolvedVoucher.creditAmount.sum()),
-//                        BigDecimal.ZERO, // 잔액 (추가 로직 필요)
-//                        tuple.get(qDepartmentEmployee.departmentName),
-//                        tuple.get(qEmployee.firstName) + " " + tuple.get(qEmployee.lastName)
-//                ))
-//                .toList();
-
-        List<Tuple> fetchtest = queryFactory
-                .select(
-                        qClient.code.as("clientCode"),
-                        qClient.printClientName.as("printClientName"),
-                        qClient.businessRegistrationNumber.as("businessRegistrationNumber"),
-                        qClient.representativeName.as("representativeName"),
-                        qResolvedVoucher.debitAmount.sum().as("totalDebitAmount"),
-                        qResolvedVoucher.creditAmount.sum().as("totalCreditAmount"),
-                        qDepartmentEmployee.departmentName.as("departmentName"),
-                        qEmployee.firstName.as("firstName"),
-                        qEmployee.lastName.as("lastName")
-                )
-                .from(qResolvedVoucher)
-                .join(qClient).on(qResolvedVoucher.client.id.eq(qClient.id))
-                .join(qEmployee).on(qResolvedVoucher.voucherManager.id.eq(qEmployee.id))
-                .join(qDepartmentEmployee).on(qEmployee.department.id.eq(qDepartmentEmployee.id))
-                .join(qAccountSubject).on(qResolvedVoucher.accountSubject.id.eq(qAccountSubject.id))
-                .where(
-                        qResolvedVoucher.voucherDate.between(
-                                LocalDate.parse("2024-01-01"),
-                                LocalDate.parse("2024-12-31")
-                        ),
-                        Expressions.numberTemplate(Integer.class, "CAST({0} AS UNSIGNED)", qClient.code)
-                                .between(1, 10),
-                        qAccountSubject.code.eq("108")
-                )
-                .groupBy(
-                        qClient.code,
-                        qClient.printClientName,
-                        qClient.businessRegistrationNumber,
-                        qClient.representativeName,
-                        qDepartmentEmployee.departmentName,
-                        qEmployee.firstName,
-                        qEmployee.lastName
-                )
-                .orderBy(qClient.code.asc())
-                .fetch();
-
-        return fetchtest
-                        .stream()
-                .map(tuple -> new ClientLedgerShowDTO(
-                        tuple.get(qClient.code),
-                        tuple.get(qClient.printClientName),
-                        tuple.get(qClient.businessRegistrationNumber),
-                        tuple.get(qClient.representativeName),
-                        BigDecimal.ZERO, // 전기이월 (추가 로직 필요)
-                        tuple.get(qResolvedVoucher.debitAmount.sum()),
-                        tuple.get(qResolvedVoucher.creditAmount.sum()),
-                        BigDecimal.ZERO, // 잔액 (추가 로직 필요)
-                        tuple.get(qDepartmentEmployee.departmentName),
-                        tuple.get(qEmployee.firstName) + " " + tuple.get(qEmployee.lastName)
+        return queryFactory
+                .select(Projections.constructor(ClientLedgerShowDTO.class,
+                        client.code,
+                        client.printClientName,
+                        client.businessRegistrationNumber,
+                        client.representativeName,
+                        Expressions.constant(BigDecimal.ZERO), // previousCash
+                        voucher.debitAmount.sum(), // debitTotalAmount
+                        voucher.creditAmount.sum(), // creditTotalAmount
+                        voucher.debitAmount.sum().subtract(voucher.creditAmount.sum()), // cashTotalAmount
+                        department.departmentName, // managerDepartment
+                        employee.firstName.concat(" ").concat(employee.lastName) // managerName
                 ))
-                .toList();
+                .from(voucher)
+                .join(voucher.client, client)
+                .join(voucher.voucherManager, employee)
+                .join(employee.department, department)
+                .join(voucher.accountSubject, accountSubject)
+                .where(voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate())
+                        .and(client.code.castToNum(Integer.class).between(Integer.valueOf(dto.getClientStartCode()), Integer.valueOf(dto.getClientEndCode())))
+                        .and(accountSubject.code.eq(dto.getAccountCode())))
+                .groupBy(client.code, client.printClientName, client.businessRegistrationNumber, client.representativeName, department.departmentName, employee.firstName, employee.lastName)
+                .orderBy(client.code.asc())
+                .fetch();
     }
 
+    @Override
+    public List<ClientListDTO> clientAndAccountSubjectLedgerList(ClientAndAccountSubjectLedgerSearchDTO dto) {
+
+        QResolvedVoucher voucher = QResolvedVoucher.resolvedVoucher;
+        QClient client = QClient.client;
+        QAccountSubject accountSubject = QAccountSubject.accountSubject;
+
+        return queryFactory
+                .select(Projections.constructor(ClientListDTO.class,
+                        client.code,
+                        client.printClientName,
+                        client.businessRegistrationNumber,
+                        client.representativeName
+                ))
+                .from(voucher)
+                .join(voucher.client, client)
+                .join(voucher.accountSubject, accountSubject)
+                .where(voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate())
+                        .and(client.code.castToNum(Integer.class).between(Integer.valueOf(dto.getStartClientCode()), Integer.valueOf(dto.getEndClientCode())))
+                        .and(accountSubject.code.castToNum(Integer.class).between(Integer.valueOf(dto.getStartAccountSubjectCode()), Integer.valueOf(dto.getEndAccountSubjectCode()))))
+                .groupBy(client.code, client.printClientName, client.businessRegistrationNumber, client.representativeName)
+                .orderBy(client.code.asc())
+                .fetch();
+
+    }
+
+    @Override
+    public List<ClientAndAccountSubjectLedgerShowDetailDTO> clientAndAccountSubjectLedgerDetail(ClientAndAccountSubjectLedgerShowDetailConditionDTO dto) {
+        QResolvedVoucher voucher = QResolvedVoucher.resolvedVoucher;
+        QClient client = QClient.client;
+        QAccountSubject accountSubject = QAccountSubject.accountSubject;
+
+        return queryFactory
+                .select(Projections.constructor(ClientAndAccountSubjectLedgerShowDetailDTO.class,
+                        accountSubject.code,
+                        accountSubject.name,
+                        Expressions.constant(BigDecimal.ZERO),
+                        voucher.debitAmount.sum(),
+                        voucher.creditAmount.sum(),
+                        voucher.debitAmount.sum().subtract(voucher.creditAmount.sum())
+                ))
+                .from(voucher)
+                .join(voucher.client, client)
+                .join(voucher.accountSubject, accountSubject)
+                .where(voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate())
+                        .and(client.id.eq(dto.getClientId()))
+                        .and(accountSubject.code.castToNum(Integer.class).between(Integer.valueOf(dto.getStartAccountSubjectCode()), Integer.valueOf(dto.getEndAccountSubjectCode()))))
+                .groupBy(accountSubject.code,accountSubject.name)
+                .orderBy(accountSubject.code.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<CashJournalShowDTO> cashJournalShow(CashJournalSearchDTO dto) {
+        QResolvedVoucher voucher = QResolvedVoucher.resolvedVoucher;
+        QClient client = QClient.client;
+
+        return queryFactory.select(
+                        Projections.constructor(CashJournalShowDTO.class,
+                                voucher.voucherDate,
+                                voucher.transactionDescription,
+                                client.code,
+                                client.printClientName,
+                                // Case문
+                                new CaseBuilder()
+                                        .when(voucher.voucherType.eq(VoucherType.DEPOSIT))
+                                        .then(voucher.creditAmount)
+                                        .otherwise(BigDecimal.ZERO),
+                                new CaseBuilder()
+                                        .when(voucher.voucherType.eq(VoucherType.WITHDRAWAL))
+                                        .then(voucher.debitAmount)
+                                        .otherwise(BigDecimal.ZERO),
+                                Expressions.constant(BigDecimal.ZERO)
+                        ))
+                .from(voucher)
+                .join(voucher.client, client)
+                .where(voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate())
+                        .and(voucher.voucherType.eq(VoucherType.DEPOSIT)
+                                .or(voucher.voucherType.eq(VoucherType.WITHDRAWAL)))
+                        .and(voucher.accountSubject.code.ne("101")))
+                .orderBy(voucher.voucherDate.asc())
+                .fetch();
+    }
 
 
 }

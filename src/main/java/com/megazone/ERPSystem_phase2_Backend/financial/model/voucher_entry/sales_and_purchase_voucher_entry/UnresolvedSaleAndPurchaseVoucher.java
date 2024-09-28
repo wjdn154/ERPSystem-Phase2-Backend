@@ -58,10 +58,8 @@ public class UnresolvedSaleAndPurchaseVoucher {
     @Column(nullable = false)
     private String itemName; // 품목명
 
-    @Column(nullable = false)
     private BigDecimal quantity; // 수량
 
-    @Column(nullable = false)
     private BigDecimal unitPrice; // 단가
 
     @Column(nullable = false)
