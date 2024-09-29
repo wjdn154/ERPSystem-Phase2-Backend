@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.financial.controller.ledger;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.JournalDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.JournalShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.JournalShowDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.ResolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherShowAllDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherShowDTO;
@@ -32,8 +33,8 @@ public class JournalApiController {
     @PostMapping("/api/financial/ledger/journal/show")
     public ResponseEntity<JournalShowDTO> journalShow(@RequestBody JournalDTO dto) {
 
-        List<UnresolvedVoucherShowDTO> ShowDTOs = journalService.journalSearch(dto.getStartDate(),dto.getEndDate())
-                .stream().map(UnresolvedVoucherShowDTO::create).toList();
+        List<JournalShowDetailDTO> ShowDTOs = journalService.journalSearch(dto.getStartDate(),dto.getEndDate())
+                .stream().map(JournalShowDetailDTO::create).toList();
 
         List<BigDecimal> totalAmounts = journalService.journalTotalAmount(dto.getStartDate(),dto.getEndDate());
         BigDecimal totalCount = journalService.journalTotalCount(dto.getStartDate(),dto.getEndDate());

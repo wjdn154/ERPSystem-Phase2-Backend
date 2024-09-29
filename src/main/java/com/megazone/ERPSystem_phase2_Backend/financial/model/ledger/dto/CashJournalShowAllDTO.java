@@ -20,14 +20,12 @@ public class CashJournalShowAllDTO {
     private BigDecimal cumulativeTotalCashAmount;
 
     public static CashJournalShowAllDTO create(List<CashJournalShowDTO> cashJournalShows,
-                                               BigDecimal cumulativeTotalDepositAmount,BigDecimal cumulativeTotalWithdrawalAmount,
+                                               BigDecimal monthlyTotalDepositAmount,
+                                               BigDecimal monthlyTotalWithdrawalAmount,
+                                               BigDecimal monthlyTotalCashAmount,
+                                               BigDecimal cumulativeTotalDepositAmount,
+                                               BigDecimal cumulativeTotalWithdrawalAmount,
                                                BigDecimal cumulativeTotalCashAmount) {
-
-        BigDecimal monthlyTotalDepositAmount = BigDecimal.ZERO;
-        BigDecimal monthlyTotalWithdrawalAmount = BigDecimal.ZERO;
-        BigDecimal monthlyTotalCashAmount = BigDecimal.ZERO;
-
-
         return new CashJournalShowAllDTO(
                 cashJournalShows,
                 monthlyTotalDepositAmount,

@@ -197,6 +197,7 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
 
         return queryFactory.select(
                         Projections.constructor(CashJournalShowDTO.class,
+                                voucher.id,
                                 voucher.voucherDate,
                                 voucher.transactionDescription,
                                 client.code,
