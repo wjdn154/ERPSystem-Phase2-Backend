@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CashJournalShowDTO {
+    private Long voucherId;
     private LocalDate voucherDate;
     private String transactionDescription;
     private String clientCode;
@@ -19,9 +20,10 @@ public class CashJournalShowDTO {
     private BigDecimal withdrawalAmount;
     private BigDecimal cashAmount;
 
-    public static CashJournalShowDTO create(LocalDate voucherDate, String transactionDescription, String clientCode,
+    public static CashJournalShowDTO create(Long voucherId, LocalDate voucherDate, String transactionDescription, String clientCode,
                                             String clientName, BigDecimal depositAmount, BigDecimal withdrawalAmount, BigDecimal cashAmount) {
         return new CashJournalShowDTO(
+                voucherId,
                 voucherDate,
                 transactionDescription,
                 clientCode,
