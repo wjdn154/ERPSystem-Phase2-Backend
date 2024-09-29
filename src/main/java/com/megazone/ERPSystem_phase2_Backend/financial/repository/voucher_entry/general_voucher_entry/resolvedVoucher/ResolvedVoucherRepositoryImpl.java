@@ -146,6 +146,7 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
 
         return queryFactory
                 .select(Projections.constructor(ClientListDTO.class,
+                        client.id,
                         client.code,
                         client.printClientName,
                         client.businessRegistrationNumber,
