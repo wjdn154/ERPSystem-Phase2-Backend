@@ -122,17 +122,17 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                         voucher.creditAmount.sum(), // creditTotalAmount
                         voucher.debitAmount.sum().subtract(voucher.creditAmount.sum()), // cashTotalAmount
                         department.departmentName, // managerDepartment
-                        employee.firstName.concat(" ").concat(employee.lastName) // managerName
+                        employee.lastName.concat(employee.firstName) // managerName
                 ))
                 .from(voucher)
                 .join(voucher.client, client)
-                .join(voucher.voucherManager, employee)
+                .join(voucher.client.employee, employee)
                 .join(employee.department, department)
                 .join(voucher.accountSubject, accountSubject)
                 .where(voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate())
                         .and(client.code.castToNum(Integer.class).between(Integer.valueOf(dto.getClientStartCode()), Integer.valueOf(dto.getClientEndCode())))
                         .and(accountSubject.code.eq(dto.getAccountCode())))
-                .groupBy(client.code, client.printClientName, client.businessRegistrationNumber, client.representativeName, department.departmentName, employee.firstName, employee.lastName)
+                .groupBy(client.code, client.printClientName, client.businessRegistrationNumber, client.representativeName, /*department.departmentName,*/ employee.firstName, employee.lastName)
                 .orderBy(client.code.asc())
                 .fetch();
     }
