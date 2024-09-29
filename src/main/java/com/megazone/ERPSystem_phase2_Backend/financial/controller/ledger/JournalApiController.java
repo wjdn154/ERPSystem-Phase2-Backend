@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.util.List;
 
-// 분개장 API Controller
+// 분개장
 @RestController
 @RequiredArgsConstructor
 public class JournalApiController {

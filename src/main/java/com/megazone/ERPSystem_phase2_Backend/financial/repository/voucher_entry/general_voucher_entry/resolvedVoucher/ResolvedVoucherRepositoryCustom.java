@@ -23,4 +23,8 @@ public interface ResolvedVoucherRepositoryCustom {
     List<ClientAndAccountSubjectLedgerShowDetailDTO> clientAndAccountSubjectLedgerDetail(ClientAndAccountSubjectLedgerShowDetailConditionDTO dto);
 
     List<CashJournalShowDTO> cashJournalShow(CashJournalSearchDTO dto);
+
+    List<AccountLedgerAccListDTO> accountLedgerList(AccountLedgerSearchDTO dto);
+
+    List<AccountLedgerShowDTO> accountLedgerDetail(AccountLedgerDetailEntryDTO dto);
 }
