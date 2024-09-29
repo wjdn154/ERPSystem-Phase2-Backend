@@ -8,13 +8,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClientListDTO {
+    private Long clientId;
     private String clientCode;
     private String clientName;
     private String clientRegisterNumber;
     private String ownerName;
 
-    public static ClientListDTO create(String clientCode, String clientName, String clientRegisterNumber, String ownerName) {
+    public static ClientListDTO create(Long clientId, String clientCode, String clientName, String clientRegisterNumber, String ownerName) {
         return new ClientListDTO(
+                clientId,
                 clientCode,
                 clientName,
                 clientRegisterNumber,

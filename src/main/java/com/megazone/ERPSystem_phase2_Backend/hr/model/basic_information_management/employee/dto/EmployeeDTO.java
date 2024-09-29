@@ -32,6 +32,8 @@ public class EmployeeDTO {
     private Long jobTitleId; // 직책 ID
     private BankAccountDTO bankAccountDTO; // 계좌 번호
 
+
+
     public static EmployeeDTO create(Employee employee) {
         return new EmployeeDTO(
                 employee.getEmployeeNumber(),
