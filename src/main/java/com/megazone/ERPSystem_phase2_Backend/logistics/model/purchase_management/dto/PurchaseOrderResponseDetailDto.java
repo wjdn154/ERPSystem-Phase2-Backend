@@ -1,18 +1,21 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
 
 /**
- * 발주 요청 상세 조회용 DTO
+ * 발주서 상세 조회용 DTO
  */
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PurchaseRequestResponseDetailDto {
+public class PurchaseOrderResponseDetailDto {
 
     // 발주 요청 ID
     private Long id;
@@ -42,16 +45,16 @@ public class PurchaseRequestResponseDetailDto {
     private String status;
 
     // 발주 요청 상세 목록
-    private List<PurchaseRequestItemDetailDto> purchaseRequestDetails;
+    private List<PurchaseOrderItemDetailDto> purchaseOrderDetails;
 
     /**
-     * 발주 요청 상세 항목에 대한 DTO
+     * 발주서 상세 항목에 대한 DTO
      */
     @Getter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class PurchaseRequestItemDetailDto {
+    public static class PurchaseOrderItemDetailDto {
         // 품목명
         private String productName;
 

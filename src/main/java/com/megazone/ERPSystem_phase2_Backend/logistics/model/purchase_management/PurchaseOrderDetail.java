@@ -2,28 +2,30 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_managemen
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * 발주요청 상세 테이블
- * 발주요청서에 포함된 품목과 관련된 정보 관리
+ * 발주서 상세 테이블
+ * 발주서에 포함된 품목과 관련된 정보 관리
  */
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PurchaseRequestDetail {
+public class PurchaseOrderDetail {
 
-    // 고유 식별자
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 발주 요청과의 다대일 관계
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "purchase_request_id", nullable = false)
-    private PurchaseRequest purchaseRequest;
+    // 발주서와의 다대일 관계
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "purchase_order_id", nullable = false)
+    private PurchaseOrder purchaseOrder;
 
     // 품목과의 다대일 관계
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

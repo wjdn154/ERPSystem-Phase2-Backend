@@ -2,16 +2,15 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_managemen
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @Builder
-public class PurchaseRequestResponseDto {
+public class PurchaseOrderResponseDto {
     private Long id;
     private String clientName;
+    private String managerName;
     private String productName;
     private LocalDate date;
     private LocalDate deliveryDate;

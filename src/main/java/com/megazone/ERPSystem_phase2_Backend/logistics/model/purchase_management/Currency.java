@@ -1,11 +1,9 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management;
+package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.PurchaseRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * 통화 엔티티
