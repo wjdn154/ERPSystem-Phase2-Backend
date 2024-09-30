@@ -40,7 +40,7 @@ public class MaterialDataServiceImpl implements MaterialDataService{
     @Override
     public List<ListMaterialDataDTO> findAllMaterial() {
 
-        return materialDataRepository.findAll().stream()
+        return materialDataRepository.findAllByOrderByIdDesc().stream()
                 .map(material -> new ListMaterialDataDTO(
                         material.getId(),
                         material.getMaterialCode(),

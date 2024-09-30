@@ -7,7 +7,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enu
 
 public enum HazardLevel {
 
-    ROW,
+    LOW,
     MEDIUM,
     HIGH
 }
