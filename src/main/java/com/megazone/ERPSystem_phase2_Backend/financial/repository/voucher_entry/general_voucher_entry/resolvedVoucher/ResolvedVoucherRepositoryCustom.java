@@ -28,5 +28,5 @@ public interface ResolvedVoucherRepositoryCustom {
 
     List<AccountLedgerShowDTO> accountLedgerDetail(AccountLedgerDetailEntryDTO dto);
 
-    Object dailyLedgerList(DailyAndMonthJournalSearchDTO dto);
+    List<DailyAndMonthJournalShowDTO> dailyLedgerList(DailyAndMonthJournalSearchDTO dto);
 }

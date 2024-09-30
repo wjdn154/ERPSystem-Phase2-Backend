@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.resolvedVoucher;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.QAccountSubject;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.QStructure;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.QClient;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.QDepartmentEmployee;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.*;
@@ -279,38 +280,78 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
     }
 
     @Override
-    public Object dailyLedgerList(DailyAndMonthJournalSearchDTO dto) {
-//        QResolvedVoucher voucher = QResolvedVoucher.resolvedVoucher;
-//        QClient client = QClient.client;
-//        QEmployee employee = QEmployee.employee;
-//        QAccountSubject accountSubject = QAccountSubject.accountSubject;
-//        QDepartment department = QDepartment.department;
-//
-//        return queryFactory.select(
-//                        Projections.constructor(AccountLedgerShowDTO.class,
-//                                voucher.id,
-//                                voucher.voucherDate,
-//                                voucher.transactionDescription,
-//                                client.code,
-//                                client.printClientName,
-//                                voucher.debitAmount,
-//                                voucher.creditAmount,
-//                                voucher.debitAmount.subtract(voucher.creditAmount),
-//                                voucher.voucherNumber,
-//                                voucher.voucherApprovalTime,
-//                                employee.department.departmentName,
-//                                employee.lastName.concat(employee.firstName)
-//                        ))
-//                .from(voucher)
-//                .join(voucher.accountSubject, accountSubject)
-//                .join(voucher.voucherManager, employee)
-//                .join(employee.department, department)
-//                .join(voucher.client, client)
-//                .where(voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate())
-//                        .and(voucher.accountSubject.id.eq(dto.getAccountId())))
-//                .orderBy(voucher.voucherDate.asc())
-//                .fetch();
-        return null;
+    public List<DailyAndMonthJournalShowDTO> dailyLedgerList(DailyAndMonthJournalSearchDTO dto) {
+
+        QResolvedVoucher rv = QResolvedVoucher.resolvedVoucher;
+        QAccountSubject ac = QAccountSubject.accountSubject;
+        QStructure ass = QStructure.structure;
+
+        return queryFactory
+                .select(Projections.constructor(
+                        DailyAndMonthJournalShowDTO.class,
+                        ac.code.as("accountCode"),
+                        ac.name.as("accountName"),
+                        ass.code.as("accountStructureCode"),
+                        ass.mediumCategory.as("accountStructureMediumCategory"),
+                        ass.smallCategory.as("accountStructureSmallCategory"),
+                        Expressions.asNumber(
+                                new CaseBuilder()
+                                        .when(rv.voucherType.in(VoucherType.DEPOSIT, VoucherType.WITHDRAWAL))
+                                        .then(rv.debitAmount)
+                                        .otherwise(BigDecimal.ZERO)
+                        ).sum().as("cashTotalDebit"),
+                        Expressions.asNumber(
+                                new CaseBuilder()
+                                        .when(rv.voucherType.in(VoucherType.DEBIT, VoucherType.CREDIT))
+                                        .then(rv.debitAmount)
+                                        .otherwise(BigDecimal.ZERO)
+                        ).sum().as("subTotalDebit"),
+                        Expressions.asNumber(
+                                new CaseBuilder()
+                                        .when(rv.voucherType.in(VoucherType.DEPOSIT, VoucherType.WITHDRAWAL))
+                                        .then(rv.debitAmount)
+                                        .otherwise(BigDecimal.ZERO)
+                        ).sum().add(
+                                Expressions.asNumber(
+                                        new CaseBuilder()
+                                                .when(rv.voucherType.in(VoucherType.DEBIT, VoucherType.CREDIT))
+                                                .then(rv.debitAmount)
+                                                .otherwise(BigDecimal.ZERO)
+                                ).sum()
+                        ).as("sumTotalDebit"),
+                        Expressions.asNumber(
+                                new CaseBuilder()
+                                        .when(rv.voucherType.in(VoucherType.DEPOSIT, VoucherType.WITHDRAWAL))
+                                        .then(rv.creditAmount)
+                                        .otherwise(BigDecimal.ZERO)
+                        ).sum().as("cashTotalCredit"),
+                        Expressions.asNumber(
+                                new CaseBuilder()
+                                        .when(rv.voucherType.in(VoucherType.DEBIT, VoucherType.CREDIT))
+                                        .then(rv.creditAmount)
+                                        .otherwise(BigDecimal.ZERO)
+                        ).sum().as("subTotalCredit"),
+                        Expressions.asNumber(
+                                new CaseBuilder()
+                                        .when(rv.voucherType.in(VoucherType.DEPOSIT, VoucherType.WITHDRAWAL))
+                                        .then(rv.creditAmount)
+                                        .otherwise(BigDecimal.ZERO)
+                        ).sum().add(
+                                Expressions.asNumber(
+                                        new CaseBuilder()
+                                                .when(rv.voucherType.in(VoucherType.DEBIT, VoucherType.CREDIT))
+                                                .then(rv.creditAmount)
+                                                .otherwise(BigDecimal.ZERO)
+                                ).sum()
+                        ).as("sumTotalCredit")))
+                .from(rv)
+                .join(rv.accountSubject, ac)
+                .join(ac.structure, ass)
+                .where(ac.code.ne("101")
+                .and(rv.voucherDate.between(dto.getStartDate(),dto.getEndDate())))
+                .groupBy(ac.code, ac.name, ass.code, ass.mediumCategory, ass.smallCategory)
+                .fetch();
+
     }
 
 

@@ -11,12 +11,35 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DailyAndMonthJournalShowDTO {
-    private BigDecimal totalDebitAmount;
-    private BigDecimal totalSubDebitAmount;
-    private BigDecimal totalDebitCashAmount;
-    private BigDecimal totalSubCreditCashAmount;
-    private BigDecimal totalCreditAmount;
-    private BigDecimal totalCreditCashAmount;
     private String accountCode;
     private String accountName;
+    private String accountStructureCode;
+    private String accountStructureMediumCategory;
+    private String accountStructureSmallCategory;
+    private BigDecimal cashTotalDebit;
+    private BigDecimal subTotalDebit;
+    private BigDecimal sumTotalDebit;
+    private BigDecimal cashTotalCredit;
+    private BigDecimal subTotalCredit;
+    private BigDecimal sumTotalCredit;
+
+    public static DailyAndMonthJournalShowDTO create(String accountCode, String accountName, String accountStructureCode,
+                                                     String accountStructureMediumCategory,
+                                                     String accountStructureSmallCategory, BigDecimal cashTotalDebit,
+                                                     BigDecimal subTotalDebit, BigDecimal sumTotalDebit, BigDecimal cashTotalCredit,
+                                                     BigDecimal subTotalCredit, BigDecimal sumTotalCredit) {
+        return new DailyAndMonthJournalShowDTO(
+                accountCode,
+                accountName,
+                accountStructureCode,
+                accountStructureMediumCategory,
+                accountStructureSmallCategory,
+                cashTotalDebit,
+                subTotalDebit,
+                sumTotalDebit,
+                cashTotalCredit,
+                subTotalCredit,
+                sumTotalCredit
+        );
+    }
 }
