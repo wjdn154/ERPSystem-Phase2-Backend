@@ -43,7 +43,7 @@ public class AccountSubjectServiceImpl implements AccountSubjectService {
         List<StructureDTO> structures = structureRepository.findAll().stream()
                 .map(structure -> new StructureDTO(
                         structure.getCode(),
-                        structure.getName(),
+                        structure.getSmallCategory(),
                         structure.getMin(),
                         structure.getMax()))
                 .toList();
