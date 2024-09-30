@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**생상량 및 작업 실적
+ * 품질 검사 결과, 불량 처리 내용, 작업 비용 분석, 작업 효율 및 개선 사항
+ * 품목 코드, 작업지시 코드, 자재 코드, 불량유형 코드,
+ * */
 @Entity(name = "work_report_work_daily_report")
 @Table(name = "work_report_work_daily_report")
 @Data
