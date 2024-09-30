@@ -21,6 +21,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -219,6 +220,60 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                         .and(voucher.voucherType.eq(VoucherType.DEPOSIT)
                                 .or(voucher.voucherType.eq(VoucherType.WITHDRAWAL)))
                         .and(voucher.accountSubject.code.ne("101")))
+                .orderBy(voucher.voucherDate.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<AccountLedgerAccListDTO> accountLedgerList(AccountLedgerSearchDTO dto) {
+        QResolvedVoucher voucher = QResolvedVoucher.resolvedVoucher;
+        QAccountSubject accountSubject = QAccountSubject.accountSubject;
+
+        return queryFactory.select(
+                        Projections.constructor(AccountLedgerAccListDTO.class,
+                                accountSubject.id,
+                                accountSubject.code,
+                                accountSubject.name
+                        ))
+                .from(voucher)
+                .join(voucher.accountSubject, accountSubject)
+                .where(voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate())
+                        .and(voucher.accountSubject.code.between(dto.getStartAccountCode(), dto.getEndAccountCode())))
+                .groupBy(accountSubject.code,accountSubject.name)
+                .orderBy(voucher.accountSubject.code.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<AccountLedgerShowDTO> accountLedgerDetail(AccountLedgerDetailEntryDTO dto) {
+        QResolvedVoucher voucher = QResolvedVoucher.resolvedVoucher;
+        QClient client = QClient.client;
+        QEmployee employee = QEmployee.employee;
+        QAccountSubject accountSubject = QAccountSubject.accountSubject;
+        QDepartment department = QDepartment.department;
+
+        return queryFactory.select(
+                        Projections.constructor(AccountLedgerShowDTO.class,
+                                    voucher.id,
+                                    voucher.voucherDate,
+                                    voucher.transactionDescription,
+                                    client.code,
+                                    client.printClientName,
+                                    voucher.debitAmount,
+                                    voucher.creditAmount,
+                                    voucher.debitAmount.subtract(voucher.creditAmount),
+                                    voucher.voucherNumber,
+                                    voucher.voucherApprovalTime,
+                                    employee.department.departmentName,
+                                    employee.lastName.concat(employee.firstName)
+                        ))
+                .from(voucher)
+                .join(voucher.accountSubject, accountSubject)
+                .join(voucher.voucherManager, employee)
+                .join(employee.department, department)
+                .join(voucher.client, client)
+                .where(voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate())
+                        .and(voucher.accountSubject.id.eq(dto.getAccountId())))
                 .orderBy(voucher.voucherDate.asc())
                 .fetch();
     }

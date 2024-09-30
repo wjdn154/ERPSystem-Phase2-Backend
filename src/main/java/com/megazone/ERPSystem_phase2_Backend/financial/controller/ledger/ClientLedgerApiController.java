@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-// 거래처 원장 API
+// 거래처 원장
 @RestController
 @RequiredArgsConstructor
 public class ClientLedgerApiController {
