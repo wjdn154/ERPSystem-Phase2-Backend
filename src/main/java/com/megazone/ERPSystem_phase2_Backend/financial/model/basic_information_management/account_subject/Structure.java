@@ -19,7 +19,11 @@ public class Structure {
     @Column(unique = true, nullable = false)
     private String code; // 계정과목 체계 코드
     @Column(nullable = false)
-    private String name; // 계정과목 체계명
+    private String largeCategory; // 대분류 (예: 자산, 부채, 자본)
+    @Column(nullable = false)
+    private String mediumCategory; // 중분류 (예: 유동자산, 비유동자산)
+    @Column(nullable = false)
+    private String smallCategory; // 소분류 (예: 당좌자산, 재고자산)
     @Column(nullable = false)
     private Integer min; // 최소값
     @Column(nullable = false)
