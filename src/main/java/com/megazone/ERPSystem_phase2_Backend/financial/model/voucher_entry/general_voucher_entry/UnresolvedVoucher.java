@@ -76,6 +76,6 @@ public class UnresolvedVoucher {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private VoucherKind voucherKind;
+    private VoucherKind voucherKind; // 전표의 유형 ( 일반전표, 매출매입전표 )
 
 }
