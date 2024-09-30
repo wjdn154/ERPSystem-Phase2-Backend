@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,6 +43,17 @@ public class AttendanceServiceImpl implements AttendanceService {
                 .map(AttendanceShowDTO::create)
             .collect(Collectors.toList());
     }
-}
 
+    @Override
+    public boolean deleteAttendanceRecord(Long employeeId) {
+        Optional<Attendance> attendance = attendanceRepository.findByEmployeeId(employeeId);
+
+        if (attendance.isPresent()) {
+            attendanceRepository.delete(attendance.get());
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
 
