@@ -5,6 +5,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.CashMemoDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.MemoRequestDTO;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -16,6 +17,8 @@ public interface AccountSubjectService {
     Optional<AccountSubjectDTO> updateAccountSubject(String code, AccountSubjectDTO dto);
 
     Optional<AccountSubjectDTO> saveAccountSubject(AccountSubjectDTO dto);
+
+    List<AccountSubjectDTO> searchAccountSubject(String searchText);
 
     void deleteAccount(String code);
 

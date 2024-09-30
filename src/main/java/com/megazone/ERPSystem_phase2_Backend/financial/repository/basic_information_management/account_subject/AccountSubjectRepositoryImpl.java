@@ -177,6 +177,7 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
                 result.setParentName(queryFactory
                         .select(accountSubject.name)
                         .from(accountSubject)
+                        .where(accountSubject.code.eq(result.getParentCode()))
                         .fetchOne());
             }
         }
@@ -184,4 +185,5 @@ public class AccountSubjectRepositoryImpl implements AccountSubjectRepositoryCus
         // Optional로 반환
         return Optional.ofNullable(result);
     }
+
 }

@@ -28,6 +28,9 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private long expiration;  // 토큰 만료 시간 (초 단위)
 
+    @Value("${jwt.refresh-expiration}")
+    private long refreshTokenExpiration;
+
     /**
      * JWT 토큰에서 사용자 이름을 추출
      *
@@ -36,6 +39,27 @@ public class JwtUtil {
      */
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+
+    public String extractTenantId(String token) {
+        return extractClaim(token, claims -> claims.get("X-Tenant-ID", String.class));
+    }
+
+    public Long extractCompanyId(String token) {
+        return extractClaim(token, claims -> claims.get("companyId", Long.class));
+    }
+
+    public Long extractEmployeeId(String token) {
+        return extractClaim(token, claims -> claims.get("employeeId", Long.class));
+    }
+
+    public Long extractPermissionId(String token) {
+        return extractClaim(token, claims -> claims.get("permissionId", Long.class));
+    }
+
+    public String extractUserNickname(String token) {
+        return extractClaim(token, claims -> claims.get("userNickname", String.class));
     }
 
     /**
@@ -99,7 +123,19 @@ public class JwtUtil {
         claims.put("companyId", companyId);
         claims.put("employeeId", employeeId);
         claims.put("permissionId", permissionId);
-        return createToken(claims, username);  // 토큰 생성
+        return createToken(claims, username, expiration);  // 토큰 생성
+    }
+
+    /**
+     * 리프레시 토큰 생성
+     *
+     * @param username 사용자 이름
+     * @return 생성된 리프레시 토큰
+     */
+    public String generateRefreshToken(String username) {
+        Map<String, Object> claims = new HashMap<>();  // 리프레시 토큰에는 최소한의 정보만 포함
+        claims.put("type", "refresh");  // 리프레시 토큰임을 표시
+        return createToken(claims, username, refreshTokenExpiration);  // 리프레시 토큰 생성
     }
 
     /**
@@ -109,7 +145,7 @@ public class JwtUtil {
      * @param subject 토큰 주체 (사용자 이름)
      * @return 생성된 JWT 토큰
      */
-    private String createToken(Map<String, Object> claims, String subject) {
+    private String createToken(Map<String, Object> claims, String subject, long expirationTime) {
         return Jwts.builder()
                 .setClaims(claims)  // 클레임 설정
                 .setSubject(subject)  // 토큰 주체 설정
@@ -143,9 +179,8 @@ public class JwtUtil {
         return null;  // 토큰이 없을 경우 null 반환
     }
 
-    public String extractTenantId(String token) {
-        return extractClaim(token, claims -> claims.get("X-Tenant-ID", String.class));
+    public Boolean validateRefreshToken(String token) {
+        return !isTokenExpired(token);  // 리프레시 토큰은 만료 여부만 확인
     }
-
 
 }

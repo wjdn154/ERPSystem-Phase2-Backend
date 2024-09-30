@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Data
 public class UnresolvedVoucherShowDTO {
+    private Long id;
     private LocalDate voucherDate;
     private String voucherNumber;
     private VoucherType voucherType;
@@ -27,13 +28,13 @@ public class UnresolvedVoucherShowDTO {
 
     public static UnresolvedVoucherShowDTO create(UnresolvedVoucher unresolvedVoucher) {
         return new UnresolvedVoucherShowDTO(
+                unresolvedVoucher.getId(),
                 unresolvedVoucher.getVoucherDate(),
                 unresolvedVoucher.getVoucherNumber(),
                 unresolvedVoucher.getVoucherType(),
                 unresolvedVoucher.getAccountSubject().getCode(),
                 unresolvedVoucher.getAccountSubject().getName(),
-                unresolvedVoucher.getVoucherManager().getFirstName() +
-                        unresolvedVoucher.getVoucherManager().getLastName(),
+unresolvedVoucher.getVoucherManager().getLastName() + unresolvedVoucher.getVoucherManager().getFirstName(),
                 unresolvedVoucher.getClient().getCode(),
                 unresolvedVoucher.getClient().getPrintClientName(),
                 unresolvedVoucher.getTransactionDescription(),

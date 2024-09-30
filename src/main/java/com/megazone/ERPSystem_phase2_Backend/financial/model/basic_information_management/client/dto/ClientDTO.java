@@ -4,6 +4,9 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import com.megazone.ERPSystem_phase2_Backend.financial.model.common.dto.AddressDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.common.dto.BankDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.EmployeeDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.EmploymentStatus;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.EmploymentType;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -25,7 +28,7 @@ public class ClientDTO {
     private LiquorDTO liquor; // 주류 정보
     private BankAccountDTO bankAccount; // 은행 계좌 정보
     private CategoryDTO category; // 거래처 분류 정보
-    private Employee employee; // 담당자 정보
+    private EmployeeDTO employee; // 담당자 정보
 
     private String code; // 거래처 코드
     private String transactionType; // 거래 유형
@@ -72,21 +75,13 @@ public class ClientDTO {
                 client.getLiquor().getName()
         );
         this.bankAccount = new BankAccountDTO(
-                new BankDTO(
-                        client.getBankAccount().getBank().getId(),
-                        client.getBankAccount().getBank().getCode(),
-                        client.getBankAccount().getBank().getName(),
-                        client.getBankAccount().getBank().getBusinessNumber()
-                ),
-                client.getBankAccount().getAccountNumber(),
-                client.getBankAccount().getAccountHolder()
         );
         this.category = new CategoryDTO(
                 client.getCategory().getId(),
                 client.getCategory().getCode(),
                 client.getCategory().getName()
         );
-        this.employee = client.getEmployee();
+        this.employee = EmployeeDTO.create(client.getEmployee());
         this.transactionType = client.getTransactionType().name();
         this.businessRegistrationNumber = client.getBusinessRegistrationNumber();
         this.idNumber = client.getIdNumber();
@@ -97,4 +92,5 @@ public class ClientDTO {
         this.remarks = client.getRemarks();
         this.isActive = client.getIsActive();
     }
+
 }

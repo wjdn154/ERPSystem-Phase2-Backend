@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.basic_information_management.client;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubject;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto.ClientDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.enums.TransactionType;
@@ -7,11 +8,15 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Address;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.common.AddressRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.common.BankRepository;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.PermissionDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -78,6 +83,20 @@ public class ClientServiceImpl implements ClientService {
         });
     }
 
+    @Override
+    public List<ClientDTO> searchClient(String searchText) {
+        List<Client> client;
+
+        if(searchText != null) {
+            client = clientRepository.findByPrintClientNameContaining(searchText);
+        }else {
+            client = clientRepository.findAll();
+        }
+
+        ModelMapper modelMapper = new ModelMapper();
+        return client.stream().map(c -> modelMapper.map(c, ClientDTO.class)).collect(Collectors.toList());
+    }
+
     private void updateBankAccount(ClientDTO clientDTO, Client client) {
         BankAccount bankAccount = client.getBankAccount();
         bankAccount.setBank(bankRepository.findById(clientDTO.getBankAccount().getBank().getId()).orElseThrow(() -> new RuntimeException("해당 은행이 존재하지 않습니다.")));
@@ -129,7 +148,6 @@ public class ClientServiceImpl implements ClientService {
     }
 
     private Client createClient(ClientDTO clientDTO, Client client) {
-        client.setEmployee(clientDTO.getEmployee());
         client.setTransactionType(TransactionType.valueOf(clientDTO.getTransactionType()));
         client.setPrintClientName(clientDTO.getPrintClientName());
         client.setBusinessRegistrationNumber(clientDTO.getBusinessRegistrationNumber());

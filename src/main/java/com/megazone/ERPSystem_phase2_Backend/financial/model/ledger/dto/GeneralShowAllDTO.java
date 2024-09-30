@@ -12,7 +12,13 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GeneralShowAllDTO {
+    private BigDecimal previousDebitAmount;
+    private BigDecimal previousCreditAmount;
+    private BigDecimal previousCashAmount;
     private Map<Integer,GeneralShowDTO> allShows;
+    private BigDecimal totalDebitAmount;
+    private BigDecimal totalCreditAmount;
+    private BigDecimal totalCashAmount;
 
 
     // 1월 ~ 12월 초기값 세팅
