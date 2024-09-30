@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.util.List;
 
-// 총계정원장 Api Controller
+// 총계정원장
 @RestController
 @RequiredArgsConstructor
 public class GeneralApiController {

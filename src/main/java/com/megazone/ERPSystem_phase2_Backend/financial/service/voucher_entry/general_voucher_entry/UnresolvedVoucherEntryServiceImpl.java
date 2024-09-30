@@ -41,6 +41,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
 
     // 현금 자동분개 시 필요한 계정과목 코드
     private final String cashAccountCode = "101";
+    private final String cashTransactionDescription = "현금";
 
     // 거래처 레포지토리
     // 적요 레포지토리
@@ -103,7 +104,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
                     totalCredit = totalCredit.add(dto.getCreditAmount());
                 }
 
-                if(!totalDebit.equals(totalCredit)) {
+                if(totalDebit.compareTo(totalCredit) != 0) {
                     throw new IllegalArgumentException("저장할 전표에 차액이 발생하였습니다.");
                 }
 
@@ -230,6 +231,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
             autoCreateDto.setCreditAmount(dto.getDebitAmount());
         }
         autoCreateDto.setAccountSubjectCode(cashAccountCode);
+        autoCreateDto.setTransactionDescription(cashTransactionDescription);
 
         return autoCreateDto;
     }
@@ -302,7 +304,8 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
 
     @Override
     public List<UnresolvedVoucher> voucherApprovalProcessing(UnresolvedVoucherApprovalDTO dto) {
-        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherRepository.findApprovalTypeVoucher(dto);
+        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherRepository.findAll(); // 초기 데이터 등록용
+//        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherRepository.findApprovalTypeVoucher(dto);
 
         try {
             if(dto.getApprovalStatus().equals(ApprovalStatus.PENDING)) {
