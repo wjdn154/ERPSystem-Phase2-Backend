@@ -10,6 +10,7 @@ import java.time.LocalDate;
 public class PurchaseOrderResponseDto {
     private Long id;
     private String clientName;
+    private String managerName;
     private String productName;
     private LocalDate date;
     private LocalDate deliveryDate;

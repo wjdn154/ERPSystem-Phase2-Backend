@@ -8,6 +8,8 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.PurchaseRequestDetail;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestCreateDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestResponseDetailDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestResponseDetailDto.PurchaseRequestItemDetailDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestResponseDetailDto.PurchaseRequestItemDetailDto.ClientDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestResponseDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
@@ -141,16 +143,16 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
     }
 
     // PurchaseRequestDetail 리스트 -> PurchaseRequestItemDetailDto 리스트 변환 메서드
-    private List<PurchaseRequestResponseDetailDto.PurchaseRequestItemDetailDto> toItemDetailDtoList(List<PurchaseRequestDetail> details) {
+    private List<PurchaseRequestItemDetailDto> toItemDetailDtoList(List<PurchaseRequestDetail> details) {
         return details.stream()
                 .map(this::toItemDetailDto)  // 각 상세 항목을 DTO로 변환
                 .collect(Collectors.toList());
     }
 
     // PurchaseRequestDetail 엔티티 -> PurchaseRequestItemDetailDto 변환 메서드
-    private PurchaseRequestResponseDetailDto.PurchaseRequestItemDetailDto toItemDetailDto(PurchaseRequestDetail detail) {
+    private PurchaseRequestItemDetailDto toItemDetailDto(PurchaseRequestDetail detail) {
         Product product = detail.getProduct();
-        return PurchaseRequestResponseDetailDto.PurchaseRequestItemDetailDto.builder()
+        return PurchaseRequestItemDetailDto.builder()
                 .productName(product.getName())  // 품목명
                 .productCode(product.getCode())  // 품목 코드
                 .quantity(detail.getQuantity())  // 수량
@@ -163,8 +165,8 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
     }
 
     // Client 엔티티 -> ClientDetailDto 변환 메서드
-    private PurchaseRequestResponseDetailDto.PurchaseRequestItemDetailDto.ClientDetailDto toClientDto(Client client) {
-        return PurchaseRequestResponseDetailDto.PurchaseRequestItemDetailDto.ClientDetailDto.builder()
+    private ClientDetailDto toClientDto(Client client) {
+        return ClientDetailDto.builder()
                 .clientId(client.getId())
                 .clientCode(client.getCode())
                 .clientName(client.getPrintClientName())
@@ -202,6 +204,7 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
                 .date(dto.getDate())
                 .deliveryDate(dto.getDeliveryDate())
                 .vatType(dto.getVatType())
+                .remarks(dto.getRemarks())
                 .build();
 
         return getPurchaseRequest(dto, newRequest);
@@ -245,6 +248,7 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
                     .supplyPrice(supplyPrice)  // 공급가액 (외화 또는 내화)
                     .localAmount(localAmount)  // 원화 금액 (환율 적용)
                     .vat(vat)  // 부가세 (내화일 경우에만 적용)
+                    .remarks(item.getRemarks())
                     .build();
 
             newRequest.addPurchaseRequestDetail(detail);

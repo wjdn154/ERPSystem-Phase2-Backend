@@ -66,11 +66,16 @@ public class PurchaseRequestController {
      * @return
      */
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updatePurchaseRequest(@PathVariable("id") Long id, @RequestBody PurchaseRequestCreateDto updateDto) {
+    public ResponseEntity<PurchaseRequestResponseDetailDto> updatePurchaseRequest(@PathVariable("id") Long id, @RequestBody PurchaseRequestCreateDto updateDto) {
         PurchaseRequestResponseDetailDto updatedRequest = purchaseRequestService.updatePurchaseRequest(id, updateDto);
         return ResponseEntity.ok(updatedRequest);
     }
 
+    /**
+     * 발주요청 삭제
+     * @param id
+     * @return
+     */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deletePurchaseRequest(@PathVariable("id") Long id) {
         String result = purchaseRequestService.deletePurchaseRequest(id);

@@ -4,19 +4,18 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 발주서 테이블
  * 발주서에 대한 정보가 있는 테이블
  */
 @Entity
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,6 +25,11 @@ public class PurchaseOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // 발주서 상세와의 일대다 관계
+    @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<PurchaseOrderDetail> purchaseOrderDetails = new ArrayList<>();
 
     // 발주 요청 - N : 1
     @ManyToOne(fetch = FetchType.LAZY)
@@ -74,4 +78,9 @@ public class PurchaseOrder {
     @Builder.Default
     private State status = State.WAITING_FOR_PURCHASE;
 
+    // 발주서 상세 항목 추가 메서드
+    public void addPurchaseOrderDetail(PurchaseOrderDetail detail) {
+        purchaseOrderDetails.add(detail);
+        detail.setPurchaseOrder(this); // 양방향 관계 설정
+    }
 }
