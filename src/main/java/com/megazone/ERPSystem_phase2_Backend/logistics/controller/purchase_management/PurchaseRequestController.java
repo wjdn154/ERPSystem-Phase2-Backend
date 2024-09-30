@@ -3,7 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.controller.purchase_mana
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestCreateDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestResponseDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestResponseDto;
-import com.megazone.ERPSystem_phase2_Backend.logistics.service.purchase_management.PurchaseRequestService;
+import com.megazone.ERPSystem_phase2_Backend.logistics.service.purchase_management.purchase_request.PurchaseRequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

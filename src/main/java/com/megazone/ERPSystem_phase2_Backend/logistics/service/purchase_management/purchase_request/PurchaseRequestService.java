@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.service.purchase_management;
+package com.megazone.ERPSystem_phase2_Backend.logistics.service.purchase_management.purchase_request;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestCreateDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestResponseDetailDto;

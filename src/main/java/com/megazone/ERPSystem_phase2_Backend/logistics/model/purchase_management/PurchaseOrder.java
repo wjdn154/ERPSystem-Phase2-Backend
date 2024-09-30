@@ -1,5 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,52 +27,34 @@ public class PurchaseOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 발주 계획 외래 키
-    @ManyToOne
-    @JoinColumn(name = "purchase_plan_id")
-    private PurchasePlan purchasePlan;
+    // 발주 요청 - N : 1
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "purchase_request_id", nullable = false)
+    private PurchaseRequest purchaseRequest;
 
-    // 발주서와 구매서 간의 일대일 관계
-    @OneToOne(mappedBy = "purchaseOrder")
-    private Purchase purchase;
+    // 거래처 - N : 1
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
 
-    // 거래처_id - N : 1
-    @Column(nullable = false)
-    private Long clientId;
-
-    // 사원_id - N : 1
-    @Column(nullable = false)
-    private Long employeeId;
+    // 사원(담당자) - N : 1
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "manager_id", nullable = false)
+    private Employee manager;
 
     // 창고_id - 입고될 창고
-    @ManyToOne
-    @JoinColumn(name = "warehouse_id")
-    private Warehouse warehouse;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "warehouse_id", nullable = false)
+    private Warehouse receivingWarehouse;
 
     // 통화_id
-    @ManyToOne
-    @JoinColumn(name = "currency_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "currency_id", nullable = false)
     private Currency currency;
-
-    // 품목_id
-    @Column
-    private Long productId;
-
-    // 수량
-    @Column(nullable = false )
-    private Integer quantity;
-
-    // 공급가액 - 수량 * 단가
-    @Column(nullable = false)
-    private Double supplyPrice;
 
     // 부가세율 적용 or 미적용
     @Column(nullable = false)
     private Boolean vatType;
-
-    // 부가세 - 공급가액의 10%
-    @Column
-    private Double vat;
 
     // 납기 일자
     @Column(nullable = false)
@@ -83,5 +67,11 @@ public class PurchaseOrder {
     // 비고
     @Column
     private String remarks;
+
+    // 진행 상태
+    @Column
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private State status = State.WAITING_FOR_PURCHASE;
 
 }

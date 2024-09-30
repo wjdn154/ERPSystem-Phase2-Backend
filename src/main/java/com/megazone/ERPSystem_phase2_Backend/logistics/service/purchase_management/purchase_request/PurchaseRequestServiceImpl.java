@@ -1,14 +1,11 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.service.purchase_management;
+package com.megazone.ERPSystem_phase2_Backend.logistics.service.purchase_management.purchase_request;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.Currency;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.PurchaseRequest;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.PurchaseRequestDetail;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.State;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestCreateDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestResponseDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestResponseDto;
@@ -16,11 +13,10 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_managemen
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.purchase_management.CurrencyRepository;
-import com.megazone.ERPSystem_phase2_Backend.logistics.repository.purchase_management.PurchaseRequestRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.purchase_management.purchase_request.PurchaseRequestRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -206,7 +202,6 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
                 .date(dto.getDate())
                 .deliveryDate(dto.getDeliveryDate())
                 .vatType(dto.getVatType())
-                .status(State.IN_PROGRESS)
                 .build();
 
         return getPurchaseRequest(dto, newRequest);
@@ -311,6 +306,11 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
         }
     }
 
+    /**
+     * 발주 요청 삭제
+     * @param id
+     * @return
+     */
     @Override
     public String deletePurchaseRequest(Long id) {
 

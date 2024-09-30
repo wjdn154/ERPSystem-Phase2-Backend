@@ -26,15 +26,15 @@ public class PurchaseRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 발주 요청과 발주 계획 간의 중간 엔티티와의 일대다 관계
-    @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<PurchasePlanRequest> purchasePlanRequests = new ArrayList<>();
-
     // 발주 요청 상세와의 일대다 관계
     @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<PurchaseRequestDetail> purchaseRequestDetails = new ArrayList<>();
+
+    // 발주서와의 일대다 관계
+    @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<PurchaseOrder> purchaseOrders = new ArrayList<>();
 
     // 사원(담당자) - N : 1
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -71,7 +71,7 @@ public class PurchaseRequest {
     @Column
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private State status = State.IN_PROGRESS;
+    private State status = State.PURCHASE_COMPLETED;
 
     // 발주 요청 상세 항목 추가 메서드
     public void addPurchaseRequestDetail(PurchaseRequestDetail detail) {
