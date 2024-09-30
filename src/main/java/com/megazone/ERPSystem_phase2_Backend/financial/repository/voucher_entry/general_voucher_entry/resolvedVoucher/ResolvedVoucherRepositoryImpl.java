@@ -86,8 +86,8 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
         return queryFactory
                 .selectDistinct(
                         qResolvedVoucher.accountSubject.id,
-                        qResolvedVoucher.accountSubject.code,
-                        qResolvedVoucher.accountSubject.name
+                        qResolvedVoucher.accountSubject.name,
+                        qResolvedVoucher.accountSubject.code
                 )
                 .from(qResolvedVoucher)
                 .where(qResolvedVoucher.voucherDate.between(dto.getStartDate(), dto.getEndDate())
@@ -97,8 +97,8 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                 .stream()
                 .map(tuple -> GeneralAccountListDTO.create(
                         tuple.get(qResolvedVoucher.accountSubject.id),
-                        tuple.get(qResolvedVoucher.accountSubject.code),
-                        tuple.get(qResolvedVoucher.accountSubject.name)
+                        tuple.get(qResolvedVoucher.accountSubject.name),
+                        tuple.get(qResolvedVoucher.accountSubject.code)
                 ))
                 .toList();
     }
