@@ -26,6 +26,7 @@ public class JournalShowDetailDTO {
     private String voucherManagerName;
     private String clientCode;
     private String clientName;
+    private String clientRegisterNumber;
     private String representativeName;
     private String transactionDescription;
     private BigDecimal debitAmount;
@@ -44,6 +45,7 @@ public class JournalShowDetailDTO {
                 unresolvedVoucher.getVoucherManager().getLastName() + unresolvedVoucher.getVoucherManager().getFirstName(),
                 unresolvedVoucher.getClient().getCode(),
                 unresolvedVoucher.getClient().getPrintClientName(),
+                unresolvedVoucher.getClient().getBusinessRegistrationNumber(),
                 unresolvedVoucher.getClient().getRepresentativeName(),
                 unresolvedVoucher.getTransactionDescription(),
                 unresolvedVoucher.getDebitAmount(),
