@@ -32,7 +32,7 @@ public class GeneralApiController {
                 ResponseEntity.status(HttpStatus.OK).body(generalShowDTOS);
     }
 
-    @PostMapping("/api/financial/ledget/general/selectShow")
+    @PostMapping("/api/financial/ledger/general/selectShow")
     public ResponseEntity<GeneralShowAllDTO> selectGeneralShow(@RequestBody GeneralSelectDTO dto) {
 
         GeneralShowAllDTO generalShowAllDTO = generalService.getGeneralSelectShow(dto);
