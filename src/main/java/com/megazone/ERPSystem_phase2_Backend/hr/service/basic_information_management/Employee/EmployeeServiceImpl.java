@@ -85,6 +85,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         dto.setDepartmentName(employee.getDepartment().getDepartmentName());
         dto.setPositionName(employee.getPosition().getPositionName());
         dto.setJobTitleName(employee.getJobTitle().getTitleName());
+        dto.setBankAccountName(employee.getBankAccount().getBankName());
         dto.setBankAccountNumber(employee.getBankAccount().getAccountNumber());
         return dto;
     }
@@ -131,10 +132,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         dto.setBankAccountId(employee.getBankAccount().getId());
         return dto;
     }
-//    public void deleteEmployeeById(Long id) {
-//        employeeRepository.deleteById(id); // DB에서 사원을 삭제
-//    }
 
+
+    // 사원 정보 수정
     @Override
     public Optional<EmployeeFindDTO> updateEmployee(Long id, EmployeeDataDTO dto) {
         // id 에 해당하는 엔티티 데이터 조회
@@ -176,11 +176,12 @@ public class EmployeeServiceImpl implements EmployeeService {
                 employee.setJobTitle(jobTitle);
             }
 
-            // BankAccount 설정
-            if (dto.getBankAccountId() != null) {
-                BankAccount bankAccount = bankAccountRepository.findById(dto.getBankAccountId())
-                        .orElseThrow(() -> new EntityNotFoundException("계좌를 찾을 수 없습니다"));
-                employee.setBankAccount(bankAccount);
+            // BankAccount는 무조건 존재해야 하므로, 예외 없이 수정 처리
+            BankAccount currentBankAccount = employee.getBankAccount();
+            if (currentBankAccount != null) {
+                currentBankAccount.setAccountNumber(dto.getAccountNumber());
+                currentBankAccount.setBankName(dto.getBankName());
+                bankAccountRepository.save(currentBankAccount);  // 변경사항 저장
             }
 
             // 3. 엔티티 저장
