@@ -29,6 +29,17 @@ public class AttendanceController {
         return ResponseEntity.ok(attendanceshowRecords);
     }
 
+    // 근태 삭제
+    @PostMapping("/del/{employeeId}")
+    public ResponseEntity<String> deleteAttendanceRecord(@PathVariable Long employeeId){
+        boolean isDeleted = attendanceService.deleteAttendanceRecord(employeeId);
+        if(isDeleted){
+            return ResponseEntity.ok("근태 기록이 삭제되었습니다.");
+        } else{
+            return ResponseEntity.status(404).body("사원에 맞는 근태 기록이 없습니다.");
+        }
+    }
+
     // 사원 근태 수정
 //    @PostMapping("/records/update/{employeeId}")
 //    public ResponseEntity

@@ -1,15 +1,9 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.Currency;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,7 +15,7 @@ import java.util.List;
  * 각 부서 담당자는 구매 관리 부서에 발주를 요청하기 위해 발주 요청을 한다.
  */
 @Entity
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,15 +26,15 @@ public class PurchaseRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 발주 요청과 발주 계획 간의 중간 엔티티와의 일대다 관계
-    @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<PurchasePlanRequest> purchasePlanRequests = new ArrayList<>();
-
     // 발주 요청 상세와의 일대다 관계
     @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<PurchaseRequestDetail> purchaseRequestDetails = new ArrayList<>();
+
+    // 발주서와의 일대다 관계
+    @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<PurchaseOrder> purchaseOrders = new ArrayList<>();
 
     // 사원(담당자) - N : 1
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -77,5 +71,17 @@ public class PurchaseRequest {
     @Column
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private State status = State.IN_PROGRESS;
+    private State status = State.PURCHASE_COMPLETED;
+
+    // 발주 요청 상세 항목 추가 메서드
+    public void addPurchaseRequestDetail(PurchaseRequestDetail detail) {
+        purchaseRequestDetails.add(detail);
+        detail.setPurchaseRequest(this);  // 양방향 관계 설정
+    }
+
+    // 발주 요청 상세 항목 삭제 메서드
+    public void removePurchaseRequestDetail(PurchaseRequestDetail detail) {
+        purchaseRequestDetails.remove(detail);
+        detail.setPurchaseRequest(null);
+    }
 }

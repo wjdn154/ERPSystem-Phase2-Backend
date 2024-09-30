@@ -74,8 +74,16 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     // 부서에 속한 사원이 있는지 확인
     public boolean hasEmployees(Long departmentId) {
-        // 부서에 속한 사원이 있는지 employeeRepository를 통해 확인
-        return employeeRepository.existsByDepartmentId(departmentId);
+        // 한 번만 existsByDepartmentId 호출하여 결과를 저장
+        boolean hasEmployees = employeeRepository.existsByDepartmentId(departmentId);
+
+        // 사원이 있을 경우 예외를 던짐
+        if (hasEmployees) {
+            throw new RuntimeException("해당 부서에 속한 사원이 있어 삭제할 수 없습니다.");
+        }
+
+        // 사원이 없으면 false 반환
+        return hasEmployees;
     }
 
     // 부서 삭제 로직

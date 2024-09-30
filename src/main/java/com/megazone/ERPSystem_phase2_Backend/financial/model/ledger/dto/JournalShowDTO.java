@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class JournalShowDTO {
-    private List<JournalShowDetailDTO> resolvedVoucherShowAllDTO;
+    private List<JournalShowDetailDTO> journalShowDetailDTO;
     private BigDecimal totalDebit;
     private BigDecimal totalCredit;
     private BigDecimal totalVoucherCount;
