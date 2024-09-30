@@ -5,7 +5,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.bom;
  * Standard Bom을 참조하여 기존 필드를 모두 포함하되, 친환경 관련 필드들을 추가함.
  */
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.HazardousMaterialType;
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enums.HazardLevel;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,7 +32,7 @@ public class GreenBom {
 
     @ElementCollection
     @Enumerated(EnumType.STRING)
-    private List<HazardousMaterialType> hazardousMaterials; // 유해 물질 정보
+    private List<HazardLevel> hazardousMaterials; // 유해 물질 정보
 
     @Column(nullable = false)
     private Boolean recyclable = false; // 재활용 가능 여부, 기본값 false
