@@ -28,5 +28,6 @@ public class EmployeeDataDTO {
     private Long departmentId; // 부서 ID
     private Long positionId; // 직위 ID
     private Long jobTitleId; // 직책 ID
-    private Long bankAccountId; // 은행 계좌 ID
+    private String accountNumber;  // 계좌 번호
+    private String bankName;       // 은행 이름
 }

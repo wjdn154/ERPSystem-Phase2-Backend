@@ -32,9 +32,6 @@ public class EmployeeFindDTO {
     private Long positionId; // 직위 ID
     private Long jobTitleId; // 직책 ID
     private Long bankAccountId; // 은행 계좌 ID
-    //private DepartmentDTO departmentName; // 부서 이름
-    //private PositionDTO positionName; // 직위 이름
-    //private JobTitleDTO jobTitleName; // 직책 이름
-    //private BankAccountDTO bankAccountNumber; // 계좌 번호
+
 
 }
