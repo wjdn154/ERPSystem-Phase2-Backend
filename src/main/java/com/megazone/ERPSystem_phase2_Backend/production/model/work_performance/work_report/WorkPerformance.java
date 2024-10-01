@@ -3,9 +3,10 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionOrder;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.goods_receipt.enums.WorkStatus;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.enums.WorkStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,7 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class WorkPerformance {
 
     @Id
@@ -29,7 +31,7 @@ public class WorkPerformance {
     @Column(nullable = false)
     private String name;    // 작업실적명
 
-    @Column(nullable = true)
+    @Column
     private String description;   // 추가 설명 또는 비고
 
     @Column(nullable = false)
@@ -41,7 +43,7 @@ public class WorkPerformance {
      * 풀량품 처리 비용(불량품 수량 x 뷸량품 처리 단가)
      * */
     @Column(nullable = false)
-    private BigDecimal WorkCost;
+    private BigDecimal workCost;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * 생산 관리 담당자는 생산완료하여 품질검사를 통과한 품목에 한하여 LOT, Serial No. 부여 후 입고 처리 등록할 수 있어야 한다.
  * 단, 품질검사에 통과하지 못한 제품은 입고 등록이 불가능해야 한다. 입고 처리 시, 제품이 입고될 창고를 선택할 수 있어야 한다.
+ * 품질검사 통과여부에서 true인것만 입고 등록 가능.
  */
 
 @Entity(name = "quality_control_inbound_registration")

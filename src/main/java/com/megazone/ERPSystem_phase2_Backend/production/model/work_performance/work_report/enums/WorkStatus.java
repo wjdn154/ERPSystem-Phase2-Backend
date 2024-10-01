@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.goods_receipt.enums;
+package com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.enums;
 
 /**작업 상태
  * */
