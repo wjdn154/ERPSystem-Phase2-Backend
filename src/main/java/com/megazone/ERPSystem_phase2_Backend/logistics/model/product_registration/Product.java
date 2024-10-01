@@ -49,6 +49,14 @@ public class Product {
     @ToString.Exclude
     private ProcessRouting processRouting;
 
+    // 이미지 파일 경로
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "image_path")
+//    private ProductImage imagePath;
+    @Column
+    private String imagePath;
+
+
     // 품목구분 (Enum)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -73,10 +81,6 @@ public class Product {
     // 단위
     @Column(nullable = false)
     private String unit;
-
-    // 이미지 파일 경로
-    @Column
-    private String imagePath;
 
     // 비고
     @Column
