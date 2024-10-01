@@ -67,7 +67,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService{
     private PurchaseOrderResponseDto toListDto(PurchaseOrder purchaseOrder) {
         return PurchaseOrderResponseDto.builder()
                 .id(purchaseOrder.getId())
-                .clientName(getClientNameFromFirstProduct(purchaseOrder))  // 첫 번째 품목의 거래처 이름
+                .clientName(purchaseOrder.getClient().getPrintClientName())  // 첫 번째 품목의 거래처 이름
                 .managerName(purchaseOrder.getManager().getLastName() + purchaseOrder.getManager().getFirstName())
                 .productName(getProductNameWithCount(purchaseOrder))  // 첫 번째 품목 이름과 "외 몇건" 추가
                 .date(purchaseOrder.getDate())
@@ -80,21 +80,21 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService{
 
     // 총 금액 계산
     private Double getTotalPrice(PurchaseOrder purchaseOrder) {
-        return purchaseOrder.getPurchaseRequest().getPurchaseRequestDetails().stream()
-                .mapToDouble(PurchaseRequestDetail::getSupplyPrice)
+        return purchaseOrder.getPurchaseOrderDetails().stream()
+                .mapToDouble(PurchaseOrderDetail::getSupplyPrice)
                 .sum();
     }
 
     // 총 수량 계산
     private Integer getTotalQuantity(PurchaseOrder purchaseOrder) {
-        return purchaseOrder.getPurchaseRequest().getPurchaseRequestDetails().stream()
-                .mapToInt(PurchaseRequestDetail::getQuantity)
+        return purchaseOrder.getPurchaseOrderDetails().stream()
+                .mapToInt(PurchaseOrderDetail::getQuantity)
                 .sum();
     }
 
     // 첫 번째 품목 이름과 외 몇건 처리
     private String getProductNameWithCount(PurchaseOrder purchaseOrder) {
-        List<PurchaseRequestDetail> details = purchaseOrder.getPurchaseRequest().getPurchaseRequestDetails();
+        List<PurchaseOrderDetail> details = purchaseOrder.getPurchaseOrderDetails();
 
         if (details.isEmpty()) {
             return "품목 없음";  // 품목이 없을 경우 처리
@@ -109,15 +109,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService{
             return firstProductName;  // 품목이 하나일 경우 그냥 첫 번째 품목 이름만 반환
         }
     }
-
-    // 첫 번째 품목의 거래처 이름 가져오기
-    private String getClientNameFromFirstProduct(PurchaseOrder purchaseOrder) {
-        if (purchaseOrder.getPurchaseRequest().getId() != null) {
-            return purchaseOrder.getPurchaseRequest().getPurchaseRequestDetails().get(0).getProduct().getClient().getPrintClientName();
-        }
-        return purchaseOrder.getClient().getPrintClientName();
-    }
-
 
     /**
      * 발주서 상세 정보 조회

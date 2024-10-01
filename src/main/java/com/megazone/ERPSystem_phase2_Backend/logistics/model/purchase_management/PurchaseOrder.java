@@ -27,13 +27,13 @@ public class PurchaseOrder {
     private Long id;
 
     // 발주서 상세와의 일대다 관계
-    @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "purchaseOrder", orphanRemoval = true)
     @Builder.Default
     private List<PurchaseOrderDetail> purchaseOrderDetails = new ArrayList<>();
 
     // 발주 요청 - N : 1
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "purchase_request_id", nullable = false)
+    @JoinColumn(name = "purchase_request_id", nullable = true)
     private PurchaseRequest purchaseRequest;
 
     // 거래처 - N : 1

@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PurchaseOrderCreateDto {
+    private Long purchaseRequestId;
     private Long clientId;
     private Long managerId;
     private Long warehouseId;
