@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**품질검사
+ * */
 @Entity
 @Data
 @NoArgsConstructor

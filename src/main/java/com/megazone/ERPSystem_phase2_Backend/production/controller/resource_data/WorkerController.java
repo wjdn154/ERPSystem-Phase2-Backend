@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.production.controller.resource_data.equipment;
+package com.megazone.ERPSystem_phase2_Backend.production.controller.resource_data;
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
