@@ -1,6 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse_location.WarehouseLocation;
@@ -29,15 +28,13 @@ public class Inventory {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    private String standard;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name= "warehouse_location_id", nullable = false)
+    private WarehouseLocation warehouseLocation;
+
+    @Column(name = "standard")
+    private String standard;  // 재고의 기준 (예: 단위, 규격 등)
 
     @Column(name = "quantity", nullable = false)
     private Long quantity;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "warehouse_location_id", nullable = false)
-    private WarehouseLocation warehouseLocation;
-
-    @Column(name = "batch_number")
-    private String batchNumber;
 }
