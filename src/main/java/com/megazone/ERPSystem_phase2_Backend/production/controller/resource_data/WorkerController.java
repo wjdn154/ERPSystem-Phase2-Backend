@@ -27,11 +27,9 @@ public class WorkerController {
     @PostMapping("/workers")
     public ResponseEntity<List<ListWorkerDTO>> allWorkers() {
 
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = user.getCompany().getId();
 
         //서비스에서 회사아이디에 해당하는 부서가 생산인 모든 작업자 정보를 가져옴
-        List<ListWorkerDTO> result = workerService.findAllWorker(companyId);
+        List<ListWorkerDTO> result = workerService.findAllWorker();
 
         return (result != null)?
                 ResponseEntity.status(HttpStatus.OK).body(result):
