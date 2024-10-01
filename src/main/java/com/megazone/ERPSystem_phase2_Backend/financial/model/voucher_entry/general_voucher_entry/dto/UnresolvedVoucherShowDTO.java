@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,6 +26,7 @@ public class UnresolvedVoucherShowDTO {
     private String transactionDescription;
     private BigDecimal debitAmount;
     private BigDecimal creditAmount;
+    private ApprovalStatus approvalStatus;
 
     public static UnresolvedVoucherShowDTO create(UnresolvedVoucher unresolvedVoucher) {
         return new UnresolvedVoucherShowDTO(
@@ -39,7 +41,8 @@ unresolvedVoucher.getVoucherManager().getLastName() + unresolvedVoucher.getVouch
                 unresolvedVoucher.getClient().getPrintClientName(),
                 unresolvedVoucher.getTransactionDescription(),
                 unresolvedVoucher.getDebitAmount(),
-                unresolvedVoucher.getCreditAmount()
+                unresolvedVoucher.getCreditAmount(),
+                unresolvedVoucher.getApprovalStatus()
         );
     }
 }

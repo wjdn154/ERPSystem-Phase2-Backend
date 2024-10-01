@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,10 +31,21 @@ public class UnresolvedSaleAndPurchaseVoucherRepositoryImpl implements Unresolve
 
         List<UnresolvedSaleAndPurchaseVoucher> results = queryFactory.selectFrom(qUnresolvedVoucher)
                 .where(qUnresolvedVoucher.voucherDate.eq(dto.getSearchDate())
-                        .and(qUnresolvedVoucher.voucherNumber.in(dto.getSearchVoucherNumList()))
+                                .and(qUnresolvedVoucher.voucherNumber.in(dto.getSearchVoucherNumberList()))
                         .and(qUnresolvedVoucher.approvalStatus.eq(ApprovalStatus.PENDING)))
                 .fetch();
 
+        return results;
+    }
+
+    @Override
+    public List<UnresolvedSaleAndPurchaseVoucher> ApprovalAllSearch(LocalDate voucherDate) {
+        QUnresolvedSaleAndPurchaseVoucher qUnresolvedVoucher = QUnresolvedSaleAndPurchaseVoucher.unresolvedSaleAndPurchaseVoucher;
+
+        List<UnresolvedSaleAndPurchaseVoucher> results = queryFactory.selectFrom(qUnresolvedVoucher)
+                .where(qUnresolvedVoucher.voucherDate.eq(voucherDate)
+                        .and(qUnresolvedVoucher.approvalStatus.ne(ApprovalStatus.APPROVED)))
+                .fetch();
         return results;
     }
 }

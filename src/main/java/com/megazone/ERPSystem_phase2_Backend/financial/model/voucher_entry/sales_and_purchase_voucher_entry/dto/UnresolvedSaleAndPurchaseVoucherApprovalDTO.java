@@ -4,6 +4,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.gener
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.tools.ant.taskdefs.Local;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,8 +14,8 @@ import java.util.List;
 @Data
 public class UnresolvedSaleAndPurchaseVoucherApprovalDTO {
     private LocalDate searchDate;
-    private List<String> searchVoucherNumList;
-    private Long approvalManagerId; // 담당자 ID
+    private List<String> searchVoucherNumberList;
+    private Long approvalManagerId; // 승인권자 ID
     private ApprovalStatus approvalStatus;
 
     public String approvalResult() {
@@ -25,9 +26,6 @@ public class UnresolvedSaleAndPurchaseVoucherApprovalDTO {
                 break;
             case REJECTED:
                 approvalResult = "반려";
-                break;
-            case PENDING:
-                approvalResult = "승인대기";
                 break;
         }
         return approvalResult;
