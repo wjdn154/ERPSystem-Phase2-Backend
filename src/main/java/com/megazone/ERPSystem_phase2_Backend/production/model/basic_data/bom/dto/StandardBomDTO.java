@@ -1,6 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.bom.dto;
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.outsourcing.OutsourcingType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,10 +19,12 @@ import java.util.List;
 public class StandardBomDTO {
 
     private Long id;
+//    @NotBlank(message = "BOM 코드(bomCode)는 필수 입력값입니다.")
     private String bomCode;               // BOM 코드
     private String bomName;               // BOM 이름
     private Double lossRate;              // BOM 전체 손실율
     private LocalDateTime createdDate; // BOM 생성일자
+//    @NotNull(message = "Version은 필수 입력값입니다.")
     private Double version; // BOM 버전
 
     private List<BomMaterialDTO> bomMaterials; // 자재 목록

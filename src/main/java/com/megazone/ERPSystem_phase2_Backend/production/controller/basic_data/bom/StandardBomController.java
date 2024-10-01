@@ -34,7 +34,7 @@ public class StandardBomController {
 
     // 특정 BOM 조회
     @PostMapping("/{id}")
-    public ResponseEntity<?> getStandardBomById(@PathVariable Long id) {
+    public ResponseEntity<?> getStandardBomById(@PathVariable("id") Long id) {
 
         try {
             StandardBomDTO bomDTO = standardBomService.getStandardBomById(id);
@@ -65,7 +65,7 @@ public class StandardBomController {
 
     // BOM 업데이트
     @PostMapping("update/{id}")
-    public ResponseEntity<Map<String, ?>> updateStandardBom(@PathVariable Long id, @RequestBody StandardBomDTO updatedBomDTO) {
+    public ResponseEntity<Map<String, ?>> updateStandardBom(@PathVariable("id") Long id, @RequestBody StandardBomDTO updatedBomDTO) {
         Map<String, Object> response = new HashMap<>();
 
         try {
@@ -94,7 +94,7 @@ public class StandardBomController {
 
     // BOM 삭제
     @PostMapping("delete/{id}")
-    public ResponseEntity<?> deleteStandardBom(@PathVariable Long id) {
+    public ResponseEntity<?> deleteStandardBom(@PathVariable("id") Long id) {
         try {
             StandardBomDTO deletedBom = standardBomService.deleteStandardBom(id);
             return ResponseEntity.ok("성공적으로 삭제되었습니다: " + deletedBom);
@@ -107,7 +107,7 @@ public class StandardBomController {
 
     // BOM 정전개: 하위 BOM 조회
     @PostMapping("/forward-explosion/{parentProductId}")
-    public ResponseEntity<?> getChildBoms(@PathVariable Long parentProductId) {
+    public ResponseEntity<?> getChildBoms(@PathVariable("parentProductId") Long parentProductId) {
 
         try {
             List<StandardBomDTO> childBoms = standardBomService.getChildBoms(parentProductId, new HashSet<>());
@@ -124,7 +124,7 @@ public class StandardBomController {
     }
 
     @PostMapping("/backward-explosion/{childProductId}")
-    public ResponseEntity<?> getParentBom(@PathVariable Long childProductId) {
+    public ResponseEntity<?> getParentBom(@PathVariable("childProductId") Long childProductId) {
         try {
             StandardBomDTO parentBom = standardBomService.getParentBom(childProductId);
             return ResponseEntity.ok(parentBom);

@@ -134,7 +134,7 @@ public class ProcessRoutingServiceImpl implements ProcessRoutingService {
                     RoutingStepId id = new RoutingStepId(routing.getId(), processId);
 
                     ProcessDetails processDetails = processDetailsRepository.findById(processId)
-                            .orElseThrow(() -> new IllegalArgumentException("Invalid Process ID: " + processId));
+                            .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 공정 ID입니다: " + processId));
 
                     return RoutingStep.builder()
                             .id(id)
@@ -184,13 +184,13 @@ public class ProcessRoutingServiceImpl implements ProcessRoutingService {
      */
     private Long getProcessIdByCodeOrName(ProcessDetailsDTO processDetailsDTO) {
         if (processDetailsDTO == null) {
-            throw new IllegalArgumentException("ProcessDetailsDTO cannot be null");
+            throw new IllegalArgumentException("생산공정 데이터가 비어 있습니다.");
         }
         // 우선 코드로 조회, 없으면 이름으로 조회
         return processDetailsRepository.findByCode(processDetailsDTO.getCode())
                 .map(ProcessDetails::getId)
                 .or(() -> processDetailsRepository.findByName(processDetailsDTO.getName()).map(ProcessDetails::getId))
-                .orElseThrow(() -> new IllegalArgumentException("ProcessDetails not found with code or name: "
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 생산공정의 코드나 이름을 찾을 수 없습니다: "
                         + processDetailsDTO.getCode() + ", " + processDetailsDTO.getName()));
     }
 

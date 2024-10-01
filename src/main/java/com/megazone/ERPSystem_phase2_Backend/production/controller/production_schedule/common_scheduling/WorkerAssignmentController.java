@@ -1,13 +1,10 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.production_schedule.common_scheduling;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
-import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentCountDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentSummaryDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.common_scheduling.WorkerAssignment.WorkerAssignmentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -23,19 +20,19 @@ public class WorkerAssignmentController {
 
     // 전체 작업장별 배정된 인원수 조회
     @PostMapping("/workcenters/count")
-    public List<WorkerAssignmentDTO> getAllWorkcentersWorkerCount() {
+    public List<WorkerAssignmentCountDTO> getAllWorkcentersWorkerCount() {
         return workerAssignmentService.getAllWorkcentersWorkerCount();
     }
 
     // 특정 작업장 배정된 작업자 명단 조회
     @PostMapping("/workcenter/{workcenterCode}")
-    public List<WorkerAssignmentDTO> getWorkersByWorkcenterCode(@PathVariable String workcenterCode) {
+    public List<WorkerAssignmentDTO> getWorkersByWorkcenterCode(@PathVariable("workcenterCode") String workcenterCode) {
         return workerAssignmentService.getWorkersByWorkcenterCode(workcenterCode);
     }
 
     // 특정 날짜에 작업자 배정 상태 확인
     @PostMapping("/check")
-    public boolean isWorkerAlreadyAssigned(@RequestParam Long workerId, @RequestParam LocalDate date) {
+    public boolean isWorkerAlreadyAssigned(@RequestParam(value = "workerId") Long workerId, @RequestParam(value = "date") LocalDate date) {
         return workerAssignmentService.isWorkerAlreadyAssigned(workerId, date);
     }
 
@@ -44,15 +41,15 @@ public class WorkerAssignmentController {
     // 일별 모든 작업장의 작업자 배정 이력 조회
     @PostMapping("/daily")
     public WorkerAssignmentSummaryDTO getDailyWorkerAssignments(
-            @RequestParam LocalDate date,
-            @RequestParam(required = false, defaultValue = "false") boolean includeShiftType,
-            @RequestParam(required = false) Long shiftTypeId) {
+            @RequestParam(value = "date") LocalDate date,
+            @RequestParam(value = "includeShiftType", required = false, defaultValue = "false") boolean includeShiftType,
+            @RequestParam(value = "shiftTypeId", required = false) Long shiftTypeId) {
         return workerAssignmentService.getWorkerAssignmentsByDate(date, includeShiftType, shiftTypeId);
     }
 
     // 월별 모든 작업장의 작업자 배정 이력 조회
     @PostMapping("/monthly")
-    public List<WorkerAssignmentDTO> getMonthlyWorkerAssignments(@RequestParam int year, @RequestParam int month) {
+    public List<WorkerAssignmentDTO> getMonthlyWorkerAssignments(@RequestParam(value = "year") int year, @RequestParam(value = "month") int month) {
         YearMonth yearMonth = YearMonth.of(year, month);
         LocalDate startOfMonth = yearMonth.atDay(1);
         LocalDate endOfMonth = yearMonth.atEndOfMonth();
@@ -73,8 +70,8 @@ public class WorkerAssignmentController {
     // 작업장별 오늘의 배정인원 상세명단과 인원수 조회
     @PostMapping("/today/summary")
     public WorkerAssignmentSummaryDTO getTodayWorkerAssignmentsSummary(
-            @RequestParam("includeShiftType") boolean includeShiftType,
-            @RequestParam("shiftType") Long shiftTypeId) {
+            @RequestParam(value = "includeShiftType") boolean includeShiftType,
+            @RequestParam(value = "shiftType") Long shiftTypeId) {
         LocalDate today = LocalDate.now();
         return workerAssignmentService.getTodayWorkerAssignmentsSummary(today, includeShiftType, shiftTypeId);
     }
@@ -83,18 +80,18 @@ public class WorkerAssignmentController {
     // 작업지시별 작업자명단 조회 + 작업자수 조회 (프론트에서 전체조회 시 작업자수 반환, 상세조회 시 상세명단 반환)
     @PostMapping("/productionOrder/{productionOrderId}/summary")
     public WorkerAssignmentSummaryDTO getWorkerAssignmentsByProductionOrder(
-            @PathVariable Long productionOrderId,
-            @RequestParam(required = false, defaultValue = "false") boolean includeShiftType,
-            @RequestParam(required = false) Long shiftTypeId) {
+            @PathVariable("productionOrderId") Long productionOrderId,
+            @RequestParam(value = "includeShiftType", required = false, defaultValue = "false") boolean includeShiftType,
+            @RequestParam(value = "shiftTypeId", required = false) Long shiftTypeId) {
         return workerAssignmentService.getWorkerAssignmentsByProductionOrder(productionOrderId, includeShiftType, shiftTypeId);
     }
 
     // 작업자별 배치이력 조회
     @PostMapping("/worker/{workerId}/assignments")
     public List<WorkerAssignmentDTO> getWorkerAssignmentsByWorker(
-            @PathVariable Long workerId,
-            @RequestParam(required = false, defaultValue = "false") boolean includeShiftType,
-            @RequestParam(required = false) Long shiftTypeId) {
+            @PathVariable("workerId") Long workerId,
+            @RequestParam(value = "includeShiftType", required = false, defaultValue = "false") boolean includeShiftType,
+            @RequestParam(value = "shiftTypeId", required = false) Long shiftTypeId) {
         return workerAssignmentService.getWorkerAssignmentsByWorker(workerId, includeShiftType, shiftTypeId);
     }
 
