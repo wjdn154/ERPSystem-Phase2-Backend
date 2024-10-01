@@ -15,11 +15,11 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class JournalShowDTO {
-    private List<UnresolvedVoucherShowDTO> resolvedVoucherShowAllDTO;
+    private List<JournalShowDetailDTO> journalShowDetailDTO;
     private BigDecimal totalDebit;
     private BigDecimal totalCredit;
     private BigDecimal totalVoucherCount;
-    public static JournalShowDTO create(List<UnresolvedVoucherShowDTO> dtos, BigDecimal totalDebit,
+    public static JournalShowDTO create(List<JournalShowDetailDTO> dtos, BigDecimal totalDebit,
                                         BigDecimal totalCredit, BigDecimal totalVoucherCount) {
         return new JournalShowDTO(
                 dtos,
