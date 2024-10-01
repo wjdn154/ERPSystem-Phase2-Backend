@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.util.List;
 
-// 총계정원장 Api Controller
+// 총계정원장
 @RestController
 @RequiredArgsConstructor
 public class GeneralApiController {
@@ -32,7 +32,7 @@ public class GeneralApiController {
                 ResponseEntity.status(HttpStatus.OK).body(generalShowDTOS);
     }
 
-    @PostMapping("/api/financial/ledget/general/selectShow")
+    @PostMapping("/api/financial/ledger/general/selectShow")
     public ResponseEntity<GeneralShowAllDTO> selectGeneralShow(@RequestBody GeneralSelectDTO dto) {
 
         GeneralShowAllDTO generalShowAllDTO = generalService.getGeneralSelectShow(dto);

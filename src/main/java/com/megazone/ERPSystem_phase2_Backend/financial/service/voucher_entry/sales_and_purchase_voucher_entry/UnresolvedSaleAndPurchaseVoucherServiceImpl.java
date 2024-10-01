@@ -35,6 +35,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.function.Function;
 
 @Slf4j
@@ -57,7 +58,15 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
     }
 
     public UnresolvedSaleAndPurchaseVoucher create(UnresolvedSaleAndPurchaseVoucherEntryDTO dto) {
-        BigDecimal supplyAmount = createSupplyAmount(dto.getQuantity(),dto.getUnitPrice());
+
+        BigDecimal supplyAmount;
+        if(!dto.getQuantity().equals(BigDecimal.ZERO) && !dto.getUnitPrice().equals(BigDecimal.ZERO)) {
+            supplyAmount = createSupplyAmount(dto.getQuantity(),dto.getUnitPrice());
+        }
+        else {
+            supplyAmount = dto.getSupplyAmount();
+        }
+
 
         VatType vatType = vatTypeRepository.findByCode(dto.getVatTypeCode());
         // 분개유형설정 회사별로 달라야함
@@ -103,7 +112,10 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
     }
 
     public String createTransactionDescription(String itemName, BigDecimal quantity, BigDecimal unitPrice) {
-        return itemName + quantity + " X " + unitPrice;
+        if(!quantity.equals(BigDecimal.ZERO) && !unitPrice.equals(BigDecimal.ZERO)) {
+            return itemName + quantity + " X " + unitPrice;
+        }
+        return itemName;
 
     }
 
@@ -152,7 +164,8 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
         AccountSubject vatTypeAccountSubject = voucher.getVatType().getAccountSubject();
         Client client = voucher.getClient();
         Employee employee = voucher.getVoucherManager();
-        BigDecimal supplyAmount = createSupplyAmount(voucher.getQuantity(), voucher.getUnitPrice());
+        BigDecimal supplyAmount = !voucher.getSupplyAmount().equals(BigDecimal.ZERO) ? voucher.getSupplyAmount() :
+                createSupplyAmount(voucher.getQuantity(), voucher.getUnitPrice());
         BigDecimal vatAmount = createVatAmount(supplyAmount,voucher.getVatType().getTaxRate());
         String itemName = voucher.getItemName();
         BigDecimal quantity = voucher.getQuantity();
@@ -355,7 +368,8 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
     @Override
     public List<UnresolvedSaleAndPurchaseVoucher> ApprovalProcessing(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto) {
 
-        List<UnresolvedSaleAndPurchaseVoucher> unresolvedVoucherList = unresolvedSaleAndPurchaseVoucherRepository.findApprovalTypeVoucher(dto);
+//        List<UnresolvedSaleAndPurchaseVoucher> unresolvedVoucherList = unresolvedSaleAndPurchaseVoucherRepository.findApprovalTypeVoucher(dto);
+        List<UnresolvedSaleAndPurchaseVoucher> unresolvedVoucherList = unresolvedSaleAndPurchaseVoucherRepository.findAll(); // 초기 데이터 등록용
         try {
             if(dto.getApprovalStatus().equals(ApprovalStatus.PENDING)) {
                 throw new IllegalArgumentException("승인 대기 상태로는 변경할 수 없습니다.");

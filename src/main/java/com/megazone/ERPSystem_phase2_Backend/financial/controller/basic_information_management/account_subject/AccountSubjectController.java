@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.financial.controller.basic_informa
 import com.megazone.ERPSystem_phase2_Backend.common.config.security.JwtUtil;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.CashMemo;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.*;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.dto.CompanyDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.basic_information_management.account_subject.AccountSubjectService;
@@ -16,6 +17,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -43,6 +46,11 @@ public class AccountSubjectController {
         // HTTP 200 상태로 응답 반환
         return response.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/search")
+    public List<AccountSubjectDTO> searchAccountSubject(@RequestBody Map<String, String> searchText) {
+        return accountSubjectService.searchAccountSubject(searchText.get("searchText"));
     }
 
     /**

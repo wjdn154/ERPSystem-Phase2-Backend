@@ -12,6 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 @Transactional
@@ -24,6 +27,10 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public TransferShowDTO createTransfer(TransferCreateDTO dto) {
         // 사원 정보 조회 (employee_id를 통해)
+        if (dto.getEmployee_id() == null) {
+            throw new IllegalArgumentException("사원 ID는 null일 수 없습니다.");
+        }
+        // 사원 정보 조회 (employee_id를 통해)
         Employee employee = employeeRepository.findById(dto.getEmployee_id())
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 사원 ID 입력: " + dto.getEmployee_id()));
 
@@ -32,6 +39,13 @@ public class TransferServiceImpl implements TransferService {
 
         // 도착 부서 정보 조회
         Department toDepartment = departmentRepository.findByDepartmentName(dto.getToDepartmentName());
+
+
+        // 사원의 부서 정보를 도착 부서로 변경
+        employee.setDepartment(toDepartment);
+
+        // 사원 정보 업데이트 (변경된 부서 정보 저장)
+        employeeRepository.save(employee);
 
         // Transfer 엔티티 생성 및 설정
         Transfer transfer = new Transfer();
@@ -45,5 +59,17 @@ public class TransferServiceImpl implements TransferService {
         // Transfer 저장
         Transfer savedTransfer = transferRepository.save(transfer);
         return TransferShowDTO.create(savedTransfer);
+    }
+
+    @Override
+    public List<TransferShowDTO> findAllTransfers() {
+        return transferRepository.findAll().stream()
+                .map(transfer -> new TransferShowDTO(
+                        transfer.getTransferDate(),
+                        transfer.getEmployee().getLastName(),
+                        transfer.getEmployee().getFirstName(),
+                        transfer.getTransferType(),
+                        transfer.getReason()
+                )).collect(Collectors.toList());
     }
 }

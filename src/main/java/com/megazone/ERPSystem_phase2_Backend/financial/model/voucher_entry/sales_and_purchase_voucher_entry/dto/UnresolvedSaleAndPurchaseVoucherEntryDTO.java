@@ -22,5 +22,6 @@ public class UnresolvedSaleAndPurchaseVoucherEntryDTO {
     private String itemName;
     private BigDecimal quantity;
     private BigDecimal unitPrice;
+    private BigDecimal supplyAmount;
     private ElectronicTaxInvoiceStatus electronicTaxInvoiceStatus;
 }

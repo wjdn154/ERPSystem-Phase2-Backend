@@ -11,15 +11,18 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransferShowDTO {
-    private LocalDate transfer_date;
-    private String employeeName;
+    private LocalDate transferDate;
+    private String employeeLastName;
+    private String employeeFirstName;
     private String transferType;
     private String reason;
+
 
     public static TransferShowDTO create(Transfer transfer) {
         return new TransferShowDTO(
                 transfer.getTransferDate(),
-                transfer.getEmployee().getLastName() + transfer.getEmployee().getFirstName(),
+                transfer.getEmployee().getLastName(),
+                transfer.getEmployee().getFirstName(),
                 transfer.getTransferType(),
                 transfer.getReason()
         );

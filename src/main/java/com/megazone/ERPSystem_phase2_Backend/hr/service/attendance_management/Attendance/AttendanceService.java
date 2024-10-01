@@ -11,4 +11,6 @@ public interface AttendanceService {
     List<EmployeeAttendanceDTO> getAttendanceRecords(Long employeeId);
 
     List<AttendanceShowDTO> getAllAttendanceRecords();
+
+    boolean deleteAttendanceRecord(Long employeeId);
 }

@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -27,6 +29,23 @@ public class ClientController {
     private final ClientService clientService;
     private final ClientRepository clientRepository;
 
+
+    /**
+     * 모든 거래처 정보 조회
+     * @return 모든 거래처 정보를 담은 ClientDTO 객체를 반환.
+     */
+    @PostMapping("/fetchClientList")
+    public ResponseEntity<Object> fetchClientList() {
+        return clientService.fetchClientList();
+    }
+
+    /**
+     * id로 거래처 상세 정보 조회
+     */
+    @PostMapping("/fetchClient/{id}")
+    public ResponseEntity<Object> fetchClient(@PathVariable("id") Long id) {
+        return clientService.fetchClient(id);
+    }
 
     /**
      * 거래처 등록
@@ -40,6 +59,11 @@ public class ClientController {
         return savedClient
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+    }
+
+    @PostMapping("/search")
+    public List<ClientDTO> searchClient(@RequestBody Map<String, String> searchText) {
+        return clientService.searchClient(searchText.get("searchText"));
     }
 
     /**

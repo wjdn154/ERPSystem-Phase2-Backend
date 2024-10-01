@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_managemen
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,25 +18,4 @@ public class PurchaseRequestResponseDto {
     private Integer totalQuantity;
     private Double totalPrice;
     private String status;
-
-//    private Long id;
-//    private LocalDate date;
-//    private Long clientId;
-//    private String clientCode;
-//    private String clientName;
-//    private Long productId;
-//    private String productCode;
-//    private String productName;
-//    private Long managerId;
-//    private String managerCode;
-//    private String managerName;
-//    private Long warehouseId;
-//    private String warehouseCode;
-//    private String warehouseName;
-//    private Long currencyId;
-//    private String currency;
-//    private List<PurchaseRequestResponseDetailDto> details;
-//    private LocalDate deliveryDate;
-//    private String status;
-//    private String remarks;
 }

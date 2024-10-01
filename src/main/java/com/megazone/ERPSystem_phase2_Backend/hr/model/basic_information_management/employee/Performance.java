@@ -28,6 +28,9 @@ public class Performance {
     private Employee evaluator; // 평가자
 
     @Column(nullable = false)
+    private String title; // 평가 제목
+
+    @Column(nullable = false)
     private LocalDate evaluationDate; // 평가일
 
     @Column(nullable = false)
