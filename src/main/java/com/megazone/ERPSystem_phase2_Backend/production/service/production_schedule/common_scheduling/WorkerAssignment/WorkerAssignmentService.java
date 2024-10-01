@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.common_scheduling.WorkerAssignment;
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentCountDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentSummaryDTO;
 
@@ -7,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface WorkerAssignmentService {
-    List<WorkerAssignmentDTO> getAllWorkcentersWorkerCount();
+    List<WorkerAssignmentCountDTO> getAllWorkcentersWorkerCount();
 
     List<WorkerAssignmentDTO> getWorkersByWorkcenterCode(String workcenterCode);
 

@@ -28,7 +28,7 @@ public class ShiftTypeController {
 
     // POST: 교대유형 상세조회
     @PostMapping("/{id}")
-    public ResponseEntity<ShiftTypeDTO> getShiftTypeById(@PathVariable Long id) {
+    public ResponseEntity<ShiftTypeDTO> getShiftTypeById(@PathVariable("id") Long id) {
         ShiftTypeDTO shiftType = shiftTypeService.getShiftTypeById(id);
         return ResponseEntity.ok(shiftType);
     }
@@ -49,7 +49,7 @@ public class ShiftTypeController {
 
     // POST: 교대유형 삭제 - 사용 중이면 삭제불가
     @PostMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteShiftType(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteShiftType(@PathVariable("id") Long id) {
         shiftTypeService.deleteShiftType(id);
         return ResponseEntity.noContent().build();
     }
