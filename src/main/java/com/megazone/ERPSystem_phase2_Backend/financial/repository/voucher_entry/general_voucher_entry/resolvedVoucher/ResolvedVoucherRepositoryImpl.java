@@ -278,5 +278,40 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                 .fetch();
     }
 
+    @Override
+    public Object dailyLedgerList(DailyAndMonthJournalSearchDTO dto) {
+//        QResolvedVoucher voucher = QResolvedVoucher.resolvedVoucher;
+//        QClient client = QClient.client;
+//        QEmployee employee = QEmployee.employee;
+//        QAccountSubject accountSubject = QAccountSubject.accountSubject;
+//        QDepartment department = QDepartment.department;
+//
+//        return queryFactory.select(
+//                        Projections.constructor(AccountLedgerShowDTO.class,
+//                                voucher.id,
+//                                voucher.voucherDate,
+//                                voucher.transactionDescription,
+//                                client.code,
+//                                client.printClientName,
+//                                voucher.debitAmount,
+//                                voucher.creditAmount,
+//                                voucher.debitAmount.subtract(voucher.creditAmount),
+//                                voucher.voucherNumber,
+//                                voucher.voucherApprovalTime,
+//                                employee.department.departmentName,
+//                                employee.lastName.concat(employee.firstName)
+//                        ))
+//                .from(voucher)
+//                .join(voucher.accountSubject, accountSubject)
+//                .join(voucher.voucherManager, employee)
+//                .join(employee.department, department)
+//                .join(voucher.client, client)
+//                .where(voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate())
+//                        .and(voucher.accountSubject.id.eq(dto.getAccountId())))
+//                .orderBy(voucher.voucherDate.asc())
+//                .fetch();
+        return null;
+    }
+
 
 }

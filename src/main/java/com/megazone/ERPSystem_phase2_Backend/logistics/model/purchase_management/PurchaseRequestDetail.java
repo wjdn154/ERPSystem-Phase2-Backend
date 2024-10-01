@@ -2,17 +2,14 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_managemen
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 발주요청 상세 테이블
  * 발주요청서에 포함된 품목과 관련된 정보 관리
  */
 @Entity
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,9 +34,17 @@ public class PurchaseRequestDetail {
     @Column(nullable = false)
     private Integer quantity;
 
+    // 단가(입고단가)
+    @Column(nullable = false)
+    private Double price;
+
     // 공급가액 (수량 * 단가)
     @Column(nullable = false)
     private Double supplyPrice;
+
+    // 원화금액 (통화가 외자일때만 사용)
+    @Column(nullable = true)
+    private Double localAmount;
 
     // 부가세
     @Column
