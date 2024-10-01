@@ -23,6 +23,9 @@ public class WorkDailyReport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id; // 고유식별자
+    
+    @Column(nullable = false)
+    private String workDailyReportCode;   //일별 보고서 코드
 
     @Column(nullable = false)
     private String title; // 일간보고제목

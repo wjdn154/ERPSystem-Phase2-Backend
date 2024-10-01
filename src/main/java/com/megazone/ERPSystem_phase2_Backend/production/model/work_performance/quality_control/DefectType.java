@@ -31,6 +31,7 @@ public class DefectType {
     @Column(nullable = false)
     private Boolean isUsed;     // 사용여부
 
+
     @OneToMany(mappedBy = "defectType")
     private List<DefectCategory> defectCategories; // 연관 불량군
 }

@@ -1,19 +1,20 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.work_performance.work_report;
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.goods_receipt.dto.WorkPerformanceDetailDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.goods_receipt.dto.WorkPerformanceListDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceDetailDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceListDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.service.work_performance.work_report.WorkPerformanceService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+/** 작업지시에 대한 작업 실적
+ *  목록 위에 select box 만들어서 작업지시 선택 시 해당하는 작업실적 리스트 보이게 만들 예정
+ *  리스트 dto에 작업지시 id, name 받아오는걸로 걸러낼 예정
+ * */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/production")
