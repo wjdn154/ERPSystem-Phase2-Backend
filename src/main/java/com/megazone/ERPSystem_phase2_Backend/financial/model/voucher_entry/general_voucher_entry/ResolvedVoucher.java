@@ -37,7 +37,7 @@ public class ResolvedVoucher {
     private Client client; // 거래처 참조
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "voucherManager_id", nullable = false)
+    @JoinColumn(name = "voucherManager_id", nullable = true)
     private Employee voucherManager; // 전표 담당자
 
 

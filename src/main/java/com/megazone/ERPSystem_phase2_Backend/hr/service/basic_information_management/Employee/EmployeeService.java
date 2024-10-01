@@ -28,4 +28,6 @@ public interface EmployeeService {
 
     // 사원 권한 조회
     ResponseEntity<Object> getAdminPermissionEmployee(Long companyId);
+
+    void softDeleteEmployee(Long id);
 }

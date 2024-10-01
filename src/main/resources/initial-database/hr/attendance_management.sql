@@ -1,10 +1,10 @@
 
 
-INSERT INTO attendance_management (check_time, checkout_time, date, employee_id, attendance_code, status) VALUES
+INSERT INTO attendance_management (checkin_time, checkout_time, date, employee_id, attendance_code, status) VALUES
 ('09:00:00','18:00:00','2024-01-05',1,'0001','PRESENT'),
 ('09:00:00','18:00:00','2024-01-12',2,'0002','ABSENT'),
 ('09:00:00','18:00:00','2024-01-18',3,'0003','LEAVE'),
-('00:00:00','24:00:00','2024-02-08',4,'0004','PUBLIC_HOLIDAY'),
+('00:00:00','22:00:00','2024-02-08',4,'0004','PUBLIC_HOLIDAY'),
 ('09:00:00','18:00:00','2024-02-13',5,'0005','EARLY_LEAVE'),
 ('09:00:00','18:00:00','2024-02-20',5,'0006','LATE');
 

@@ -1,9 +1,13 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Employee;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.ResolvedVoucher;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.resolvedVoucher.ResolvedVoucherRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.*;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.*;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.attendance_management.Attendance.AttendanceRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.BankAccount.EmployeeBankAccountRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Department.DepartmentRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
@@ -35,6 +39,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final JobTitleRepository jobTitleRepository;
     private final EmployeeBankAccountRepository bankAccountRepository;
     private final CompanyRepository companyRepository;
+    private final AttendanceRepository attendanceRepository;
+    private final ClientRepository clientRepository;
+    private final ResolvedVoucherRepository resolvedVoucherRepository;
 
     // 사원 리스트 조회
     @Override
@@ -109,9 +116,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     // 사원 삭제
     @Override
-    public void deleteEmployee(Long id) {
-        performanceRepository.deleteByEvaluatorId(id);
-        employeeRepository.deleteById(id);
+    public void deleteEmployee(Long employeeId) {
+        performanceRepository.deleteByEmployeeId(employeeId);
+        attendanceRepository.deleteByEmployeeId(employeeId);
+        employeeRepository.deleteById(employeeId);
     }
 
 
@@ -336,4 +344,31 @@ public class EmployeeServiceImpl implements EmployeeService {
         return newEmployeeNumber;  // 예: "240914001", "240914002"
     }
 
+//    @Transactional
+//    public void softDeleteEmployee(Long employeeId) {
+//        Optional<Employee> employeeOpt = employeeRepository.findById(employeeId);
+//
+//        if (employeeOpt.isPresent()) {
+//            Employee employee = employeeOpt.get();
+//            employee.setIsDeleted(true);  // Soft Delete 적용
+//            employeeRepository.save(employee);  // 저장 (논리적 삭제 처리)
+//        } else {
+//            throw new EntityNotFoundException("사원을 찾을 수 없습니다.");
+//        }
+//    }
+
+    @Transactional
+    public void softDeleteEmployee(Long employeeId) {
+        // 사원 조회
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("사원을 찾을 수 없습니다."));
+
+        // 해당 사원이 담당한 Client와 ResolvedVoucher의 employee 필드를 null로 설정
+        clientRepository.updateEmployeeToNull(employeeId);
+        resolvedVoucherRepository.updateEmployeeToNull(employeeId);
+
+        // 사원의 isDeleted를 true로 설정하여 논리적으로 삭제
+        employee.setIsDeleted(true);
+        employeeRepository.save(employee);
+    }
 }

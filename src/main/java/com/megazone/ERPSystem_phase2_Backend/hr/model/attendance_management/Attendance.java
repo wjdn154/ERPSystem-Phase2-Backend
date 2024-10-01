@@ -33,10 +33,10 @@ public class Attendance {
     @Column(nullable = false)
     private LocalDate date; // 날짜
 
-    @Column(nullable = false)
-    private Time checkTime; // 출근 시간
+    @Column
+    private Time checkinTime; // 출근 시간
 
-    @Column(nullable = false)
+    @Column
     private Time checkoutTime; // 퇴근 시간
 
     @Enumerated(EnumType.STRING)

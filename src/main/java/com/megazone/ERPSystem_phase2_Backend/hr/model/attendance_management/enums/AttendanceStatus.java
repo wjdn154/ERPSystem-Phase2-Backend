@@ -18,3 +18,10 @@ public enum AttendanceStatus {
     OVERTIME, // 야근
     SHIFT_WORK // 교대 근무
 }
+
+// 09:00 시 출근
+// 18:00 시 퇴근
+
+// 09:10분 부터 지각
+
+// 18:00 시 전 퇴근 => 조퇴

@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.ResolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -40,4 +41,8 @@ public interface ResolvedVoucherRepository extends JpaRepository<ResolvedVoucher
             + "GROUP BY voucher_date, voucher_number) AS grouped_vouchers",
             nativeQuery = true)
     BigDecimal generalTotalCount(@Param("startDate")LocalDate startDate, @Param("endDate")LocalDate endDate);
+
+    @Modifying
+    @Query("UPDATE resolved_voucher rv SET rv.voucherManager = NULL WHERE rv.voucherManager.id = :employeeId")
+    void updateEmployeeToNull(@Param("employeeId") Long employeeId);
 }

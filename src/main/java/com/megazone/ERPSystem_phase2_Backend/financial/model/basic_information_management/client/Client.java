@@ -45,7 +45,7 @@ public class Client {
     private ManagerInfo managerInfo; // 업체 담당자 정보
 
     @ManyToOne
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "employee_id", nullable = true)
     private Employee employee; // 담당자
 
     @ManyToOne

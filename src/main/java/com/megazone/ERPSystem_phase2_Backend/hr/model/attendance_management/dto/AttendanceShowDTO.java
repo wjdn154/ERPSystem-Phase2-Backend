@@ -3,7 +3,6 @@ package com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.dto
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Attendance;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.enums.AttendanceStatus;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.JobTitle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,11 +28,11 @@ public class AttendanceShowDTO {
           return new AttendanceShowDTO(
               attendance.getId(),
               attendance.getEmployee().getEmployeeNumber(),
-              attendance.getEmployee().getFirstName()+ attendance.getEmployee().getLastName(),
+              attendance.getEmployee().getLastName()+ attendance.getEmployee().getFirstName(),
               attendance.getEmployee().getJobTitle().getTitleName(),
               attendance.getAttendanceCode(),
               attendance.getDate(),
-              attendance.getCheckTime(),
+              attendance.getCheckinTime(),
               attendance.getCheckoutTime(),
               attendance.getStatus()
           );

@@ -14,6 +14,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class EmployeeAttendanceDTO {
     private Long employeeId;
+    private String employeeFirstName;
+    private String employeeLastName;
+    private String employeeNumber;
     private String attendanceCode;
     private LocalDate date;
     private Time checkTime;
@@ -23,9 +26,12 @@ public class EmployeeAttendanceDTO {
     public static EmployeeAttendanceDTO create(Attendance attendance) {
         return new EmployeeAttendanceDTO(
                 attendance.getEmployee().getId(),
+                attendance.getEmployee().getLastName(),
+                attendance.getEmployee().getFirstName(),
+                attendance.getEmployee().getEmployeeNumber(),
                 attendance.getAttendanceCode(),
                 attendance.getDate(),
-                attendance.getCheckTime(),
+                attendance.getCheckinTime(),
                 attendance.getCheckoutTime(),
                 attendance.getStatus()
         );

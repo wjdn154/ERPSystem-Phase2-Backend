@@ -51,8 +51,8 @@ public class EmployeeController {
             EmployeeDTO employeeDTO = employeeService.saveEmployee(dto);
 
             // 저장된 사원이 존재하는 경우 OK 응답을 반환합니다.
-            return employeeDTO != null ? ResponseEntity.status(HttpStatus.OK).body("사원 등록완료") :
-                    ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("사원 등록실패");
+            return employeeDTO != null ? ResponseEntity.status(HttpStatus.OK).body("사원등록을 완료했습니다.") :
+                    ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("사원등록을 실패했습니다.");
     }
 
 
@@ -71,7 +71,13 @@ public class EmployeeController {
             employeeService.deleteEmployee(id);
             return ResponseEntity.status(HttpStatus.OK).body("사원을 삭제하였습니다.");
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("사원 삭제 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("사원삭제 중 오류가 발생했습니다.");
         }
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> softDeleteEmployee(@PathVariable("id") Long id) {
+        employeeService.softDeleteEmployee(id);
+        return ResponseEntity.ok("사원이 논리적으로 삭제되었습니다.");
     }
 }
