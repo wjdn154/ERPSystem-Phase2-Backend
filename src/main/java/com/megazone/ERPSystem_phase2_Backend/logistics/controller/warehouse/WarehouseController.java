@@ -57,9 +57,9 @@ public class WarehouseController {
             WarehouseResponseTestDTO updatedWarehouse = warehouseService.updateWarehouse(warehouseId, requestDTO);
             return ResponseEntity.ok(updatedWarehouse);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

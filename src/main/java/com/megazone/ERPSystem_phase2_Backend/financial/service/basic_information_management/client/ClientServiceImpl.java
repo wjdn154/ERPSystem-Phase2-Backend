@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.financial.service.basic_informatio
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubject;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto.ClientDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto.fetchClientListDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.enums.TransactionType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Address;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.*;
@@ -12,9 +13,13 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_manageme
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -95,6 +100,25 @@ public class ClientServiceImpl implements ClientService {
 
         ModelMapper modelMapper = new ModelMapper();
         return client.stream().map(c -> modelMapper.map(c, ClientDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public ResponseEntity<Object> fetchClientList() {
+        List<fetchClientListDTO> client = clientRepository.fetchClientList();
+        return client.isEmpty() ? ResponseEntity.status(HttpStatus.BAD_REQUEST).body("거래처 데이터가 없습니다.") : ResponseEntity.ok(client);
+    }
+
+    @Override
+    public ResponseEntity<Object> fetchClient(Long id) {
+
+        Optional<Client> client = clientRepository.findById(id);
+
+        ModelMapper modelMapper = new ModelMapper();
+        Optional<ClientDTO> clientDTO = client.map(value -> modelMapper.map(value, ClientDTO.class));
+
+        if (!clientDTO.isPresent()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 거래처 정보가 없습니다.");
+
+        return ResponseEntity.ok(clientDTO);
     }
 
     private void updateBankAccount(ClientDTO clientDTO, Client client) {
