@@ -10,8 +10,8 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedul
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.production_strategy.PlanOfMakeToStock;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.Worker;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
-import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.production_strategy.PlanOfMakeToOrderRepository;
-import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.production_strategy.PlanOfMakeToStockRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.production_strategy.mto.PlanOfMakeToOrderRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.production_strategy.mts.PlanOfMakeToStockRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.shift_type.ShiftTypeRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.production_order.ProductionOrderRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.worker_assignment.WorkerAssignmentRepository;
@@ -216,6 +216,9 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
                         .map(this::convertWorkerAssignmentToDTO)
                         .toList())
                 .remarks(productionOrder.getRemarks())
+                .confirmed(productionOrder.getConfirmed())
+                .startDateTime(productionOrder.getStartDateTime())
+                .endDateTime(productionOrder.getEndDateTime())
                 .build();
     }
 
@@ -229,6 +232,9 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
                 .planOfMakeToStock(productionOrderDTO.getPlanOfMakeToStockId() != null ? planOfMakeToStockRepository.findById(productionOrderDTO.getPlanOfMakeToStockId())
                         .orElseThrow(() -> new EntityNotFoundException("생산 재고 계획을 찾을 수 없습니다.")) : null)
                 .remarks(productionOrderDTO.getRemarks())
+                .confirmed(productionOrderDTO.getConfirmed())
+                .startDateTime(productionOrderDTO.getStartDateTime())
+                .endDateTime(productionOrderDTO.getEndDateTime())
                 .build();
     }
 

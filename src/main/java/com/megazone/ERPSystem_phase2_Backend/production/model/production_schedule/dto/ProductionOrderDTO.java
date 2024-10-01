@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -26,5 +27,11 @@ public class ProductionOrderDTO {
 //    private List<WorkPerformanceDTO> workPerformances; // 작업 실적 DTO 리스트
 
     private String remarks; // 추가 설명 또는 비고
+
+    private Boolean confirmed;
+
+    private LocalDateTime startDateTime; // 작업 시작 날짜 및 시간
+
+    private LocalDateTime endDateTime; // 작업 종료 날짜 및 시간
 
 }

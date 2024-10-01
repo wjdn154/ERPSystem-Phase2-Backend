@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -50,4 +51,12 @@ public class ProductionOrder {
     @Column(nullable = true)
     private String remarks; // 추가 설명 또는 비고
 
+    @Column(nullable = true)
+    private Boolean confirmed; // 확정 여부
+
+    @Column(nullable = false)
+    private LocalDateTime startDateTime; // 작업 시작 날짜 및 시간
+
+    @Column(nullable = false)
+    private LocalDateTime endDateTime; // 작업 종료 날짜 및 시간
 }
