@@ -31,6 +31,23 @@ public class ClientController {
 
 
     /**
+     * 모든 거래처 정보 조회
+     * @return 모든 거래처 정보를 담은 ClientDTO 객체를 반환.
+     */
+    @PostMapping("/fetchClientList")
+    public ResponseEntity<Object> fetchClientList() {
+        return clientService.fetchClientList();
+    }
+
+    /**
+     * id로 거래처 상세 정보 조회
+     */
+    @PostMapping("/fetchClient/{id}")
+    public ResponseEntity<Object> fetchClient(@PathVariable("id") Long id) {
+        return clientService.fetchClient(id);
+    }
+
+    /**
      * 거래처 등록
      * @param clientDTO 수정할 거래처 DTO
      * @return 등록한 거래처 정보를 담은 ClientDTO 객체를 반환.
