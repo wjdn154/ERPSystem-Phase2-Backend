@@ -15,7 +15,7 @@ public interface ProductService {
 
     Optional<ProductResponseDto> saveProduct(ProductRequestDto productRequestDto, MultipartFile images);
 
-    Optional<ProductResponseDto> updateProduct(Long id, ProductRequestDto productRequestDto);
+    Optional<ProductResponseDto> updateProduct(Long id, ProductRequestDto productRequestDto, MultipartFile imageFile);
 
     String deleteProduct(Long id);
 

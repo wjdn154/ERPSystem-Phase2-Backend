@@ -75,13 +75,20 @@ public class ProductController {
     /**
      * 품목 업데이트
      * @param id 업데이트하려는 품목의 id
-     * @param productRequestDto 업데이트할 품목 정보
+     * @param productData JSON 형식의 품목 정보
+     * @param imageFile 이미지 파일 (선택 사항)
      * @return 업데이트된 품목 정보를 반환함
      */
     @PutMapping("/update/{id}")
-    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable("id") Long id, @RequestBody ProductRequestDto productRequestDto){
+    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable("id") Long id,
+                                                            @RequestParam("productData") String productData,
+                                                            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) throws JsonProcessingException {
 
-        return productService.updateProduct(id, productRequestDto)
+        // JSON 문자열을 DTO로 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+        ProductRequestDto productRequestDto = objectMapper.readValue(productData, ProductRequestDto.class);
+
+        return productService.updateProduct(id, productRequestDto, imageFile)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
 

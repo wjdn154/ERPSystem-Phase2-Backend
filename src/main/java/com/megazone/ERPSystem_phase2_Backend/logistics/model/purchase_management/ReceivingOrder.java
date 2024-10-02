@@ -25,11 +25,6 @@ public class ReceivingOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 입고 지시서와 구매서 간의 일대일 관계
-    @OneToOne
-    @JoinColumn(name = "purchase_id")
-    private Purchase purchase;
-
     // 거래처_id - N : 1
     @Column(nullable = false)
     private Long clientId;
