@@ -30,10 +30,6 @@ public class Purchase {
     @JoinColumn(name = "purchase_order_id")
     private PurchaseOrder purchaseOrder;
 
-    // 구매서와 입고 지시서 간의 일대일 관계
-    @OneToOne(mappedBy = "purchase")
-    private ReceivingOrder receivingOrder;
-
     // 주문서_id
     @Column
     private Long ordersId;

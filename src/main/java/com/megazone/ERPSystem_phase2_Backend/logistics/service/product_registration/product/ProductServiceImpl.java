@@ -38,7 +38,7 @@ public class ProductServiceImpl implements ProductService{
     private final ProductImageService productImageService;
 
     // 이미지가 저장된 경로 (src/main/resources/static/uploads/)
-    private static final String UPLOAD_DIR = "src/main/resources/static/uploads/";
+    private static final String UPLOAD_DIR = "src/main/resources/static";
 
     /**
      * 품목등록 리스트 조회
@@ -115,7 +115,7 @@ public class ProductServiceImpl implements ProductService{
 
         // 품목 조회 및 검증
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 품목 그룹을 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 품목을 찾을 수 없습니다."));
 
         // 코드 중복 검사, 업데이트 할 품목은 제외하고 검사
         if (productRepository.existsByCodeAndIdNot(productRequestDto.getCode(), id)) {

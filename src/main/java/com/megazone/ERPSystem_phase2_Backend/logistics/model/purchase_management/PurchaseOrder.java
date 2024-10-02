@@ -76,7 +76,7 @@ public class PurchaseOrder {
     @Column
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private State status = State.WAITING_FOR_PURCHASE;
+    private State status = State.PURCHASE_COMPLETED;
 
     // 발주서 상세 항목 추가 메서드
     public void addPurchaseOrderDetail(PurchaseOrderDetail detail) {
