@@ -21,7 +21,7 @@ public interface WorkerService {
     Optional<WorkerDetailShowDTO> updateWorker(Long id, WorkerDetailShowDTO dto);
 
     //생산관리 작업자 리스트 조회
-    List<ListWorkerDTO> findAllWorker(Long companyId);
+    List<ListWorkerDTO> findAllWorker();
 
     //생산관리 작업자 상세 조회
     Optional<WorkerDetailShowDTO> findWorkerById(Long id);
