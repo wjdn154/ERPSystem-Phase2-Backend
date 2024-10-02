@@ -12,7 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BankAccountDTO {
-    private BankDTO bank; // 은행 정보
+    private Long bankId; // 은행 정보
     private String accountNumber; // 계좌번호
     private String accountHolder; // 예금주
 }

@@ -16,8 +16,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 public interface ClientService {
-    Optional<ClientDTO> saveClient(ClientDTO clientDTO);
-    Optional<ClientDTO> updateClient(Long id, ClientDTO clientDTO);
+    Long saveClient(ClientDTO clientDTO);
+    Long updateClient(ClientDTO clientDTO);
     List<ClientDTO> searchClient(String searchText);
     ResponseEntity<Object> fetchClientList();
     ResponseEntity<Object> fetchClient(Long id);

@@ -75,12 +75,12 @@ public class ClientController {
      * @return 등록한 거래처 정보를 담은 ClientDTO 객체를 반환.
      */
     @PostMapping("/save")
-    public ResponseEntity<ClientDTO> registerClient(@RequestBody ClientDTO clientDTO) {
-        Optional<ClientDTO> savedClient = clientService.saveClient(clientDTO);
+    public ResponseEntity<Object> registerClient(@RequestBody ClientDTO clientDTO) {
+        Long savedClient = clientService.saveClient(clientDTO);
 
-        return savedClient
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+        if (savedClient == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+        return ResponseEntity.ok("저장 완료");
     }
 
     @PostMapping("/search")
@@ -90,15 +90,16 @@ public class ClientController {
 
     /**
      * 거래처 수정
-     * @param id 수정할 거래처의 ID
      * @param clientDTO 수정할 거래처 DTO
      * @return 수정된 거래처 정보를 담은 ClientDTO 객체를 반환.
      */
-    @PutMapping("/update/{id}")
-    public ResponseEntity<ClientDTO> updateClient(@PathVariable("id") Long id, @RequestBody ClientDTO clientDTO) {
-        Optional<ClientDTO> updatedClient = clientService.updateClient(id, clientDTO);
-        return updatedClient
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    @PutMapping("/update")
+    public ResponseEntity<Object> updateClient(@RequestBody ClientDTO clientDTO) {
+        System.out.println("clientDTO.toString() = " + clientDTO.toString());
+        Long updatedClient = clientService.updateClient(clientDTO);
+
+        if (updatedClient == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+        return ResponseEntity.ok("수정 완료");
     }
 }
