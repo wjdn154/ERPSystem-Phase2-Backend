@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.financial.service.basic_informatio
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubject;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto.ClientDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto.ClientDTO2;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto.fetchClientListDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.enums.TransactionType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Address;
@@ -46,7 +47,7 @@ public class ClientServiceImpl implements ClientService {
      * @return 저장된 거래처 정보를 DTO로 변환하여 Optional로 반환
      */
     @Override
-    public Optional<ClientDTO> saveClient(ClientDTO clientDTO) {
+    public Long saveClient(ClientDTO clientDTO) {
         Client client = new Client();
 
         createAddress(clientDTO, client); // 주소 정보
@@ -60,18 +61,17 @@ public class ClientServiceImpl implements ClientService {
 
         Client savedClient = createClient(clientDTO, client); // 거래처 정보 저장
 
-        return Optional.of(new ClientDTO(savedClient));
+        return savedClient.getId();
     }
 
     /**
      * 거래처 정보를 수정하고 DTO로 반환
-     * @param id 거래처 ID
      * @param clientDTO 수정할 거래처 정보가 담긴 DTO
      * @return 수정된 거래처 정보를 DTO로 변환하여 Optional로 반환
      */
     @Override
-    public Optional<ClientDTO> updateClient(Long id, ClientDTO clientDTO) {
-        return clientRepository.findById(id).map(client -> {
+    public Long updateClient(ClientDTO clientDTO) {
+        return clientRepository.findById(clientDTO.getId()).map(client -> {
 
             updateAddress(clientDTO, client); // 주소 정보 수정
             updateBusinessInfo(clientDTO, client); // 업태 및 종목 정보 수정
@@ -82,10 +82,20 @@ public class ClientServiceImpl implements ClientService {
             getLiquor(clientDTO, client); // 주류 정보 수정
             getCategory(clientDTO, client); // 거래처 분류 수정
 
-            Client savedClient = createClient(clientDTO, client); // 거래처 정보 저장
+            Client savedClient;
+            try{
+                savedClient = updateClient(clientDTO, client); // 거래처 정보 저장
+                System.out.println("savedClient = " + savedClient);
+            }catch (Exception e){
+                e.printStackTrace();
+                System.out.println("e = " + e);
+                System.out.println("e = " + e.getMessage());
+                throw new RuntimeException(e);
+            }
 
-            return new ClientDTO(savedClient);
-        });
+
+            return savedClient.getId();
+        }).orElse(null);
     }
 
     @Override
@@ -115,6 +125,7 @@ public class ClientServiceImpl implements ClientService {
 
         ModelMapper modelMapper = new ModelMapper();
         Optional<ClientDTO> clientDTO = client.map(value -> modelMapper.map(value, ClientDTO.class));
+        System.out.println("clientDTO.toString() = " + clientDTO.toString());
 
         if (!clientDTO.isPresent()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 거래처 정보가 없습니다.");
 
@@ -123,7 +134,7 @@ public class ClientServiceImpl implements ClientService {
 
     private void updateBankAccount(ClientDTO clientDTO, Client client) {
         BankAccount bankAccount = client.getBankAccount();
-        bankAccount.setBank(bankRepository.findById(clientDTO.getBankAccount().getBank().getId()).orElseThrow(() -> new RuntimeException("해당 은행이 존재하지 않습니다.")));
+        bankAccount.setBank(bankRepository.findById(clientDTO.getBankAccount().getBankId()).orElseThrow(() -> new RuntimeException("해당 은행이 존재하지 않습니다.")));
         bankAccount.setAccountNumber(clientDTO.getBankAccount().getAccountNumber());
         bankAccount.setAccountHolder(clientDTO.getBankAccount().getAccountHolder());
         bankAccountRepository.save(bankAccount);
@@ -186,10 +197,24 @@ public class ClientServiceImpl implements ClientService {
         return clientRepository.save(client);
     }
 
+    private Client updateClient(ClientDTO clientDTO, Client client) {
+        client.setTransactionType(TransactionType.valueOf(clientDTO.getTransactionType()));
+        client.setBusinessRegistrationNumber(clientDTO.getBusinessRegistrationNumber());
+        client.setIdNumber(clientDTO.getIdNumber());
+        client.setRepresentativeName(clientDTO.getRepresentativeName());
+        client.setPrintClientName(clientDTO.getPrintClientName());
+        client.setTransactionStartDate(clientDTO.getTransactionStartDate());
+        client.setTransactionEndDate(clientDTO.getTransactionEndDate());
+        client.setRemarks(clientDTO.getRemarks());
+        client.setIsActive(clientDTO.getIsActive());
+
+        return clientRepository.save(client);
+    }
+
     private void createBankAccount(ClientDTO clientDTO, Client client) {
         if (clientDTO.getBankAccount() != null) {
             BankAccount bankAccount = new BankAccount();
-            bankAccount.setBank(bankRepository.findById(clientDTO.getBankAccount().getBank().getId()).orElseThrow(() -> new RuntimeException("해당 은행이 존재하지 않습니다.")));
+            bankAccount.setBank(bankRepository.findById(clientDTO.getBankAccount().getBankId()).orElseThrow(() -> new RuntimeException("해당 은행이 존재하지 않습니다.")));
             bankAccount.setAccountNumber(clientDTO.getBankAccount().getAccountNumber());
             bankAccount.setAccountHolder(clientDTO.getBankAccount().getAccountHolder());
             bankAccountRepository.save(bankAccount);
@@ -249,7 +274,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     private void getCategory(ClientDTO clientDTO, Client client) {
-        client.setCategory(categoryRepository.findById(clientDTO.getCategory().getId()).orElseThrow(
+        client.setCategory(categoryRepository.findById(clientDTO.getCategoryId()).orElseThrow(
                 () -> new RuntimeException("해당 거래처 분류 코드가 존재하지 않습니다.")));
     }
 
