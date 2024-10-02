@@ -5,8 +5,11 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.AccountSubjectsAndMemosDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.MemoRequestDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto.CategoryDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto.ClientDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto.LiquorDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.dto.CompanyDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.common.dto.BankDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.basic_information_management.account_subject.AccountSubjectService;
@@ -46,6 +49,25 @@ public class ClientController {
     public ResponseEntity<Object> fetchClient(@PathVariable("id") Long id) {
         return clientService.fetchClient(id);
     }
+
+    @PostMapping("/fetchLiquorList")
+    public ResponseEntity<Object> fetchLiquorList() {
+        List<LiquorDTO> liquorList = clientService.fetchLiquorList();
+        return liquorList.isEmpty() ? ResponseEntity.status(HttpStatus.BAD_REQUEST).body("조회된 데이터가 없습니다.") : ResponseEntity.ok(liquorList);
+    }
+
+    @PostMapping("/fetchCategoryList")
+    public ResponseEntity<Object> fetchCategoryList() {
+        List<CategoryDTO> categoryList = clientService.fetchCategoryList();
+        return categoryList.isEmpty() ? ResponseEntity.status(HttpStatus.BAD_REQUEST).body("조회된 데이터가 없습니다.") : ResponseEntity.ok(categoryList);
+    }
+
+    @PostMapping("/fetchBankList")
+    public ResponseEntity<Object> fetchBankList() {
+        List<BankDTO> bankList = clientService.fetchBankList();
+        return bankList.isEmpty() ? ResponseEntity.status(HttpStatus.BAD_REQUEST).body("조회된 데이터가 없습니다.") : ResponseEntity.ok(bankList);
+    }
+
 
     /**
      * 거래처 등록

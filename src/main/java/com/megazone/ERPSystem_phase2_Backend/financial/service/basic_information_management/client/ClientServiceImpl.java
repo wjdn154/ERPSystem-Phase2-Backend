@@ -2,10 +2,14 @@ package com.megazone.ERPSystem_phase2_Backend.financial.service.basic_informatio
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubject;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.*;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto.CategoryDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto.ClientDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto.LiquorDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto.fetchClientListDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.enums.TransactionType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Address;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Bank;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.common.dto.BankDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.common.AddressRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.common.BankRepository;
@@ -60,7 +64,8 @@ public class ClientServiceImpl implements ClientService {
 
         Client savedClient = createClient(clientDTO, client); // 거래처 정보 저장
 
-        return Optional.of(new ClientDTO(savedClient));
+        ModelMapper modelMapper = new ModelMapper();
+        return Optional.of(modelMapper.map(savedClient, ClientDTO.class));
     }
 
     /**
@@ -84,7 +89,8 @@ public class ClientServiceImpl implements ClientService {
 
             Client savedClient = createClient(clientDTO, client); // 거래처 정보 저장
 
-            return new ClientDTO(savedClient);
+            ModelMapper modelMapper = new ModelMapper();
+            return modelMapper.map(savedClient, ClientDTO.class);
         });
     }
 
@@ -119,6 +125,27 @@ public class ClientServiceImpl implements ClientService {
         if (!clientDTO.isPresent()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 거래처 정보가 없습니다.");
 
         return ResponseEntity.ok(clientDTO);
+    }
+
+    @Override
+    public List<LiquorDTO> fetchLiquorList() {
+        List<Liquor> liquors = liquorRepository.findAll();
+        ModelMapper modelMapper = new ModelMapper();
+        return liquors.stream().map(l -> modelMapper.map(l, LiquorDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CategoryDTO> fetchCategoryList() {
+        List<Category> categories = categoryRepository.findAll();
+        ModelMapper modelMapper = new ModelMapper();
+        return categories.stream().map(c -> modelMapper.map(c, CategoryDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BankDTO> fetchBankList() {
+        List<Bank> banks = bankRepository.findAll();
+        ModelMapper modelMapper = new ModelMapper();
+        return banks.stream().map(b -> modelMapper.map(b, BankDTO.class)).collect(Collectors.toList());
     }
 
     private void updateBankAccount(ClientDTO clientDTO, Client client) {
@@ -181,7 +208,7 @@ public class ClientServiceImpl implements ClientService {
         client.setTransactionEndDate(clientDTO.getTransactionEndDate());
         client.setRemarks(clientDTO.getRemarks());
         client.setIsActive(clientDTO.getIsActive());
-        getClientCode(clientDTO,client);
+        client.setCode(clientDTO.getCode() != null ? clientDTO.getCode() : clientRepository.findMaxCode() + 1);
 
         return clientRepository.save(client);
     }
@@ -256,17 +283,6 @@ public class ClientServiceImpl implements ClientService {
     private void getLiquor(ClientDTO clientDTO, Client client) {
         client.setLiquor(liquorRepository.findById(clientDTO.getLiquor().getId()).orElseThrow(
                 () -> new RuntimeException("해당 주류 코드가 존재하지 않습니다.")));
-    }
-
-    private void getClientCode(ClientDTO clientDTO, Client client) {
-        Client oldClient = clientRepository.findByCode(clientDTO.getCode()).orElse(null);
-
-        if(oldClient == null) {
-            client.setCode(clientDTO.getCode());
-        }
-        else {
-            throw new RuntimeException("해당 거래처 코드가 이미 존재 합니다.");
-        }
     }
 
 }

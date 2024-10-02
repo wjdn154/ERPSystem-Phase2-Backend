@@ -130,15 +130,12 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     private void updateAddress(BankAccountDTO bankAccountDTO, BankAccount bankAccount) {
-        if (bankAccountDTO.getAddress() != null) {
-        Address address = addressRepository.findById(bankAccountDTO.getAddress().getId())
-                .orElseThrow(() -> new RuntimeException("해당 주소 정보가 존재하지 않습니다."));
+        Address address = bankAccount.getAddress();
         address.setPostalCode(bankAccountDTO.getAddress().getPostalCode());
         address.setRoadAddress(bankAccountDTO.getAddress().getRoadAddress());
         address.setDetailedAddress(bankAccountDTO.getAddress().getDetailedAddress());
         addressRepository.save(address);
         bankAccount.setAddress(address);
-        }
     }
 
 
