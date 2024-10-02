@@ -3,26 +3,22 @@ package com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.QAccountSubject;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.QStructure;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.QClient;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.QDepartmentEmployee;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.*;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.enums.DailyAndMonthType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.QResolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.QDepartment;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.QEmployee;
-import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Expression;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -280,18 +276,29 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
     }
 
     @Override
-    public List<DailyAndMonthJournalShowDTO> dailyLedgerList(DailyAndMonthJournalSearchDTO dto) {
+    public List<DailyAndMonthJournalDTO> dailyLedgerList(DailyAndMonthJournalSearchDTO dto) {
 
         QResolvedVoucher rv = QResolvedVoucher.resolvedVoucher;
         QAccountSubject ac = QAccountSubject.accountSubject;
         QStructure ass = QStructure.structure;
 
+        BooleanBuilder whereClause = new BooleanBuilder();
+        whereClause.and(ac.code.ne("101"));
+
+        if (dto.getJournalType() == DailyAndMonthType.DAILY) {
+            whereClause.and(rv.voucherDate.between(dto.getStartDate(), dto.getEndDate()));
+        } else if (dto.getJournalType() == DailyAndMonthType.MONTHLY) {
+            // 월계표일 경우 월 단위로 그룹화
+            whereClause.and(rv.voucherDate.between(dto.getStartDate().withDayOfMonth(1), dto.getEndDate().withDayOfMonth(dto.getEndDate().lengthOfMonth())));
+        }
+
         return queryFactory
                 .select(Projections.constructor(
-                        DailyAndMonthJournalShowDTO.class,
+                        DailyAndMonthJournalDTO.class,
                         ac.code.as("accountCode"),
                         ac.name.as("accountName"),
                         ass.code.as("accountStructureCode"),
+                        ass.min.as("accountStructureMin"),
                         ass.mediumCategory.as("accountStructureMediumCategory"),
                         ass.smallCategory.as("accountStructureSmallCategory"),
                         Expressions.asNumber(
@@ -347,9 +354,8 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                 .from(rv)
                 .join(rv.accountSubject, ac)
                 .join(ac.structure, ass)
-                .where(ac.code.ne("101")
-                .and(rv.voucherDate.between(dto.getStartDate(),dto.getEndDate())))
-                .groupBy(ac.code, ac.name, ass.code, ass.mediumCategory, ass.smallCategory)
+                .where(whereClause)
+                .groupBy(ac.code, ac.name, ass.code,ass.min, ass.mediumCategory, ass.smallCategory)
                 .fetch();
 
     }
