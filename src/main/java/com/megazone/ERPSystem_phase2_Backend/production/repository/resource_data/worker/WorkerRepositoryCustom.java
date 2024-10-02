@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface WorkerRepositoryCustom {
 
-    List<ListWorkerDTO> findAllWorkerByDepartmentAndCompanyId(Long companyId);
+    List<ListWorkerDTO> findAllWorkerByDepartment();
 }
