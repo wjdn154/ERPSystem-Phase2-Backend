@@ -18,7 +18,9 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -67,32 +69,58 @@ public class ResolvedSaleAndPurchaseVoucherRepositoryImpl implements ResolvedSal
     }
 
     @Override
-    public Object showTaxInvoiceLedger(TaxInvoiceLedgerSearchDTO dto) {
-//        QClient client = QClient.client;
-//        QResolvedSaleAndPurchaseVoucher voucher = QResolvedSaleAndPurchaseVoucher.resolvedSaleAndPurchaseVoucher;
-//
-//
-//        List<Integer> monthsList = IntStream.rangeClosed(1, 12).boxed().collect(Collectors.toList());
-//
-//        return queryFactory.select(
-//                        client.code.as("clientCode"),
-//                        client.printClientName.as("clientName"),
-//                        client.businessRegistrationNumber.as("clientNumber"),
-//                        voucher.voucherDate.month().as("month"),  // voucher의 월 정보 사용
-//                        voucher.id.count().coalesce(0L).as("voucherCount"),
-//                        voucher.supplyAmount.sum().coalesce(0L).as("supplyAmount"),
-//                        voucher.vatAmount.sum().coalesce(0L).as("vatAmount")
-//                )
-//                .from(client)
-//                .leftJoin(voucher)
-//                .on(voucher.voucherDate.month().in(monthsList)  // 지정된 월 리스트로 필터링
-//                        .and(voucher.voucherDate.between(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 8, 31)))
-//                        .and(voucher.client.id.eq(client.id))
-//                        .and(voucher.electronicTaxInvoiceStatus.eq(ElectronicTaxInvoiceStatus.PUBLISHED)))
-//                .where(client.code.between("1", "30"))
-//                .groupBy(client.code, client.printClientName, client.businessRegistrationNumber, voucher.voucherDate.month())
-//                .orderBy(client.code.asc(), voucher.voucherDate.month().asc())
-//                .fetch();
-        return null;
+    public List<TaxInvoiceLedgerShowDTO> showTaxInvoiceLedger(TaxInvoiceLedgerSearchDTO dto) {
+        QClient client = QClient.client;
+        QResolvedSaleAndPurchaseVoucher voucher = QResolvedSaleAndPurchaseVoucher.resolvedSaleAndPurchaseVoucher;
+        QVatType vatType = QVatType.vatType;
+
+        List<TaxInvoiceLedgerShowDTO> result =  queryFactory
+                .select(Projections.constructor(TaxInvoiceLedgerShowDTO.class,
+                        client.code.as("clientCode"),
+                        client.printClientName.as("clientName"),
+                        client.businessRegistrationNumber.as("clientNumber"),
+                        voucher.voucherDate.month().as("month"),
+                        voucher.id.count().as("voucherCount"),
+                        voucher.supplyAmount.sum().as("supplyAmount"),
+                        voucher.vatAmount.sum().as("vatAmount")
+                ))
+                .from(voucher)
+                .join(client).on(voucher.client.id.eq(client.id))
+                .join(vatType).on(voucher.vatType.id.eq(vatType.id))
+                .where(
+                        voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate())
+                                .and(voucher.electronicTaxInvoiceStatus.eq(ElectronicTaxInvoiceStatus.PUBLISHED))
+                                .and(client.code.castToNum(Integer.class).between(Integer.parseInt(dto.getStartClientCode()),
+                                        Integer.parseInt(dto.getEndClientCode()))
+                                        .and(vatType.transactionType.eq(dto.getTransactionType()))))
+                .groupBy(client.code, voucher.voucherDate.month())
+                .orderBy(client.code.asc(), voucher.voucherDate.month().asc())
+                .fetch();
+
+
+        Map<Integer, TaxInvoiceLedgerShowDTO> dataMap = result.stream()
+                .collect(Collectors.toMap(TaxInvoiceLedgerShowDTO::getMonth, dto2 -> dto2));
+
+
+        List<TaxInvoiceLedgerShowDTO> endResultData = new ArrayList<>();
+
+        for (int month = dto.getStartDate().getMonthValue(); month <= dto.getStartDate().getMonthValue(); month++) {
+            if (dataMap.containsKey(month)) {
+
+                endResultData.add(dataMap.get(month));
+            } else {
+
+                endResultData.add(new TaxInvoiceLedgerShowDTO(
+                        dataMap.values().stream().findFirst().get().getClientCode(),
+                        dataMap.values().stream().findFirst().get().getClientName(),
+                        dataMap.values().stream().findFirst().get().getClientNumber(),
+                        month,
+                        0,
+                        BigDecimal.ZERO,
+                        BigDecimal.ZERO
+                ));
+            }
+        }
+        return endResultData;
     }
 }

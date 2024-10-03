@@ -39,16 +39,16 @@ public class SalesAndPurchaseLedgerServiceImpl implements SalesAndPurchaseLedger
 
             // 전표 번호 기준 중복 없이 전표 개수 계산
             int voucherCount = (int) dtoList.stream()
-                    .map(SalesAndPurChaseLedgerShowDTO::getVoucherNumber)  // 전표 번호 추출
-                    .distinct()  // 중복 제거
-                    .count();  // 고유 전표 번호 개수
+                    .map(SalesAndPurChaseLedgerShowDTO::getVoucherNumber)
+                    .distinct()
+                    .count();
 
             SalesAndPurChaseLedgerDailySumDTO dailySumDTO;
 
-            if(voucherCount <= 1) {
-                dailySumDTO = null;
-            }
-            else {
+//            if(voucherCount <= 1) {
+//                dailySumDTO = null;
+//            }
+//            else {
                 // 공급가액, 부가세, 총 금액의 합계 계산
                 BigDecimal sumSupplyAmount = dtoList.stream()
                         .map(SalesAndPurChaseLedgerShowDTO::getSupplyAmount)
@@ -63,14 +63,12 @@ public class SalesAndPurchaseLedgerServiceImpl implements SalesAndPurchaseLedger
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
 
                 dailySumDTO = SalesAndPurChaseLedgerDailySumDTO.create(voucherCount, sumSupplyAmount, sumVatAmount, sumAmount);
-            }
+//            }
 
-            // SalesAndPurChaseLedgerShowAllDTO 객체 생성
             SalesAndPurChaseLedgerShowAllDTO result = SalesAndPurChaseLedgerShowAllDTO.create(
                     dtoList, dailySumDTO
             );
 
-            // 결과를 resultMap에 저장
             resultList.add(result);
         }
 
