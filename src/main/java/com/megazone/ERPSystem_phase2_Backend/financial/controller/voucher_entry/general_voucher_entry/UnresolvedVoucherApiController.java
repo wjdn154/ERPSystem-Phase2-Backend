@@ -32,6 +32,7 @@ public class UnresolvedVoucherApiController {
      */
     @PostMapping("/api/financial/general-voucher-entry/unresolvedVoucherEntry")
     public ResponseEntity<List<UnresolvedVoucherEntryDTO>> unresolvedVoucherEntry(@RequestBody List<UnresolvedVoucherEntryDTO> dto) {
+
         List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.unresolvedVoucherEntry(dto);
 
         List<UnresolvedVoucherEntryDTO> entryDtoList = new ArrayList<UnresolvedVoucherEntryDTO>();
@@ -99,14 +100,27 @@ public class UnresolvedVoucherApiController {
      * @return
      */
     @PostMapping("api/financial/general-voucher-entry/approvalUnresolvedVoucher")
-    public ResponseEntity<String> voucherApprovalProcessing(@RequestBody UnresolvedVoucherApprovalDTO dto) {
+    public ResponseEntity<Object> voucherApprovalProcessing(@RequestBody UnresolvedVoucherApprovalDTO dto) {
+        try {
+            List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.voucherApprovalProcessing(dto);
+            return ResponseEntity.status(HttpStatus.OK).body("선택한 미결전표가 " + dto.approvalResult() + "되었습니다.");
+        }catch(Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이유 : " + e.getMessage() + " " + dto.approvalResult() + "처리 실패");
+        }
+    }
 
-
-        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.voucherApprovalProcessing(dto);
-
-
-        return (unresolvedVoucherList != null && !unresolvedVoucherList.isEmpty()) ?
-                ResponseEntity.status(HttpStatus.OK).body("선택한 미결전표가 " + dto.approvalResult() + "되었습니다.") :
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dto.approvalResult() + "처리 실패");
+    /**
+     * 미결전표 승인탭 조회기능
+     */
+    @PostMapping("api/financial/general-voucher-entry/approvalSearch")
+    public ResponseEntity<Object> voucherApprovalSearch(@RequestBody Map<String,LocalDate> requestData) {
+        try{
+            LocalDate date = requestData.get("searchDate");
+            UnresolvedVoucherShowAllDTO showAllDto = unresolvedVoucherEntryService.unresolvedVoucherApprovalSearch(date);
+            return ResponseEntity.status(HttpStatus.OK).body(showAllDto);
+        }
+        catch(Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 }
