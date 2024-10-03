@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.financial.controller.basic_informa
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.bank_account.dto.BankAccountDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto.ClientDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.common.dto.BankDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.bank_account.BankAccountRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.basic_information_management.bank_account.BankAccountService;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -49,5 +51,15 @@ public class BankAccountController {
         return updatedBankAccount
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    // 은행 리스트 조회
+    @PostMapping("/fetchBankList")
+    public ResponseEntity<Object> fetchBankList() {
+        List<BankDTO> bankDTOS = bankAccountService.fetchBankList();
+
+        if(!bankDTOS.isEmpty()) return ResponseEntity.status(HttpStatus.OK).body(bankDTOS);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }

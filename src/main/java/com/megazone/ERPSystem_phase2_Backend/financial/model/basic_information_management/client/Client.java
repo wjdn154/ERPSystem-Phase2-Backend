@@ -6,6 +6,7 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_manageme
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 @Table(name = "client")
 @Getter
 @Setter
+@ToString
 public class Client {
 
     @Id
