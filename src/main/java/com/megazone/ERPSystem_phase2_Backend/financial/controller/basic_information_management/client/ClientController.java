@@ -5,8 +5,11 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.AccountSubjectsAndMemosDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.dto.MemoRequestDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto.CategoryDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto.ClientDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto.LiquorDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.dto.CompanyDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.common.dto.BankDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.basic_information_management.account_subject.AccountSubjectService;
@@ -47,18 +50,38 @@ public class ClientController {
         return clientService.fetchClient(id);
     }
 
+    @PostMapping("/fetchLiquorList")
+    public ResponseEntity<Object> fetchLiquorList() {
+        List<LiquorDTO> liquorList = clientService.fetchLiquorList();
+        return liquorList.isEmpty() ? ResponseEntity.status(HttpStatus.BAD_REQUEST).body("조회된 데이터가 없습니다.") : ResponseEntity.ok(liquorList);
+    }
+
+    @PostMapping("/fetchCategoryList")
+    public ResponseEntity<Object> fetchCategoryList() {
+        List<CategoryDTO> categoryList = clientService.fetchCategoryList();
+        return categoryList.isEmpty() ? ResponseEntity.status(HttpStatus.BAD_REQUEST).body("조회된 데이터가 없습니다.") : ResponseEntity.ok(categoryList);
+    }
+
+    @PostMapping("/fetchBankList")
+    public ResponseEntity<Object> fetchBankList() {
+        List<BankDTO> bankList = clientService.fetchBankList();
+        return bankList.isEmpty() ? ResponseEntity.status(HttpStatus.BAD_REQUEST).body("조회된 데이터가 없습니다.") : ResponseEntity.ok(bankList);
+    }
+
+
     /**
      * 거래처 등록
      * @param clientDTO 수정할 거래처 DTO
      * @return 등록한 거래처 정보를 담은 ClientDTO 객체를 반환.
      */
     @PostMapping("/save")
-    public ResponseEntity<ClientDTO> registerClient(@RequestBody ClientDTO clientDTO) {
-        Optional<ClientDTO> savedClient = clientService.saveClient(clientDTO);
+    public ResponseEntity<Object> registerClient(@RequestBody ClientDTO clientDTO) {
+        System.out.println("clientDTO = " + clientDTO.toString());
+        Long savedClient = clientService.saveClient(clientDTO);
 
-        return savedClient
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+        if (savedClient == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+        return ResponseEntity.ok("저장 완료");
     }
 
     @PostMapping("/search")
@@ -68,15 +91,15 @@ public class ClientController {
 
     /**
      * 거래처 수정
-     * @param id 수정할 거래처의 ID
      * @param clientDTO 수정할 거래처 DTO
      * @return 수정된 거래처 정보를 담은 ClientDTO 객체를 반환.
      */
-    @PutMapping("/update/{id}")
-    public ResponseEntity<ClientDTO> updateClient(@PathVariable("id") Long id, @RequestBody ClientDTO clientDTO) {
-        Optional<ClientDTO> updatedClient = clientService.updateClient(id, clientDTO);
-        return updatedClient
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    @PostMapping("/update")
+    public ResponseEntity<Object> updateClient(@RequestBody ClientDTO clientDTO) {
+        ClientDTO updatedClient = clientService.updateClient(clientDTO);
+
+        if (updatedClient == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+        return ResponseEntity.ok(updatedClient);
     }
 }

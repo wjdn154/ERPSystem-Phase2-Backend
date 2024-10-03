@@ -11,7 +11,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddressDTO {
-    private Long id;
     private String postalCode; // 우편번호
     private String roadAddress; // 도로명 주소
     private String detailedAddress; // 상세 주소

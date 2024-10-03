@@ -9,6 +9,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Address;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Bank;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Contact;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.common.dto.BankDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.bank_account.AccountTypeRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.bank_account.BankAccountRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.*;
@@ -17,8 +18,10 @@ import com.megazone.ERPSystem_phase2_Backend.financial.repository.common.BankRep
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.common.ContactRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -70,6 +73,14 @@ public class BankAccountServiceImpl implements BankAccountService {
             // 수정된 정보를 DTO로 변환하여 반환
             return new BankAccountDTO(updatedBankAccount);
         });
+    }
+
+    @Override
+    public List<BankDTO> fetchBankList() {
+        ModelMapper modelMapper = new ModelMapper();
+        return bankRepository.findAll().stream()
+                .map(bank -> modelMapper.map(bank, BankDTO.class))
+                .toList();
     }
 
     private BankAccount createBankAccount(BankAccountDTO bankAccountDTO, BankAccount bankAccount) {
@@ -130,15 +141,12 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     private void updateAddress(BankAccountDTO bankAccountDTO, BankAccount bankAccount) {
-        if (bankAccountDTO.getAddress() != null) {
-        Address address = addressRepository.findById(bankAccountDTO.getAddress().getId())
-                .orElseThrow(() -> new RuntimeException("해당 주소 정보가 존재하지 않습니다."));
+        Address address = bankAccount.getAddress();
         address.setPostalCode(bankAccountDTO.getAddress().getPostalCode());
         address.setRoadAddress(bankAccountDTO.getAddress().getRoadAddress());
         address.setDetailedAddress(bankAccountDTO.getAddress().getDetailedAddress());
         addressRepository.save(address);
         bankAccount.setAddress(address);
-        }
     }
 
 
