@@ -270,6 +270,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService{
             if(updateDto.getClientId() != null){
                 Client client = clientRepository.findById(updateDto.getClientId())
                         .orElseThrow(() -> new RuntimeException("해당 거래처 정보를 찾을 수 없습니다."));
+                purchaseOrder.setClient(client);
             }
             
             if (updateDto.getManagerId() != null) {

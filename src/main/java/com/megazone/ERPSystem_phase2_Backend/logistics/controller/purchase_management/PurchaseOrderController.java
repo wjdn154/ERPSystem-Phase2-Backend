@@ -73,6 +73,11 @@ public class PurchaseOrderController {
         return ResponseEntity.ok(updatedOrder);
     }
 
+    /**
+     * 발주서 삭제
+     * @param id
+     * @return
+     */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deletePurchaseOrder(@PathVariable("id") Long id) {
         String result = purchaseOrderService.deletePurchaseOrder(id);

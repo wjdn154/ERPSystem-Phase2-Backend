@@ -11,6 +11,7 @@ public class ReceivingOrderResponseDto {
     private Long id;
     private String clientName;
     private String managerName;
+    private String warehouseName;
     private String productName;
     private LocalDate date;
     private LocalDate deliveryDate;

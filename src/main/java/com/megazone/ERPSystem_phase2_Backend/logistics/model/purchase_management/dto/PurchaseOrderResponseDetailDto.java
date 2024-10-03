@@ -17,10 +17,10 @@ import java.util.List;
 @AllArgsConstructor
 public class PurchaseOrderResponseDetailDto {
 
-    // 발주 요청 ID
+    // 발주서 ID
     private Long id;
 
-    // 발주 요청 일자
+    // 발주서 작성 일자
     private LocalDate date;
 
     // 납기 일자

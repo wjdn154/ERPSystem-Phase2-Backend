@@ -1,16 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.controller.purchase_management;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseOrderResponseDetailDto;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.ReceivingOrderResponseDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.logistics.service.purchase_management.receiving_order.ReceivingOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -44,10 +40,46 @@ public class ReceivingOrderController {
      * @return
      */
     @PostMapping("/{id}")
-    public ResponseEntity<ReceivingOrderResponseDto> getReceivingOrderDetails(@PathVariable("id") Long id) {
+    public ResponseEntity<ReceivingOrderResponseDetailDto> getReceivingOrderDetails(@PathVariable("id") Long id) {
 
         return receivingOrderService.findReceivingOrderDetailById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    /**
+     * 입고지시서 등록
+     * @param createDto
+     * @return
+     */
+    @PostMapping("/create")
+    public ResponseEntity<?> createReceivingOrder(@RequestBody ReceivingOrderCreateDto createDto) {
+        ReceivingOrderResponseDetailDto savedOrder = receivingOrderService.createReceivingOrder(createDto);
+        return savedOrder != null ?
+                ResponseEntity.status(HttpStatus.CREATED).body(savedOrder) :
+                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("발주서 생성에 실패했습니다.");
+    }
+
+    /**
+     * 입고지시서 수정
+     * @param id
+     * @param updateDto
+     * @return
+     */
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ReceivingOrderResponseDetailDto> updateReceivingOrder(@PathVariable("id") Long id, @RequestBody ReceivingOrderCreateDto updateDto) {
+        ReceivingOrderResponseDetailDto updatedOrder = receivingOrderService.updatePurchaseOrder(id, updateDto);
+        return ResponseEntity.ok(updatedOrder);
+    }
+
+    /**
+     * 입고지시서 삭제
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteReceivingOrder(@PathVariable("id") Long id) {
+        String result = receivingOrderService.deleteReceivingOrder(id);
+        return ResponseEntity.ok(result);
     }
 }

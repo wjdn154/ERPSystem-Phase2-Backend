@@ -4,10 +4,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,7 +15,7 @@ import java.util.List;
  * 입고 지시서에 대한 정보가 있는 테이블
  */
 @Entity
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -51,7 +48,7 @@ public class ReceivingOrder {
 
     // 입고 예정 일자
     @Column(nullable = false)
-    private LocalDate receivingDate;
+    private LocalDate deliveryDate;
 
     // 일자 - 입고지시서 입력 일자
     @Column(nullable = false)
