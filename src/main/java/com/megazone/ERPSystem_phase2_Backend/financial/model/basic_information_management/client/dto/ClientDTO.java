@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.dto;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.enums.TransactionType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.common.dto.AddressDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.common.dto.BankDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
@@ -31,8 +32,9 @@ public class ClientDTO {
 
     private EmployeeDTO employee; // 담당자 정보
     private Long id; // 거래처 ID
-    private String code; // 거래처 코드
-    private String transactionType; // 거래 유형
+    private String code; // 거래처 코드e
+
+    private TransactionType transactionType; // 거래 유형
     private String businessRegistrationNumber; // 사업자등록번호
     private String idNumber; // 주민등록번호
     private String representativeName; // 대표자명

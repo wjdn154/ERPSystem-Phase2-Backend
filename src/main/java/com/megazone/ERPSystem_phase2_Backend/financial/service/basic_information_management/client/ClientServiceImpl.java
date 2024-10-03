@@ -13,7 +13,9 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.common.dto.BankDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.common.AddressRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.common.BankRepository;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.PermissionDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -43,6 +45,7 @@ public class ClientServiceImpl implements ClientService {
     private final FinancialInfoRepository financialInfoRepository;
     private final LiquorRepository liquorRepository;
     private final ManageInfoRepository manageInfoRepository;
+    private final EmployeeRepository employeeRepository;
 
     /**
      * 거래처 정보를 저장하고 DTO로 반환     *
@@ -50,7 +53,7 @@ public class ClientServiceImpl implements ClientService {
      * @return 저장된 거래처 정보를 DTO로 변환하여 Optional로 반환
      */
     @Override
-    public Optional<ClientDTO> saveClient(ClientDTO clientDTO) {
+    public Long saveClient(ClientDTO clientDTO) {
         Client client = new Client();
 
         createAddress(clientDTO, client); // 주소 정보
@@ -64,19 +67,17 @@ public class ClientServiceImpl implements ClientService {
 
         Client savedClient = createClient(clientDTO, client); // 거래처 정보 저장
 
-        ModelMapper modelMapper = new ModelMapper();
-        return Optional.of(modelMapper.map(savedClient, ClientDTO.class));
+        return savedClient.getId();
     }
 
     /**
      * 거래처 정보를 수정하고 DTO로 반환
-     * @param id 거래처 ID
      * @param clientDTO 수정할 거래처 정보가 담긴 DTO
      * @return 수정된 거래처 정보를 DTO로 변환하여 Optional로 반환
      */
     @Override
-    public Optional<ClientDTO> updateClient(Long id, ClientDTO clientDTO) {
-        return clientRepository.findById(id).map(client -> {
+    public ClientDTO updateClient(ClientDTO clientDTO) {
+        return clientRepository.findById(clientDTO.getId()).map(client -> {
 
             updateAddress(clientDTO, client); // 주소 정보 수정
             updateBusinessInfo(clientDTO, client); // 업태 및 종목 정보 수정
@@ -86,12 +87,13 @@ public class ClientServiceImpl implements ClientService {
             updateBankAccount(clientDTO, client); // 은행 계좌 정보 수정
             getLiquor(clientDTO, client); // 주류 정보 수정
             getCategory(clientDTO, client); // 거래처 분류 수정
+            client.setEmployee(employeeRepository.findById(clientDTO.getEmployee().getId()).orElseThrow(() -> new RuntimeException("해당 담당자가 존재하지 않습니다."))); // 담당자 정보 수정
 
             Client savedClient = createClient(clientDTO, client); // 거래처 정보 저장
 
             ModelMapper modelMapper = new ModelMapper();
             return modelMapper.map(savedClient, ClientDTO.class);
-        });
+        }).orElse(null);
     }
 
     @Override
@@ -121,6 +123,8 @@ public class ClientServiceImpl implements ClientService {
 
         ModelMapper modelMapper = new ModelMapper();
         Optional<ClientDTO> clientDTO = client.map(value -> modelMapper.map(value, ClientDTO.class));
+
+        System.out.println("clientDTO.toString() = " + clientDTO.toString());
 
         if (!clientDTO.isPresent()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 거래처 정보가 없습니다.");
 
@@ -199,7 +203,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     private Client createClient(ClientDTO clientDTO, Client client) {
-        client.setTransactionType(TransactionType.valueOf(clientDTO.getTransactionType()));
+        client.setTransactionType(clientDTO.getTransactionType());
         client.setPrintClientName(clientDTO.getPrintClientName());
         client.setBusinessRegistrationNumber(clientDTO.getBusinessRegistrationNumber());
         client.setIdNumber(clientDTO.getIdNumber());
@@ -208,7 +212,7 @@ public class ClientServiceImpl implements ClientService {
         client.setTransactionEndDate(clientDTO.getTransactionEndDate());
         client.setRemarks(clientDTO.getRemarks());
         client.setIsActive(clientDTO.getIsActive());
-        client.setCode(clientDTO.getCode() != null ? clientDTO.getCode() : clientRepository.findMaxCode() + 1);
+        client.setCode(clientDTO.getCode() != null ? clientDTO.getCode() : String.valueOf(Integer.parseInt(clientRepository.findMaxCode()) + 1));
 
         return clientRepository.save(client);
     }

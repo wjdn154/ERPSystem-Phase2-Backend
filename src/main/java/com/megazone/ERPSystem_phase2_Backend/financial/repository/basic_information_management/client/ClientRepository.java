@@ -12,6 +12,6 @@ import java.util.Optional;
 public interface ClientRepository extends JpaRepository<Client, Long>, ClientRepositoryCustom {
     Optional<Client> findByCode(String code);
     List<Client> findByPrintClientNameContaining(String printClientName);
-    @Query("SELECT MAX(c.code) FROM client c WHERE c.id = ?1")
+    @Query("SELECT MAX(c.code) FROM client c")
     String findMaxCode();
 }

@@ -76,6 +76,7 @@ public class ClientController {
      */
     @PostMapping("/save")
     public ResponseEntity<Object> registerClient(@RequestBody ClientDTO clientDTO) {
+        System.out.println("clientDTO = " + clientDTO.toString());
         Long savedClient = clientService.saveClient(clientDTO);
 
         if (savedClient == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -93,13 +94,12 @@ public class ClientController {
      * @param clientDTO 수정할 거래처 DTO
      * @return 수정된 거래처 정보를 담은 ClientDTO 객체를 반환.
      */
-    @PutMapping("/update")
+    @PostMapping("/update")
     public ResponseEntity<Object> updateClient(@RequestBody ClientDTO clientDTO) {
-        System.out.println("clientDTO.toString() = " + clientDTO.toString());
-        Long updatedClient = clientService.updateClient(clientDTO);
+        ClientDTO updatedClient = clientService.updateClient(clientDTO);
 
         if (updatedClient == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-        return ResponseEntity.ok("수정 완료");
+        return ResponseEntity.ok(updatedClient);
     }
 }
