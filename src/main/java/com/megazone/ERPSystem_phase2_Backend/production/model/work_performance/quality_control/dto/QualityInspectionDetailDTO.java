@@ -18,7 +18,7 @@ public class QualityInspectionDetailDTO {
     private String inspectionCode;     //품질 검사 코드
     private String inspectionName;     //품질 검사 이름
     private String description;        //설명
-    private Boolean isPassed;          //품질 통과 여부 
+    private String isPassed;          //품질 통과 여부
     private QualityInspectionType qualityInspectionType;   //품질 검사 유형 
     private Long workPerformanceId;         //작업실적 아이디
     private String workPerformanceName;     //작업실적 이름
