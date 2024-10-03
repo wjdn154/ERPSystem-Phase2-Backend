@@ -1,12 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.resolvedVoucher;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.*;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.ResolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherDeleteDTO;
-import com.querydsl.core.Tuple;
-import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface ResolvedVoucherRepositoryCustom {
@@ -28,5 +24,5 @@ public interface ResolvedVoucherRepositoryCustom {
 
     List<AccountLedgerShowDTO> accountLedgerDetail(AccountLedgerDetailEntryDTO dto);
 
-    Object dailyLedgerList(DailyAndMonthJournalSearchDTO dto);
+    List<DailyAndMonthJournalDTO> dailyLedgerList(DailyAndMonthJournalSearchDTO dto);
 }

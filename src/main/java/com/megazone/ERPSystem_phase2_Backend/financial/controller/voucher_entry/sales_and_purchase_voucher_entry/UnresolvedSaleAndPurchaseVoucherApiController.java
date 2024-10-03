@@ -61,7 +61,7 @@ public class UnresolvedSaleAndPurchaseVoucherApiController {
         List<UnresolvedSaleAndPurchaseVoucherShowDTO> showDTOS = voucherList.stream().map(
                 UnresolvedSaleAndPurchaseVoucherShowDTO::create).toList();
 
-        UnresolvedSaleAndPurchaseVoucherShowAllDTO showAllDTO = UnresolvedSaleAndPurchaseVoucherShowAllDTO.create(date,showDTOS);
+        UnresolvedSaleAndPurchaseVoucherShowAllDTO showAllDTO = UnresolvedSaleAndPurchaseVoucherShowAllDTO.create(showDTOS);
 
         return ResponseEntity.status(HttpStatus.OK).body(showAllDTO);
     }
@@ -119,18 +119,31 @@ public class UnresolvedSaleAndPurchaseVoucherApiController {
 
     /**
      * 미결 매출 매입전표 승인 처리 메소드
-     * @param dto
-     * @return
      */
     @PostMapping("/api/financial/sale-end-purchase-unresolved-voucher/approve")
-    public ResponseEntity<String> voucherApprovalProcessing(@RequestBody UnresolvedSaleAndPurchaseVoucherApprovalDTO dto) {
+    public ResponseEntity<Object> voucherApprovalProcessing(@RequestBody UnresolvedSaleAndPurchaseVoucherApprovalDTO dto) {
 
+        try{
+            List<UnresolvedSaleAndPurchaseVoucher> unresolvedVoucherList = unresolvedSaleAndPurchaseVoucherService.ApprovalProcessing(dto);
+            return ResponseEntity.status(HttpStatus.OK).body("선택한 미결 매출매입전표가 " + dto.approvalResult() + "되었습니다.");
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이유 : " + e.getMessage() + " " + dto.approvalResult() + "처리 실패");
+        }
+    }
 
-        List<UnresolvedSaleAndPurchaseVoucher> unresolvedVoucherList = unresolvedSaleAndPurchaseVoucherService.ApprovalProcessing(dto);
+    /**
+     * 미결전표 승인탭 전체조회
+     */
+    @PostMapping("/api/financial/sale-end-purchase-unresolved-voucher/approveSearch")
+    public ResponseEntity<Object> voucherApprovalSearch(@RequestBody Map<String,LocalDate> requestData) {
 
+        LocalDate date = requestData.get("searchDate");
 
-        return (unresolvedVoucherList != null && !unresolvedVoucherList.isEmpty()) ?
-                ResponseEntity.status(HttpStatus.OK).body("선택한 미결전표가 " + dto.approvalResult() + "되었습니다.") :
-                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(dto.approvalResult() + "처리 실패");
+        try {
+            List<UnresolvedSaleAndPurchaseVoucherShowDTO> unresolvedVoucherList = unresolvedSaleAndPurchaseVoucherService.ApprovalSearch(date);
+            return ResponseEntity.status(HttpStatus.OK).body(unresolvedVoucherList);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 }

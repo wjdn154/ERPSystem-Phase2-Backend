@@ -5,6 +5,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.UnresolvedSaleAndPurchaseVoucherApprovalDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.UnresolvedSaleAndPurchaseVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.UnresolvedSaleAndPurchaseVoucherEntryDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.UnresolvedSaleAndPurchaseVoucherShowDTO;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -25,9 +26,9 @@ public interface UnresolvedSaleAndPurchaseVoucherService {
 
     BigDecimal calculateTotalAmount(List<UnresolvedVoucher> vouchers, Function<UnresolvedVoucher, BigDecimal> amount);
 
-//    List<UnresolvedVoucher> searchVoucher(String voucherNumber);
-
     List<UnresolvedVoucher> searchVoucher(String voucherNumber);
 
     List<UnresolvedSaleAndPurchaseVoucher> ApprovalProcessing(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto);
+
+    List<UnresolvedSaleAndPurchaseVoucherShowDTO> ApprovalSearch(LocalDate date);
 }
