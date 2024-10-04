@@ -31,7 +31,7 @@ public class StandardBomMaterial {
     private Long id; // PK
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bom_id", nullable = false)
+    @JoinColumn(name = "standard_bom_id", nullable = false)
     private StandardBom bom; // 특정 BOM 참조
 
     @ManyToOne(fetch = FetchType.LAZY)

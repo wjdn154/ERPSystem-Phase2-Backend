@@ -1,13 +1,24 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.common_scheduling.ProductionRequest;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Department;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Department.DepartmentRepository;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.Orders;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.ProductionRequestDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionRequest;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.production_strategy.PlanOfMakeToOrder;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.production_request.ProductionRequestsRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -16,15 +27,62 @@ import java.util.List;
 public class ProductionRequestServiceImpl implements ProductionRequestService {
 
     private final ProductionRequestsRepository productionRequestsRepository;
+    private final ClientRepository clientRepository;
+    private final ProductRepository productRepository;
+    private final EmployeeRepository employeeRepository;
+    private final DepartmentRepository departmentRepository;
+//    private final OrdersRepository ordersRepository;
 
     @Override
     public ProductionRequestDTO saveManualProductionRequest(ProductionRequestDTO dto) {
+        validateProductionRequestFields(dto);
+        validateRelatedEntities(dto);
+
+        if (isDuplicateRequest(dto)) {
+            throw new IllegalArgumentException("동일한 생산요청이 이미 존재합니다.");
+        }
+
         ProductionRequest entity = convertToEntity(dto);
-        // 수동 등록의 경우, 추가적인 처리나 검증이 필요할 수 있음
-        // 예: 요청자가 지정한 사항을 검토
         ProductionRequest savedEntity = productionRequestsRepository.save(entity);
         return convertToDTO(savedEntity);
     }
+
+    // 중복방지 검증
+    private boolean isDuplicateRequest(ProductionRequestDTO dto) {
+        return productionRequestsRepository.existsByProductIdAndRequestDate(
+                dto.getProductId(), dto.getRequestDate());
+    }
+
+    // 필수입력값
+    private void validateProductionRequestFields(ProductionRequestDTO dto) {
+
+        if (dto.getProductId() == null) {
+            throw new IllegalArgumentException("제품을 선택해 주세요.");
+        }
+        if (dto.getRequestQuantity() == null || dto.getRequestQuantity().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("요청 수량은 0보다 커야 합니다.");
+        }
+
+    }
+
+    // 연관엔티티 검증
+    private void validateRelatedEntities(ProductionRequestDTO dto) {
+        if (!clientRepository.existsById(dto.getClientId())) {
+            throw new EntityNotFoundException("해당 클라이언트를 찾을 수 없습니다.");
+        }
+        if (!productRepository.existsById(dto.getProductId())) {
+            throw new EntityNotFoundException("해당 제품을 찾을 수 없습니다.");
+        }
+//        if (!ordersRepository.existsById(dto.getSalesOrderId())) {
+//            throw new EntityNotFoundException("해당 영업 주문을 찾을 수 없습니다.");
+//        } todo
+        if (!employeeRepository.existsById(dto.getRequesterId())) {
+            throw new EntityNotFoundException("요청자를 찾을 수 없습니다.");
+        }
+
+    }
+
+
 
     @Override
     public ProductionRequestDTO getProductionRequestById(Long id) {
@@ -51,10 +109,37 @@ public class ProductionRequestServiceImpl implements ProductionRequestService {
         existingEntity.setRequestDate(dto.getRequestDate());
         existingEntity.setRequestQuantity(dto.getRequestQuantity());
         existingEntity.setConfirmedQuantity(dto.getConfirmedQuantity());
-        existingEntity.setProduct(dto.getProduct());
-        existingEntity.setSalesOrder(dto.getSalesOrder());
-        existingEntity.setRequester(dto.getRequester());
-        existingEntity.setRemarks(dto.getRemarks());
+
+        // 연관된 엔티티는 ID로 조회해서 설정
+        if (dto.getClientId() != null) {
+            Client client = clientRepository.findById(dto.getClientId())
+                    .orElseThrow(() -> new EntityNotFoundException("클라이언트를 찾을 수 없습니다."));
+            existingEntity.setClient(client);
+        }
+
+        if (dto.getDepartmentId() != null) {
+            Department department = departmentRepository.findById(dto.getDepartmentId())
+                    .orElseThrow(() -> new EntityNotFoundException("부서를 찾을 수 없습니다."));
+            existingEntity.setProductionDepartment(department);
+        }
+
+        if (dto.getProductId() != null) {
+            Product product = productRepository.findById(dto.getProductId())
+                    .orElseThrow(() -> new EntityNotFoundException("제품을 찾을 수 없습니다."));
+            existingEntity.setProduct(product);
+        }
+
+//        if (dto.getSalesOrderId() != null) {
+//            Orders salesOrder = ordersRepository.findById(dto.getSalesOrderId())
+//                    .orElseThrow(() -> new EntityNotFoundException("영업 주문을 찾을 수 없습니다."));
+//            existingEntity.setSalesOrder(salesOrder);
+//        }
+
+        if (dto.getRequesterId() != null) {
+            Employee requester = employeeRepository.findById(dto.getRequesterId())
+                    .orElseThrow(() -> new EntityNotFoundException("요청자를 찾을 수 없습니다."));
+            existingEntity.setRequester(requester);
+        }
 
         ProductionRequest updatedEntity = productionRequestsRepository.save(existingEntity);
         return convertToDTO(updatedEntity);
@@ -100,16 +185,28 @@ public class ProductionRequestServiceImpl implements ProductionRequestService {
 
     // DTO와 엔티티 변환 메서드
     private ProductionRequest convertToEntity(ProductionRequestDTO dto) {
+
+        Client client = clientRepository.findById(dto.getClientId())
+                .orElseThrow(() -> new EntityNotFoundException("클라이언트를 찾을 수 없습니다."));
+        Department department = departmentRepository.findById(dto.getDepartmentId())
+                .orElseThrow(() -> new EntityNotFoundException("부서를 찾을 수 없습니다."));
+        Employee requester = employeeRepository.findById(dto.getRequesterId())
+                .orElseThrow(() -> new EntityNotFoundException("요청자를 찾을 수 없습니다."));
+
         return ProductionRequest.builder()
                 .id(dto.getId())
                 .name(dto.getName())
                 .isConfirmed(dto.getIsConfirmed())
                 .requestDate(dto.getRequestDate())
+                .deadlineOfCompletion(dto.getDeadlineOfCompletion())
+                .dueDateToProvide(dto.getDueDateToProvide())
                 .requestQuantity(dto.getRequestQuantity())
                 .confirmedQuantity(dto.getConfirmedQuantity())
-                .product(dto.getProduct())
-                .salesOrder(dto.getSalesOrder())
-                .requester(dto.getRequester())
+                .product(Product.builder().id(dto.getProductId()).build())
+                .client(client)
+                .productionDepartment(department)
+                .salesOrder(Orders.builder().id(dto.getSalesOrderId()).build())
+                .requester(requester)
                 .remarks(dto.getRemarks())
                 .build();
     }
@@ -120,12 +217,18 @@ public class ProductionRequestServiceImpl implements ProductionRequestService {
                 .name(entity.getName())
                 .isConfirmed(entity.getIsConfirmed())
                 .requestDate(entity.getRequestDate())
+                .deadlineOfCompletion(entity.getDeadlineOfCompletion())
+                .dueDateToProvide(entity.getDueDateToProvide())
                 .requestQuantity(entity.getRequestQuantity())
                 .confirmedQuantity(entity.getConfirmedQuantity())
-                .product(entity.getProduct())
-                .salesOrder(entity.getSalesOrder())
-                .requester(entity.getRequester())
                 .remarks(entity.getRemarks())
+                .clientId(entity.getClient().getId() != null ? entity.getClient().getId() : null)
+                .departmentId(entity.getProductionDepartment().getId() != null ? entity.getProductionDepartment().getId() : null)
+                .productId(entity.getProduct().getId() != null ? entity.getProduct().getId() : null)
+                .salesOrderId(entity.getSalesOrder().getId() != null ? entity.getSalesOrder().getId() : null)
+                .requesterId(entity.getRequester().getId() != null ? entity.getRequester().getId() : null)
+                .planOfMakeToOrderIds(entity.getPlanOfMakeToOrders() != null ?
+                        entity.getPlanOfMakeToOrders().stream().map(PlanOfMakeToOrder::getId).toList() : null)
                 .build();
     }
 }
