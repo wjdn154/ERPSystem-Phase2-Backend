@@ -90,7 +90,7 @@ spring:
         - classpath:initial-database/logistics/warehouse/warehouse.sql
         - classpath:initial-database/logistics/purchase_management/purchase_request.sql
         - classpath:initial-database/logistics/purchase_management/purchase_order.sql
-        - classpath:initial-database/logistics/purchase_management/receiving_order.sql
+#        - classpath:initial-database/logistics/purchase_management/receiving_order.sql
 
         - classpath:initial-database/production/basic_data/bom/standard_bom.sql
         - classpath:initial-database/production/basic_data/workcenter.sql
