@@ -13,12 +13,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UnresolvedSaleAndPurchaseVoucherShowAllDTO {
-    private LocalDate date;
+//    private LocalDate date;
     private List<UnresolvedSaleAndPurchaseVoucherShowDTO> showDTOS;
 
-    public static UnresolvedSaleAndPurchaseVoucherShowAllDTO create(LocalDate localDate,
-                                                             List<UnresolvedSaleAndPurchaseVoucherShowDTO> showDTOS) {
-        return new UnresolvedSaleAndPurchaseVoucherShowAllDTO(localDate, showDTOS);
+    public static UnresolvedSaleAndPurchaseVoucherShowAllDTO create(/*LocalDate localDate,*/List<UnresolvedSaleAndPurchaseVoucherShowDTO> showDTOS) {
+        return new UnresolvedSaleAndPurchaseVoucherShowAllDTO(/*localDate,*/ showDTOS);
     }
 
 }

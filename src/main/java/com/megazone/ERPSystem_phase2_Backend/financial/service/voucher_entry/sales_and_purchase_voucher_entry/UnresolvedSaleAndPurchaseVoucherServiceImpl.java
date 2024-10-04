@@ -11,9 +11,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.gener
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.JournalEntry;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.VatType;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.UnresolvedSaleAndPurchaseVoucherApprovalDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.UnresolvedSaleAndPurchaseVoucherDeleteDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.UnresolvedSaleAndPurchaseVoucherEntryDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.TransactionType;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
@@ -23,6 +21,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.vatType.VatTypeRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry.UnresolvedVoucherEntryService;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.UserPermission;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -368,15 +367,22 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
     @Override
     public List<UnresolvedSaleAndPurchaseVoucher> ApprovalProcessing(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto) {
 
-//        List<UnresolvedSaleAndPurchaseVoucher> unresolvedVoucherList = unresolvedSaleAndPurchaseVoucherRepository.findApprovalTypeVoucher(dto);
-        List<UnresolvedSaleAndPurchaseVoucher> unresolvedVoucherList = unresolvedSaleAndPurchaseVoucherRepository.findAll(); // 초기 데이터 등록용
-        try {
-            if(dto.getApprovalStatus().equals(ApprovalStatus.PENDING)) {
-                throw new IllegalArgumentException("승인 대기 상태로는 변경할 수 없습니다.");
-            }
+//        List<UnresolvedSaleAndPurchaseVoucher> unresolvedVoucherList = unresolvedSaleAndPurchaseVoucherRepository.findAll(); // 초기 데이터 등록용
+        if(dto.getApprovalStatus().equals(ApprovalStatus.PENDING)) {
+            throw new RuntimeException("승인 대기 상태로는 변경할 수 없습니다.");
+        }
 
-            if(!unresolvedVoucherList.isEmpty())
-            {
+        Employee employee = employeeRepository.findById(dto.getApprovalManagerId())
+                .orElseThrow(() -> new RuntimeException("해당하는 유저가 없습니다."));
+
+        System.out.println(employee.getUsers().getPermission().getGeneralVoucherPermission());
+        if(!employee.getUsers().getPermission().getGeneralVoucherPermission().equals(UserPermission.ADMIN)) {
+            throw new RuntimeException("권한이 없습니다.");
+        }
+
+        List<UnresolvedSaleAndPurchaseVoucher> unresolvedVoucherList = unresolvedSaleAndPurchaseVoucherRepository.findApprovalTypeVoucher(dto);
+
+            if(!unresolvedVoucherList.isEmpty()) {
                 unresolvedVoucherList.stream().forEach(
                         unresolvedVoucher -> {
                             unresolvedVoucher.setApprovalStatus(dto.getApprovalStatus());
@@ -390,12 +396,23 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
             else {
                 throw new IllegalArgumentException("권한 또는 해당하는 전표가 없습니다.");
             }
-        }
-        catch (Exception e) {
-            e.getStackTrace();
-            return null;
-        }
         return unresolvedVoucherList;
+    }
+
+    @Override
+    public List<UnresolvedSaleAndPurchaseVoucherShowDTO> ApprovalSearch(LocalDate date) {
+
+        List<UnresolvedSaleAndPurchaseVoucher> vouchers = unresolvedSaleAndPurchaseVoucherRepository.ApprovalAllSearch(date);
+
+        if(vouchers.isEmpty()) {
+            throw new NoSuchElementException("해당 날짜에 등록된 미결전표가 없습니다.");
+        }
+
+        List<UnresolvedSaleAndPurchaseVoucherShowDTO> showDTOS = vouchers.stream().map(
+                UnresolvedSaleAndPurchaseVoucherShowDTO::create).toList();
+
+
+        return showDTOS;
     }
 
 }
