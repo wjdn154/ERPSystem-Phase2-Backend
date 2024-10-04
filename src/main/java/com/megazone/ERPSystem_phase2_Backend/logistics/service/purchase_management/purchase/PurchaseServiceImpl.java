@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.purchase_management.purchase;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.sales_and_purchase_voucher_entry.VatTypeService;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.Purchase;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.PurchaseDetail;
@@ -32,7 +33,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     private final WarehouseRepository warehouseRepository;
     private final CurrencyRepository currencyRepository;
     private final ProductRepository productRepository;
-
+    private final VatTypeService vatTypeService;
 
     /**
      * 구매서 목록 조회
@@ -61,7 +62,7 @@ public class PurchaseServiceImpl implements PurchaseService {
                 .clientName(purchase.getClient().getPrintClientName())
                 .productName(getProductNameWithCount(purchase))
                 .warehouseName(purchase.getReceivingWarehouse().getName())
-                .vatName(purchase.getVatId().toString())
+                .vatName(vatTypeService.vatTypeGet(purchase.getVatId()).getVatTypeName())
                 .totalPrice(getTotalPrice(purchase))
                 .status(purchase.getStatus().toString())
                 .accountingReflection(purchase.getAccountingReflection())
