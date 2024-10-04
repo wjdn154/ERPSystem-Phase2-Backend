@@ -1,11 +1,13 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.resolvedSaleAndPurchaseVoucher;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.QAccountSubject;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.QClient;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.SalesAndPurChaseLedgerSearchDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.SalesAndPurChaseLedgerShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.TaxInvoiceLedgerSearchDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.TaxInvoiceLedgerShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.QJournalEntry;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.QJournalEntryTypeSetup;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.QResolvedSaleAndPurchaseVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.QVatType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
@@ -37,12 +39,17 @@ public class ResolvedSaleAndPurchaseVoucherRepositoryImpl implements ResolvedSal
         QJournalEntry journalEntry = QJournalEntry.journalEntry;
         QEmployee employee = QEmployee.employee;
         QDepartment department = QDepartment.department;
+        QAccountSubject accountSubject = QAccountSubject.accountSubject;
         QResolvedSaleAndPurchaseVoucher voucher = QResolvedSaleAndPurchaseVoucher.resolvedSaleAndPurchaseVoucher;
+        QJournalEntryTypeSetup journalEntryTypeSetup = QJournalEntryTypeSetup.journalEntryTypeSetup;
 
         return queryFactory.select(
                         Projections.constructor(SalesAndPurChaseLedgerShowDTO.class,
                                 voucher.id,
                                 vatType.vatName,
+                                vatType.transactionType,
+                                accountSubject.code,
+                                accountSubject.name,
                                 voucher.voucherDate,
                                 voucher.voucherNumber,
                                 voucher.itemName,
@@ -58,7 +65,10 @@ public class ResolvedSaleAndPurchaseVoucherRepositoryImpl implements ResolvedSal
                                 employee.lastName.concat(employee.firstName)
                         ))
                 .from(voucher)
-                .join(client)
+                .join(journalEntry).on(journalEntry.id.eq(voucher.journalEntry.id))
+                .join(journalEntryTypeSetup).on(journalEntryTypeSetup.id.eq(journalEntry.journalEntryTypeSetup.id))
+                .join(accountSubject).on(accountSubject.id.eq(journalEntryTypeSetup.accountSubject.id))
+                .join(client).on(client.id.eq(voucher.client.id))
                 .join(vatType).on(vatType.id.eq(voucher.vatType.id))
                 .join(journalEntry).on(journalEntry.id.eq(voucher.journalEntry.id))
                 .join(employee).on(employee.id.eq(voucher.voucherManager.id))
