@@ -5,18 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+
 public class DefectCategoryDTO {
-    
-    private Long id;
-    private String defectCategoryCode;   //불량군 코드
-    private String defectCategoryName;   //불량군 이름
-    private String isUsed;              //사용 여부
-
-    private String defectTypeCode;   //불량 유형 코드
-    private String defectTypeName;   //불량 유형 이름
-
 }

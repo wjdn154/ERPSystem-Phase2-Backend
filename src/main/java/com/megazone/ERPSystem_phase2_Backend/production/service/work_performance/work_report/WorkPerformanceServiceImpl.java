@@ -145,7 +145,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
         return workPerformance;
     }
 
-    //수정 엔티티로 변환
+    //수정 엔티티를 dto로 변환
     private WorkPerformance updateWorkPerformanceToEntity(WorkPerformance workPerformance , WorkPerformanceDetailDTO dto) {
 
         WorkDailyReport workDailyReport = workDailyReportRepository.findByWorkDailyReportCode(dto.getWorkDailyReportCode())
