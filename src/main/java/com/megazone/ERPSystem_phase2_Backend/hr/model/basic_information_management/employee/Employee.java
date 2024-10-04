@@ -9,8 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+//import org.hibernate.annotations.SQLDelete;
+//import org.hibernate.annotations.Where;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,8 +23,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = {"department", "position", "jobTitle", "performance", "transfer", "users", "bankAccount", "leaves", "attendance"})
-@SQLDelete(sql = "UPDATE employee SET is_deleted = true WHERE id = ?")
-@Where(clause = "is_deleted = false")
+//@SQLDelete(sql = "UPDATE employee SET is_deleted = true WHERE id = ?")
+//@Where(clause = "is_deleted = false")
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

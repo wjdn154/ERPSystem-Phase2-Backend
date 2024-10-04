@@ -42,7 +42,7 @@ public interface ResolvedVoucherRepository extends JpaRepository<ResolvedVoucher
             nativeQuery = true)
     BigDecimal generalTotalCount(@Param("startDate")LocalDate startDate, @Param("endDate")LocalDate endDate);
 
-    @Modifying
-    @Query("UPDATE resolved_voucher rv SET rv.voucherManager = NULL WHERE rv.voucherManager.id = :employeeId")
-    void updateEmployeeToNull(@Param("employeeId") Long employeeId);
+//    @Modifying
+//    @Query("UPDATE resolved_voucher rv SET rv.voucherManager = NULL WHERE rv.voucherManager.id = :employeeId")
+//    void updateEmployeeToNull(@Param("employeeId") Long employeeId);
 }

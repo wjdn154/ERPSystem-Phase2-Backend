@@ -75,9 +75,9 @@ public class EmployeeController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> softDeleteEmployee(@PathVariable("id") Long id) {
-        employeeService.softDeleteEmployee(id);
-        return ResponseEntity.ok("사원이 논리적으로 삭제되었습니다.");
-    }
+//    @DeleteMapping("/delete/{id}")
+//    public ResponseEntity<String> softDeleteEmployee(@PathVariable("id") Long id) {
+//        employeeService.softDeleteEmployee(id);
+//        return ResponseEntity.ok("사원이 논리적으로 삭제되었습니다.");
+//    }
 }

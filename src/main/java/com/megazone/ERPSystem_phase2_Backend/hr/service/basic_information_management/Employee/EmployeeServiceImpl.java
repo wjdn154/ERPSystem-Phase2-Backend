@@ -357,18 +357,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 //        }
 //    }
 
-    @Transactional
-    public void softDeleteEmployee(Long employeeId) {
-        // 사원 조회
-        Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new IllegalArgumentException("사원을 찾을 수 없습니다."));
-
-        // 해당 사원이 담당한 Client와 ResolvedVoucher의 employee 필드를 null로 설정
-        clientRepository.updateEmployeeToNull(employeeId);
-        resolvedVoucherRepository.updateEmployeeToNull(employeeId);
-
-        // 사원의 isDeleted를 true로 설정하여 논리적으로 삭제
-        employee.setIsDeleted(true);
-        employeeRepository.save(employee);
-    }
+//    @Transactional
+//    public void softDeleteEmployee(Long employeeId) {
+//        // 사원 조회
+//        Employee employee = employeeRepository.findById(employeeId)
+//                .orElseThrow(() -> new IllegalArgumentException("사원을 찾을 수 없습니다."));
+//
+//        // 해당 사원이 담당한 Client와 ResolvedVoucher의 employee 필드를 null로 설정
+//        clientRepository.updateEmployeeToNull(employeeId);
+//        resolvedVoucherRepository.updateEmployeeToNull(employeeId);
+//
+//        // 사원의 isDeleted를 true로 설정하여 논리적으로 삭제
+//        employee.setIsDeleted(true);
+//        employeeRepository.save(employee);
+//    }
 }

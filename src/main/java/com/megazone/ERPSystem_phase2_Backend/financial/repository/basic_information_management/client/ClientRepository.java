@@ -15,7 +15,7 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     Optional<Client> findByCode(String code);
     List<Client> findByPrintClientNameContaining(String printClientName);
 
-    @Modifying
-    @Query("UPDATE client c SET c.employee = NULL WHERE c.employee.id = :employeeId")
-    void updateEmployeeToNull(@Param("employeeId") Long employeeId);
+//    @Modifying
+//    @Query("UPDATE client c SET c.employee = NULL WHERE c.employee.id = :employeeId")
+//    void updateEmployeeToNull(@Param("employeeId") Long employeeId);
 }
