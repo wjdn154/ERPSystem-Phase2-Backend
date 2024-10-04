@@ -43,12 +43,12 @@ public class MaterialInputStatus {
     private ProductionOrder productionOrder; // 작업지시와 연관 관계
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "process_details_id", nullable = false)
+    @JoinColumn(name = "process_id", nullable = false)
     private ProcessDetails processDetails; // 공정 단계와 연관 관계
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workcenter_id", nullable = false)
-    private Workcenter workCenter; // 작업장과 연관 관계
+    private Workcenter workcenter; // 작업장과 연관 관계
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "equipment_id", nullable = true)

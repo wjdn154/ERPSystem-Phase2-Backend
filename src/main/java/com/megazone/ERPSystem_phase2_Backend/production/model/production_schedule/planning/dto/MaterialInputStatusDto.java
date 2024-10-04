@@ -1,5 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.planning.dto;
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.ListMaterialDataDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.MaterialDataShowDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -20,7 +23,7 @@ public class MaterialInputStatusDto {
 
     private LocalDateTime dateTime; // 일자 및 시간
 
-    private Long materialDataId; // 자재와 연관 관계
+    private List<MaterialDataShowDTO> materialDataIds; // 자재와 연관 관계
 
     private Long productionOrderId; // 작업지시와 연관 관계
 

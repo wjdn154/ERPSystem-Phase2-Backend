@@ -40,9 +40,9 @@ public class MaterialInputStatusServiceImpl implements MaterialInputStatusServic
         if (dto == null) {
             throw new IllegalArgumentException("자재 투입 현황 정보가 입력되지 않았습니다.");
         }
-        if (dto.getMaterialDataId() == null) {
-            throw new IllegalArgumentException("자재 ID가 필요합니다.");
-        }
+//        if (dto.getMaterialDataId() == null) {
+//            throw new IllegalArgumentException("자재 ID가 필요합니다.");
+//        }
         if (dto.getProductionOrderId() == null) {
             throw new IllegalArgumentException("작업지시 ID가 필요합니다.");
         }
@@ -56,9 +56,9 @@ public class MaterialInputStatusServiceImpl implements MaterialInputStatusServic
             throw new IllegalArgumentException("소비된 자재 수량이 올바르지 않습니다.");
         }
 
-        // 연관 엔티티 조회
-        MaterialData materialData = materialDataRepository.findById(dto.getMaterialDataId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 자재를 찾을 수 없습니다."));
+//        // 연관 엔티티 조회
+//        MaterialData materialData = materialDataRepository.findById(dto.getMaterialDataId())
+//                .orElseThrow(() -> new EntityNotFoundException("해당 자재를 찾을 수 없습니다."));
         ProductionOrder productionOrder = productionOrderRepository.findById(dto.getProductionOrderId())
                 .orElseThrow(() -> new EntityNotFoundException("해당 작업지시를 찾을 수 없습니다."));
         ProcessDetails processDetails = processDetailsRepository.findById(dto.getProcessDetailsId())
@@ -75,10 +75,10 @@ public class MaterialInputStatusServiceImpl implements MaterialInputStatusServic
         MaterialInputStatus inputStatus = MaterialInputStatus.builder()
                 .name(dto.getName())
                 .dateTime(dto.getDateTime())
-                .materialData(materialData)
+//                .materialData(materialData)
                 .productionOrder(productionOrder)
                 .processDetails(processDetails)
-                .workCenter(workCenter)
+                .workcenter(workCenter)
 //                .equipmentData(equipmentData)
                 .quantityConsumed(dto.getQuantityConsumed())
                 .unitOfMeasure(dto.getUnitOfMeasure())
@@ -170,10 +170,10 @@ public class MaterialInputStatusServiceImpl implements MaterialInputStatusServic
                 .id(inputStatus.getId())
                 .name(inputStatus.getName())
                 .dateTime(inputStatus.getDateTime())
-                .materialDataId(inputStatus.getMaterialData().getId())
+//                .materialDataId(inputStatus.getMaterialData().getId())
                 .productionOrderId(inputStatus.getProductionOrder().getId())
                 .processDetailsId(inputStatus.getProcessDetails().getId())
-                .workcenterId(inputStatus.getWorkCenter().getId())
+                .workcenterId(inputStatus.getWorkcenter().getId())
                 .equipmentDataId(inputStatus.getEquipmentData() != null ? inputStatus.getEquipmentData().getId() : null)
                 .quantityConsumed(inputStatus.getQuantityConsumed())
                 .unitOfMeasure(inputStatus.getUnitOfMeasure())
