@@ -37,7 +37,6 @@ public class TaxInvoiceLedgerServiceImpl implements TaxInvoiceLedgerService {
         for (Map.Entry<String, List<TaxInvoiceLedgerShowDTO>> entry : groupedData.entrySet()) {
             List<TaxInvoiceLedgerShowDTO> groupedList = entry.getValue();
 
-
             int totalVoucherCount = groupedList.stream().mapToInt(TaxInvoiceLedgerShowDTO::getVoucherCount).sum();
             BigDecimal totalSupplyAmount = groupedList.stream()
                     .map(TaxInvoiceLedgerShowDTO::getSupplyAmount)

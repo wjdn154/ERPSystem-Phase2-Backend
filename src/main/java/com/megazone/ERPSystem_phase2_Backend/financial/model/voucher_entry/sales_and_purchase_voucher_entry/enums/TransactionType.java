@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Arrays;
 
 public enum TransactionType {
+
     SALES("Sales"), // 매출
     PURCHASE("Purchase"); // 매입
 
