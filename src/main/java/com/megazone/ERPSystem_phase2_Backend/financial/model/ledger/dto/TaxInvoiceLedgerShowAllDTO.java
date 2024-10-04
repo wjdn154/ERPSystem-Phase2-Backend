@@ -5,7 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -17,5 +19,5 @@ public class TaxInvoiceLedgerShowAllDTO {
     private int totalVoucherCount;
     private BigDecimal totalSupplyAmount;
     private BigDecimal totalVatAmount;
-    private List<TaxInvoiceLedgerShowDTO> taxInvoiceShowList;
+    private List<TaxInvoiceLedgerShowDTO> allShows;
 }

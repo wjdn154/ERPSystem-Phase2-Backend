@@ -11,11 +11,3 @@ INSERT INTO journal_entry (
       (5,'2','외상','Purchase'),
       (6,'3','카드','Purchase');
 
-
-SELECT code, name
-FROM journal_entry
-GROUP BY code,name;
-
-SELECT DISTINCT code, name
-FROM journal_entry
-WHERE name IN ('현금', '외상', '카드');
