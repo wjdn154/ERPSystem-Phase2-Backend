@@ -7,13 +7,14 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.service.inventory_managem
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-@RestController
+@Controller
 @RequestMapping("/api/logistics/warehouseTransfer")
 @RequiredArgsConstructor
 public class WarehouseTransferController {
