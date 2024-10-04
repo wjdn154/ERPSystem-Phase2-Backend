@@ -13,8 +13,8 @@ import java.util.List;
 @Data
 public class UnresolvedVoucherApprovalDTO {
     private LocalDate searchDate;
-    private List<String> searchVoucherNumList;
-    private Long approvalManagerId; // 담당자 ID
+    private List<String> searchVoucherNumberList;
+    private Long approvalManagerId; // 승인권자 ID
     private ApprovalStatus approvalStatus;
 
     public String approvalResult() {
@@ -25,9 +25,6 @@ public class UnresolvedVoucherApprovalDTO {
                 break;
             case REJECTED:
                 approvalResult = "반려";
-                break;
-            case PENDING:
-                approvalResult = "승인대기";
                 break;
         }
         return approvalResult;

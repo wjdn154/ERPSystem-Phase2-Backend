@@ -47,7 +47,6 @@ public class BankAccountDTO {
                 bankAccount.getBank().getBusinessNumber()
         );
         this.address = bankAccount.getAddress() != null ? new AddressDTO(
-                bankAccount.getAddress().getId(),
                 bankAccount.getAddress().getPostalCode(),
                 bankAccount.getAddress().getRoadAddress(),
                 bankAccount.getAddress().getDetailedAddress()

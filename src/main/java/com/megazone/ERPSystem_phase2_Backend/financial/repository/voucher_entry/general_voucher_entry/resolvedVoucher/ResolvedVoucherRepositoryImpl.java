@@ -1,27 +1,24 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.resolvedVoucher;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.QAccountSubject;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.QStructure;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.QClient;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.QDepartmentEmployee;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.*;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.enums.DailyAndMonthType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.QResolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.QDepartment;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.QEmployee;
-import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Expression;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -279,38 +276,88 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
     }
 
     @Override
-    public Object dailyLedgerList(DailyAndMonthJournalSearchDTO dto) {
-//        QResolvedVoucher voucher = QResolvedVoucher.resolvedVoucher;
-//        QClient client = QClient.client;
-//        QEmployee employee = QEmployee.employee;
-//        QAccountSubject accountSubject = QAccountSubject.accountSubject;
-//        QDepartment department = QDepartment.department;
-//
-//        return queryFactory.select(
-//                        Projections.constructor(AccountLedgerShowDTO.class,
-//                                voucher.id,
-//                                voucher.voucherDate,
-//                                voucher.transactionDescription,
-//                                client.code,
-//                                client.printClientName,
-//                                voucher.debitAmount,
-//                                voucher.creditAmount,
-//                                voucher.debitAmount.subtract(voucher.creditAmount),
-//                                voucher.voucherNumber,
-//                                voucher.voucherApprovalTime,
-//                                employee.department.departmentName,
-//                                employee.lastName.concat(employee.firstName)
-//                        ))
-//                .from(voucher)
-//                .join(voucher.accountSubject, accountSubject)
-//                .join(voucher.voucherManager, employee)
-//                .join(employee.department, department)
-//                .join(voucher.client, client)
-//                .where(voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate())
-//                        .and(voucher.accountSubject.id.eq(dto.getAccountId())))
-//                .orderBy(voucher.voucherDate.asc())
-//                .fetch();
-        return null;
+    public List<DailyAndMonthJournalDTO> dailyLedgerList(DailyAndMonthJournalSearchDTO dto) {
+
+        QResolvedVoucher rv = QResolvedVoucher.resolvedVoucher;
+        QAccountSubject ac = QAccountSubject.accountSubject;
+        QStructure ass = QStructure.structure;
+
+        BooleanBuilder whereClause = new BooleanBuilder();
+        whereClause.and(ac.code.ne("101"));
+
+        if (dto.getJournalType() == DailyAndMonthType.DAILY) {
+            whereClause.and(rv.voucherDate.between(dto.getStartDate(), dto.getEndDate()));
+        } else if (dto.getJournalType() == DailyAndMonthType.MONTHLY) {
+            // 월계표일 경우 월 단위로 그룹화
+            whereClause.and(rv.voucherDate.between(dto.getStartDate().withDayOfMonth(1), dto.getEndDate().withDayOfMonth(dto.getEndDate().lengthOfMonth())));
+        }
+
+        return queryFactory
+                .select(Projections.constructor(
+                        DailyAndMonthJournalDTO.class,
+                        ac.code.as("accountCode"),
+                        ac.name.as("accountName"),
+                        ass.code.as("accountStructureCode"),
+                        ass.min.as("accountStructureMin"),
+                        ass.mediumCategory.as("accountStructureMediumCategory"),
+                        ass.smallCategory.as("accountStructureSmallCategory"),
+                        Expressions.asNumber(
+                                new CaseBuilder()
+                                        .when(rv.voucherType.in(VoucherType.DEPOSIT, VoucherType.WITHDRAWAL))
+                                        .then(rv.debitAmount)
+                                        .otherwise(BigDecimal.ZERO)
+                        ).sum().as("cashTotalDebit"),
+                        Expressions.asNumber(
+                                new CaseBuilder()
+                                        .when(rv.voucherType.in(VoucherType.DEBIT, VoucherType.CREDIT))
+                                        .then(rv.debitAmount)
+                                        .otherwise(BigDecimal.ZERO)
+                        ).sum().as("subTotalDebit"),
+                        Expressions.asNumber(
+                                new CaseBuilder()
+                                        .when(rv.voucherType.in(VoucherType.DEPOSIT, VoucherType.WITHDRAWAL))
+                                        .then(rv.debitAmount)
+                                        .otherwise(BigDecimal.ZERO)
+                        ).sum().add(
+                                Expressions.asNumber(
+                                        new CaseBuilder()
+                                                .when(rv.voucherType.in(VoucherType.DEBIT, VoucherType.CREDIT))
+                                                .then(rv.debitAmount)
+                                                .otherwise(BigDecimal.ZERO)
+                                ).sum()
+                        ).as("sumTotalDebit"),
+                        Expressions.asNumber(
+                                new CaseBuilder()
+                                        .when(rv.voucherType.in(VoucherType.DEPOSIT, VoucherType.WITHDRAWAL))
+                                        .then(rv.creditAmount)
+                                        .otherwise(BigDecimal.ZERO)
+                        ).sum().as("cashTotalCredit"),
+                        Expressions.asNumber(
+                                new CaseBuilder()
+                                        .when(rv.voucherType.in(VoucherType.DEBIT, VoucherType.CREDIT))
+                                        .then(rv.creditAmount)
+                                        .otherwise(BigDecimal.ZERO)
+                        ).sum().as("subTotalCredit"),
+                        Expressions.asNumber(
+                                new CaseBuilder()
+                                        .when(rv.voucherType.in(VoucherType.DEPOSIT, VoucherType.WITHDRAWAL))
+                                        .then(rv.creditAmount)
+                                        .otherwise(BigDecimal.ZERO)
+                        ).sum().add(
+                                Expressions.asNumber(
+                                        new CaseBuilder()
+                                                .when(rv.voucherType.in(VoucherType.DEBIT, VoucherType.CREDIT))
+                                                .then(rv.creditAmount)
+                                                .otherwise(BigDecimal.ZERO)
+                                ).sum()
+                        ).as("sumTotalCredit")))
+                .from(rv)
+                .join(rv.accountSubject, ac)
+                .join(ac.structure, ass)
+                .where(whereClause)
+                .groupBy(ac.code, ac.name, ass.code,ass.min, ass.mediumCategory, ass.smallCategory)
+                .fetch();
+
     }
 
 
