@@ -1,6 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control;
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.goods_receipt.InboundRegistration;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.goods_receipt.completeProduct;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.enums.QualityInspectionType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
 import jakarta.persistence.*;
@@ -50,6 +50,6 @@ public class QualityInspection {
     private List<DefectCategory> defectCategories;     // 불량유형
 
     @OneToMany(mappedBy = "qualityInspection")
-    private List<InboundRegistration> inboundRegistrations;   //품질검사에 따른 제품 입고 리스트
+    private List<completeProduct> completeProducts;   //품질검사에 따른 제품 입고 리스트
 
 }

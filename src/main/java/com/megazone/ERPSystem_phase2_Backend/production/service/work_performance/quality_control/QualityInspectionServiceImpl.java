@@ -1,6 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.work_performance.quality_control;
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.goods_receipt.InboundRegistration;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.goods_receipt.completeProduct;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.DefectCategory;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.DefectType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.QualityInspection;
@@ -9,8 +9,6 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.q
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.dto.QualityInspectionDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.dto.QualityInspectionListDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
-import com.megazone.ERPSystem_phase2_Backend.production.repository.work_performance.goods_receipt.InboundRegistration.InboundRegistrationRepository;
-import com.megazone.ERPSystem_phase2_Backend.production.repository.work_performance.quality_control.DefectCategory.DefectCategoryRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.work_performance.quality_control.DefectType.DefectTypeRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.work_performance.quality_control.QualityInspection.QualityInspectionRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.work_performance.work_report.WorkPerformanceRepository;
@@ -140,7 +138,7 @@ public class QualityInspectionServiceImpl implements QualityInspectionService{
                                 .map(this::defectCategoryDtoToEntity)
                                 .collect(Collectors.toList())
                 )
-                .inboundRegistrations(
+                .completeProducts(
                         dto.getInboundRegistration().stream()
                                 .map(this::inboundRegistrationDtoToEntity)
                                 .collect(Collectors.toList())
@@ -150,9 +148,9 @@ public class QualityInspectionServiceImpl implements QualityInspectionService{
         return qualityInspection;
     }
 
-    private InboundRegistration inboundRegistrationDtoToEntity(InboundRegistrationDTO dto) {
+    private completeProduct inboundRegistrationDtoToEntity(InboundRegistrationDTO dto) {
 
-        return InboundRegistration.builder()
+        return completeProduct.builder()
                 .id(dto.getId())
                 .code(dto.getInboundCode())
                 .title(dto.getInboundTitle())
@@ -191,7 +189,7 @@ public class QualityInspectionServiceImpl implements QualityInspectionService{
                         .map(this::defectCategoryDtoToEntity)
                         .collect(Collectors.toList()));
 
-        qualityInspection.setInboundRegistrations(
+        qualityInspection.setCompleteProducts(
                 dto.getInboundRegistration().stream()
                         .map(this::inboundRegistrationDtoToEntity)
                         .collect(Collectors.toList()));
@@ -211,7 +209,7 @@ public class QualityInspectionServiceImpl implements QualityInspectionService{
                         .build()
                 ).toList();
 
-        List<InboundRegistrationDTO> inboundRegistrationList = qualityInspection.getInboundRegistrations().stream()
+        List<InboundRegistrationDTO> inboundRegistrationList = qualityInspection.getCompleteProducts().stream()
                 .map(inboundRegistration -> InboundRegistrationDTO.builder()
                         .id(inboundRegistration.getId())
                         .inboundCode(inboundRegistration.getCode())
