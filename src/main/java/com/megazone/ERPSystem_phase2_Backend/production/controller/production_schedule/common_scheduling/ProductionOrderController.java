@@ -42,7 +42,7 @@ public class ProductionOrderController {
      * @return 성공 시 200 OK
      */
     @PostMapping("/{productionOrderId}/assignWorkers")
-    public ResponseEntity<String> assignWorkersToWorkcenter(@PathVariable Long productionOrderId, @RequestBody ProductionOrderDTO productionOrderDTO) {
+    public ResponseEntity<String> assignWorkersToWorkcenter(@PathVariable("productionOrderId") Long productionOrderId, @RequestBody ProductionOrderDTO productionOrderDTO) {
         try {
             ProductionOrder productionOrder = productionOrderRepository.findById(productionOrderId)
                     .orElseThrow(() -> new EntityNotFoundException("작업지시를 찾을 수 없습니다."));
@@ -79,7 +79,7 @@ public class ProductionOrderController {
      * @return 작업 지시 정보
      */
     @PostMapping("/{productionOrderId}")
-    public ResponseEntity<ProductionOrderDTO> getProductionOrderById(@PathVariable Long productionOrderId) {
+    public ResponseEntity<ProductionOrderDTO> getProductionOrderById(@PathVariable("productionOrderId") Long productionOrderId) {
         ProductionOrderDTO productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
         return ResponseEntity.ok(productionOrder);
     }
@@ -92,7 +92,7 @@ public class ProductionOrderController {
      * @return 수정된 작업 지시 정보
      */
     @PostMapping("/update/{productionOrderId}")
-    public ResponseEntity<ProductionOrderDTO> updateProductionOrder(@PathVariable Long productionOrderId, @RequestBody ProductionOrderDTO productionOrderDTO) {
+    public ResponseEntity<ProductionOrderDTO> updateProductionOrder(@PathVariable("productionOrderId") Long productionOrderId, @RequestBody ProductionOrderDTO productionOrderDTO) {
         ProductionOrderDTO updatedProductionOrder = productionOrderService.updateProductionOrder(productionOrderId, productionOrderDTO);
         return ResponseEntity.ok(updatedProductionOrder);
     }
@@ -104,7 +104,7 @@ public class ProductionOrderController {
      * @return 성공 시 200 OK
      */
     @PostMapping("/delete/{productionOrderId}")
-    public ResponseEntity<String> deleteProductionOrder(@PathVariable Long productionOrderId) {
+    public ResponseEntity<String> deleteProductionOrder(@PathVariable("productionOrderId") Long productionOrderId) {
         productionOrderService.deleteProductionOrder(productionOrderId);
         return ResponseEntity.ok("작업 지시가 성공적으로 삭제되었습니다.");
     }
