@@ -49,6 +49,8 @@ public class SalesAndPurchaseLedgerServiceImpl implements SalesAndPurchaseLedger
 //                dailySumDTO = null;
 //            }
 //            else {
+
+
                 // 공급가액, 부가세, 총 금액의 합계 계산
                 BigDecimal sumSupplyAmount = dtoList.stream()
                         .map(SalesAndPurChaseLedgerShowDTO::getSupplyAmount)
