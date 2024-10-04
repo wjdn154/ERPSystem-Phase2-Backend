@@ -108,7 +108,7 @@ public class WorkerServiceImpl implements WorkerService {
                 .sorted((a1, a2) -> a2.getAttendanceDate().compareTo(a1.getAttendanceDate()))    //날짜 기준 내림차순 정렬
                 .toList();
 
-        // 작업 배치 관리 리스트 생성
+// 작업 배치 관리 리스트 생성
         List<WorkerAssignmentDTO> assignmentList = worker.getWorkerAssignments().stream()
                 .map(assignment -> WorkerAssignmentDTO.builder()
                         .workerName(assignment.getWorker().getEmployee().getFirstName() + " " + assignment.getWorker().getEmployee().getLastName()) // 작업자 이름

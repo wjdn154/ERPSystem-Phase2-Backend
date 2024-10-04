@@ -5,14 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class InboundRegistrationDTO {
 
-    private Long id;
-    private String inboundCode;
-    private String inboundTitle;
-    private String isDone;
+public class InboundRegistrationDTO {
 }
