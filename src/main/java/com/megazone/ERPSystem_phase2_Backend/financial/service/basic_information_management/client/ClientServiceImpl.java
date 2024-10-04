@@ -124,8 +124,6 @@ public class ClientServiceImpl implements ClientService {
         ModelMapper modelMapper = new ModelMapper();
         Optional<ClientDTO> clientDTO = client.map(value -> modelMapper.map(value, ClientDTO.class));
 
-        System.out.println("clientDTO.toString() = " + clientDTO.toString());
-
         if (!clientDTO.isPresent()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 거래처 정보가 없습니다.");
 
         return ResponseEntity.ok(clientDTO);

@@ -27,6 +27,18 @@ public class InventoryAdjustmentDetail {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;  // 조정된 품목
 
+    @Column(name = "product_code", nullable = false)
+    private String productCode;
+
+    @Column(name = "product_name", nullable = false)
+    private String productName;
+
+    @Column(name = "standard")  // 추가: 규격 필드
+    private String standard;
+
+    @Column(name = "unit")  // 추가: 단위 필드
+    private String unit;
+
     @Column(name = "book_quantity", nullable = false)
     private Long bookQuantity;  // 장부상의 수량
 

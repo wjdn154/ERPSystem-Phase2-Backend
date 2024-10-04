@@ -94,8 +94,8 @@ spring:
 
         - classpath:initial-database/production/basic_data/bom/standard_bom.sql
         - classpath:initial-database/production/basic_data/workcenter.sql
-        - classpath:initial-database/production/production_schedule/common_scheduling/production_order.sql
         - classpath:initial-database/production/production_schedule/common_scheduling/shift_type.sql
+        - classpath:initial-database/production/production_schedule/common_scheduling/production_order.sql
 
         - classpath:initial-database/production/resource_data/equipmentData.sql
         - classpath:initial-database/production/resource_data/maintenanceHistory.sql
@@ -103,6 +103,7 @@ spring:
         - classpath:initial-database/production/production_schedule/common_scheduling/worker_assignment.sql
         - classpath:initial-database/production/resource_data/materialData.sql
         - classpath:initial-database/production/resource_data/hazardousMaterial.sql
+        - classpath:initial-database/production/production_schedule/planning/mrp_material_input_status.sql
 
         - classpath:initial-database/financial/unresolved_sale_and_purchase_voucher.sql
         - classpath:initial-database/financial/unresolved_voucher.sql
@@ -118,18 +119,18 @@ logging:
 #    org.hibernate.type.descriptor.sql.BasicBinder: TRACE # Hibernate SQL 바인딩 로그 레벨 설정 (TRACE)
 #    org.flywaydb: DEBUG  # Flyway 관련 로그
 #    com.zaxxer.hikari: DEBUG  # 데이터소스 관련 로그
-    org.hibernate.SQL: OFF # SQL 쿼리 로그 비활성화
-    org.hibernate.type.descriptor.sql.BasicBinder: ERROR # SQL 바인딩 로그 비활성화
+#    org.hibernate.SQL: OFF # SQL 쿼리 로그 비활성화
+#    org.hibernate.type.descriptor.sql.BasicBinder: ERROR # SQL 바인딩 로그 비활성화
 #    com:
 #      megazone:
 #        ERPSystem_phase2_Backend: DEBUG
 #        financial: DEBUG # financial 서브 패키지
-#    org:
-#      hibernate:
-#        SQL: DEBUG
-#        type:
-#          descriptor:
-#            sql: TRACE
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql: TRACE
 
 jwt:
   secret: dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234

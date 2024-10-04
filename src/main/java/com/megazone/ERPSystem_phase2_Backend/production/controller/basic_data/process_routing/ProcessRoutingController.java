@@ -50,35 +50,35 @@ public class ProcessRoutingController {
 
     // 3.1 생성 시 등록창 내에서 생산공정 검색 (RoutingStep 등록 위함)
     @PostMapping("/searchProcessDetails")
-    public ResponseEntity<List<ProcessDetailsDTO>> searchProcessDetails(@RequestParam String keyword) {
+    public ResponseEntity<List<ProcessDetailsDTO>> searchProcessDetails(@RequestParam(value = "keyword") String keyword) {
         List<ProcessDetailsDTO> processDetailsList = processRoutingService.searchProcessDetails(keyword);
         return ResponseEntity.ok(processDetailsList);
     }
 
     // 3.2 생성 시 등록창 내에서 품목Product 검색
     @PostMapping("/searchProducts")
-    public ResponseEntity<List<ProductDto>> searchProducts(@RequestParam String keyword) {
+    public ResponseEntity<List<ProductDto>> searchProducts(@RequestParam(value = "keyword") String keyword) {
         List<ProductDto> productList = processRoutingService.searchProducts(keyword);
         return ResponseEntity.ok(productList);
     }
 
     // 3.3 선택 시 각 항목을 미리보기로 상세조회
     @PostMapping("/previewProcessDetails/{id}")
-    public ResponseEntity<ProcessDetailsDTO> previewProcessDetails(@PathVariable Long id) {
+    public ResponseEntity<ProcessDetailsDTO> previewProcessDetails(@PathVariable("id") Long id) {
         ProcessDetailsDTO processDetails = processRoutingService.getProcessDetailsById(id);
         return ResponseEntity.ok(processDetails);
     }
 
-//    @PostMapping("/previewProduct/{id}")
-//    public ResponseEntity<Optional<Product>> previewProduct(@PathVariable Long id) {
-//        Optional<Product> product = productRepository.findById(id);
-//        return ResponseEntity.ok(product);
-//    }
+    @PostMapping("/previewProduct/{id}")
+    public ResponseEntity<Optional<Product>> previewProduct(@PathVariable("id") Long id) {
+        Optional<Product> product = productRepository.findById(id);
+        return ResponseEntity.ok(product);
+    }
 
     // 4. 수정
     @PostMapping("update/{id}")
     public ResponseEntity<ProcessRoutingDTO> updateProcessRouting(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @RequestBody ProcessRoutingDTO processRoutingDTO) {
         ProcessRoutingDTO updatedRouting = processRoutingService.updateProcessRouting(id, processRoutingDTO);
         return ResponseEntity.ok(updatedRouting);
@@ -87,7 +87,7 @@ public class ProcessRoutingController {
 
     // 5. 삭제
     @PostMapping("delete/{id}")
-    public ResponseEntity<Void> deleteProcessRouting(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProcessRouting(@PathVariable("id") Long id) {
         processRoutingService.deleteProcessRouting(id);
         return ResponseEntity.noContent().build();
     }

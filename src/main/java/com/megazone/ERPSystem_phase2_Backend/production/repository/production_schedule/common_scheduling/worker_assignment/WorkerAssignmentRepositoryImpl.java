@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.worker_assignment;
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.WorkerAssignment;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -18,10 +19,11 @@ public class WorkerAssignmentRepositoryImpl implements WorkerAssignmentRepositor
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<WorkerAssignment> findWorkerCountByWorkcenter() {
+    public List<Tuple> findWorkerCountByWorkcenter() {
         return queryFactory
-                .selectFrom(workerAssignment)
-                .groupBy(workerAssignment.workcenter)
+                .select(workerAssignment.workcenter.code, workerAssignment.workcenter.name, workerAssignment.count())
+                .from(workerAssignment)
+                .groupBy(workerAssignment.workcenter.code, workerAssignment.workcenter.name)
                 .fetch();
     }
 

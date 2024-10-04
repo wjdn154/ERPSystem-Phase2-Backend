@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.service.production_sche
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionOrder;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentCountDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentSummaryDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ShiftType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.Worker;
@@ -12,6 +13,7 @@ import com.megazone.ERPSystem_phase2_Backend.production.repository.production_sc
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.shift_type.ShiftTypeRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.resource_data.worker.WorkerRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.worker_assignment.WorkerAssignmentRepository;
+import com.querydsl.core.Tuple;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -35,11 +37,18 @@ public class WorkerAssignmentServiceImpl implements WorkerAssignmentService {
 
     // 전체 작업장별 배정된 인원수 조회
     @Override
-    public List<WorkerAssignmentDTO> getAllWorkcentersWorkerCount() {
-        return workerAssignmentRepository.findWorkerCountByWorkcenter().stream()
-                .map(this::convertToDTO)
+    public List<WorkerAssignmentCountDTO> getAllWorkcentersWorkerCount() {
+        List<Tuple> result = workerAssignmentRepository.findWorkerCountByWorkcenter();
+
+        return result.stream()
+                .map(tuple -> WorkerAssignmentCountDTO.builder()
+                        .workcenterCode(tuple.get(0, String.class))   // 첫 번째 컬럼이 workcenterCode
+                        .workcenterName(tuple.get(1, String.class))   // 두 번째 컬럼이 workcenterName
+                        .workerCount(tuple.get(2, Long.class))        // 세 번째 컬럼이 workerCount
+                        .build())
                 .collect(Collectors.toList());
     }
+
 
     // 특정 작업장 배정된 작업자 명단 조회
     @Override

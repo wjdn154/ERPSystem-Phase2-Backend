@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.controller.inventory_management.inventory_adjustment;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory_adjustment.dto.InventoryAdjustmentResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory_adjustment.dto.InventoryInspectionRequestDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory_adjustment.dto.InventoryInspectionResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory_adjustment.dto.InventoryInspectionResponseListDTO;
@@ -104,7 +105,6 @@ public class InventoryAdjustmentController {
         }
     }
 
-
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteInspectionById(@PathVariable("id") Long id) {
         try {
@@ -115,6 +115,23 @@ public class InventoryAdjustmentController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("해당 ID (" + id + ")에 대한 재고 실사 데이터를 찾을 수 없습니다. 삭제할 수 없습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("서버 내부 오류가 발생했습니다. 오류 메시지: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/adjust/{id}")
+    public ResponseEntity<?> adjustInventoryByInspection(@PathVariable Long id) {
+        try {
+            // 서비스 계층에 재고 조정 요청 및 조정된 데이터 반환
+            InventoryAdjustmentResponseDTO responseDTO = inventoryInspectionService.adjustInventoryByInspection(id);
+
+            // 조정된 데이터를 반환
+            return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("잘못된 요청입니다. 오류 메시지: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("서버 내부 오류가 발생했습니다. 오류 메시지: " + e.getMessage());
