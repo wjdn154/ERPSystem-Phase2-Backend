@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.worker_assignment;
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.WorkerAssignment;
+import com.querydsl.core.Tuple;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -10,9 +11,10 @@ public interface WorkerAssignmentRepositoryCustom {
 
     /**
      * 작업장별 작업자 수 조회
+     *
      * @return 작업자 배정 리스트
      */
-    List<WorkerAssignment> findWorkerCountByWorkcenter();
+    List<Tuple> findWorkerCountByWorkcenter();
 
     /**
      * 작업장 코드로 작업자 배정 검색
