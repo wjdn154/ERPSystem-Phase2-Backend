@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Purchase {
+public class PurchaseInvoice {
 
     // 고유 식별자
     @Id
