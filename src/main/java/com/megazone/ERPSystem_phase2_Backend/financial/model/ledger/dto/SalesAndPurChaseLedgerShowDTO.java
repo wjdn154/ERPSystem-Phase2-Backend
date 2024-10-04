@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.TransactionType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,9 @@ import java.time.LocalDate;
 public class SalesAndPurChaseLedgerShowDTO {
     private Long voucherId;
     private String vatTypeName;
+    private TransactionType transactionType;
+    private String accountSubjectCode;
+    private String accountSubjectName;
     private LocalDate voucherDate;
     private String voucherNumber;
     private String itemName;
@@ -31,7 +35,8 @@ public class SalesAndPurChaseLedgerShowDTO {
     private String voucherManagerDepartmentName;
     private String voucherManagerName;
 
-    public static SalesAndPurChaseLedgerShowDTO create(Long voucherId, String vatTypeName, LocalDate voucherDate, String voucherNumber, String itemName,
+    public static SalesAndPurChaseLedgerShowDTO create(Long voucherId, String vatTypeName, TransactionType transactionType,
+                                         String accountSubjectCode, String accountSubjectName, LocalDate voucherDate, String voucherNumber, String itemName,
                                          BigDecimal supplyAmount, BigDecimal vatAmount, BigDecimal sumAmount, String clientCode,
                                          String clientName, ElectronicTaxInvoiceStatus electronicTaxInvoiceStatus,
                                          String journalEntryName, /*String creditCardCode, String bankAccountName,
@@ -40,6 +45,9 @@ public class SalesAndPurChaseLedgerShowDTO {
         return new SalesAndPurChaseLedgerShowDTO(
                 voucherId,
                 vatTypeName,
+                transactionType,
+                accountSubjectCode,
+                accountSubjectName,
                 voucherDate,
                 voucherNumber,
                 itemName,
