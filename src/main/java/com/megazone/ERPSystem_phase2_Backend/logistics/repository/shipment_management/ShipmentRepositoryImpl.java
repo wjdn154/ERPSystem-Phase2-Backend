@@ -17,7 +17,7 @@ import static com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_ma
 
 @Repository
 @RequiredArgsConstructor
-public class ShipmentRepositoryCustomImpl implements ShipmentRepositoryCustom {
+public class ShipmentRepositoryImpl implements ShipmentRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 

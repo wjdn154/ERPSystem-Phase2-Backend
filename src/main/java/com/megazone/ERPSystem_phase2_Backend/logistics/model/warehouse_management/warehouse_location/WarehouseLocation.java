@@ -27,6 +27,6 @@ public class WarehouseLocation {
     @Column(name = "location_name", nullable = false, unique = true)
     private String locationName;
 
-    @Column(name = "is_active", nullable = false)
+    @Column(name = "active", nullable = false)
     private boolean isActive;
 }
