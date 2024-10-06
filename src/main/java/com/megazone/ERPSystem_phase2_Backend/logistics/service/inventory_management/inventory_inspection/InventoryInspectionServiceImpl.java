@@ -2,8 +2,6 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.service.inventory_manage
 
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory.Inventory;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory_adjustment.InventoryAdjustment;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory_adjustment.InventoryAdjustmentDetail;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory_adjustment.InventoryInspection;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory_adjustment.InventoryInspectionDetail;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory_adjustment.dto.*;
@@ -11,7 +9,6 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_managemen
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.inventory_management.inventory.InventoryRepository;
-import com.megazone.ERPSystem_phase2_Backend.logistics.repository.inventory_management.inventory_adjustment.InventoryAdjustmentRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.inventory_management.inventory_inspection.InventoryInspectionRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +26,6 @@ public class InventoryInspectionServiceImpl implements InventoryInspectionServic
 
     private final InventoryInspectionRepository inspectionRepository;
     private final InventoryRepository inventoryRepository;
-    private final InventoryAdjustmentRepository inventoryAdjustmentRepository;
     private final ProductRepository productRepository;
     private final WarehouseRepository warehouseRepository;
     private final EmployeeRepository employeeRepository;
@@ -151,93 +146,6 @@ public class InventoryInspectionServiceImpl implements InventoryInspectionServic
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 재고 실사를 찾을 수 없습니다. ID: " + id));
 
         inspectionRepository.delete(inspection);
-    }
-
-    @Override
-    public InventoryAdjustmentResponseDTO adjustInventoryByInspection(Long id) {
-        InventoryInspection inspection = inspectionRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID에 대한 실사 데이터를 찾을 수 없습니다."));
-
-        if (inspection.getStatus() != InspectionStatus.미조정) {
-            throw new IllegalArgumentException("이미 조정이 진행된 실사 데이터입니다.");
-        }
-
-        List<InventoryAdjustmentDetail> adjustmentDetails = new ArrayList<>();
-        for (InventoryInspectionDetail detail : inspection.getDetails()) {
-            Inventory inventory = detail.getInventory();
-
-            Inventory updatedInventory = Inventory.builder()
-                    .id(inventory.getId())
-                    .quantity(detail.getActualQuantity())
-                    .product(inventory.getProduct())
-                    .warehouseLocation(inventory.getWarehouseLocation())
-                    .warehouse(inventory.getWarehouse())
-                    .standard(inventory.getStandard())
-                    .build();
-
-            inventoryRepository.save(updatedInventory);
-
-            InventoryAdjustmentDetail adjustmentDetail = InventoryAdjustmentDetail.builder()
-                    .product(detail.getProduct())
-                    .productCode(detail.getProductCode())
-                    .productName(detail.getProductName())
-                    .standard(detail.getStandard())
-                    .unit(detail.getUnit())
-                    .bookQuantity(detail.getBookQuantity())
-                    .adjustmentQuantity(detail.getActualQuantity())
-                    .comment("재고 실사 조정")
-                    .build();
-            adjustmentDetails.add(adjustmentDetail);
-        }
-
-        InventoryAdjustment adjustment = InventoryAdjustment.builder()
-                .inventoryInspection(inspection)
-                .employee(inspection.getEmployee())
-                .adjustmentDate(LocalDate.now())
-                .adjustmentDetails(new ArrayList<>())
-                .comment("재고 실사 조정 완료")
-                .build();
-
-        List<InventoryAdjustmentDetail> finalAdjustmentDetails = adjustmentDetails.stream()
-                .map(detail -> InventoryAdjustmentDetail.builder()
-                        .id(detail.getId())  // 기존 ID 유지
-                        .product(detail.getProduct())
-                        .productCode(detail.getProductCode())
-                        .productName(detail.getProductName())
-                        .standard(detail.getStandard())
-                        .unit(detail.getUnit())
-                        .bookQuantity(detail.getBookQuantity())
-                        .adjustmentQuantity(detail.getAdjustmentQuantity())
-                        .comment(detail.getComment())
-                        .inventoryAdjustment(adjustment)
-                        .build())
-                .collect(Collectors.toList());
-
-        InventoryAdjustment finalAdjustment = InventoryAdjustment.builder()
-                .id(adjustment.getId())
-                .inventoryInspection(adjustment.getInventoryInspection())
-                .employee(adjustment.getEmployee())
-                .adjustmentDate(adjustment.getAdjustmentDate())
-                .adjustmentDetails(finalAdjustmentDetails)
-                .comment(adjustment.getComment())
-                .build();
-
-        inventoryAdjustmentRepository.save(finalAdjustment);
-
-        InventoryInspection updatedInspection = InventoryInspection.builder()
-                .id(inspection.getId())
-                .warehouse(inspection.getWarehouse())
-                .employee(inspection.getEmployee())
-                .details(inspection.getDetails())
-                .inspectionDate(inspection.getInspectionDate())
-                .inspectionNumber(inspection.getInspectionNumber())
-                .status(InspectionStatus.조정완료)
-                .comment(inspection.getComment())
-                .build();
-
-        inspectionRepository.save(updatedInspection);
-
-        return InventoryAdjustmentResponseDTO.mapToDTO(finalAdjustment);
     }
 
     private InventoryInspectionResponseDTO mapToResponseDTO(InventoryInspection inspection) {

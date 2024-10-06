@@ -54,7 +54,7 @@ VALUES (1, 1, 2),
        (8, 2, 8),
        (9, 1, 9);
 
-INSERT INTO warehouse_location (id, warehouse_id, location_name, is_active)
+INSERT INTO warehouse_location (id, warehouse_id, location_name, active)
 VALUES (1, 1, 'A1', true),
        (2, 1, 'A2', true),
        (3, 1, 'A3', true),

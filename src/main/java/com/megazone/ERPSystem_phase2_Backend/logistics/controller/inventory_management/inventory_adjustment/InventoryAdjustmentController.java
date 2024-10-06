@@ -105,7 +105,7 @@ public class InventoryAdjustmentController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteInspectionById(@PathVariable("id") Long id) {
         try {
             inventoryInspectionService.deleteInspectionById(id);
@@ -121,20 +121,4 @@ public class InventoryAdjustmentController {
         }
     }
 
-    @PutMapping("/adjust/{id}")
-    public ResponseEntity<?> adjustInventoryByInspection(@PathVariable Long id) {
-        try {
-            // 서비스 계층에 재고 조정 요청 및 조정된 데이터 반환
-            InventoryAdjustmentResponseDTO responseDTO = inventoryInspectionService.adjustInventoryByInspection(id);
-
-            // 조정된 데이터를 반환
-            return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("잘못된 요청입니다. 오류 메시지: " + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("서버 내부 오류가 발생했습니다. 오류 메시지: " + e.getMessage());
-        }
-    }
 }
