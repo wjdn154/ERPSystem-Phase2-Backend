@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.controller.inventory_management.inventory_adjustment;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory_adjustment.dto.InventoryAdjustmentResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory_adjustment.dto.InventoryInspectionRequestDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory_adjustment.dto.InventoryInspectionResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory_adjustment.dto.InventoryInspectionResponseListDTO;
@@ -104,8 +105,7 @@ public class InventoryAdjustmentController {
         }
     }
 
-
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteInspectionById(@PathVariable("id") Long id) {
         try {
             inventoryInspectionService.deleteInspectionById(id);
@@ -120,4 +120,5 @@ public class InventoryAdjustmentController {
                     .body("서버 내부 오류가 발생했습니다. 오류 메시지: " + e.getMessage());
         }
     }
+
 }
