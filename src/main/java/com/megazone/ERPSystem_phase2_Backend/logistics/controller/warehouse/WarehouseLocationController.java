@@ -78,7 +78,7 @@ public class WarehouseLocationController {
     /**
      * 창고 위치 삭제
      * @param id
-     * @return  삭제 성공 여부
+     * @return
      */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteWarehouseLocation(@PathVariable("id") Long id) {
@@ -91,5 +91,4 @@ public class WarehouseLocationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-
 }
