@@ -9,6 +9,7 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.Mate
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +50,14 @@ public class Product {
     @ToString.Exclude
     private ProcessRouting processRouting;
 
+    // 이미지 파일 경로
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "image_path")
+//    private ProductImage imagePath;
+    @Column
+    private String imagePath;
+
+
     // 품목구분 (Enum)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -56,11 +65,11 @@ public class Product {
 
     // 입고 단가
     @Column(nullable = false)
-    private Double purchasePrice;
+    private BigDecimal purchasePrice;
 
     // 출고 단가
     @Column(nullable = false)
-    private Double salesPrice;
+    private BigDecimal salesPrice;
 
     // 품목명
     @Column(nullable = false)
@@ -73,10 +82,6 @@ public class Product {
     // 단위
     @Column(nullable = false)
     private String unit;
-
-    // 이미지 파일 경로
-    @Column
-    private String imagePath;
 
     // 비고
     @Column

@@ -2,21 +2,20 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_managemen
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @Builder
-public class PurchaseRequestResponseDto {
+public class ReceivingOrderResponseDto {
     private Long id;
     private String clientName;
+    private String managerName;
+    private String warehouseName;
     private String productName;
     private LocalDate date;
     private LocalDate deliveryDate;
     private Integer totalQuantity;
-    private BigDecimal totalPrice;
     private String status;
+    private String remarks;
 }

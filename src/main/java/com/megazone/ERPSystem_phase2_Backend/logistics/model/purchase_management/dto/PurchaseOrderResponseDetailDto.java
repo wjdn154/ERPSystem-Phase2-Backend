@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,10 +18,10 @@ import java.util.List;
 @AllArgsConstructor
 public class PurchaseOrderResponseDetailDto {
 
-    // 발주 요청 ID
+    // 발주서 ID
     private Long id;
 
-    // 발주 요청 일자
+    // 발주서 작성 일자
     private LocalDate date;
 
     // 납기 일자
@@ -65,13 +66,13 @@ public class PurchaseOrderResponseDetailDto {
         private Integer quantity;
 
         // 품목 단가(입고단가)
-        private Double price;
+        private BigDecimal price;
 
         // 품목 공급가액
-        private Double supplyPrice;
+        private BigDecimal supplyPrice;
 
         // 품목 부가세
-        private Double vat;
+        private BigDecimal vat;
 
         // 비고
         private String remarks;
