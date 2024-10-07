@@ -24,7 +24,7 @@ public class PurchaseCreateDto {
     private Long warehouseId;
     private Long currencyId;
     private Long vatId;
-    private Long journalEntryCode;
+    private String journalEntryCode;
     private String remarks;
     private List<PurchaseItemDetailDto> items;
 

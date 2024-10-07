@@ -67,11 +67,12 @@ public class Purchase {
 
     // 분개유형_code
     @Column(nullable = false)
-    private Long journalEntryCode;
+    private String journalEntryCode;
 
     // 세금계산서발행여부
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Builder.Default
     private ElectronicTaxInvoiceStatus electronicTaxInvoiceStatus = ElectronicTaxInvoiceStatus.UNPUBLISHED;
 
     // 일자
@@ -94,7 +95,7 @@ public class Purchase {
 
     // 구매 전표와 일대일 관계 설정
     @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "invoice_id", nullable = false)
+    @JoinColumn(name = "invoice_id", nullable = true)
     private PurchaseInvoice purchaseInvoice;
 
     public void addPurchaseDetail(PurchaseDetail purchaseDetail) {

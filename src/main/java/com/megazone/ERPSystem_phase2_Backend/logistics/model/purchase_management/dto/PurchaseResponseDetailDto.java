@@ -28,7 +28,7 @@ public class PurchaseResponseDetailDto {
     private String warehouseName;
     private String vatCode;
     private String vatName;
-    private Long journalEntryCode;
+    private String journalEntryCode;
     private String journalEntryName;
     private String electronicTaxInvoiceStatus;
     private String currency;
