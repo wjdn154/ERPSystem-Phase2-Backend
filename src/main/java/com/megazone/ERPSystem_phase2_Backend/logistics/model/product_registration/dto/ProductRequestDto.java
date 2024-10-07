@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,8 +22,8 @@ public class ProductRequestDto {
 //    private String imageUrl; // 이미지 경로
     private String standard; // 규격
     private String unit; // 단위
-    private Double purchasePrice; // 입고단가
-    private Double salesPrice; // 출고 단가
+    private BigDecimal purchasePrice; // 입고단가
+    private BigDecimal salesPrice; // 출고 단가
     private ProductType productType; // 품목 구분
     private String remarks; // 적요
 

@@ -1,5 +1,5 @@
 -- ReceivingOrder 테이블 초기 데이터 삽입
-INSERT INTO receiving_order (client_id, manager_id, warehouse_id, receiving_date, date, remarks, status) VALUES
+INSERT INTO receiving_order (client_id, manager_id, warehouse_id, delivery_date, date, remarks, status) VALUES
 (1, 1, 1, '2024-10-01', '2024-09-25', '긴급', 'WAITING_FOR_RECEIPT'),
 (2, 2, 2, '2024-10-03', '2024-09-28', '일반', 'WAITING_FOR_RECEIPT'),
 (3, 3, 3, '2024-10-05', '2024-09-30', '우선 처리', 'WAITING_FOR_RECEIPT'),

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,8 +25,8 @@ public class ProductResponseDto {
     private String productGroupName; // 폼목 그룹명
     private String standard; // 규격
     private String unit; // 단위
-    private Double purchasePrice; // 입고단가
-    private Double salesPrice; // 출고 단가
+    private BigDecimal purchasePrice; // 입고단가
+    private BigDecimal salesPrice; // 출고 단가
     private ProductType productType; // 품목 구분
     private Long processRoutingId; // 생산 라우팅 ID
     private String processRoutingCode; // 생산라우팅 코드

@@ -1,10 +1,10 @@
 -- Purchase 테이블 초기 데이터 삽입
 INSERT INTO purchase (client_id, manager_id, warehouse_id, currency_id, vatId, JournalEntryICode, electronicTaxInvoiceStatus, date, remarks, status, accountingReflection, invoice_id) VALUES
-(1, 1, 1, 1, 1001, 2001, 'UNPUBLISHED', '2024-10-01', '긴급 구매', 'WAITING_FOR_RECEIPT', false, 1),
-(2, 2, 2, 2, 1002, 2002, 'PUBLISHED', '2024-10-02', '정기 구매', 'PURCHASE_COMPLETED', true, 2),
-(3, 3, 3, 3, 1003, 2003, 'UNPUBLISHED', '2024-10-03', '고객 요청 구매', 'WAITING_FOR_RECEIPT', false, 3),
-(1, 2, 1, 1, 1004, 2004, 'PUBLISHED', '2024-10-04', '특별 할인 구매', 'PURCHASE_COMPLETED', true, 4),
-(3, 1, 2, 3, 1005, 2005, 'UNPUBLISHED', '2024-10-05', '대량 구매', 'WAITING_FOR_RECEIPT', false, 5);
+(1, 1, 1, 1, 1, 1, 'UNPUBLISHED', '2024-10-01', '긴급 구매', 'WAITING_FOR_RECEIPT', false, 1),
+(2, 2, 2, 2, 2, 2, 'PUBLISHED', '2024-10-02', '정기 구매', 'PURCHASE_COMPLETED', true, 2),
+(3, 3, 3, 3, 3, 3, 'UNPUBLISHED', '2024-10-03', '고객 요청 구매', 'WAITING_FOR_RECEIPT', false, 3),
+(1, 2, 1, 1, 4, 1, 'PUBLISHED', '2024-10-04', '특별 할인 구매', 'PURCHASE_COMPLETED', true, 4),
+(3, 1, 2, 3, 5, 2, 'UNPUBLISHED', '2024-10-05', '대량 구매', 'WAITING_FOR_RECEIPT', false, 5);
 
 -- PurchaseDetail 테이블 초기 데이터 삽입
 INSERT INTO purchase_detail (purchase_id, product_id, quantity, supplyPrice, localAmount, vat, remarks) VALUES

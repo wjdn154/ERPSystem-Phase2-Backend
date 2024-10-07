@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -65,13 +66,13 @@ public class PurchaseOrderResponseDetailDto {
         private Integer quantity;
 
         // 품목 단가(입고단가)
-        private Double price;
+        private BigDecimal price;
 
         // 품목 공급가액
-        private Double supplyPrice;
+        private BigDecimal supplyPrice;
 
         // 품목 부가세
-        private Double vat;
+        private BigDecimal vat;
 
         // 비고
         private String remarks;

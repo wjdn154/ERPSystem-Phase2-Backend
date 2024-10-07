@@ -67,7 +67,7 @@ public class Purchase {
 
     // 분개유형_code
     @Column(nullable = false)
-    private Long JournalEntryICode;
+    private Long journalEntryCode;
 
     // 세금계산서발행여부
     @Enumerated(EnumType.STRING)
@@ -96,4 +96,9 @@ public class Purchase {
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "invoice_id", nullable = false)
     private PurchaseInvoice purchaseInvoice;
+
+    public void addPurchaseDetail(PurchaseDetail purchaseDetail) {
+        this.purchaseDetails.add(purchaseDetail);
+        purchaseDetail.setPurchase(this);
+    }
 }

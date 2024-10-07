@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -79,10 +80,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService{
     }
 
     // 총 금액 계산
-    private Double getTotalPrice(PurchaseOrder purchaseOrder) {
+    private BigDecimal getTotalPrice(PurchaseOrder purchaseOrder) {
         return purchaseOrder.getPurchaseOrderDetails().stream()
-                .mapToDouble(PurchaseOrderDetail::getSupplyPrice)
-                .sum();
+                .map(PurchaseOrderDetail::getSupplyPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     // 총 수량 계산
@@ -215,28 +216,28 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService{
 
             // 단가 설정
             // 품목에서 기본 단가 가져오기
-            double price = product.getPurchasePrice();
+            BigDecimal price = product.getPurchasePrice();
 
             // 프론트에서 단가를 변경하지 않으면 품목에 저장된 기본 단가를 적용
-            double appliedPrice = item.getPrice() != null ? item.getPrice() : price;
+            BigDecimal appliedPrice = item.getPrice() != null ? item.getPrice() : price;
 
             // 공급가액 계산 (수량 * 제품 단가)
-            double supplyPrice = item.getQuantity() * appliedPrice;
+            BigDecimal supplyPrice = BigDecimal.valueOf(item.getQuantity()).multiply(appliedPrice);
 
             // 부가세 계산 (내화인 경우만 10% 적용)
-            Double vat = null;  // 외화의 경우 부가세 계산 안 함
+            BigDecimal vat = null;  // 외화의 경우 부가세 계산 안 함
             if (newOrder.getCurrency().getCode().equals("KRW") && newOrder.getVatType().equals(true)) {
-                vat = supplyPrice * 0.1;  // 내화인 경우 부가세 적용되어있으면 10%
+                vat = supplyPrice.multiply(BigDecimal.valueOf(0.1));  // 내화인 경우 부가세 적용되어있으면 10%
             }
 
             // 백엔드에서 기본 환율 가져오기
-            double exchangeRate = newOrder.getCurrency().getExchangeRate();
+            BigDecimal exchangeRate = newOrder.getCurrency().getExchangeRate();
 
             // 프론트에서 환율이 변경되지 않으면 DB에 저장된 기본 환율을 사용
-            double appliedRate = dto.getExchangeRate() != null ? dto.getExchangeRate() : exchangeRate;
+            BigDecimal appliedRate = dto.getExchangeRate() != null ? dto.getExchangeRate() : exchangeRate;
 
             // 원화 금액 계산
-            double localAmount = supplyPrice * appliedRate;
+            BigDecimal localAmount = supplyPrice.multiply(appliedRate);
 
             // 발주서 상세 항목 생성
             PurchaseOrderDetail detail = PurchaseOrderDetail.builder()

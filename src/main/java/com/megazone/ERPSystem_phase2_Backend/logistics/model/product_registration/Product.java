@@ -9,6 +9,7 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.Mate
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,11 +65,11 @@ public class Product {
 
     // 입고 단가
     @Column(nullable = false)
-    private Double purchasePrice;
+    private BigDecimal purchasePrice;
 
     // 출고 단가
     @Column(nullable = false)
-    private Double salesPrice;
+    private BigDecimal salesPrice;
 
     // 품목명
     @Column(nullable = false)
