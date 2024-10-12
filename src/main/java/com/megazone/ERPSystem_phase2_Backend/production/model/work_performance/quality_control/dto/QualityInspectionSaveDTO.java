@@ -1,6 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.dto;
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.InspectedProduct;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.enums.QualityInspectionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,9 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class QualityInspectionDetailDTO {
+public class QualityInspectionSaveDTO {
 
-    private Long id;
     private String inspectionCode;     //품질 검사 코드
     private String inspectionName;     //품질 검사 이름
     private String description;        //설명
@@ -27,5 +25,4 @@ public class QualityInspectionDetailDTO {
     private String productCode;            //품목 코드
     private String productName;            //품목 명
 
-    private List<InspectedProductDTO> inspectedProducts;        // 검사된 개별 제품 리스트
 }

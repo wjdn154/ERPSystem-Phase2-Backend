@@ -1,15 +1,10 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.work_performance.quality_control;
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.goods_receipt.completeProduct;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.DefectCategory;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.DefectType;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.QualityInspection;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.dto.DefectCategoryDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.dto.InboundRegistrationDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.dto.QualityInspectionDetailDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.dto.QualityInspectionListDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
-import com.megazone.ERPSystem_phase2_Backend.production.repository.work_performance.quality_control.DefectType.DefectTypeRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.work_performance.quality_control.QualityInspection.QualityInspectionRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.work_performance.work_report.WorkPerformanceRepository;
 import lombok.AllArgsConstructor;
@@ -28,25 +23,42 @@ public class QualityInspectionServiceImpl implements QualityInspectionService{
 
     private final QualityInspectionRepository qualityInspectionRepository;
     private final WorkPerformanceRepository workPerformanceRepository;
-    private final DefectTypeRepository defectTypeRepository;
+    private final ProductRepository productRepository;
 
     //모든 품질 검사 리스트 조회
     @Override
     public List<QualityInspectionListDTO> findAllQualityInspection() {
-
         return qualityInspectionRepository.findAllByOrderByIdDesc().stream()
-                .map(qualityInspection -> new QualityInspectionListDTO(
-                        qualityInspection.getId(),
-                        qualityInspection.getInspectionCode(),
-                        qualityInspection.getInspectionName(),
-                        qualityInspection.getDescription(),
-                        qualityInspection.getIsPassed(),
-                        qualityInspection.getQualityInspectionType(),
-                        qualityInspection.getWorkPerformance().getId(),
-                        qualityInspection.getWorkPerformance().getName()
-                )).collect(Collectors.toList());
+                .map(qualityInspection -> {
+                    // 총 수량
+                    Long totalQuantity = qualityInspection.getWorkPerformance().getActualQuantity();
 
+                    // 불량 수량 계산: `isPassed`가 `false`인 `InspectedProduct`의 개수
+                    Long defectiveQuantity = qualityInspection.getInspectedProducts().stream()
+                            .filter(inspectedProduct -> !inspectedProduct.getIsPassed()) // 검사 불통과 제품
+                            .count();
+
+                    // 통과 수량 계산
+                    Long passedQuantity = totalQuantity - defectiveQuantity;
+
+                    // `QualityInspectionListDTO` 생성 및 반환
+                    return new QualityInspectionListDTO(
+                            qualityInspection.getId(),
+                            qualityInspection.getInspectionCode(),
+                            qualityInspection.getInspectionName(),
+                            qualityInspection.getQualityInspectionType(),
+                            qualityInspection.getWorkPerformance().getId(),
+                            qualityInspection.getWorkPerformance().getName(),
+                            qualityInspection.getProduct().getCode(),
+                            qualityInspection.getProduct().getName(),
+                            totalQuantity,
+                            defectiveQuantity,
+                            passedQuantity
+                    );
+                })
+                .collect(Collectors.toList());
     }
+
 
     //해당 품질 검사 상세 조회
     @Override
@@ -63,7 +75,7 @@ public class QualityInspectionServiceImpl implements QualityInspectionService{
 
     //해당 품질 검사 상세 등록
     @Override
-    public Optional<QualityInspectionDetailDTO> createQualityInspection(QualityInspectionDetailDTO dto) {
+    public Optional<QualityInspectionDetailDTO> createQualityInspection(QualityInspectionSaveDTO dto) {
 
         //품질 검사 코드 중복 확인
         if(qualityInspectionRepository.existsByInspectionCode(dto.getInspectionCode())){
@@ -85,7 +97,7 @@ public class QualityInspectionServiceImpl implements QualityInspectionService{
 
     //해당 품질 검사 상세 수정
     @Override
-    public Optional<QualityInspectionDetailDTO> updateQualityInspection(Long id, QualityInspectionDetailDTO dto) {
+    public Optional<QualityInspectionDetailDTO> updateQualityInspection(Long id, QualityInspectionUpdateDTO dto) {
 
         //아이디 존재 여부 확인
         QualityInspection qualityInspection = qualityInspectionRepository.findById(id)
@@ -120,79 +132,42 @@ public class QualityInspectionServiceImpl implements QualityInspectionService{
         qualityInspectionRepository.delete(qualityInspection);
     }
 
-    private QualityInspection qualityInspectionToEntity(QualityInspectionDetailDTO dto) {
+    //품질검사 등록 dto를 엔티티로 변환
+    private QualityInspection qualityInspectionToEntity(QualityInspectionSaveDTO dto) {
 
         WorkPerformance workPerformance = workPerformanceRepository.findById(dto.getWorkPerformanceId())
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 작업실적 아이디를 조회할 수 없습니다."));
 
+        Product product = productRepository.findByCode(dto.getProductCode())
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 품목 코드를 조회할 수 없습니다. "));
+
         QualityInspection qualityInspection = QualityInspection.builder()
-                .id(dto.getId())
                 .inspectionCode(dto.getInspectionCode())
                 .inspectionName(dto.getInspectionName())
                 .description(dto.getDescription())
-                .isPassed(Boolean.parseBoolean(dto.getIsPassed()))
                 .qualityInspectionType(dto.getQualityInspectionType())
                 .workPerformance(workPerformance)
-                .defectCategories(
-                        dto.getDefectCategory().stream()
-                                .map(this::defectCategoryDtoToEntity)
-                                .collect(Collectors.toList())
-                )
-                .completeProducts(
-                        dto.getInboundRegistration().stream()
-                                .map(this::inboundRegistrationDtoToEntity)
-                                .collect(Collectors.toList())
-                )
+                .product(product)
                 .build();
 
         return qualityInspection;
     }
 
-    private completeProduct inboundRegistrationDtoToEntity(InboundRegistrationDTO dto) {
-
-        return completeProduct.builder()
-                .id(dto.getId())
-                .code(dto.getInboundCode())
-                .title(dto.getInboundTitle())
-                .isDone(Boolean.parseBoolean(dto.getIsDone()))
-                .build();
-    }
-
-    private DefectCategory defectCategoryDtoToEntity(DefectCategoryDTO dto) {
-
-        DefectType defectType = defectTypeRepository.findByCode(dto.getDefectTypeCode())
-                .orElseThrow(() -> new IllegalArgumentException("해당 불량유형 코드를 조회할 수 없습니다."));
-
-        return DefectCategory.builder()
-                .id(dto.getId())
-                .code(dto.getDefectCategoryCode())
-                .name(dto.getDefectCategoryName())
-                .isUsed(Boolean.parseBoolean(dto.getIsUsed()))
-                .defectType(defectType)
-                .build();
-    }
-
-    private QualityInspection updateQualityInspectionToEntity(QualityInspection qualityInspection, QualityInspectionDetailDTO dto) {
+    //품질검사 수정 dto를 엔티티로 변환
+    private QualityInspection updateQualityInspectionToEntity(QualityInspection qualityInspection, QualityInspectionUpdateDTO dto) {
 
         WorkPerformance workPerformance = workPerformanceRepository.findById(dto.getWorkPerformanceId())
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 작업실적 아이디를 조회할 수 없습니다."));
 
+        Product product = productRepository.findByCode(dto.getProductCode())
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 품목 코드를 조회할 수 없습니다. "));
+
         qualityInspection.setInspectionCode(dto.getInspectionCode());
         qualityInspection.setInspectionName(dto.getInspectionName());
         qualityInspection.setDescription(dto.getDescription());
-        qualityInspection.setIsPassed(Boolean.parseBoolean(dto.getIsPassed()));
         qualityInspection.setQualityInspectionType(dto.getQualityInspectionType());
         qualityInspection.setWorkPerformance(workPerformance);
-
-        qualityInspection.setDefectCategories(
-                dto.getDefectCategory().stream()
-                        .map(this::defectCategoryDtoToEntity)
-                        .collect(Collectors.toList()));
-
-        qualityInspection.setCompleteProducts(
-                dto.getInboundRegistration().stream()
-                        .map(this::inboundRegistrationDtoToEntity)
-                        .collect(Collectors.toList()));
+        qualityInspection.setProduct(product);
 
         return qualityInspection;
     }
@@ -200,35 +175,24 @@ public class QualityInspectionServiceImpl implements QualityInspectionService{
     //엔티티를 QualityInspectionDetailDTO로 변환
     private QualityInspectionDetailDTO qualityInspectionToDTO(QualityInspection qualityInspection) {
 
-        List<DefectCategoryDTO> defectCategoryList = qualityInspection.getDefectCategories().stream()
-                .map(defectCategory -> DefectCategoryDTO.builder()
-                        .id(defectCategory.getId())
-                        .defectCategoryCode(defectCategory.getCode())
-                        .defectCategoryName(defectCategory.getName())
-                        .isUsed(defectCategory.getIsUsed().toString())
-                        .build()
-                ).toList();
-
-        List<InboundRegistrationDTO> inboundRegistrationList = qualityInspection.getCompleteProducts().stream()
-                .map(inboundRegistration -> InboundRegistrationDTO.builder()
-                        .id(inboundRegistration.getId())
-                        .inboundCode(inboundRegistration.getCode())
-                        .inboundTitle(inboundRegistration.getTitle())
-                        .isDone(inboundRegistration.getIsDone().toString())
-                        .build()
-                ).toList();
+        List<InspectedProductDTO> inspectedProducts = qualityInspection.getInspectedProducts().stream()
+                .map(inspect -> new InspectedProductDTO(
+                                inspect.getId(),
+                                inspect.getIsPassed().toString(),
+                                inspect.getDefectCategory().getName(),
+                                inspect.getDefectCount()
+                        )).collect(Collectors.toList());
 
         QualityInspectionDetailDTO qualityInspectionDetail = QualityInspectionDetailDTO.builder()
                 .id(qualityInspection.getId())
                 .inspectionCode(qualityInspection.getInspectionCode())
                 .inspectionName(qualityInspection.getInspectionName())
-                .description(qualityInspection.getDescription())
-                .isPassed(qualityInspection.getIsPassed().toString())
                 .qualityInspectionType(qualityInspection.getQualityInspectionType())
                 .workPerformanceId(qualityInspection.getWorkPerformance().getId())
                 .workPerformanceName(qualityInspection.getWorkPerformance().getName())
-                .defectCategory(defectCategoryList)
-                .inboundRegistration(inboundRegistrationList)
+                .productCode(qualityInspection.getProduct().getCode())
+                .productName(qualityInspection.getProduct().getName())
+                .inspectedProducts(inspectedProducts)
                 .build();
 
         return qualityInspectionDetail;

@@ -9,21 +9,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 /**
- * 생산 관리 담당자는 생산완료하여 품질검사를 통과한 품목(완제품)에 한하여 LOT, Serial No. 부여 후 입고 처리 등록할 수 있어야 한다.
- * 단, 품질검사에 통과하지 못한 제품은 입고 등록이 불가능해야 한다. 입고 처리 시, 제품이 입고될 창고를 선택할 수 있어야 한다.
- * 품질검사 통과여부에서 true인것만 입고 등록 가능.
+ * 품질검사에서 통과한 개별 제품을 나타내는것이 아니라 통과한 제품의 묶음을 나타냄.
+ * 하나의 제품 묶음 (또는 생산된 총 제품량의 일부)이 품질검사를 통과한 경우를 나타내며, 이 제품 묶음은 lot, serialNo를 부여받게 됨.
+ * 생산 관리 담당자는 생산완료하여 품질검사를 통과한 품목(완제품)에 한하여 LOT, Serial No. 부여
+ * 단, 품질검사에 통과하지 못한 제품은 입고 등록이 불가능해야 한다. 품질검사 통과여부에서 true인것만 입고 등록 가능.
+ *
  */
 
-@Entity(name = "quality_control_inbound_registration")
-@Table(name = "quality_control_inbound_registration")
+@Entity(name = "quality_control_complete_product")
+@Table(name = "quality_control_complete_product")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class completeProduct {
+public class CompletedProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,7 +45,7 @@ public class completeProduct {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quality_inspection_id")
-    private QualityInspection qualityInspection; // 연관 품질검사
+    private QualityInspection qualityInspection; // 하나의 품질검사에 여러개의 완제품
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lot_id")
@@ -55,8 +55,5 @@ public class completeProduct {
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;           // 하나의 창고에 여러개의 품목
 
-    public boolean canRegister(){
-        return qualityInspection != null && qualityInspection.getIsPassed();
-    }
 
 }
