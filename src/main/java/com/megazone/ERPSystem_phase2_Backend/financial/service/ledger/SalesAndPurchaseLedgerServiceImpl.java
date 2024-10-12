@@ -17,116 +17,149 @@ import java.time.YearMonth;
 @RequiredArgsConstructor
 public class SalesAndPurchaseLedgerServiceImpl implements SalesAndPurchaseLedgerService {
     private final ResolvedSaleAndPurchaseVoucherRepository resolvedSaleAndPurchaseVoucherRepository;
+    @Override
+    public SalesAndPurChaseLedgerShowAllDTO showAll(SalesAndPurChaseLedgerSearchDTO dto) {
+        List<SalesAndPurChaseLedgerShowDTO> dtos = resolvedSaleAndPurchaseVoucherRepository.SalesAndPurChaseLedgerShowList(dto);
 
-//    @Override
-//    public List<SalesAndPurChaseLedgerShowAllDTO> showAll(SalesAndPurChaseLedgerSearchDTO dto) {
-//        List<SalesAndPurChaseLedgerShowDTO> dtos =resolvedSaleAndPurchaseVoucherRepository.SalesAndPurChaseLedgerShowList(dto);
-//
-//        List<SalesAndPurChaseLedgerShowAllDTO> resultList = new ArrayList<>();
-//
-//        Map<LocalDate, List<SalesAndPurChaseLedgerShowDTO>> map = dtos.stream()
-//                .collect(Collectors.groupingBy(SalesAndPurChaseLedgerShowDTO::getVoucherDate, LinkedHashMap::new, Collectors.toList()));
-//
-//        for(Map.Entry<LocalDate, List<SalesAndPurChaseLedgerShowDTO>> entry : map.entrySet()) {
-//            LocalDate date = entry.getKey();
-//            List<SalesAndPurChaseLedgerShowDTO> dtoList = entry.getValue();
-//
-//            // 전표 번호 기준 중복 없이 전표 개수 계산
-//            int voucherCount = (int) dtoList.stream()
-//                    .map(SalesAndPurChaseLedgerShowDTO::getVoucherNumber)
-//                    .distinct()
-//                    .count();
-//
-//            SalesAndPurChaseLedgerDailySumDTO dailySumDTO;
-//
-////            if(voucherCount <= 1) {
-////                dailySumDTO = null;
-////            }
-////            else {
-//
-//
-//                // 공급가액, 부가세, 총 금액의 합계 계산
-//                BigDecimal sumSupplyAmount = dtoList.stream()
-//                        .map(SalesAndPurChaseLedgerShowDTO::getSupplyAmount)
-//                        .reduce(BigDecimal.ZERO, BigDecimal::add);
-//
-//                BigDecimal sumVatAmount = dtoList.stream()
-//                        .map(SalesAndPurChaseLedgerShowDTO::getVatAmount)
-//                        .reduce(BigDecimal.ZERO, BigDecimal::add);
-//
-//                BigDecimal sumAmount = dtoList.stream()
-//                        .map(SalesAndPurChaseLedgerShowDTO::getSumAmount)  // 공급가액 + 부가세
-//                        .reduce(BigDecimal.ZERO, BigDecimal::add);
-//
-//                dailySumDTO = SalesAndPurChaseLedgerDailySumDTO.create(voucherCount, sumSupplyAmount, sumVatAmount, sumAmount);
-////            }
-//
-//            SalesAndPurChaseLedgerShowAllDTO result = SalesAndPurChaseLedgerShowAllDTO.create(
-//                    dtoList, dailySumDTO
-//            );
-//
-//            resultList.add(result);
-//        }
-//
-//        return resultList;
-//    }
-@Override
-public SalesAndPurChaseLedgerShowAllDTO showAll(SalesAndPurChaseLedgerSearchDTO dto) {
-    List<SalesAndPurChaseLedgerShowDTO> dtos = resolvedSaleAndPurchaseVoucherRepository.SalesAndPurChaseLedgerShowList(dto);
-
-    // 각 계별 결과를 저장할 리스트
-    List<SalesAndPurChaseLedgerDailySumDTO> dailySummaries = new ArrayList<>();
-    List<SalesAndPurChaseLedgerMonthlySumDTO> monthlySummaries = new ArrayList<>();
-    List<SalesAndPurChaseLedgerQuarterlySumDTO> quarterlySummaries = new ArrayList<>();
-    List<SalesAndPurChaseLedgerHalfYearlySumDTO> halfYearlySummaries = new ArrayList<>();
-    List<SalesAndPurChaseLedgerCumulativeSumDTO> cumulativeSummaries = new ArrayList<>(); // 월별 누계 저장용
-
-    // 누계 계산용 변수
-    BigDecimal cumulativeSupply = BigDecimal.ZERO;
-    BigDecimal cumulativeVat = BigDecimal.ZERO;
-    BigDecimal cumulativeSum = BigDecimal.ZERO;
-
-    // 그룹화 및 일계, 월계, 분기계, 반기계, 누계 집계 처리
-    Map<YearMonth, BigDecimal> monthlySupplyTotals = new HashMap<>();
-    Map<Integer, BigDecimal> quarterlySupplyTotals = new HashMap<>();
-    Map<Integer, BigDecimal> halfYearlySupplyTotals = new HashMap<>();
-
-    for (SalesAndPurChaseLedgerShowDTO dtoItem : dtos) {
-        LocalDate voucherDate = dtoItem.getVoucherDate();
-        YearMonth yearMonth = YearMonth.from(voucherDate);
-        int quarter = (voucherDate.getMonthValue() - 1) / 3 + 1;
-        int halfYear = (voucherDate.getMonthValue() - 1) / 6 + 1;
+        // 각 계별 결과를 저장할 리스트
+        List<SalesAndPurChaseLedgerDailySumDTO> dailySummaries = new ArrayList<>();
+        List<SalesAndPurChaseLedgerMonthlySumDTO> monthlySummaries = new ArrayList<>();
+        List<SalesAndPurChaseLedgerQuarterlySumDTO> quarterlySummaries = new ArrayList<>();
+        List<SalesAndPurChaseLedgerHalfYearlySumDTO> halfYearlySummaries = new ArrayList<>();
+        List<SalesAndPurChaseLedgerCumulativeSumDTO> cumulativeSummaries = new ArrayList<>(); // 월별 누계 저장용
 
         // 일계 계산
-        BigDecimal supplyAmount = dtoItem.getSupplyAmount();
-        BigDecimal vatAmount = dtoItem.getVatAmount();
-        BigDecimal sumAmount = dtoItem.getSumAmount();
+        Map<LocalDate, List<SalesAndPurChaseLedgerShowDTO>> dailyMap = dtos.stream()
+                .collect(Collectors.groupingBy(SalesAndPurChaseLedgerShowDTO::getVoucherDate, LinkedHashMap::new, Collectors.toList()));
 
-        dailySummaries.add(SalesAndPurChaseLedgerDailySumDTO.create(1, supplyAmount, vatAmount, sumAmount));
+        BigDecimal cumulativeSupply = BigDecimal.ZERO;
+        BigDecimal cumulativeVat = BigDecimal.ZERO;
+        BigDecimal cumulativeSum = BigDecimal.ZERO;
 
-        // 월계 계산
-        monthlySupplyTotals.put(yearMonth, monthlySupplyTotals.getOrDefault(yearMonth, BigDecimal.ZERO).add(supplyAmount));
-        monthlySummaries.add(SalesAndPurChaseLedgerMonthlySumDTO.create(yearMonth, 1, supplyAmount, vatAmount, sumAmount));
+        for (Map.Entry<LocalDate, List<SalesAndPurChaseLedgerShowDTO>> entry : dailyMap.entrySet()) {
+            LocalDate date = entry.getKey();
+            List<SalesAndPurChaseLedgerShowDTO> dtoList = entry.getValue();
+
+            BigDecimal dailySupplyAmount = dtoList.stream()
+                    .map(SalesAndPurChaseLedgerShowDTO::getSupplyAmount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            BigDecimal dailyVatAmount = dtoList.stream()
+                    .map(SalesAndPurChaseLedgerShowDTO::getVatAmount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            BigDecimal dailySumAmount = dtoList.stream()
+                    .map(SalesAndPurChaseLedgerShowDTO::getSumAmount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            int dailyVoucherCount = (int) dtoList.stream()
+                    .map(SalesAndPurChaseLedgerShowDTO::getVoucherNumber)
+                    .distinct()
+                    .count();
+
+            // 일계 결과 추가
+            dailySummaries.add(SalesAndPurChaseLedgerDailySumDTO.create(dailyVoucherCount, dailySupplyAmount, dailyVatAmount, dailySumAmount));
+        }
+
+        // 월계 계산과 함께 누계(월별 누계) 계산
+        Map<YearMonth, List<SalesAndPurChaseLedgerShowDTO>> monthlyMap = dtos.stream()
+                .collect(Collectors.groupingBy(dtoItem -> YearMonth.from(dtoItem.getVoucherDate()), LinkedHashMap::new, Collectors.toList()));
+
+        for (Map.Entry<YearMonth, List<SalesAndPurChaseLedgerShowDTO>> entry : monthlyMap.entrySet()) {
+            YearMonth month = entry.getKey();
+            List<SalesAndPurChaseLedgerShowDTO> dtoList = entry.getValue();
+
+            BigDecimal monthlySupplyAmount = dtoList.stream()
+                    .map(SalesAndPurChaseLedgerShowDTO::getSupplyAmount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            BigDecimal monthlyVatAmount = dtoList.stream()
+                    .map(SalesAndPurChaseLedgerShowDTO::getVatAmount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            BigDecimal monthlySumAmount = dtoList.stream()
+                    .map(SalesAndPurChaseLedgerShowDTO::getSumAmount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            int monthlyVoucherCount = (int) dtoList.stream()
+                    .map(SalesAndPurChaseLedgerShowDTO::getVoucherNumber)
+                    .distinct()
+                    .count();
+
+            // 월계 결과 추가
+            monthlySummaries.add(SalesAndPurChaseLedgerMonthlySumDTO.create(month, monthlyVoucherCount, monthlySupplyAmount, monthlyVatAmount, monthlySumAmount));
+
+            // 누계 업데이트: 월별로 누적
+            cumulativeSupply = cumulativeSupply.add(monthlySupplyAmount);
+            cumulativeVat = cumulativeVat.add(monthlyVatAmount);
+            cumulativeSum = cumulativeSum.add(monthlySumAmount);
+
+            // 누계 결과 추가 (월별 누계)
+            cumulativeSummaries.add(SalesAndPurChaseLedgerCumulativeSumDTO.create(monthlyVoucherCount, cumulativeSupply, cumulativeVat, cumulativeSum));
+        }
 
         // 분기계 계산
-        quarterlySupplyTotals.put(quarter, quarterlySupplyTotals.getOrDefault(quarter, BigDecimal.ZERO).add(supplyAmount));
-        quarterlySummaries.add(SalesAndPurChaseLedgerQuarterlySumDTO.create(quarter, 1, supplyAmount, vatAmount, sumAmount));
+        Map<Integer, List<SalesAndPurChaseLedgerShowDTO>> quarterlyMap = dtos.stream()
+                .collect(Collectors.groupingBy(dtoItem -> (dtoItem.getVoucherDate().getMonthValue() - 1) / 3 + 1, LinkedHashMap::new, Collectors.toList()));
+
+        for (Map.Entry<Integer, List<SalesAndPurChaseLedgerShowDTO>> entry : quarterlyMap.entrySet()) {
+            int quarter = entry.getKey();
+            List<SalesAndPurChaseLedgerShowDTO> dtoList = entry.getValue();
+
+            BigDecimal quarterlySupplyAmount = dtoList.stream()
+                    .map(SalesAndPurChaseLedgerShowDTO::getSupplyAmount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            BigDecimal quarterlyVatAmount = dtoList.stream()
+                    .map(SalesAndPurChaseLedgerShowDTO::getVatAmount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            BigDecimal quarterlySumAmount = dtoList.stream()
+                    .map(SalesAndPurChaseLedgerShowDTO::getSumAmount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            int quarterlyVoucherCount = (int) dtoList.stream()
+                    .map(SalesAndPurChaseLedgerShowDTO::getVoucherNumber)
+                    .distinct()
+                    .count();
+
+            // 분기계 결과 추가
+            quarterlySummaries.add(SalesAndPurChaseLedgerQuarterlySumDTO.create(quarter, quarterlyVoucherCount, quarterlySupplyAmount, quarterlyVatAmount, quarterlySumAmount));
+        }
 
         // 반기계 계산
-        halfYearlySupplyTotals.put(halfYear, halfYearlySupplyTotals.getOrDefault(halfYear, BigDecimal.ZERO).add(supplyAmount));
-        halfYearlySummaries.add(SalesAndPurChaseLedgerHalfYearlySumDTO.create(halfYear, 1, supplyAmount, vatAmount, sumAmount));
+        Map<Integer, List<SalesAndPurChaseLedgerShowDTO>> halfYearlyMap = dtos.stream()
+                .collect(Collectors.groupingBy(dtoItem -> (dtoItem.getVoucherDate().getMonthValue() - 1) / 6 + 1, LinkedHashMap::new, Collectors.toList()));
 
-        // 누계 계산
-        cumulativeSupply = cumulativeSupply.add(supplyAmount);
-        cumulativeVat = cumulativeVat.add(vatAmount);
-        cumulativeSum = cumulativeSum.add(sumAmount);
-        cumulativeSummaries.add(SalesAndPurChaseLedgerCumulativeSumDTO.create(1, cumulativeSupply, cumulativeVat, cumulativeSum));
+        for (Map.Entry<Integer, List<SalesAndPurChaseLedgerShowDTO>> entry : halfYearlyMap.entrySet()) {
+            int halfYear = entry.getKey();
+            List<SalesAndPurChaseLedgerShowDTO> dtoList = entry.getValue();
+
+            BigDecimal halfYearlySupplyAmount = dtoList.stream()
+                    .map(SalesAndPurChaseLedgerShowDTO::getSupplyAmount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            BigDecimal halfYearlyVatAmount = dtoList.stream()
+                    .map(SalesAndPurChaseLedgerShowDTO::getVatAmount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            BigDecimal halfYearlySumAmount = dtoList.stream()
+                    .map(SalesAndPurChaseLedgerShowDTO::getSumAmount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            int halfYearlyVoucherCount = (int) dtoList.stream()
+                    .map(SalesAndPurChaseLedgerShowDTO::getVoucherNumber)
+                    .distinct()
+                    .count();
+
+            // 반기계 결과 추가
+            halfYearlySummaries.add(SalesAndPurChaseLedgerHalfYearlySumDTO.create(halfYear, halfYearlyVoucherCount, halfYearlySupplyAmount, halfYearlyVatAmount, halfYearlySumAmount));
+        }
+
+        // 최종 결과 반환
+        return SalesAndPurChaseLedgerShowAllDTO.create(
+                dtos, dailySummaries, monthlySummaries, quarterlySummaries, halfYearlySummaries, cumulativeSummaries
+        );
     }
-
-    // 최종 결과 반환
-    return SalesAndPurChaseLedgerShowAllDTO.create(
-            dtos, dailySummaries, monthlySummaries, quarterlySummaries, halfYearlySummaries, cumulativeSummaries
-    );
-}
 }
 
