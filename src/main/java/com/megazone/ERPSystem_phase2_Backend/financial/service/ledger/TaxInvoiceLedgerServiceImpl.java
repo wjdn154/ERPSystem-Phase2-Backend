@@ -19,6 +19,10 @@ public class TaxInvoiceLedgerServiceImpl implements TaxInvoiceLedgerService {
 
     private final ResolvedSaleAndPurchaseVoucherRepository resolvedSaleAndPurchaseVoucherRepository;
 
+    /**
+     * 거래처의 월별 합계의 합계 month 100으로 표시
+     */
+
     @Override
     public List<TaxInvoiceLedgerShowDTO> show(TaxInvoiceLedgerSearchDTO dto) {
         List<TaxInvoiceLedgerShowDTO> resultList = resolvedSaleAndPurchaseVoucherRepository.showTaxInvoiceLedger(dto);
