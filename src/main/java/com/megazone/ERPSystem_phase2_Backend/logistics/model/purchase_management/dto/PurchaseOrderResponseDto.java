@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_managemen
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -15,6 +16,6 @@ public class PurchaseOrderResponseDto {
     private LocalDate date;
     private LocalDate deliveryDate;
     private Integer totalQuantity;
-    private Double totalPrice;
+    private BigDecimal totalPrice;
     private String status;
 }

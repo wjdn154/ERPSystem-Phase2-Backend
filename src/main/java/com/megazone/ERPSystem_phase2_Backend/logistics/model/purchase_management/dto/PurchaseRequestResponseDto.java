@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,6 +17,6 @@ public class PurchaseRequestResponseDto {
     private LocalDate date;
     private LocalDate deliveryDate;
     private Integer totalQuantity;
-    private Double totalPrice;
+    private BigDecimal totalPrice;
     private String status;
 }

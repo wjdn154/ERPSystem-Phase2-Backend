@@ -27,12 +27,12 @@ public class PurchaseRequest {
     private Long id;
 
     // 발주 요청 상세와의 일대다 관계
-    @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "purchaseRequest", orphanRemoval = true)
     @Builder.Default
     private List<PurchaseRequestDetail> purchaseRequestDetails = new ArrayList<>();
 
     // 발주서와의 일대다 관계
-    @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "purchaseRequest", orphanRemoval = true)
     @Builder.Default
     private List<PurchaseOrder> purchaseOrders = new ArrayList<>();
 

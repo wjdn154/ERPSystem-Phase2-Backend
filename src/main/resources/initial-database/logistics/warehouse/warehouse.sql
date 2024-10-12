@@ -54,7 +54,7 @@ VALUES (1, 1, 2),
        (8, 2, 8),
        (9, 1, 9);
 
-INSERT INTO warehouse_location (id, warehouse_id, location_name, is_active)
+INSERT INTO warehouse_location (id, warehouse_id, location_name, active)
 VALUES (1, 1, 'A1', true),
        (2, 1, 'A2', true),
        (3, 1, 'A3', true),
@@ -86,19 +86,19 @@ VALUES (1,  1, 1, 100, null),
        (9,  2, 2, 200, null),
        (10, 3, 2, 300, null);
 
-INSERT INTO inventory (id, warehouse_location_id, quantity, standard, product_id, warehouse_id)
-VALUES (1, 1, 30, null, 1, 1),
-       (2, 2, 40, null, 1, 1),
-       (3, 3, 70, null, 1, 6),
-       (4, 4, 60, null, 1, 7),
-       (5, 1, 90, null, 1, 8),
-       (6, 2, 80, null, 1, 9),
-       (7, 3, 70, null, 1, 10),
-       (8, 1, 10, null, 1, 11),
-       (9, 2, 500, null, 1, 12),
-       (10, 5, 240, null, 1, 13),
-       (11, 6, 310, null, 1, 14),
-       (12, 7, 200, null, 1, 15);
+INSERT INTO inventory (id, warehouse_location_id, inventory_number,quantity, standard, product_id, warehouse_id)
+VALUES (1, 1, 0000000001, 30, null, 1, 1),
+       (2, 2, 0000000002, 40, null, 1, 1),
+       (3, 3, 0000000003, 70, null, 1, 6),
+       (4, 4, 0000000004, 60, null, 1, 7),
+       (5, 1, 0000000005, 90, null, 1, 8),
+       (6, 2, 0000000006, 80, null, 1, 9),
+       (7, 3, 0000000007, 70, null, 1, 10),
+       (8, 1, 0000000008, 10, null, 1, 11),
+       (9, 2, 0000000009, 500, null, 1, 12),
+       (10, 5, 0000000010, 240, null, 1, 13),
+       (11, 6, 0000000011, 310, null, 1, 14),
+       (12, 7, 0000000012, 200, null, 1, 15);
 
 INSERT INTO inventory_inspection (id, employee_id, warehouse_id, inspection_date, inspection_number, status, comment)
 values (1, 1, 1, '2024-09-12', 1, '조정완료', '2024년 9월 정기 재고 실시'),

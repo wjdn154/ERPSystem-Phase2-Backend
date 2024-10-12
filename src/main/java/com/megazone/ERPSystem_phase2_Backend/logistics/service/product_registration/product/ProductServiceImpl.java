@@ -14,7 +14,13 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -29,6 +35,10 @@ public class ProductServiceImpl implements ProductService{
     private final ProcessRoutingRepository processRoutingRepository;
     private final ProductGroupRepository productGroupRepository;
     private final ClientRepository clientRepository;
+    private final ProductImageService productImageService;
+
+    // 이미지가 저장된 경로 (src/main/resources/static/uploads/)
+    private static final String UPLOAD_DIR = "src/main/resources/static";
 
     /**
      * 품목등록 리스트 조회
@@ -62,29 +72,31 @@ public class ProductServiceImpl implements ProductService{
      * 새로운 품목 등록하기
      *
      * @param productRequestDto 저장할 품목의 정보가 담긴 DTO
+     * @param imageFile
      * @return 저장된 품목 정보를 담은 DTO를 Optional로 반환함.
      */
     @Override
-    public Optional<ProductResponseDto> saveProduct(ProductRequestDto productRequestDto) {
+    public Optional<ProductResponseDto> saveProduct(ProductRequestDto productRequestDto, MultipartFile imageFile) {
 
         // 코드 중복 검사
         validateProductCodeUnique(productRequestDto.getCode());
 
-        // 거래처 조회
+        // 거래처, 품목 그룹, 생산 라우팅 정보 조회
         Client client = clientRepository.findById(productRequestDto.getClientId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 거래처를 찾을 수 없습니다."));
-
-        // 품목 그룹 조회
         ProductGroup productGroup = productGroupRepository.findById(productRequestDto.getProductGroupId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 품목 그룹을 찾을 수 없습니다."));
-
-        // 생산 라우팅 조회
         ProcessRouting processRouting = processRoutingRepository.findById(productRequestDto.getProcessRoutingId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 생산 라우팅을 찾을 수 없습니다."));
 
+        // 이미지 파일 업로드 및 경로 가져오기
+        String imagePath = productImageService.uploadProductImage(imageFile);
+
         // 엔티티로 변환 후 저장
-        Product product = toEntity(productRequestDto, client ,productGroup, processRouting);
+        Product product = toEntity(productRequestDto, client ,productGroup, processRouting, imagePath);
+
         Product savedProduct = productRepository.save(product);
+
 
         // 다시 DTO로 변환 후 반환
         return Optional.of(toDto(savedProduct));
@@ -95,42 +107,68 @@ public class ProductServiceImpl implements ProductService{
      *
      * @param id
      * @param productRequestDto
+     * @param imageFile
      * @return 수정된 품목의 DTO를 반환
      */
     @Override
-    public Optional<ProductResponseDto> updateProduct(Long id, ProductRequestDto productRequestDto) {
+    public Optional<ProductResponseDto> updateProduct(Long id, ProductRequestDto productRequestDto, MultipartFile imageFile) {
 
         // 품목 조회 및 검증
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 품목 그룹을 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 품목을 찾을 수 없습니다."));
 
         // 코드 중복 검사, 업데이트 할 품목은 제외하고 검사
         if (productRepository.existsByCodeAndIdNot(productRequestDto.getCode(), id)) {
             throw new IllegalArgumentException("동일한 코드를 가진 품목이 이미 존재합니다.");
         }
 
-        // 거래처 조회
+        // 거래처, 품목 그룹, 생산 라우팅 조회
         Client client = clientRepository.findById(productRequestDto.getClientId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 거래처를 찾을 수 없습니다."));
-
-        // 품목 그룹 조회
         ProductGroup productGroup = productGroupRepository.findById(productRequestDto.getProductGroupId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 품목 그룹을 찾을 수 없습니다."));
-
-        // 생산 라우팅 조회
         ProcessRouting processRouting =  processRoutingRepository.findById(productRequestDto.getProcessRoutingId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 생산 라우팅을 찾을 수 없습니다."));
 
-        // 거래처, 품목 그룹, 생산 라우팅 필드 업데이트
-//        product.setClient(client);
+        // 이미지가 전송된 경우 기존 이미지 삭제 후 새 이미지 저장
+        if (imageFile != null && !imageFile.isEmpty()) {
+            // 기존 이미지 경로 삭제 로직
+            String oldImagePath = product.getImagePath();
+            if (oldImagePath != null) {
+                deleteOldImage(oldImagePath);  // 기존 이미지 삭제
+            }
+
+            // 새로운 이미지 업로드 및 경로 설정
+            String newImagePath = productImageService.uploadProductImage(imageFile);
+            product.setImagePath(newImagePath);
+        }
+
+        // 나머지 필드 업데이트
+        product.setClient(client);
         product.setProductGroup(productGroup);
         product.setProcessRouting(processRouting);
-        // 나머지 필드 업데이트
         updateProductFields(product, productRequestDto);
 
         // 저장
         Product updatedProduct = productRepository.save(product);
+        
         return Optional.of(toDto(updatedProduct));
+    }
+
+    private void deleteOldImage(String oldImagePath) {
+        try {
+            // 이미지 경로를 완전한 파일 시스템 경로로 변환
+            File file = new File(UPLOAD_DIR + oldImagePath);
+
+            if (file.exists()) {
+                Files.delete(Paths.get(file.getPath()));  // 파일 삭제
+                System.out.println("기존 이미지 파일이 삭제되었습니다: " + file.getPath());
+            }
+        } catch (IOException e) {
+            // 삭제 실패 시 예외 처리
+            System.err.println("이미지 파일 삭제 실패: " + e.getMessage());
+            throw new RuntimeException("이미지 파일 삭제 실패", e);
+        }
     }
 
     /**
@@ -233,19 +271,19 @@ public class ProductServiceImpl implements ProductService{
                 .code(product.getCode())
                 .name(product.getName())
                 .clientId(product.getClient().getId())
-                .clientCode(product.getClient() != null ? product.getClient().getCode() : null)
-                .clientName(product.getClient() != null ? product.getClient().getPrintClientName() : null)
+                .clientCode(product.getClient().getCode())
+                .clientName(product.getClient().getPrintClientName())
                 .productGroupId(product.getProductGroup().getId())
-                .productGroupCode(product.getProductGroup() != null ? product.getProductGroup().getCode() : null)
-                .productGroupName(product.getProductGroup() != null ? product.getProductGroup().getName() : null)
+                .productGroupCode(product.getProductGroup().getCode())
+                .productGroupName(product.getProductGroup().getName())
                 .standard(product.getStandard())
                 .unit(product.getUnit())
                 .purchasePrice(product.getPurchasePrice())
                 .salesPrice(product.getSalesPrice())
                 .productType(product.getProductType())
                 .processRoutingId(product.getProcessRouting().getId())
-                .processRoutingCode(product.getProcessRouting() != null ? product.getProcessRouting().getCode() : null)
-                .processRoutingName(product.getProcessRouting() != null ? product.getProcessRouting().getName() : null)
+                .processRoutingCode(product.getProcessRouting().getCode())
+                .processRoutingName(product.getProcessRouting().getName())
                 .imagePath(product.getImagePath())
                 .remarks(product.getRemarks())
                 .isActive(product.isActive())
@@ -253,7 +291,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     // DTO -> Entity 변환 메서드
-    public Product toEntity(ProductRequestDto productRequestDto, Client client, ProductGroup productGroup, ProcessRouting processRouting) {
+    public Product toEntity(ProductRequestDto productRequestDto, Client client, ProductGroup productGroup, ProcessRouting processRouting, String imagePath) {
         return Product.builder()
                 .code(productRequestDto.getCode())
                 .name(productRequestDto.getName())
@@ -265,7 +303,7 @@ public class ProductServiceImpl implements ProductService{
                 .purchasePrice(productRequestDto.getPurchasePrice())
                 .salesPrice(productRequestDto.getSalesPrice())
                 .productType(productRequestDto.getProductType())
-                .imagePath(productRequestDto.getImageUrl())
+                .imagePath(imagePath)
                 .remarks(productRequestDto.getRemarks())
                 .build();
     }

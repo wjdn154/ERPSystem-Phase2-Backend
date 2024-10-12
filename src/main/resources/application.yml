@@ -13,6 +13,7 @@ spring:
     #    generate-ddl: true
     properties:
       hibernate:
+        format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
         multi-tenancy: SCHEMA # 멀티 테넌시 설정 (스키마 기반)
         tenant_identifier_resolver: com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.SchemaBasedTenantIdentifierResolver
@@ -90,6 +91,9 @@ spring:
         - classpath:initial-database/logistics/warehouse/warehouse.sql
         - classpath:initial-database/logistics/purchase_management/purchase_request.sql
         - classpath:initial-database/logistics/purchase_management/purchase_order.sql
+        - classpath:initial-database/logistics/purchase_management/receiving_order.sql
+#        - classpath:initial-database/logistics/purchase_management/purchase.sql
+        - classpath:initial-database/logistics/sales_management/shipping_order.sql
 
         - classpath:initial-database/production/basic_data/bom/standard_bom.sql
         - classpath:initial-database/production/basic_data/workcenter.sql
@@ -112,6 +116,10 @@ spring:
 
 logging:
   level:
+    root: INFO
+    com.megazone: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %highlight(%-5level) %logger{36} - %msg%n"
 #    org.flywaydb.core: DEBUG
 #    root: DEBUG
 #    org.hibernate.SQL: DEBUG # Hibernate SQL 쿼리 로그 레벨 설정 (DEBUG)
