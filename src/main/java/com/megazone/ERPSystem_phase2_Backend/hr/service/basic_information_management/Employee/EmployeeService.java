@@ -1,11 +1,9 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Employee;
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.*;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 public interface EmployeeService {

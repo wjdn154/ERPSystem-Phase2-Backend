@@ -40,8 +40,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeBankAccountRepository bankAccountRepository;
     private final CompanyRepository companyRepository;
     private final AttendanceRepository attendanceRepository;
-    private final ClientRepository clientRepository;
-    private final ResolvedVoucherRepository resolvedVoucherRepository;
+    //private final ClientRepository clientRepository;
+    //private final ResolvedVoucherRepository resolvedVoucherRepository;
 
     // 사원 리스트 조회
     @Override

@@ -64,7 +64,7 @@ public class EmployeeController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
-    //사원 삭제
+    //사원 삭제 : 나중에
     @DeleteMapping("/employee/del/{id}")
     public ResponseEntity<String> deleteEmployee(@PathVariable("id") Long id) {
         try {
