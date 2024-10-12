@@ -1,8 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.UnresolvedVoucherApprovalDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.UnresolvedVoucherEntryDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.UnresolvedVoucherDeleteDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherKind;
@@ -13,6 +11,9 @@ import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_informat
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.unresolvedVoucher.UnresolvedVoucherRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.unresolveSaleAndPurchaseVoucher.UnresolvedSaleAndPurchaseVoucherRepository;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Permission;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.UserPermission;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -304,30 +305,59 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
 
     @Override
     public List<UnresolvedVoucher> voucherApprovalProcessing(UnresolvedVoucherApprovalDTO dto) {
-        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherRepository.findAll(); // 초기 데이터 등록용
-//        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherRepository.findApprovalTypeVoucher(dto);
+//        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherRepository.findAll(); // 초기 데이터 등록용
 
-        try {
-            if(dto.getApprovalStatus().equals(ApprovalStatus.PENDING)) {
-                throw new IllegalArgumentException("승인 대기 상태로는 변경할 수 없습니다.");
-            }
+        if(dto.getApprovalStatus().equals(ApprovalStatus.PENDING)) {
+            throw new RuntimeException("승인 대기 상태로는 변경할 수 없습니다.");
+        }
 
-            if(!unresolvedVoucherList.isEmpty())
-            {
-                unresolvedVoucherList.stream().forEach(
-                        unresolvedVoucher -> {unresolvedVoucher.setApprovalStatus(dto.getApprovalStatus());
-                        });
-                resolvedVoucherService.resolvedVoucherEntry(unresolvedVoucherList);
-            }
-            else {
-                throw new IllegalArgumentException("권한 또는 해당하는 전표가 없습니다.");
-            }
+        Employee employee = employeeRepository.findById(dto.getApprovalManagerId())
+                .orElseThrow(() -> new RuntimeException("해당하는 유저가 없습니다."));
+
+        System.out.println(employee.getUsers().getPermission().getGeneralVoucherPermission());
+        if(!employee.getUsers().getPermission().getGeneralVoucherPermission().equals(UserPermission.ADMIN)) {
+            throw new RuntimeException("권한이 없습니다.");
         }
-        catch (Exception e) {
-            e.getStackTrace();
-            return null;
+
+        List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherRepository.findApprovalTypeVoucher(dto);
+
+
+        if(!unresolvedVoucherList.isEmpty())
+        {
+            unresolvedVoucherList.stream().forEach(
+                    unresolvedVoucher -> {unresolvedVoucher.setApprovalStatus(dto.getApprovalStatus());
+                    });
+            resolvedVoucherService.resolvedVoucherEntry(unresolvedVoucherList);
         }
+        else {
+            throw new RuntimeException("해당하는 전표가 없습니다.");
+        }
+
         return unresolvedVoucherList;
+    }
+
+    @Override
+    public UnresolvedVoucherShowAllDTO unresolvedVoucherApprovalSearch(LocalDate date) {
+
+
+        List<UnresolvedVoucher> unresolvedVoucherList =
+                unresolvedVoucherRepository.ApprovalAllSearch(date);
+
+        if(unresolvedVoucherList.isEmpty()) {
+            throw new NoSuchElementException("해당 날짜에 등록된 미결전표가 없습니다.");
+        }
+
+        List<UnresolvedVoucherShowDTO> showDtos = unresolvedVoucherList.stream().map(
+                UnresolvedVoucherShowDTO::create).toList();
+
+        UnresolvedVoucherShowAllDTO showAllDto = UnresolvedVoucherShowAllDTO.create(
+                date,
+                showDtos,
+                BigDecimal.ZERO,  // 현재잔액 기능 구현필요 <<<<
+                totalDebit(unresolvedVoucherList),
+                totalCredit(unresolvedVoucherList)
+        );
+        return showAllDto;
     }
 
 }

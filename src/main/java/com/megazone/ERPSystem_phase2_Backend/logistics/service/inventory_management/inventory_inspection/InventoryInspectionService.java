@@ -19,4 +19,5 @@ public interface InventoryInspectionService {
     InventoryInspectionResponseDTO getInspectionById(Long id);
 
     void deleteInspectionById(Long id);
+
 }

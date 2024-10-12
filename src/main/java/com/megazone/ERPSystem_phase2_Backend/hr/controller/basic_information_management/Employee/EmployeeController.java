@@ -18,8 +18,6 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
 
-
-
     @PostMapping("/employee/permission/admin/{companyId}")
     public ResponseEntity<Object> getAdminPermissionEmployee(@PathVariable("companyId") Long companyId) {
         return employeeService.getAdminPermissionEmployee(companyId);

@@ -89,7 +89,7 @@ public class UsersServiceImpl implements UsersService{
 
         // JWT 토큰 생성
         String jwtToken = jwtUtil.generateToken(tenantId, userDetails.getUsername(), user.getUserNickname(),
-                user.getCompany().getId(), null, user.getPermission().getId());
+                user.getCompany().getId(), user.getEmployee().getId(), user.getPermission().getId());
 
         return ResponseEntity.ok(jwtToken);
     }
@@ -105,9 +105,10 @@ public class UsersServiceImpl implements UsersService{
         String userNickname = jwtUtil.extractUserNickname(refreshToken);
         Long companyId = jwtUtil.extractCompanyId(refreshToken);
         Long permissionId = jwtUtil.extractPermissionId(refreshToken);
+        Long employeeId = jwtUtil.extractEmployeeId(refreshToken);
 
         Map<String, String> response = new HashMap<>();
-        String jwtToken = jwtUtil.generateToken(tenantId, username, userNickname, companyId, null, permissionId);
+        String jwtToken = jwtUtil.generateToken(tenantId, username, userNickname, companyId, employeeId, permissionId);
         response.put("token", jwtToken);
 
         return ResponseEntity.ok(response);
@@ -222,7 +223,6 @@ public class UsersServiceImpl implements UsersService{
         dto.setUserName(user.getUserNickname());
         dto.setUsersId(user.getUserName());
 
-        // Check if Employee is not null
         if (user.getEmployee() != null) {
             dto.setEmployeeId(user.getEmployee().getId());
             dto.setEmployeeNumber(user.getEmployee().getEmployeeNumber());

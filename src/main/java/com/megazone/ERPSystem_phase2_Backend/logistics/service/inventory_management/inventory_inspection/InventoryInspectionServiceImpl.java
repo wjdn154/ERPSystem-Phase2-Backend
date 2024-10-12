@@ -53,13 +53,12 @@ public class InventoryInspectionServiceImpl implements InventoryInspectionServic
         Long maxInspectionNumber = inspectionRepository.findMaxInspectionNumberByDate(requestDTO.getInspectionDate());
         Long nextInspectionNumber = (maxInspectionNumber == null) ? 1 : maxInspectionNumber + 1;
 
-        // InventoryInspection 엔티티 생성
         InventoryInspection inventoryInspection = InventoryInspection.builder()
                 .inspectionDate(requestDTO.getInspectionDate())
-                .inspectionNumber(nextInspectionNumber)  // 전표 번호 설정
+                .inspectionNumber(nextInspectionNumber)
                 .warehouse(warehouseRepository.findById(requestDTO.getWarehouseId()).orElseThrow(() -> new IllegalArgumentException("창고 정보를 찾을 수 없습니다.")))
                 .employee(employeeRepository.findById(requestDTO.getEmployeeId()).orElseThrow(() -> new IllegalArgumentException("직원 정보를 찾을 수 없습니다.")))
-                .status(InspectionStatus.미조정)  // 초기 상태는 '미조정'
+                .status(InspectionStatus.미조정)
                 .comment(requestDTO.getComment())
                 .build();
 
@@ -73,22 +72,19 @@ public class InventoryInspectionServiceImpl implements InventoryInspectionServic
                     .warehouseLocation(inventory.getWarehouseLocation())
                     .productCode(item.getProductCode())
                     .productName(item.getProductName())
-                    .standard(product.getStandard())  // 품목의 규격 정보 추가
-                    .unit(product.getUnit())  // 품목의 단위 정보 추가
-                    .bookQuantity(null)  // 초기 저장 시 장부 수량은 null
-                    .actualQuantity(item.getActualQuantity())  // 사용자가 입력한 실사 수량
-                    .differenceQuantity(0L)  // 차이는 0으로 초기화, 나중에 재고 조정 시 설정
+                    .standard(product.getStandard())
+                    .unit(product.getUnit())
+                    .bookQuantity(null)
+                    .actualQuantity(item.getActualQuantity())
+                    .differenceQuantity(null)
                     .comment(item.getComment())
                     .build();
         }).collect(Collectors.toList());
 
-        // InventoryInspection에 details 추가
         inventoryInspection.getDetails().addAll(details);
 
-        // InventoryInspection 저장
         InventoryInspection savedInspection = inspectionRepository.save(inventoryInspection);
 
-        // 저장된 InventoryInspection을 응답 DTO로 변환하여 반환
         return mapToResponseDTO(savedInspection);
     }
 
@@ -195,7 +191,7 @@ public class InventoryInspectionServiceImpl implements InventoryInspectionServic
         Long totalDifferenceQuantity = inspection.getDetails() != null ?
                 inspection.getDetails().stream()
                         .mapToLong(detail -> detail.getDifferenceQuantity() != null ? detail.getDifferenceQuantity() : 0L)
-                        .sum() : null;  // 차이 수량도 null인 경우 0 처리
+                        .sum() : null;
 
         return new InventoryInspectionResponseListDTO(
                 inspection.getId(),

@@ -4,4 +4,5 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_managemen
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface InventoryRepository extends JpaRepository<Inventory, Long>, InventoryRepositoryCustom {
+    boolean existsByWarehouseLocationId(Long warehouseLocationId);
 }

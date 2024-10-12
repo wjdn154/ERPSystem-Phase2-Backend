@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 public class BomMaterialDTO {
 
     private Long id;
+    private Long bomId;
     private String BomCode;
     private Double version; // BOM 버전
 

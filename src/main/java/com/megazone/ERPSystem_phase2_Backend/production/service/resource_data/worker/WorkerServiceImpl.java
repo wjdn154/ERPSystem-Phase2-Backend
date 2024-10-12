@@ -65,10 +65,10 @@ public class WorkerServiceImpl implements WorkerService {
 
     //생산에 해당하는 작업자 목록 조회
     @Override
-    public List<ListWorkerDTO> findAllWorker(Long companyId) {
+    public List<ListWorkerDTO> findAllWorker() {
 
         //해당 회사아이디에 해당하는 부서 작업자 목록 조회
-        List<ListWorkerDTO> workerList = workerRepository.findAllWorkerByDepartmentAndCompanyId(companyId);
+        List<ListWorkerDTO> workerList = workerRepository.findAllWorkerByDepartment();
         return workerList;
     }
 

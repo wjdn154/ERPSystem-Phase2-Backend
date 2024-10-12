@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 /**
  * 발주서 상세 테이블
  * 발주서에 포함된 품목과 관련된 정보 관리
@@ -38,19 +40,19 @@ public class PurchaseOrderDetail {
 
     // 단가(입고단가)
     @Column(nullable = false)
-    private Double price;
+    private BigDecimal price;
 
     // 공급가액 (수량 * 단가)
     @Column(nullable = false)
-    private Double supplyPrice;
+    private BigDecimal supplyPrice;
 
     // 원화금액 (통화가 외자일때만 사용)
     @Column(nullable = true)
-    private Double localAmount;
+    private BigDecimal localAmount;
 
     // 부가세
     @Column
-    private Double vat;
+    private BigDecimal vat;
 
     // 비고
     @Column

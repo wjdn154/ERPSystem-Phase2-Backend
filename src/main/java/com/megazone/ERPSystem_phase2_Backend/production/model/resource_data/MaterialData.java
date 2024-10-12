@@ -58,10 +58,8 @@ public class MaterialData {
     @OneToMany(mappedBy = "materialData", fetch = FetchType.LAZY)          //자재와 품목 다대다 중간 엔티티
     private List<MaterialProduct> materialProducts = new ArrayList<>();
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "material_input_status_id")
-    private MaterialInputStatus materialInputStatus;
+    @OneToMany(mappedBy = "materialData", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MaterialInputStatus> materialInputStatusList;
 
     @OneToMany(mappedBy = "material", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StandardBomMaterial> bomMaterials = new ArrayList<>();

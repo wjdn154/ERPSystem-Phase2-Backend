@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,11 +17,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PurchaseOrderCreateDto {
+    private Long purchaseRequestId;
     private Long clientId;
     private Long managerId;
     private Long warehouseId;
     private Long currencyId;
-    private Double exchangeRate; // 사용자가 환율을 변경한 경우에만 전달
+    private BigDecimal exchangeRate; // 사용자가 환율을 변경한 경우에만 전달
     private LocalDate date;
     private LocalDate deliveryDate;
     private Boolean vatType;
@@ -35,10 +37,10 @@ public class PurchaseOrderCreateDto {
     public static class PurchaseOrderItemCreateDto {
         private Long productId;
         private Integer quantity;
-        private Double price; // 사용자가 단가를 변경한 경우에만 전달
-        private Double supplyPrice;
-        private Double localAmount; // 원화 금액
-        private Double vat;
+        private BigDecimal price; // 사용자가 단가를 변경한 경우에만 전달
+        private BigDecimal supplyPrice;
+        private BigDecimal localAmount; // 원화 금액
+        private BigDecimal vat;
         private String remarks;
     }
 }
