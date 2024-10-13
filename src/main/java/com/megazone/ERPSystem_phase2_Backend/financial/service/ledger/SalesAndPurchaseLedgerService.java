@@ -6,5 +6,5 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.SalesAnd
 import java.util.List;
 
 public interface SalesAndPurchaseLedgerService {
-    List<SalesAndPurChaseLedgerShowAllDTO> showAll(SalesAndPurChaseLedgerSearchDTO dto);
+    SalesAndPurChaseLedgerShowAllDTO showAll(SalesAndPurChaseLedgerSearchDTO dto);
 }

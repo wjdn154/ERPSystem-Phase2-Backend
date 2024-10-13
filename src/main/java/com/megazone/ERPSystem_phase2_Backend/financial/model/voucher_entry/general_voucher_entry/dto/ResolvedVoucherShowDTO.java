@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResolvedVoucherShowDTO {
+    private Long voucherId;
     private LocalDate voucherDate;
     private String voucherNumber;
     private VoucherType voucherType;
@@ -29,6 +30,7 @@ public class ResolvedVoucherShowDTO {
 
     public static ResolvedVoucherShowDTO create(ResolvedVoucher resolvedVoucher) {
         return new ResolvedVoucherShowDTO(
+                resolvedVoucher.getId(),
                 resolvedVoucher.getVoucherDate(),
                 resolvedVoucher.getVoucherNumber(),
                 resolvedVoucher.getVoucherType(),
