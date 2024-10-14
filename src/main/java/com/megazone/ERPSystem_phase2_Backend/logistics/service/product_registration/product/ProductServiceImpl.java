@@ -271,7 +271,6 @@ public class ProductServiceImpl implements ProductService{
                 .code(product.getCode())
                 .name(product.getName())
                 .clientId(product.getClient().getId())
-                .clientCode(product.getClient().getCode())
                 .clientName(product.getClient().getPrintClientName())
                 .productGroupId(product.getProductGroup().getId())
                 .productGroupCode(product.getProductGroup().getCode())
