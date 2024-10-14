@@ -135,7 +135,7 @@ public class TaxInvoiceLedgerServiceImpl implements TaxInvoiceLedgerService {
                 "전체",
                 "전체",
                 "전체",
-                100,
+                200,
                 grandTotalVoucherCount,
                 grandTotalSupply,
                 grandTotalVat
