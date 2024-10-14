@@ -1,12 +1,12 @@
-INSERT INTO product_image (image_path) VALUES
-('images/product1_image.jpg'),
-('images/product2_image.jpg'),
-('images/product3_image.jpg'),
-('images/product4_image.jpg'),
-('images/product5_image.jpg'),
-('images/product6_image.jpg'),
-('images/product7_image.jpg'),
-('images/product8_image.jpg');
+INSERT INTO product_image (image_path, created_at) VALUES
+('images/product1_image.jpg', '2024-09-30 12:04:05.630002'),
+('images/product2_image.jpg', '2024-09-30 12:04:05.630002'),
+('images/product3_image.jpg', '2024-09-30 12:04:05.630002'),
+('images/product4_image.jpg', '2024-09-30 12:04:05.630002'),
+('images/product5_image.jpg', '2024-09-30 12:04:05.630002'),
+('images/product6_image.jpg', '2024-09-30 12:04:05.630002'),
+('images/product7_image.jpg', '2024-09-30 12:04:05.630002'),
+('images/product8_image.jpg', '2024-09-30 12:04:05.630002');
 
 INSERT INTO product (code, product_group_id, client_id, process_routing_id, product_type, purchase_price, sales_price, name, standard, unit, image_path, remarks, is_active) VALUES
 ('B0001', 1, 1, 1, 'GOODS', 1200, 1500, '즉석밥', '200g', 'EA', null, '가공식품', TRUE),

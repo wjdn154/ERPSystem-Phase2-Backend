@@ -27,7 +27,7 @@ public class ProductImage {
     @Column(name = "image_path", nullable = false)
     private String imagePath;
 
-    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
