@@ -1,12 +1,14 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 출하지시서 테이블
@@ -14,7 +16,7 @@ import java.time.LocalDate;
  * 고객이 주문한 상품의 배송을 안내하는 지시서 - 물류쪽에 출하지시를 내림
  */
 @Entity
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,37 +27,33 @@ public class ShippingOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 판매_id 참조
-    @Column
-    private Long saleId;
+    // 출하지시서 상세와의 일대다 관계
+    @OneToMany(mappedBy = "shippingOrder", orphanRemoval = true)
+    @Builder.Default
+    private List<ShippingOrderDetail> shippingOrderDetails = new ArrayList<>();
 
-    // 거래처_id - N : 1
-    @Column(nullable = false)
-    private Long clientId;
+    // 거래처 - N : 1
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
 
-    // 사원_id - N : 1
-    @Column(nullable = false)
-    private Long employeeId;
-
-    // 연락처
-    @Column
-    private String contact;
+    // 사원(담당자) - N : 1
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "manager_id", nullable = false)
+    private Employee manager;
 
     // 출하 창고_id - N : 1
-    @Column(nullable = false)
-    private Long warehouseId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "warehouse_id", nullable = false)
+    private Warehouse shippingWarehouse;
 
     // 주소 - 배송 보낼 주소(거래처 주소가 될 수도 있음)
-    @Column
+    @Column(nullable = false)
     private String shippingAddress;
 
-    // 품목_id - 1 : N
-    @Column
-    private Long productId;
-
-    // 수량
+    // 우편번호 - 거래처에 우편번호가 될 수도 있음(직접 입력도 가능)
     @Column(nullable = false)
-    private Integer quantity;
+    private String postalCode;
 
     // 출하예정일자
     @Column(nullable = false)
@@ -71,5 +69,7 @@ public class ShippingOrder {
 
     // 진행상태 (진행중, 완료)
     @Column(nullable = false)
-    private Boolean status;
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private State state = State.WAITING_FOR_SHIPMENT;
 }

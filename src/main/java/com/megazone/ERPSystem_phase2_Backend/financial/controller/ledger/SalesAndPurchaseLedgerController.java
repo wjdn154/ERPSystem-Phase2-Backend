@@ -19,8 +19,8 @@ public class SalesAndPurchaseLedgerController {
 
 
     @PostMapping("/api/financial/ledger/SalesAndPurchase/show")
-    public ResponseEntity<List<SalesAndPurChaseLedgerShowAllDTO>> show(@RequestBody SalesAndPurChaseLedgerSearchDTO dto) {
-        List<SalesAndPurChaseLedgerShowAllDTO> resultDTO = salesAndPurchaseLedgerService.showAll(dto);
+    public ResponseEntity<SalesAndPurChaseLedgerShowAllDTO> show(@RequestBody SalesAndPurChaseLedgerSearchDTO dto) {
+        SalesAndPurChaseLedgerShowAllDTO resultDTO = salesAndPurchaseLedgerService.showAll(dto);
 
         return ResponseEntity.status(HttpStatus.OK).body(resultDTO);
     }

@@ -1,3 +1,13 @@
+INSERT INTO product_image (image_path, created_at) VALUES
+('images/product1_image.jpg', '2024-09-30 12:04:05.630002'),
+('images/product2_image.jpg', '2021-01-01 00:00:00'),
+('images/product3_image.jpg', '2021-01-01 00:00:00'),
+('images/product4_image.jpg', '2021-01-01 00:00:00'),
+('images/product5_image.jpg', '2021-01-01 00:00:00'),
+('images/product6_image.jpg', '2021-01-01 00:00:00'),
+('images/product7_image.jpg', '2021-01-01 00:00:00'),
+('images/product8_image.jpg', '2021-01-01 00:00:00');
+
 INSERT INTO product (code, product_group_id, client_id, process_routing_id, product_type, purchase_price, sales_price, name, standard, unit, image_path, remarks, is_active) VALUES
 ('B0001', 1, 1, 1, 'GOODS', 1200, 1500, '즉석밥', '200g', 'EA', null, '가공식품', TRUE),
 ('B0002', 2, 2, 1, 'GOODS', 3500, 5000, '유기농 토마토', '500g', 'PKG', null, '신선식품', TRUE),
@@ -14,3 +24,6 @@ INSERT INTO product (code, product_group_id, client_id, process_routing_id, prod
 ('B0013', 2, 3, 2, 'GOODS', 5000, 7000, '유기농 사과', '1kg', 'PKG', null, '신선식품', TRUE),
 ('B0014', 3, 4, 1, 'GOODS', 8000, 10000, '샴푸', '500ml', 'BOTTLE', null, '일상용품', TRUE),
 ('B0015', 5, 5, 3, 'GOODS', 30000, 40000, '응급 처치 키트', '1세트', 'SET', '/images/first-aid-kit.jpg', '의약품/의료기기', TRUE);
+
+
+

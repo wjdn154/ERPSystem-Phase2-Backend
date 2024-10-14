@@ -1,10 +1,13 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.controller.product_registration;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductRequestDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductResponseDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.product.ProductImageService;
 import com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,8 +24,8 @@ import java.util.List;
 @RequestMapping("/api/logistics/products")
 public class ProductController {
     private final ProductService productService;
-    private final UsersRepository usersRepository;
-
+    private final ProductImageService productImageService;
+    
     /**
      * 품목등록 리스트 조회
      * @return 등록된 모든 품목을 반환
@@ -46,15 +50,23 @@ public class ProductController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
+
     /**
      * 품목을 등록함
-     * @param productRequestDto
-     * @return 등록된 품목의 DTO를 반환
+     * @param productData
+     * @param imageFile
+     * @return
+     * @throws JsonProcessingException
      */
     @PostMapping("/save")
-    public ResponseEntity<ProductResponseDto> saveProduct(@RequestBody ProductRequestDto productRequestDto) {
+    public ResponseEntity<ProductResponseDto> saveProduct(@RequestParam("productData") String productData,
+                                                          @RequestParam("imageFile") MultipartFile imageFile) throws JsonProcessingException {
 
-        return productService.saveProduct(productRequestDto)
+        // JSON 문자열을 DTO로 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+        ProductRequestDto productRequestDto = objectMapper.readValue(productData, ProductRequestDto.class);
+
+        return productService.saveProduct(productRequestDto, imageFile)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
 
@@ -63,13 +75,20 @@ public class ProductController {
     /**
      * 품목 업데이트
      * @param id 업데이트하려는 품목의 id
-     * @param productRequestDto 업데이트할 품목 정보
+     * @param productData JSON 형식의 품목 정보
+     * @param imageFile 이미지 파일 (선택 사항)
      * @return 업데이트된 품목 정보를 반환함
      */
     @PutMapping("/update/{id}")
-    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable("id") Long id, @RequestBody ProductRequestDto productRequestDto){
+    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable("id") Long id,
+                                                            @RequestParam("productData") String productData,
+                                                            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) throws JsonProcessingException {
 
-        return productService.updateProduct(id, productRequestDto)
+        // JSON 문자열을 DTO로 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+        ProductRequestDto productRequestDto = objectMapper.readValue(productData, ProductRequestDto.class);
+
+        return productService.updateProduct(id, productRequestDto, imageFile)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
 

@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_managemen
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -31,7 +32,7 @@ public class Currency {
 
     // 환율
     @Column(nullable = false)
-    private Double exchangeRate;
+    private BigDecimal exchangeRate;
 
     // 날짜
     @Column(nullable = false)

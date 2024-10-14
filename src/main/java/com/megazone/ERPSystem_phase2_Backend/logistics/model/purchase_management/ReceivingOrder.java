@@ -1,20 +1,21 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 입고 지시서 테이블
  * 입고 지시서에 대한 정보가 있는 테이블
  */
 @Entity
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,39 +26,29 @@ public class ReceivingOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 입고 지시서와 구매서 간의 일대일 관계
-    @OneToOne
-    @JoinColumn(name = "purchase_id")
-    private Purchase purchase;
+    // 입고지시서 상세와의 일대다 관계
+    @OneToMany(mappedBy = "receivingOrder", orphanRemoval = true)
+    @Builder.Default
+    private List<ReceivingOrderDetail> receivingOrderDetails = new ArrayList<>();
 
-    // 거래처_id - N : 1
-    @Column(nullable = false)
-    private Long clientId;
+    // 거래처 - N : 1
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
 
-    // 사원_id - N : 1
-    @Column(nullable = false)
-    private Long employeeId;
-
-    // 연락처
-    @Column
-    private String contact;
+    // 사원(담당자) - N : 1
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "manager_id", nullable = false)
+    private Employee manager;
 
     // 창고_id - 입고될 창고
-    @ManyToOne
-    @JoinColumn(name = "warehouse_id")
-    private Warehouse warehouse;
-
-    // 품목_id - 1 : N
-    @Column
-    private Long productId;
-
-    // 수량
-    @Column(nullable = false)
-    private Integer quantity;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "warehouse_id", nullable = false)
+    private Warehouse receivingWarehouse;
 
     // 입고 예정 일자
     @Column(nullable = false)
-    private LocalDate receivingDate;
+    private LocalDate deliveryDate;
 
     // 일자 - 입고지시서 입력 일자
     @Column(nullable = false)
@@ -67,7 +58,9 @@ public class ReceivingOrder {
     @Column
     private String remarks;
 
-    // 진행상태 (진행중, 완료)
-    @Column(nullable = false)
-    private Boolean status;
+    // 진행 상태
+    @Column
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private State status = State.WAITING_FOR_RECEIPT;
 }
