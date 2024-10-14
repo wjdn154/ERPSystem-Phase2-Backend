@@ -1,4 +1,4 @@
-ALTER TABLE production_hazardous_material MODIFY COLUMN description VARCHAR(255);
+-- ALTER TABLE production_hazardous_material MODIFY COLUMN description VARCHAR(255);
 
 INSERT INTO production_hazardous_material
 (description, hazard_level, hazardous_material_code, hazardous_material_name)
