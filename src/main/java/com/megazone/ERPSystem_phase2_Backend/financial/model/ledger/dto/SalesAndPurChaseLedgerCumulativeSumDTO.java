@@ -16,7 +16,7 @@ public class SalesAndPurChaseLedgerCumulativeSumDTO {
     private Integer voucherCount;
     private BigDecimal sumSupplyAmount;
     private BigDecimal sumVatAmount;
-    private BigDecimal sumSumAmount;
+    private BigDecimal sumAmount;
 
     public static SalesAndPurChaseLedgerCumulativeSumDTO create(YearMonth month,Integer totalVoucherCount, BigDecimal cumulativeSupplyAmount,
                                                                 BigDecimal cumulativeVatAmount, BigDecimal cumulativeSumAmount) {
