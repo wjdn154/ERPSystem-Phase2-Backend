@@ -86,11 +86,21 @@ public class ProductServiceImpl implements ProductService{
                 .orElseThrow(() -> new IllegalArgumentException("해당 거래처를 찾을 수 없습니다."));
         ProductGroup productGroup = productGroupRepository.findById(productRequestDto.getProductGroupId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 품목 그룹을 찾을 수 없습니다."));
-        ProcessRouting processRouting = processRoutingRepository.findById(productRequestDto.getProcessRoutingId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 생산 라우팅을 찾을 수 없습니다."));
+
+        ProcessRouting processRouting = null;
+        if(productRequestDto.getProcessRoutingId() != null) {
+            processRouting = processRoutingRepository.findById(productRequestDto.getProcessRoutingId())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 생산 라우팅을 찾을 수 없습니다."));
+        }
 
         // 이미지 파일 업로드 및 경로 가져오기
-        String imagePath = productImageService.uploadProductImage(imageFile);
+        String imagePath = null;
+        if (imageFile != null) {
+            imagePath = productImageService.uploadProductImage(imageFile);
+            // 파일 저장 로직 추가
+        } else {
+            System.out.println("파일이 존재하지 않습니다.");
+        }
 
         // 엔티티로 변환 후 저장
         Product product = toEntity(productRequestDto, client ,productGroup, processRouting, imagePath);
@@ -280,9 +290,9 @@ public class ProductServiceImpl implements ProductService{
                 .purchasePrice(product.getPurchasePrice())
                 .salesPrice(product.getSalesPrice())
                 .productType(product.getProductType())
-                .processRoutingId(product.getProcessRouting().getId())
-                .processRoutingCode(product.getProcessRouting().getCode())
-                .processRoutingName(product.getProcessRouting().getName())
+                .processRoutingId(product.getProcessRouting() != null ? product.getProcessRouting().getId() : null)
+                .processRoutingCode(product.getProcessRouting() != null ? product.getProcessRouting().getCode() : null)
+                .processRoutingName(product.getProcessRouting() != null ? product.getProcessRouting().getName() : null)
                 .imagePath(product.getImagePath())
                 .remarks(product.getRemarks())
                 .isActive(product.isActive())

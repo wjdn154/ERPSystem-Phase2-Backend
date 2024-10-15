@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.common.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -35,6 +36,16 @@ public class WebConfig {
                         .allowedHeaders("*")
                         .allowCredentials(true);
             }
+
+            // 리소스 핸들러 설정
+            @Override
+            public void addResourceHandlers(ResourceHandlerRegistry registry) {
+                registry.addResourceHandler("/uploads/**")
+                        .addResourceLocations("file:src/main/resources/static/uploads/")
+                        .resourceChain(true);
+            }
         };
+
     }
+
 }
