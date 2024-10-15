@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.controller.ledger;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.TaxInvoiceLedgerSearchDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.TaxInvoiceLedgerShowAllDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.TaxInvoiceLedgerShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.ledger.TaxInvoiceLedgerService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class TaxInvoiceLedgerApiController {
 
     @PostMapping("/api/financial/ledger/taxInvoice/show")
     public ResponseEntity<Object> show(@RequestBody TaxInvoiceLedgerSearchDTO dto ) {
-        List<TaxInvoiceLedgerShowDTO> showResult = taxInvoiceLedgerService.show(dto);
+        List<TaxInvoiceLedgerShowAllDTO> showResult = taxInvoiceLedgerService.show(dto);
         return !showResult.isEmpty() ? ResponseEntity.status(HttpStatus.OK).body(showResult) :
                 ResponseEntity.status(HttpStatus.NO_CONTENT).body("해당하는 내용이 없습니다.");
     }

@@ -20,4 +20,18 @@ public class TaxInvoiceLedgerShowAllDTO {
     private BigDecimal totalSupplyAmount;
     private BigDecimal totalVatAmount;
     private List<TaxInvoiceLedgerShowDTO> allShows;
+
+    public static TaxInvoiceLedgerShowAllDTO create(String clientCode, String clientName, String clientNumber,
+                                                    int totalVoucherCount, BigDecimal totalSupplyAmount, BigDecimal totalVatAmount,
+                                                    List<TaxInvoiceLedgerShowDTO> allShows) {
+        return new TaxInvoiceLedgerShowAllDTO(
+                clientCode,
+                clientName,
+                clientNumber,
+                totalVoucherCount,
+                totalSupplyAmount,
+                totalVatAmount,
+                allShows
+        );
+    }
 }

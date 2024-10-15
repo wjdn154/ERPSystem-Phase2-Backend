@@ -5,19 +5,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.YearMonth;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class SalesAndPurChaseLedgerCumulativeSumDTO {
-    private Integer totalVoucherCount;
-    private BigDecimal cumulativeSupplyAmount;
-    private BigDecimal cumulativeVatAmount;
-    private BigDecimal cumulativeSumAmount;
+    private YearMonth month;
+    private Integer voucherCount;
+    private BigDecimal sumSupplyAmount;
+    private BigDecimal sumVatAmount;
+    private BigDecimal sumAmount;
 
-    public static SalesAndPurChaseLedgerCumulativeSumDTO create(Integer totalVoucherCount, BigDecimal cumulativeSupplyAmount,
+    public static SalesAndPurChaseLedgerCumulativeSumDTO create(YearMonth month,Integer totalVoucherCount, BigDecimal cumulativeSupplyAmount,
                                                                 BigDecimal cumulativeVatAmount, BigDecimal cumulativeSumAmount) {
-        return new SalesAndPurChaseLedgerCumulativeSumDTO(totalVoucherCount, cumulativeSupplyAmount, cumulativeVatAmount, cumulativeSumAmount);
+        return new SalesAndPurChaseLedgerCumulativeSumDTO(month,totalVoucherCount, cumulativeSupplyAmount, cumulativeVatAmount, cumulativeSumAmount);
     }
 }

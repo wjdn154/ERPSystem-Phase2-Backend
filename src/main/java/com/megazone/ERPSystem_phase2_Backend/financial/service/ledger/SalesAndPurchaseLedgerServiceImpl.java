@@ -32,6 +32,7 @@ public class SalesAndPurchaseLedgerServiceImpl implements SalesAndPurchaseLedger
         Map<LocalDate, List<SalesAndPurChaseLedgerShowDTO>> dailyMap = dtos.stream()
                 .collect(Collectors.groupingBy(SalesAndPurChaseLedgerShowDTO::getVoucherDate, LinkedHashMap::new, Collectors.toList()));
 
+        int cumulativeVoucherCount = 0;
         BigDecimal cumulativeSupply = BigDecimal.ZERO;
         BigDecimal cumulativeVat = BigDecimal.ZERO;
         BigDecimal cumulativeSum = BigDecimal.ZERO;
@@ -81,21 +82,19 @@ public class SalesAndPurchaseLedgerServiceImpl implements SalesAndPurchaseLedger
                     .map(SalesAndPurChaseLedgerShowDTO::getSumAmount)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            int monthlyVoucherCount = (int) dtoList.stream()
-                    .map(SalesAndPurChaseLedgerShowDTO::getVoucherNumber)
-                    .distinct()
-                    .count();
+            int monthlyVoucherCount = dtoList.size();
 
             // 월계 결과 추가
             monthlySummaries.add(SalesAndPurChaseLedgerMonthlySumDTO.create(month, monthlyVoucherCount, monthlySupplyAmount, monthlyVatAmount, monthlySumAmount));
 
             // 누계 업데이트: 월별로 누적
+            cumulativeVoucherCount = cumulativeVoucherCount + monthlyVoucherCount;
             cumulativeSupply = cumulativeSupply.add(monthlySupplyAmount);
             cumulativeVat = cumulativeVat.add(monthlyVatAmount);
             cumulativeSum = cumulativeSum.add(monthlySumAmount);
 
             // 누계 결과 추가 (월별 누계)
-            cumulativeSummaries.add(SalesAndPurChaseLedgerCumulativeSumDTO.create(monthlyVoucherCount, cumulativeSupply, cumulativeVat, cumulativeSum));
+            cumulativeSummaries.add(SalesAndPurChaseLedgerCumulativeSumDTO.create(month,cumulativeVoucherCount, cumulativeSupply, cumulativeVat, cumulativeSum));
         }
 
         // 분기계 계산
@@ -118,10 +117,7 @@ public class SalesAndPurchaseLedgerServiceImpl implements SalesAndPurchaseLedger
                     .map(SalesAndPurChaseLedgerShowDTO::getSumAmount)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            int quarterlyVoucherCount = (int) dtoList.stream()
-                    .map(SalesAndPurChaseLedgerShowDTO::getVoucherNumber)
-                    .distinct()
-                    .count();
+            int quarterlyVoucherCount = dtoList.size();
 
             // 분기계 결과 추가
             quarterlySummaries.add(SalesAndPurChaseLedgerQuarterlySumDTO.create(quarter, quarterlyVoucherCount, quarterlySupplyAmount, quarterlyVatAmount, quarterlySumAmount));
@@ -147,10 +143,7 @@ public class SalesAndPurchaseLedgerServiceImpl implements SalesAndPurchaseLedger
                     .map(SalesAndPurChaseLedgerShowDTO::getSumAmount)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            int halfYearlyVoucherCount = (int) dtoList.stream()
-                    .map(SalesAndPurChaseLedgerShowDTO::getVoucherNumber)
-                    .distinct()
-                    .count();
+            int halfYearlyVoucherCount = dtoList.size();
 
             // 반기계 결과 추가
             halfYearlySummaries.add(SalesAndPurChaseLedgerHalfYearlySumDTO.create(halfYear, halfYearlyVoucherCount, halfYearlySupplyAmount, halfYearlyVatAmount, halfYearlySumAmount));
