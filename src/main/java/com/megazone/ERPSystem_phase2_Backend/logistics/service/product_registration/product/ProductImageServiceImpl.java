@@ -48,19 +48,18 @@ public class ProductImageServiceImpl implements ProductImageService {
     @Override
     public String saveImage(MultipartFile image, String uploadsDir) throws IOException {
         // 파일 이름 생성
-        String fileName = UUID.randomUUID().toString().replace("-", "") + image.getOriginalFilename();
-
+//        String fileName = UUID.randomUUID().toString().replace("-", "") + image.getOriginalFilename();
+        String fileName = image.getOriginalFilename();
         // 실제 파일이 저장될 경로
         String filePath = uploadsDir + fileName;
 
         // DB에 저장할 경로 문자열
-        String dbFilePath = "/uploads/" + fileName;
 
         Path path = Paths.get(filePath); // Path 객체 생성
         Files.createDirectories(path.getParent()); // 디렉토리 생성
         Files.write(path, image.getBytes()); // 디렉토리에 파일 저장
 
-        return dbFilePath;
+        return fileName;
     }
 
 

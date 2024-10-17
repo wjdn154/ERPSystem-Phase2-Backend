@@ -13,6 +13,7 @@ import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.pr
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,7 +49,7 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public List<ProductResponseDto> findAllProducts() {
 
-        return productRepository.findAll().stream()
+        return productRepository.findAll(Sort.by(Sort.Direction.DESC, "id")).stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
@@ -137,8 +138,11 @@ public class ProductServiceImpl implements ProductService{
                 .orElseThrow(() -> new IllegalArgumentException("해당 거래처를 찾을 수 없습니다."));
         ProductGroup productGroup = productGroupRepository.findById(productRequestDto.getProductGroupId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 품목 그룹을 찾을 수 없습니다."));
-        ProcessRouting processRouting =  processRoutingRepository.findById(productRequestDto.getProcessRoutingId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 생산 라우팅을 찾을 수 없습니다."));
+        ProcessRouting processRouting = null;
+        if(productRequestDto.getProcessRoutingId() != null) {
+            processRouting = processRoutingRepository.findById(productRequestDto.getProcessRoutingId())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 생산 라우팅을 찾을 수 없습니다."));
+        }
 
         // 이미지가 전송된 경우 기존 이미지 삭제 후 새 이미지 저장
         if (imageFile != null && !imageFile.isEmpty()) {
