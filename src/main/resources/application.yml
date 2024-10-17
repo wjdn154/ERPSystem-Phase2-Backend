@@ -22,7 +22,7 @@ spring:
     #    show-sql: true # SQL 쿼리를 콘솔에 출력하도록 설정
     show-sql: false # SQL 쿼리를 콘솔에 출력하도록 설정
     defer-datasource-initialization: true # 데이터베이스 초기화를 지연시켜, 스키마 생성 후 데이터 초기화가 이루어지도록 설정
-    open-in-view: false # OpenEntityManagerInView 패턴 사용 여부 설정
+#    open-in-view: false # OpenEntityManagerInView 패턴 사용 여부 설정
   web:
     resources:
       static-locations:
@@ -82,32 +82,32 @@ spring:
         - classpath:initial-database/financial/client/client.sql
         - classpath:initial-database/hr/users.sql
 #
-        - classpath:initial-database/production/basic_data/process_routing/process_details.sql
-        - classpath:initial-database/production/basic_data/process_routing/process_routing.sql
-        - classpath:initial-database/production/basic_data/process_routing/routing_step.sql
-
-        - classpath:initial-database/logistics/currency.sql
-        - classpath:initial-database/logistics/product/product_group.sql
-        - classpath:initial-database/logistics/product/product.sql
-        - classpath:initial-database/logistics/warehouse/warehouse.sql
-        - classpath:initial-database/logistics/purchase_management/purchase_request.sql
-        - classpath:initial-database/logistics/purchase_management/purchase_order.sql
-        - classpath:initial-database/logistics/purchase_management/receiving_order.sql
-#        - classpath:initial-database/logistics/purchase_management/purchase.sql
-        - classpath:initial-database/logistics/sales_management/shipping_order.sql
-
-        - classpath:initial-database/production/basic_data/bom/standard_bom.sql
-        - classpath:initial-database/production/basic_data/workcenter.sql
-        - classpath:initial-database/production/production_schedule/common_scheduling/shift_type.sql
-        - classpath:initial-database/production/production_schedule/common_scheduling/production_order.sql
-
-        - classpath:initial-database/production/resource_data/equipmentData.sql
-        - classpath:initial-database/production/resource_data/maintenanceHistory.sql
-        - classpath:initial-database/production/resource_data/worker.sql
-        - classpath:initial-database/production/production_schedule/common_scheduling/worker_assignment.sql
-        - classpath:initial-database/production/resource_data/materialData.sql
-        - classpath:initial-database/production/resource_data/hazardousMaterial.sql
-        - classpath:initial-database/production/production_schedule/planning/mrp_material_input_status.sql
+#        - classpath:initial-database/production/basic_data/process_routing/process_details.sql
+#        - classpath:initial-database/production/basic_data/process_routing/process_routing.sql
+#        - classpath:initial-database/production/basic_data/process_routing/routing_step.sql
+#
+#        - classpath:initial-database/logistics/currency.sql
+#        - classpath:initial-database/logistics/product/product_group.sql
+#        - classpath:initial-database/logistics/product/product.sql
+#        - classpath:initial-database/logistics/warehouse/warehouse.sql
+#        - classpath:initial-database/logistics/purchase_management/purchase_request.sql
+#        - classpath:initial-database/logistics/purchase_management/purchase_order.sql
+#        - classpath:initial-database/logistics/purchase_management/receiving_order.sql
+##        - classpath:initial-database/logistics/purchase_management/purchase.sql
+#        - classpath:initial-database/logistics/sales_management/shipping_order.sql
+#
+#        - classpath:initial-database/production/basic_data/bom/standard_bom.sql
+#        - classpath:initial-database/production/basic_data/workcenter.sql
+#        - classpath:initial-database/production/production_schedule/common_scheduling/shift_type.sql
+#        - classpath:initial-database/production/production_schedule/common_scheduling/production_order.sql
+#
+#        - classpath:initial-database/production/resource_data/equipmentData.sql
+#        - classpath:initial-database/production/resource_data/maintenanceHistory.sql
+#        - classpath:initial-database/production/resource_data/worker.sql
+#        - classpath:initial-database/production/production_schedule/common_scheduling/worker_assignment.sql
+#        - classpath:initial-database/production/resource_data/materialData.sql
+#        - classpath:initial-database/production/resource_data/hazardousMaterial.sql
+#        - classpath:initial-database/production/production_schedule/planning/mrp_material_input_status.sql
 
         - classpath:initial-database/financial/unresolved_sale_and_purchase_voucher.sql
         - classpath:initial-database/financial/unresolved_voucher.sql

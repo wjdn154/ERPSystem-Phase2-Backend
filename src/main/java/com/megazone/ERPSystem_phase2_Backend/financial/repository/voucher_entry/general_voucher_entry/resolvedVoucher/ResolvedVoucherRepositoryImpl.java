@@ -7,6 +7,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.enums.DailyAndMonthType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.QResolvedVoucher;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.VoucherType;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.QDepartment;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.QEmployee;
@@ -235,7 +236,7 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                 .from(voucher)
                 .join(voucher.accountSubject, accountSubject)
                 .where(voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate())
-                        .and(voucher.accountSubject.code.between(dto.getStartAccountCode(), dto.getEndAccountCode())))
+                        .and(accountSubject.code.castToNum(Integer.class).between(Integer.valueOf(dto.getStartAccountCode()), Integer.valueOf(dto.getEndAccountCode()))))
                 .groupBy(accountSubject.code,accountSubject.name)
                 .orderBy(voucher.accountSubject.code.asc())
                 .fetch();
@@ -358,6 +359,61 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                 .groupBy(ac.code, ac.name, ass.code,ass.min, ass.mediumCategory, ass.smallCategory)
                 .fetch();
 
+    }
+
+    @Override
+    public List<ResolvedVoucherShowDTO> voucherPrintShowList(VoucherPrintSearchDTO dto) {
+        QResolvedVoucher voucher = QResolvedVoucher.resolvedVoucher;
+        QClient client = QClient.client;
+        QAccountSubject accountSubject = QAccountSubject.accountSubject;
+        QEmployee employee = QEmployee.employee;
+
+
+        BooleanBuilder whereCondition = new BooleanBuilder();
+
+
+        if(dto.getStartDate() != null && dto.getEndDate() != null) {
+            whereCondition.and(voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate()));
+        }
+
+        if (dto.getVoucherType() != null) {
+            whereCondition.and(voucher.voucherType.eq(dto.getVoucherType()));
+        }
+
+
+        if (dto.getVoucherKind() != null) {
+            whereCondition.and(voucher.voucherKind.eq(dto.getVoucherKind()));
+        }
+
+        if(dto.getStartAccountCode() != null && dto.getEndAccountCode() != null) {
+            whereCondition.and(accountSubject.code.castToNum(Integer.class)
+                    .between(Integer.valueOf(dto.getStartAccountCode()), Integer.valueOf(dto.getEndAccountCode())));
+        }
+
+
+        return queryFactory
+                .select(Projections.constructor(ResolvedVoucherShowDTO.class,
+                        voucher.id,
+                        voucher.voucherDate,
+                        voucher.voucherNumber,
+                        voucher.voucherType,
+                        accountSubject.code,
+                        accountSubject.name,
+                        employee.lastName.concat(employee.firstName),
+                        client.code,
+                        client.printClientName,
+                        voucher.transactionDescription,
+                        voucher.debitAmount,
+                        voucher.creditAmount,
+                        voucher.voucherKind
+                        ))
+                .from(voucher)
+                .innerJoin(accountSubject).on(voucher.accountSubject.id.eq(accountSubject.id))
+                .innerJoin(client).on(voucher.client.id.eq(client.id))
+                .innerJoin(employee).on(employee.id.eq(voucher.voucherManager.id))
+                .where(whereCondition)
+                .orderBy(voucher.voucherDate.asc(),voucher.voucherNumber.asc())
+                .fetch();
     }
 
 
