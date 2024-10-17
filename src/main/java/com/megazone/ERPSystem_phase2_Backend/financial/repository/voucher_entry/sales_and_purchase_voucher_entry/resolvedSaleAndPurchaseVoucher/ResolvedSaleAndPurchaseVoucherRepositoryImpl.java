@@ -14,6 +14,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.QDepartment;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.QEmployee;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -77,60 +78,147 @@ public class ResolvedSaleAndPurchaseVoucherRepositoryImpl implements ResolvedSal
                 .orderBy(voucher.voucherDate.asc())
                 .fetch();
     }
+    // 없는달 제외 출력 로직
+//    @Override
+//    public List<TaxInvoiceLedgerShowDTO> showTaxInvoiceLedger(TaxInvoiceLedgerSearchDTO dto) {
+//        QClient client = QClient.client;
+//        QResolvedSaleAndPurchaseVoucher voucher = QResolvedSaleAndPurchaseVoucher.resolvedSaleAndPurchaseVoucher;
+//        QVatType vatType = QVatType.vatType;
+//
+//// 1월부터 12월까지의 월을 수동으로 생성 (QueryDSL로 With절이나 CROSS JOIN을 사용하지 못하므로)
+//        List<Integer> allMonths = IntStream.rangeClosed(1, 12).boxed().collect(Collectors.toList());
+//
+//// 결과 리스트를 담을 리스트
+//        List<TaxInvoiceLedgerShowDTO> resultList = new ArrayList<>();
+//
+//// 모든 월을 돌면서 각 월에 대한 집계 데이터를 생성
+//        for (Integer month : allMonths) {
+//            List<TaxInvoiceLedgerShowDTO> monthlyResult = queryFactory
+//                    .select(Projections.constructor(TaxInvoiceLedgerShowDTO.class,
+//                            client.code.as("clientCode"),
+//                            client.printClientName.as("clientName"),
+//                            client.businessRegistrationNumber.as("clientNumber"),
+//                            Expressions.asNumber(month).as("month"),
+//                            Expressions.numberTemplate(Integer.class, "CAST({0} AS INTEGER)", voucher.id.count()),
+//                            voucher.supplyAmount.sum().as("supplyAmount"),
+//                            voucher.vatAmount.sum().as("vatAmount")
+//                    ))
+//                    .from(voucher)
+//                    .join(client).on(voucher.client.id.eq(client.id))
+//                    .join(vatType).on(voucher.vatType.id.eq(vatType.id))
+//                    .where(
+//                            voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate())
+//                                    .and(voucher.electronicTaxInvoiceStatus.eq(ElectronicTaxInvoiceStatus.PUBLISHED))
+//                                    .and(client.code.castToNum(Integer.class).between(
+//                                            Integer.parseInt(dto.getStartClientCode()), Integer.parseInt(dto.getEndClientCode())))
+//                                    .and(voucher.voucherDate.month().eq(month))
+//                                    .and(vatType.transactionType.eq(dto.getTransactionType()))
+//                    )
+//                    .groupBy(client.code)
+//                    .orderBy(client.code.asc())
+//                    .fetch();
+//
+//            // 해당 월에 데이터가 없는 경우, 빈 값을 추가
+//            if (monthlyResult.isEmpty()) {
+//                List<TaxInvoiceLedgerShowDTO> clients = queryFactory
+//                        .select(Projections.constructor(TaxInvoiceLedgerShowDTO.class,
+//                                client.code.as("clientCode"),
+//                                client.printClientName.as("clientName"),
+//                                client.businessRegistrationNumber.as("clientNumber"),
+//                                Expressions.asNumber(month),  // 월을 수동으로 추가
+//                                Expressions.constant(0),
+//                                Expressions.constant(BigDecimal.ZERO),
+//                                Expressions.constant(BigDecimal.ZERO)
+//                        ))
+//                        .from(client)
+//                        .where(client.code.castToNum(Integer.class).between(
+//                                Integer.parseInt(dto.getStartClientCode()), Integer.parseInt(dto.getEndClientCode())))
+//                        .fetch();
+//
+//                resultList.addAll(clients);
+//            } else {
+//                resultList.addAll(monthlyResult);
+//            }
+//        }
+//
+//        return resultList;
+//    }
+//}
+    //없는달 포함 출력 로직
+@Override
+public List<TaxInvoiceLedgerShowDTO> showTaxInvoiceLedger(TaxInvoiceLedgerSearchDTO dto) {
+    QClient client = QClient.client;
+    QResolvedSaleAndPurchaseVoucher voucher = QResolvedSaleAndPurchaseVoucher.resolvedSaleAndPurchaseVoucher;
+    QVatType vatType = QVatType.vatType;
 
-    @Override
-    public List<TaxInvoiceLedgerShowDTO> showTaxInvoiceLedger(TaxInvoiceLedgerSearchDTO dto) {
-        QClient client = QClient.client;
-        QResolvedSaleAndPurchaseVoucher voucher = QResolvedSaleAndPurchaseVoucher.resolvedSaleAndPurchaseVoucher;
-        QVatType vatType = QVatType.vatType;
+// 1월부터 12월까지의 월을 수동으로 생성 (QueryDSL로 With절이나 CROSS JOIN을 사용하지 못하므로)
+    List<Integer> allMonths = IntStream.rangeClosed(dto.getStartDate().getMonthValue(), dto.getEndDate().getMonthValue()).boxed().collect(Collectors.toList());
 
-        List<TaxInvoiceLedgerShowDTO> result =  queryFactory
-                .select(Projections.constructor(TaxInvoiceLedgerShowDTO.class,
-                        client.code.as("clientCode"),
-                        client.printClientName.as("clientName"),
-                        client.businessRegistrationNumber.as("clientNumber"),
-                        voucher.voucherDate.month().as("month"),
-                        voucher.id.count().as("voucherCount"),
-                        voucher.supplyAmount.sum().as("supplyAmount"),
-                        voucher.vatAmount.sum().as("vatAmount")
-                ))
-                .from(voucher)
-                .join(client).on(voucher.client.id.eq(client.id))
-                .join(vatType).on(voucher.vatType.id.eq(vatType.id))
-                .where(
-                        voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate())
-                                .and(voucher.electronicTaxInvoiceStatus.eq(ElectronicTaxInvoiceStatus.PUBLISHED))
-                                .and(client.code.castToNum(Integer.class).between(Integer.parseInt(dto.getStartClientCode()),
-                                        Integer.parseInt(dto.getEndClientCode()))
-                                        .and(vatType.transactionType.eq(dto.getTransactionType()))))
-                .groupBy(client.code, voucher.voucherDate.month())
-                .orderBy(client.code.asc(), voucher.voucherDate.month().asc())
-                .fetch();
+// 모든 클라이언트를 미리 조회
+    List<TaxInvoiceLedgerShowDTO> allClients = queryFactory
+            .select(Projections.constructor(TaxInvoiceLedgerShowDTO.class,
+                    client.code.as("clientCode"),
+                    client.printClientName.as("clientName"),
+                    client.businessRegistrationNumber.as("clientNumber"),
+                    Expressions.asNumber(1),  // 월을 임의로 추가 (나중에 대체됨)
+                    Expressions.constant(0),  // 임시 값
+                    Expressions.constant(BigDecimal.ZERO),  // 임시 값
+                    Expressions.constant(BigDecimal.ZERO)  // 임시 값
+            ))
+            .from(client)
+            .where(client.code.castToNum(Integer.class).between(
+                    Integer.parseInt(dto.getStartClientCode()), Integer.parseInt(dto.getEndClientCode())))
+            .fetch();
 
+// 결과 리스트를 담을 리스트
+    List<TaxInvoiceLedgerShowDTO> resultList = new ArrayList<>();
 
-        Map<Integer, TaxInvoiceLedgerShowDTO> dataMap = result.stream()
-                .collect(Collectors.toMap(TaxInvoiceLedgerShowDTO::getMonth, dto2 -> dto2));
+// 모든 클라이언트에 대해 모든 월을 돌면서 각 월에 대한 집계 데이터를 생성
+    for (TaxInvoiceLedgerShowDTO clientInfo : allClients) {
+        for (Integer month : allMonths) {
+            List<TaxInvoiceLedgerShowDTO> monthlyResult = queryFactory
+                    .select(Projections.constructor(TaxInvoiceLedgerShowDTO.class,
+                            client.code.as("clientCode"),
+                            client.printClientName.as("clientName"),
+                            client.businessRegistrationNumber.as("clientNumber"),
+                            Expressions.asNumber(month).as("month"),
+                            Expressions.numberTemplate(Integer.class, "CAST({0} AS INTEGER)", voucher.id.count()),
+                            voucher.supplyAmount.sum().as("supplyAmount"),
+                            voucher.vatAmount.sum().as("vatAmount")
+                    ))
+                    .from(voucher)
+                    .join(client).on(voucher.client.id.eq(client.id))
+                    .join(vatType).on(voucher.vatType.id.eq(vatType.id))
+                    .where(
+                            voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate())
+                                    .and(voucher.electronicTaxInvoiceStatus.eq(ElectronicTaxInvoiceStatus.PUBLISHED))
+                                    .and(client.code.eq(clientInfo.getClientCode()))  // 특정 클라이언트로 제한
+                                    .and(voucher.voucherDate.month().eq(month))
+                                    .and(vatType.transactionType.eq(dto.getTransactionType()))
+                    )
+                    .groupBy(client.code)
+                    .orderBy(client.code.asc())
+                    .fetch();
 
-
-        List<TaxInvoiceLedgerShowDTO> endResultData = new ArrayList<>();
-
-        for (int month = dto.getStartDate().getMonthValue(); month <= dto.getStartDate().getMonthValue(); month++) {
-            if (dataMap.containsKey(month)) {
-
-                endResultData.add(dataMap.get(month));
-            } else {
-
-                endResultData.add(new TaxInvoiceLedgerShowDTO(
-                        dataMap.values().stream().findFirst().get().getClientCode(),
-                        dataMap.values().stream().findFirst().get().getClientName(),
-                        dataMap.values().stream().findFirst().get().getClientNumber(),
+            // 해당 월에 데이터가 없는 경우, 빈 값을 추가
+            if (monthlyResult.isEmpty()) {
+                TaxInvoiceLedgerShowDTO emptyResult = new TaxInvoiceLedgerShowDTO(
+                        clientInfo.getClientCode(),
+                        clientInfo.getClientName(),
+                        clientInfo.getClientNumber(),
                         month,
                         0,
                         BigDecimal.ZERO,
                         BigDecimal.ZERO
-                ));
+                );
+                resultList.add(emptyResult);
+            } else {
+                resultList.addAll(monthlyResult);
             }
         }
-        return endResultData;
     }
+
+    return resultList;
+
+}
 }
