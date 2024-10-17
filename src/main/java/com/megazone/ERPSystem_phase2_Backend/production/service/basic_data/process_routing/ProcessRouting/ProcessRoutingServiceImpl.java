@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ProcessRoutingServiceImpl implements ProcessRoutingService {
 
     private final ProcessRoutingRepository processRoutingRepository;
@@ -43,7 +44,6 @@ public class ProcessRoutingServiceImpl implements ProcessRoutingService {
      * @param routingDTO
      * @return ProcessRouting
      */
-    @Transactional
     public ProcessRoutingDTO createProcessRoutingWithSteps(ProcessRoutingDTO routingDTO) {
         // 1. 고유코드 중복 확인
         if (processRoutingRepository.existsByCode(routingDTO.getCode())) {
@@ -227,7 +227,6 @@ public class ProcessRoutingServiceImpl implements ProcessRoutingService {
      * @param processRoutingDTO
      * @return
      */
-    @Transactional
     public ProcessRoutingDTO updateProcessRouting(Long id, ProcessRoutingDTO processRoutingDTO) {
         // 1. 기존 라우팅을 조회
         ProcessRouting existingRouting = processRoutingRepository.findById(id)
@@ -266,7 +265,6 @@ public class ProcessRoutingServiceImpl implements ProcessRoutingService {
     // 메모리 내에서 삭제된 이력을 저장할 리스트
     private final List<ProcessRoutingDTO> deletedRoutingsHistory = new ArrayList<>();
 
-    @Transactional
     public ProcessRoutingDTO deleteProcessRouting(Long id) {
         // 1. 기존 라우팅을 조회
         ProcessRouting existingRouting = processRoutingRepository.findById(id)
