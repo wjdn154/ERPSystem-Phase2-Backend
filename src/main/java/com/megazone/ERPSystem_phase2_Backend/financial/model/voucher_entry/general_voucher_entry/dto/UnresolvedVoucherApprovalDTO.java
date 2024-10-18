@@ -16,6 +16,7 @@ public class UnresolvedVoucherApprovalDTO {
     private List<String> searchVoucherNumberList;
     private Long approvalManagerId; // 승인권자 ID
     private ApprovalStatus approvalStatus;
+    private boolean superManager; // 총관리자 여부
 
     public String approvalResult() {
         String approvalResult = "";
