@@ -81,7 +81,7 @@ spring:
         - classpath:initial-database/financial/client/client_liquor.sql
         - classpath:initial-database/financial/client/client.sql
         - classpath:initial-database/hr/users.sql
-#
+
         - classpath:initial-database/production/basic_data/process_routing/process_details.sql
         - classpath:initial-database/production/basic_data/process_routing/process_routing.sql
         - classpath:initial-database/production/basic_data/process_routing/routing_step.sql
