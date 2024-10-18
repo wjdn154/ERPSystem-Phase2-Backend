@@ -49,7 +49,7 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public List<ProductResponseDto> findAllProducts() {
 
-        return productRepository.findAll(Sort.by(Sort.Direction.DESC, "id")).stream()
+        return productRepository.findAll().stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
