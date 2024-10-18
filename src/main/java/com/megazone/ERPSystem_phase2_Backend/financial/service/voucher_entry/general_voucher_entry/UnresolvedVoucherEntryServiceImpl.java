@@ -314,8 +314,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
         Employee employee = employeeRepository.findById(dto.getApprovalManagerId())
                 .orElseThrow(() -> new RuntimeException("해당하는 유저가 없습니다."));
 
-        System.out.println(employee.getUsers().getPermission().getGeneralVoucherPermission());
-        if(!employee.getUsers().getPermission().getGeneralVoucherPermission().equals(UserPermission.ADMIN)) {
+        if((!employee.getUsers().getPermission().getGeneralVoucherPermission().equals(UserPermission.ADMIN)) && !dto.isSuperManager()) {
             throw new RuntimeException("권한이 없습니다.");
         }
 

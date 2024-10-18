@@ -101,6 +101,8 @@ public class UnresolvedVoucherApiController {
      */
     @PostMapping("api/financial/general-voucher-entry/approvalUnresolvedVoucher")
     public ResponseEntity<Object> voucherApprovalProcessing(@RequestBody UnresolvedVoucherApprovalDTO dto) {
+
+        System.out.println("dto = " + dto.toString());
         try {
             List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.voucherApprovalProcessing(dto);
             return ResponseEntity.status(HttpStatus.OK).body("선택한 미결전표가 " + dto.approvalResult() + "되었습니다.");
