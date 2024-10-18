@@ -12,6 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 public class UnresolvedVoucherDeleteDTO {
     private LocalDate searchDate;
-    private List<String> searchVoucherNumList;
+    private List<Long> searchVoucherNumList;
     private Long ManagerId; // 담당자 ID
 }

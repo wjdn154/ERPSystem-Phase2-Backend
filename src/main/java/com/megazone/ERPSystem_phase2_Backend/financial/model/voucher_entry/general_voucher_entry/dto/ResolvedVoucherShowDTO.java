@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class ResolvedVoucherShowDTO {
     private Long voucherId;
     private LocalDate voucherDate;
-    private String voucherNumber;
+    private Long voucherNumber;
     private VoucherType voucherType;
     private String accountSubjectCode;
     private String accountSubjectName;
