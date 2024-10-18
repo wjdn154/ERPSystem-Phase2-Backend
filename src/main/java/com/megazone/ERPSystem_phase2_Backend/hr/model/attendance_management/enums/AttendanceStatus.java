@@ -16,7 +16,8 @@ public enum AttendanceStatus {
     REMOTE_WORK, // 자택 근무
     ON_DUTY, // 근무
     OVERTIME, // 야근
-    SHIFT_WORK // 교대 근무
+    SHIFT_WORK, // 교대 근무
+    LATE_AND_EARLY_LEAVE // 지각 및 조퇴
 }
 
 // 09:00 시 출근

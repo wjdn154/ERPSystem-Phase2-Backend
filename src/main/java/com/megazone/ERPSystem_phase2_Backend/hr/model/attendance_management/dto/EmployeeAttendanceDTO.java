@@ -6,8 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 // 특정 사원의 출퇴근 기록
 @Data
 @AllArgsConstructor
@@ -19,8 +20,8 @@ public class EmployeeAttendanceDTO {
     private String employeeNumber;
     private String attendanceCode;
     private LocalDate date;
-    private Time checkTime;
-    private Time checkoutTIme;
+    private LocalDateTime checkTime;
+    private LocalDateTime checkoutTIme;
     private AttendanceStatus status;
 
     public static EmployeeAttendanceDTO create(Attendance attendance) {

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -20,8 +21,8 @@ public class AttendanceShowDTO {
     private String titleName;
     private String attendanceCode;
     private LocalDate date;
-    private Time checkInTime;
-    private Time checkOutTime;
+    private LocalDateTime checkInTime;
+    private LocalDateTime checkOutTime;
     private AttendanceStatus status;
 
     public static AttendanceShowDTO create(Attendance attendance) {

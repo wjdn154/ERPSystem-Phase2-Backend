@@ -94,10 +94,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         dto.setHireDate(employee.getHireDate());
         dto.setHouseholdHead(employee.isHouseholdHead());
         dto.setProfilePicture(employee.getProfilePicture());
+        dto.setDepartmentCode(employee.getDepartment().getDepartmentCode());
         dto.setDepartmentName(employee.getDepartment().getDepartmentName());
         dto.setPositionName(employee.getPosition().getPositionName());
         dto.setJobTitleName(employee.getJobTitle().getTitleName());
-        dto.setBankAccountName(employee.getBankAccount().getBankName());
+        dto.setBankAccountName(employee.getBankAccount().getBank().getName());
         dto.setBankAccountNumber(employee.getBankAccount().getAccountNumber());
         return dto;
     }
@@ -200,7 +201,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             BankAccount currentBankAccount = employee.getBankAccount();
             if (currentBankAccount != null) {
                 currentBankAccount.setAccountNumber(dto.getAccountNumber());
-                currentBankAccount.setBankName(dto.getBankName());
+                currentBankAccount.setBank(dto.getBankName());
                 bankAccountRepository.save(currentBankAccount);  // 변경사항 저장
             }
 
@@ -273,7 +274,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         // BankAccount 설정
         BankAccount newBankAccount = new BankAccount();
-        newBankAccount.setBankName(dto.getBankAccountDTO().getBankName());
+        newBankAccount.setBank(dto.getBankAccountDTO().getBankName());
         newBankAccount.setAccountNumber(dto.getBankAccountDTO().getAccountNumber());
         newBankAccount.setEmployee(employee);
         employee.setBankAccount(newBankAccount);

@@ -35,7 +35,15 @@ VALUES
 ('2000-10-16', '2027-07-07', FALSE,TRUE, 3, 2, 3, '거제', 'wkdgywjd77@naver.com', '270707001', '정현', '박', '010-2234-5678', 'img7.jpg', 'ACTIVE', 'FULL_TIME'),
 ('2000-12-25', '2028-08-08', FALSE,TRUE, 3, 2, 3, '서울', 'readyoun@omz.com', '280808001', '희연', '임', '010-2234-5678', 'img8.jpg', 'ACTIVE', 'INTERN');
 
-
+INSERT INTO employee_bank_account ( account_number, bank_id, employee_id) VALUES
+('110-1234-5678', 1, 1),
+('140-9876-5432', 2, 2),
+('1002-456-123789', 3, 3),
+('620-7894-5612', 4, 4),
+('031-3216-5498', 5, 5),
+('301-6547-8932', 6, 6),
+('3333-1478-5236', 7, 7),
+('1000-9632-5874', 8, 8);
 INSERT INTO employee_performance (evaluation_date, employee_id, title, evaluator_id, comments, score) VALUES
 ('2021-06-15', 1, '2021년 성과평가', 1, '탁월한 성과를 내며, 기대치를 꾸준히 충족했습니다.', 'A'),
 ('2022-06-20', 2, '2022년 성과평가', 1, '기한 준수가 필요합니다.', 'C'),
