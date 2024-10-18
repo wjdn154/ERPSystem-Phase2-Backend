@@ -18,7 +18,7 @@ public class VoucherPrintSearchDTO {
     private VoucherKind voucherKind;
     private String startAccountCode;
     private String endAccountCode;
-    private String startVoucherNumber;
-    private String endVoucherNumber;
+    private Long startVoucherNumber;
+    private Long endVoucherNumber;
 
 }
