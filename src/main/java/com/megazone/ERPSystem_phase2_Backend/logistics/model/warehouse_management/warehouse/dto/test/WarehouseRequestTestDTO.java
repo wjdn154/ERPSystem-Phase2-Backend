@@ -17,7 +17,7 @@ public class WarehouseRequestTestDTO {
     private String code; // 창고 코드
     private String name; // 창고명
     private WarehouseType warehouseType; // 구분 (창고, 공장, 공장(외주비관리) 등)
-    private Long processDetailsId; // 선택한 생산공정의 ID
+    private Long processDetailId; // 선택한 생산공정의 ID
     private List<WarehouseHierarchyGroupDTO> hierarchyGroups; // 창고 계층 그룹들의 ID 리스트
     private Boolean isActive; // 사용 여부 (사용, 미사용)
 

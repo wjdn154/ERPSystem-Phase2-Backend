@@ -22,7 +22,7 @@ spring:
     #    show-sql: true # SQL 쿼리를 콘솔에 출력하도록 설정
     show-sql: false # SQL 쿼리를 콘솔에 출력하도록 설정
     defer-datasource-initialization: true # 데이터베이스 초기화를 지연시켜, 스키마 생성 후 데이터 초기화가 이루어지도록 설정
-#    open-in-view: false # OpenEntityManagerInView 패턴 사용 여부 설정
+    open-in-view: false # OpenEntityManagerInView 패턴 사용 여부 설정
   web:
     resources:
       static-locations:

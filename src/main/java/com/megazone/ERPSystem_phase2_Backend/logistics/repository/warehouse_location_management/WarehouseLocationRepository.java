@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.repository.warehouse_location_management;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse_location.WarehouseLocation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,4 +15,6 @@ public interface WarehouseLocationRepository extends JpaRepository<WarehouseLoca
     Optional<WarehouseLocation> findByIdAndWarehouseId(Long id, Long warehouseId);
 
     boolean existsByWarehouseIdAndLocationName(Long warehouseId, String locationName);
+
+    boolean existsByWarehouse(Warehouse warehouse);
 }
