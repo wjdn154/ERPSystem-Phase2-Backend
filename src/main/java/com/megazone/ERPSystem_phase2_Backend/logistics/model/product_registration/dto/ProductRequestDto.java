@@ -19,7 +19,6 @@ public class ProductRequestDto {
     private Long clientId; // 거래처_id
     private Long productGroupId;// 폼목 그룹_id
     private Long processRoutingId; // 생산라우팅_id
-//    private String imageUrl; // 이미지 경로
     private String standard; // 규격
     private String unit; // 단위
     private BigDecimal purchasePrice; // 입고단가
