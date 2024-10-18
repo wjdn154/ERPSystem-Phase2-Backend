@@ -1,8 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.resolvedVoucher;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.QAccountSubject;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.QStandardFinancialStatement;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.QStructure;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.enums.FinancialStatementType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.QClient;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.FinancialStatementsLedgerSearchDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.FinancialStatementsLedgerShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.enums.DailyAndMonthType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherDeleteDTO;
@@ -413,6 +417,35 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                 .innerJoin(employee).on(employee.id.eq(voucher.voucherManager.id))
                 .where(whereCondition)
                 .orderBy(voucher.voucherDate.asc(),voucher.voucherNumber.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<FinancialStatementsLedgerShowDTO> financialStatementsShow(FinancialStatementsLedgerSearchDTO dto) {
+        QStandardFinancialStatement standardFinancialStatement = QStandardFinancialStatement.standardFinancialStatement;
+        QAccountSubject accountSubject = QAccountSubject.accountSubject;
+        QResolvedVoucher resolvedVoucher = QResolvedVoucher.resolvedVoucher;
+        QStructure structure = QStructure.structure;
+
+        return queryFactory
+                .select(Projections.constructor(FinancialStatementsLedgerShowDTO.class,
+                        Expressions.constant(BigDecimal.ZERO),
+                        resolvedVoucher.debitAmount.sum(),
+                        Expressions.constant(BigDecimal.ZERO),
+                        resolvedVoucher.creditAmount.sum(),
+                        standardFinancialStatement.id,
+                        structure.mediumCategory,
+                        structure.smallCategory,
+                        standardFinancialStatement.name,
+                        standardFinancialStatement.code
+                        ))
+                .from(standardFinancialStatement)
+                .leftJoin(accountSubject).on(accountSubject.standardFinancialStatementCode.eq(standardFinancialStatement.code))
+                .leftJoin(resolvedVoucher).on(resolvedVoucher.accountSubject.id.eq(accountSubject.id))
+                .leftJoin(structure).on(structure.id.eq(accountSubject.structure.id).and(structure.id.eq(standardFinancialStatement.structure.id)))
+                .where(structure.financialStatementType.eq(FinancialStatementType.STANDARD_FINANCIAL_STATEMENT))
+                .groupBy(standardFinancialStatement.id,standardFinancialStatement.code)
+                .orderBy(standardFinancialStatement.id.asc())
                 .fetch();
     }
 

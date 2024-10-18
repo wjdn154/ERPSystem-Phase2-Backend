@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.enums.FinancialStatementType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,4 +29,8 @@ public class Structure {
     private Integer min; // 최소값
     @Column(nullable = false)
     private Integer max; // 최대값
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private FinancialStatementType financialStatementType; // 재무재표 반영 유형
 }
