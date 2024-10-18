@@ -17,11 +17,11 @@ public interface UnresolvedVoucherEntryService {
 
     List<UnresolvedVoucher> unresolvedVoucherEntry(List<UnresolvedVoucherEntryDTO> dtoList);
 
-    UnresolvedVoucher createUnresolvedVoucher(UnresolvedVoucherEntryDTO dto, String voucherNum, LocalDateTime nowTime);
+    UnresolvedVoucher createUnresolvedVoucher(UnresolvedVoucherEntryDTO dto, Long voucherNum, LocalDateTime nowTime);
 
     boolean depositAndWithdrawalUnresolvedVoucherTypeCheck(UnresolvedVoucherEntryDTO dto);
 
-    String CreateUnresolvedVoucherNumber(LocalDate voucherDate, VoucherKind voucherKind);
+    Long CreateUnresolvedVoucherNumber(LocalDate voucherDate, VoucherKind voucherKind);
 
     UnresolvedVoucherEntryDTO autoCreateUnresolvedVoucherDto(UnresolvedVoucherEntryDTO dto) throws CloneNotSupportedException;
 

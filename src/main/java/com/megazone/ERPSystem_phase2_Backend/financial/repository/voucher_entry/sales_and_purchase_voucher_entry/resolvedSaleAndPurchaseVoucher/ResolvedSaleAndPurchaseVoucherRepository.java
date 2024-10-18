@@ -12,7 +12,7 @@ import java.util.List;
 public interface ResolvedSaleAndPurchaseVoucherRepository extends JpaRepository<ResolvedSaleAndPurchaseVoucher, Long>,ResolvedSaleAndPurchaseVoucherRepositoryCustom {
     List<ResolvedSaleAndPurchaseVoucher> findByVoucherDateOrderByVoucherNumberAsc(LocalDate date);
 
-    ResolvedSaleAndPurchaseVoucher findByVoucherNumber(String voucherNumber);
+    ResolvedSaleAndPurchaseVoucher findByVoucherNumber(Long voucherNumber);
     // 승인권자 Id 필요
-    void deleteByVoucherNumberAndVoucherDate(String voucherNumber, LocalDate searchDate);
+    void deleteByVoucherNumberAndVoucherDate(Long voucherNumber, LocalDate searchDate);
 }

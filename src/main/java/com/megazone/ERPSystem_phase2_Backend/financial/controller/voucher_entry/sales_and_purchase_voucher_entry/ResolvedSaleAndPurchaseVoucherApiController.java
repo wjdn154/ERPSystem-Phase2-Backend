@@ -56,7 +56,7 @@ public class ResolvedSaleAndPurchaseVoucherApiController {
      * @return
      */
     @PostMapping("/api/financial/sale-end-purchase-resolved-voucher/show/{voucherNumber}")
-    public ResponseEntity<Object> showOne(@PathVariable("voucherNumber") String voucherNumber) {
+    public ResponseEntity<Object> showOne(@PathVariable("voucherNumber") Long voucherNumber) {
         try {
             List<ResolvedVoucher> vouchers = resolvedSaleAndPurchaseVoucherService.searchEntryVoucher(voucherNumber);
 
