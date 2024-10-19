@@ -50,7 +50,7 @@ public class UnresolvedSaleAndPurchaseVoucher {
     private List<UnresolvedVoucher> unresolvedVouchers;
 
     @Column(nullable = false)
-    private String voucherNumber;
+    private Long voucherNumber;
 
     @Column(nullable = false)
     private LocalDate voucherDate; // 매출매입전표 거래날짜

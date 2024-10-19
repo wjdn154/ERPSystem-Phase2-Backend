@@ -47,8 +47,6 @@ public class Warehouse {
     @JoinColumn(name = "process_detail_id")
     private ProcessDetails processDetail;
 
-    private String productionProcess;
-
     @Column(nullable = false) // 사용여부(사용, 미사용)
     private Boolean isActive;
 

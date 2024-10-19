@@ -8,5 +8,5 @@ public interface ProductImageService {
 
     String uploadProductImage(MultipartFile image);
 
-    String saveImage(MultipartFile image, String uploadsDir) throws IOException;
+    String saveImageToS3(MultipartFile image) throws IOException;
 }

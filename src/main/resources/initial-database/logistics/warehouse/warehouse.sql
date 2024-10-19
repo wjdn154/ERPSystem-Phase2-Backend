@@ -26,22 +26,24 @@ VALUES (1,  null,'root', 'root'),
        (8,  2,'HG008', '그룹 H'),
        (9,  7,'HG009', '그룹 I');
 
-INSERT INTO warehouse (id, warehouse_address_id, process_detail_id, warehouse_code, warehouse_type, name, production_process, is_active)
-VALUES (1,  1, null,'WH001', 'WAREHOUSE', '재고창고', '지혁몸통창고', TRUE),
-       (2,  2, 1,'WH002', 'FACTORY', '생산공장', '지혁이몸통생산', FALSE),
-       (3,  3, 2,'WH003', 'FACTORY', '과일창고', '지혁이머리저장', FALSE),
-       (4,  4, 3,'WH004', 'FACTORY', '부품공장', '지혁이머리생산', TRUE),
-       (5,  5, null,'WH005', 'WAREHOUSE', '부품공장', null, TRUE),
-       (6,  6, null,'WH006', 'WAREHOUSE', '식품저장', null, TRUE),
-       (7,  7, null,'WH007', 'WAREHOUSE', '출하창고', null, TRUE),
-       (8,  8, null,'WH008', 'WAREHOUSE', '입고창고', null, TRUE),
-       (9,  9, null,'WH009', 'WAREHOUSE', '지혁창고', null, TRUE),
-       (10,  10, null,'WH010', 'WAREHOUSE', '부품저장창고', null, TRUE),
-       (11,  11, null,'WH011', 'WAREHOUSE', '반품창고', null, TRUE),
-       (12,  12, null,'WH012', 'WAREHOUSE', '창고2', null, TRUE),
-       (13,  13, null,'WH013', 'WAREHOUSE', '창고3', null, TRUE),
-       (14,  14, null,'WH014', 'WAREHOUSE', '창고4', null, TRUE),
-       (15,  15, null,'WH015', 'WAREHOUSE', '창고5', null, TRUE);
+INSERT INTO warehouse (id, warehouse_address_id, process_detail_id, warehouse_code, warehouse_type, name, is_active)
+VALUES (1,  1, null,'WH001', 'WAREHOUSE', '재고창고', TRUE),
+       (2,  2, 1,'WH002', 'FACTORY', '생산공장', FALSE),
+       (3,  3, 2,'WH003', 'FACTORY', '과일창고', FALSE),
+       (4,  4, 3,'WH004', 'FACTORY', '부품공장', TRUE),
+       (5,  5, null,'WH005', 'WAREHOUSE', '부품공장', TRUE),
+       (6,  6, null,'WH006', 'WAREHOUSE', '식품저장', TRUE),
+       (7,  7, null,'WH007', 'WAREHOUSE', '출하창고', TRUE),
+       (8,  8, null,'WH008', 'WAREHOUSE', '입고창고', TRUE),
+       (9,  9, null,'WH009', 'WAREHOUSE', '지혁창고', TRUE),
+       (10,  10, null,'WH010', 'WAREHOUSE', '부품저장창고', TRUE),
+       (11,  11, null,'WH011', 'WAREHOUSE', '반품창고', TRUE),
+       (12,  12, null,'WH012', 'WAREHOUSE', '창고2', TRUE),
+       (13,  13, null,'WH013', 'WAREHOUSE', '창고3', TRUE),
+       (14,  14, null,'WH014', 'WAREHOUSE', '창고4', TRUE),
+       (15,  15, null,'WH015', 'WAREHOUSE', '창고5', TRUE),
+       (16,  1, null,'testWarehouse', 'WAREHOUSE', 'testWarehouse', TRUE),
+       (17,  1, null,'testWarehouse2', 'WAREHOUSE', 'testWarehouse2', TRUE);
 
 INSERT INTO warehouse_hierarchy_group (id, warehouse_id, hierarchy_group_id)
 VALUES (1, 1, 2),
@@ -123,7 +125,8 @@ values (1, 1, 1, 1, 1, 1, '2024-10-2', 1, null),
        (8, 8, 8, 3, 8, 8, '2024-09-20', 1, null),
        (9, 9, 9, 4, 9, 9, '2024-09-19', 1, null),
        (10, 10, 10, 5, 10, 10, '2024-09-15', 1, null),
-       (11, 11, 11, 1, 11, 11, '2024-09-14', 1, null);
+       (11, 11, 11, 1, 11, 11, '2024-09-14', 1, null),
+       (12, 16, 1, 1, 11, 11, '2024-09-11', 1, null);
 
 INSERT INTO shipment_product (id, comment, product_code, product_name, quantity, standard, unit, product_id, shipment_id)
 values (1, null, 'B0001', '즉석밥', 100, null, null, 1, 1),
@@ -158,7 +161,10 @@ values (1, null, 'B0001', '즉석밥', 100, null, null, 1, 1),
        (30, null, 'B0003', '세탁세제', 100, null, null, 3, 10),
        (31, null, 'B0001', '즉석밥', 100, null, null, 1, 11),
        (32, null, 'B0002', '유기농 토마토', 100, null, null, 2, 11),
-       (33, null, 'B0003', '세탁세제', 100, null, null, 3, 11);
+       (33, null, 'B0003', '세탁세제', 100, null, null, 3, 11),
+       (34, null, 'B0001', '즉석밥', 100, null, null, 1, 12),
+       (35, null, 'B0002', '유기농 토마토', 100, null, null, 2, 12),
+       (36, null, 'B0003', '세탁세제', 100, null, null, 3, 12);
 
 
 

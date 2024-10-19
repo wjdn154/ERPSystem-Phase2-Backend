@@ -19,7 +19,7 @@ public class SalesAndPurChaseLedgerShowDTO {
     private String accountSubjectCode;
     private String accountSubjectName;
     private LocalDate voucherDate;
-    private String voucherNumber;
+    private Long voucherNumber;
     private String itemName;
     private BigDecimal supplyAmount;
     private BigDecimal vatAmount;
@@ -36,7 +36,7 @@ public class SalesAndPurChaseLedgerShowDTO {
     private String voucherManagerName;
 
     public static SalesAndPurChaseLedgerShowDTO create(Long voucherId, String vatTypeName, TransactionType transactionType,
-                                         String accountSubjectCode, String accountSubjectName, LocalDate voucherDate, String voucherNumber, String itemName,
+                                         String accountSubjectCode, String accountSubjectName, LocalDate voucherDate, Long voucherNumber, String itemName,
                                          BigDecimal supplyAmount, BigDecimal vatAmount, BigDecimal sumAmount, String clientCode,
                                          String clientName, ElectronicTaxInvoiceStatus electronicTaxInvoiceStatus,
                                          String journalEntryName, /*String creditCardCode, String bankAccountName,
