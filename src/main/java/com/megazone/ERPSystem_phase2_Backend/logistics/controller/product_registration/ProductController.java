@@ -10,13 +10,22 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registratio
 import com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.product.ProductImageService;
 import com.megazone.ERPSystem_phase2_Backend.logistics.service.product_registration.product.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Controller
@@ -60,7 +69,7 @@ public class ProductController {
      */
     @PostMapping("/save")
     public ResponseEntity<ProductResponseDto> saveProduct(@RequestParam("productData") String productData,
-                                                          @RequestParam("imageFile") MultipartFile imageFile) throws JsonProcessingException {
+                                                          @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) throws JsonProcessingException {
 
         // JSON 문자열을 DTO로 변환
         ObjectMapper objectMapper = new ObjectMapper();
@@ -137,4 +146,26 @@ public class ProductController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/uploads/{filename}")
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+        try {
+            Path file = Paths.get("src/main/resources/static/uploads/").resolve(filename);
+            Resource resource = new UrlResource(file.toUri());
+
+            if (resource.exists() || resource.isReadable()) {
+                // Content-Type을 파일의 MIME 타입으로 설정
+                String contentType = Files.probeContentType(file);
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (MalformedURLException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
