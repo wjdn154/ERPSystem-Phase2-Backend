@@ -2,13 +2,15 @@ package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_manag
 
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Department;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentCreateDTO;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.JobTitle;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Position;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Department.DepartmentRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.JobTitle.JobTitleRepository;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Position.PositionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 public class DepartmentServiceImpl implements DepartmentService {
     private final DepartmentRepository departmentRepository;
     private final EmployeeRepository employeeRepository;
+    private final PositionRepository positionRepository;
+    private final JobTitleRepository jobTitleRepository;
 
     // 부서 리스트 조회
     @Override
@@ -35,22 +39,57 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     // 부서 상세 조회
     @Override
-    public Optional<DepartmentShowDTO> findDepartmentById(Long id) {
-        Department department = departmentRepository.findById(id)
-                .orElseThrow(()-> new IllegalArgumentException("아이디가 올바르지 않습니다."));
+    public Optional<DepartmentDetailDTO> findDepartmentById(Long id) {
+        Optional<Department> department = departmentRepository.findById(id);
+//        Department department = departmentRepository.findById(id)
+//                .orElseThrow(()-> new IllegalArgumentException("아이디가 올바르지 않습니다."));
 
-        DepartmentShowDTO departmentDTO = convertToDTO(department);
+        if (department.isPresent()) {
+            DepartmentDetailDTO dto = new DepartmentDetailDTO();
+            dto.setDepartmentCode(department.get().getDepartmentCode());
+            dto.setDepartmentName(department.get().getDepartmentName());
+            dto.setLocation(department.get().getLocation());
 
-        return Optional.of(departmentDTO);
+            // 사원 목록을 조회하여 DTO에 추가
+            List<EmployeeDepartmentDTO> employeeDepartmentDTOS = employeeRepository.findByDepartmentId(id).stream()
+                    .map(employee -> {
+                            String positionName = positionRepository.findById(employee.getPosition().getId())
+                            .map(Position::getPositionName)
+                            .orElse("찾을 수 없습니다.");
+
+                     String titleName = jobTitleRepository.findById(employee.getJobTitle().getId())
+                            .map(JobTitle::getTitleName)
+                            .orElse("찾을 수 없습니다.");
+
+                            return new EmployeeDepartmentDTO(
+                            employee.getEmployeeNumber(),
+                            employee.getFirstName(),
+                            employee.getLastName(),
+                                    positionName,
+                                    titleName
+                            );
+        }).collect(Collectors.toList());
+
+            // 사원 리스트를 DTO에 추가
+            dto.setEmployeeDepartmentDTOS(employeeDepartmentDTOS);
+
+            return Optional.of(dto);
+        }
+        return Optional.empty();
     }
 
-    private DepartmentShowDTO convertToDTO(Department department) {
-        DepartmentShowDTO dto = new DepartmentShowDTO();
-        dto.setDepartmentCode(department.getDepartmentCode());
-        dto.setDepartmentName(department.getDepartmentName());
-        dto.setLocation(department.getLocation());
-        return dto;
-    }
+//        DepartmentDetailDTO departmentDTO = convertToDTO(department);
+//
+//        return Optional.of(departmentDTO);
+//    }
+//
+//    private DepartmentDetailDTO convertToDTO(Department department) {
+//        DepartmentDetailDTO dto = new DepartmentDetailDTO();
+//        dto.setDepartmentCode(department.getDepartmentCode());
+//        dto.setDepartmentName(department.getDepartmentName());
+//        dto.setLocation(department.getLocation());
+//        return dto;
+//    }
 
 
     // 부서 등록

@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee;
 
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Bank;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,8 +23,9 @@ public class BankAccount {
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
-    @Column(nullable = false)
-    private String bankName; // 은행 이름
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bank_id")
+    private Bank bank;
 
     @Column(nullable = false)
     private String accountNumber; // 계좌번호
