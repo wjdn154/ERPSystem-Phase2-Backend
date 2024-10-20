@@ -49,7 +49,7 @@ public class MaterialDataServiceImpl implements MaterialDataService{
                         material.getStockQuantity(),
                         material.getPurchasePrice(),
                         material.getSupplier().getCode(),
-                        material.getSupplier().getRepresentativeName(),
+                        material.getSupplier().getPrintClientName(),
                         (long)material.getMaterialHazardous().size()
                 )).collect(Collectors.toList());
     }
@@ -446,7 +446,7 @@ public class MaterialDataServiceImpl implements MaterialDataService{
         dto.setStockQuantity(createMaterial.getStockQuantity());
         dto.setPurchasePrice(createMaterial.getPurchasePrice());
         dto.setRepresentativeCode(createMaterial.getSupplier().getCode());
-        dto.setRepresentativeName(createMaterial.getSupplier().getRepresentativeName());
+        dto.setRepresentativeName(createMaterial.getSupplier().getPrintClientName());
 
         //품목 리스트 생성
         List<ProductMaterialDTO> productMaterialList = createMaterial.getMaterialProducts().stream()
@@ -484,7 +484,7 @@ public class MaterialDataServiceImpl implements MaterialDataService{
         dto.setStockQuantity(updateMaterial.getStockQuantity());
         dto.setPurchasePrice(updateMaterial.getPurchasePrice());
         dto.setRepresentativeCode(updateMaterial.getSupplier().getCode());
-        dto.setRepresentativeName(updateMaterial.getSupplier().getRepresentativeName());
+        dto.setRepresentativeName(updateMaterial.getSupplier().getPrintClientName());
         dto.setHazardousMaterialQuantity((long)updateMaterial.getMaterialHazardous().size());
 
         return dto;
