@@ -73,7 +73,8 @@ public class ShipmentServiceImpl implements ShipmentService{
     public ShipmentResponseDTO getShipmentById(Long id) {
         return shipmentRepository.findById(id)
                 .map(ShipmentResponseDTO::mapToDto)
-                .orElse(null);    }
+                .orElse(null);
+    }
 
 
     @Override

@@ -52,4 +52,17 @@ public class InventoryController {
         InventoryResponseDTO responseDTO = inventoryService.createInventory(requestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
+
+    /**
+     * 창고별 재고 조회
+     * @param warehouseId
+     *
+     */
+    @PostMapping("/warehouse/{warehouseId}")
+    public ResponseEntity<List<InventoryResponseDTO>> getInventoriesByWarehouseId(@PathVariable Long warehouseId) {
+        List<InventoryResponseDTO> inventories = inventoryService.getInventoriesByWarehouseId(warehouseId);
+        return ResponseEntity.ok(inventories);
+    }
 }
+
+

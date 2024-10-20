@@ -13,21 +13,25 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InventoryInspectionResponseDTO {
-    private Long id;
-    private String inspectionDate;
-    private Long inspectionNumber;
-    private String employeeName;
-    private String warehouseName;
-    private InspectionStatus status;
-    private String comment;
-    private List<InventoryInspectionDetailResponseDTO> details;
+    private Long id; // 실사 ID
+    private String inspectionDate; // 실사 일자
+    private Long inspectionNumber; // 실사 번호
+    private Long employeeId; // 담당자 ID
+    private String employeeName; // 담당자 이름
+    private Long warehouseId; // 창고 ID
+    private String warehouseName; // 창고 이름
+    private InspectionStatus status; // 실사 상태
+    private String comment; // 코멘트 (비고)
+    private List<InventoryInspectionDetailResponseDTO> details; // 실사 품목 리스트
 
     public static InventoryInspectionResponseDTO mapToDto(InventoryInspection inventoryInspection) {
         return new InventoryInspectionResponseDTO(
                 inventoryInspection.getId(),
                 inventoryInspection.getInspectionDate().toString(),
                 inventoryInspection.getInspectionNumber(),
+                inventoryInspection.getEmployee().getId(),
                 inventoryInspection.getEmployee().getLastName() + inventoryInspection.getEmployee().getFirstName(),
+                inventoryInspection.getWarehouse().getId(),
                 inventoryInspection.getWarehouse().getName(),
                 inventoryInspection.getStatus(),
                 inventoryInspection.getComment(),
