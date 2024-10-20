@@ -74,6 +74,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                         inventory.product.unit,
                         inventory.quantity,
                         warehouse.name,
+                        warehouseLocation.id,
                         warehouseLocation.locationName))
                 .from(inventory)
                 .join(inventory.product, product)

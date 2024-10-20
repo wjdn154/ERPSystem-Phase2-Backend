@@ -19,6 +19,7 @@ public class InventoryResponseDTO {
     private String unit;               // 단위
     private Long quantity;             // 재고 수량
     private String warehouseName;      // 창고 이름
+    private Long warehouseLocationId;  // 위치 id
     private String warehouseLocationName;       // 위치 이름
 
     // Inventory 엔티티를 DTO로 변환하는 메서드
@@ -33,6 +34,7 @@ public class InventoryResponseDTO {
                 inventory.getProduct().getUnit(),  // 단위
                 inventory.getQuantity(),  // 재고 수량
                 inventory.getWarehouse().getName(),  // 창고 이름
+                inventory.getWarehouseLocation().getId(),  // 위치 id
                 inventory.getWarehouseLocation().getLocationName()  // 위치 이름
         );
     }
