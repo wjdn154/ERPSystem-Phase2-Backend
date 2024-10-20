@@ -44,7 +44,7 @@ public class ResolvedVoucher {
     private String transactionDescription; // 거래 설명
 
     @Column(nullable = false)
-    private String voucherNumber; // 전표 번호
+    private Long voucherNumber; // 전표 번호
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

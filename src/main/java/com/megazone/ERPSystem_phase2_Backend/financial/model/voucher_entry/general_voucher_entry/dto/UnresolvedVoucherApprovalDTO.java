@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 public class UnresolvedVoucherApprovalDTO {
     private LocalDate searchDate;
-    private List<String> searchVoucherNumberList;
+    private List<Long> searchVoucherNumberList;
     private Long approvalManagerId; // 승인권자 ID
     private ApprovalStatus approvalStatus;
     private boolean superManager; // 총관리자 여부

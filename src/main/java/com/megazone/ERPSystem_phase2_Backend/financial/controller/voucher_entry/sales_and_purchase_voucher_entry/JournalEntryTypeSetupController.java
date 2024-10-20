@@ -36,11 +36,12 @@ public class JournalEntryTypeSetupController {
     }
 
     @PostMapping("/api/financial/journal_entry_type_setup/update")
-    public ResponseEntity<String> updateEntrySetup(@RequestBody JournalEntryTypeSetupUpdateDTO dto) {
-        String message = journalEntryTypeSetupService.updateEntryTypeSetup(dto);
-
-        return message != null ?
-                ResponseEntity.status(HttpStatus.OK).body(message) :
-                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("잘못된 입력입니다.");
+    public ResponseEntity<String> updateEntrySetup(@RequestBody List<JournalEntryTypeSetupUpdateDTO> dto) {
+        try {
+            String message = journalEntryTypeSetupService.updateEntryTypeSetup(dto);
+            return ResponseEntity.status(HttpStatus.OK).body(message);
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 }

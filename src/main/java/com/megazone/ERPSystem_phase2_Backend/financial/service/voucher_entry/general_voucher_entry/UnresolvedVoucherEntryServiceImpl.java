@@ -72,7 +72,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
         // 입금&출금 전표인지, 차변&대변 전표인지 확인
         try {
             // 전표 번호 부여
-            String newVoucherNum = null;
+            Long newVoucherNum = null;
             LocalDate currentDate = dtoList.get(0).getVoucherDate();
             LocalDateTime nowTime = LocalDateTime.now();
 
@@ -135,7 +135,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
      * @return 생성된 미결전표
      */
     @Override
-    public UnresolvedVoucher createUnresolvedVoucher(UnresolvedVoucherEntryDTO dto, String voucherNum, LocalDateTime nowTime) {
+    public UnresolvedVoucher createUnresolvedVoucher(UnresolvedVoucherEntryDTO dto, Long voucherNum, LocalDateTime nowTime) {
         UnresolvedVoucher unresolvedVoucher = UnresolvedVoucher.builder()
                 .accountSubject(accountSubjectRepository.findByCode(dto.getAccountSubjectCode()).orElseThrow(
                         () -> new IllegalArgumentException("해당하는 코드의 계정과목이 없습니다.")))
@@ -176,22 +176,22 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
      * @return 입금,출금,차변,대변 조건에 맞게 번호 부여
      */
     @Override
-    public String CreateUnresolvedVoucherNumber(LocalDate voucherDate, VoucherKind voucherKind) {
+    public Long CreateUnresolvedVoucherNumber(LocalDate voucherDate, VoucherKind voucherKind) {
         // 해당 조건의 날짜에 해당하는 마지막 미결전표 Entity 가져오기
 
-        String lastVoucherNumber = "";
-        String StartNumber = "";
+        Long lastVoucherNumber = null;
+        Long StartNumber = null;
 
         Optional<?> voucherBox = Optional.empty();
 
         switch (voucherKind) {
             case GENERAL:
                 voucherBox = unresolvedVoucherRepository.findFirstByVoucherDateOrderByIdDesc(voucherDate);
-                StartNumber = "1";
+                StartNumber = 1L;
                 break;
             case SALE_AND_PURCHASE:
                 voucherBox = unresolvedSaleAndPurchaseVoucherRepository.findFirstByVoucherDateOrderByIdDesc(voucherDate);
-                StartNumber = "50000";
+                StartNumber = 50000L;
                 break;
         }
 
@@ -206,8 +206,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
             } else if (voucher instanceof UnresolvedSaleAndPurchaseVoucher) {
                 lastVoucherNumber = ((UnresolvedSaleAndPurchaseVoucher) voucher).getVoucherNumber();
             }
-            int voucherNum = Integer.parseInt(lastVoucherNumber) + 1;
-            return String.valueOf(voucherNum);
+            return lastVoucherNumber + 1;
         }
     }
 
@@ -341,10 +340,6 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
 
         List<UnresolvedVoucher> unresolvedVoucherList =
                 unresolvedVoucherRepository.ApprovalAllSearch(date);
-
-        if(unresolvedVoucherList.isEmpty()) {
-            throw new NoSuchElementException("해당 날짜에 등록된 미결전표가 없습니다.");
-        }
 
         List<UnresolvedVoucherShowDTO> showDtos = unresolvedVoucherList.stream().map(
                 UnresolvedVoucherShowDTO::create).toList();

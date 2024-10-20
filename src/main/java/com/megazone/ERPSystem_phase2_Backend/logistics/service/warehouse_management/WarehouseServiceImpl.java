@@ -10,12 +10,19 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_managemen
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.hierarchy_group.HierarchyGroupRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse_hierarchy_group.WarehouseHierarchyGroupRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.inventory_management.inventory.InventoryRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.inventory_management.inventory_inspection.InventoryInspectionRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.inventory_management.warehouse_transfer.WarehouseTransferRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.purchase_management.purchase_request.PurchaseRequestRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.shipment_management.ShipmentRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.warehouse_location_management.WarehouseLocationRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessDetails;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.process_routing.ProcessDetails.ProcessDetailsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +35,12 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final HierarchyGroupRepository hierarchyGroupRepository;
     private final WarehouseHierarchyGroupRepository warehouseHierarchyGroupRepository;
     private final ProcessDetailsRepository processDetailsRepository;
+    private final InventoryRepository inventoryRepository;
+    private final PurchaseRequestRepository purchaseRequestRepository;
+    private final WarehouseLocationRepository warehouseLocationRepository;
+    private final WarehouseTransferRepository warehouseTransferRepository;
+    private final InventoryInspectionRepository inventoryInspectionRepository;
+    private final ShipmentRepository shipmentRepository;
 
 
     @Override
@@ -46,15 +59,18 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public WarehouseResponseTestDTO createWarehouse(WarehouseRequestTestDTO requestDTO) {
         ProcessDetails processDetail = null;
-        if (requestDTO.getWarehouseType() == WarehouseType.FACTORY && requestDTO.getProcessDetailsId() != null) {
-            processDetail = processDetailsRepository.findById(requestDTO.getProcessDetailsId())
+        if (requestDTO.getWarehouseType() == WarehouseType.FACTORY && requestDTO.getProcessDetailId() != null) {
+            processDetail = processDetailsRepository.findById(requestDTO.getProcessDetailId())
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 생산 공정입니다."));
         }
 
-        List<WarehouseHierarchyGroup> hierarchyGroups = requestDTO.getHierarchyGroups().stream()
-                .map(dto -> warehouseHierarchyGroupRepository.findById(dto.getId())
-                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계층 그룹입니다.")))
-                .collect(Collectors.toList());
+        List<WarehouseHierarchyGroup> hierarchyGroups = new ArrayList<>();
+        if (requestDTO.getHierarchyGroups() != null && !requestDTO.getHierarchyGroups().isEmpty()) {
+            hierarchyGroups = requestDTO.getHierarchyGroups().stream()
+                    .map(dto -> warehouseHierarchyGroupRepository.findById(dto.getId())
+                            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계층 그룹입니다.")))
+                    .collect(Collectors.toList());
+        }
 
         Warehouse newWarehouse = requestDTO.mapToEntity(processDetail, hierarchyGroups);
 
@@ -68,21 +84,24 @@ public class WarehouseServiceImpl implements WarehouseService {
         Warehouse existingWarehouse = warehouseRepository.findById(warehouseId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 창고를 찾을 수 없습니다."));
 
-        List<WarehouseHierarchyGroup> updatedHierarchyGroups = requestDTO.getHierarchyGroups().stream()
-                .map(dto -> {
-                    HierarchyGroup hierarchyGroup = hierarchyGroupRepository.findById(dto.getId())
-                            .orElseThrow(() -> new IllegalArgumentException("해당 계층 그룹을 찾을 수 없습니다."));
+        // 계층 그룹이 입력되지 않은 경우를 처리
+        List<WarehouseHierarchyGroup> updatedHierarchyGroups = new ArrayList<>();
+        if (requestDTO.getHierarchyGroups() != null && !requestDTO.getHierarchyGroups().isEmpty()) {
+            updatedHierarchyGroups = requestDTO.getHierarchyGroups().stream()
+                    .map(dto -> {
+                        HierarchyGroup hierarchyGroup = hierarchyGroupRepository.findById(dto.getId())
+                                .orElseThrow(() -> new IllegalArgumentException("해당 계층 그룹을 찾을 수 없습니다."));
+                        return WarehouseHierarchyGroup.builder()
+                                .warehouse(existingWarehouse)
+                                .hierarchyGroup(hierarchyGroup)
+                                .build();
+                    })
+                    .collect(Collectors.toList());
+        }
 
-                    return WarehouseHierarchyGroup.builder()
-                            .warehouse(existingWarehouse)
-                            .hierarchyGroup(hierarchyGroup)
-                            .build();
-                })
-                .collect(Collectors.toList());
-
-        ProcessDetails processDetails = null;
-        if (requestDTO.getWarehouseType() == WarehouseType.FACTORY && requestDTO.getProcessDetailsId() != null) {
-            processDetails = processDetailsRepository.findById(requestDTO.getProcessDetailsId())
+        ProcessDetails processDetail = null;
+        if (requestDTO.getWarehouseType() == WarehouseType.FACTORY && requestDTO.getProcessDetailId() != null) {
+            processDetail = processDetailsRepository.findById(requestDTO.getProcessDetailId())
                     .orElseThrow(() -> new IllegalArgumentException("해당 생산 공정을 찾을 수 없습니다."));
         }
 
@@ -92,7 +111,7 @@ public class WarehouseServiceImpl implements WarehouseService {
                 .name(requestDTO.getName())
                 .warehouseType(requestDTO.getWarehouseType())
                 .isActive(requestDTO.getIsActive())
-                .processDetail(processDetails)
+                .processDetail(processDetail)
                 .warehouseHierarchyGroup(updatedHierarchyGroups)
                 .build();
 
@@ -101,15 +120,52 @@ public class WarehouseServiceImpl implements WarehouseService {
         return WarehouseResponseTestDTO.mapToDTO(savedWarehouse);
     }
 
+
     @Override
     public String deleteWarehouse(Long id) {
         return warehouseRepository.findById(id)
                 .map(warehouse -> {
+                    String relatedIssues = getRelatedEntitiesIssues(warehouse);
+
+                    if (!relatedIssues.isEmpty()) {
+                        // 연관된 데이터가 있을 때 명확한 예외 메시지 반환
+                        throw new IllegalStateException(
+                                "삭제 실패: " + relatedIssues
+                        );
+                    }
+                    // 연관된 데이터가 없을 경우 창고 삭제
                     warehouseRepository.delete(warehouse);
                     return warehouse.getName() + "가 삭제되었습니다.";
                 })
-                .orElse("삭제 실패 : 삭제하려는 창고 ID를 찾을 수 없습니다.");
+                .orElse("삭제 실패: 삭제하려는 창고 ID를 찾을 수 없습니다.");
     }
 
+    // 연관된 테이블의 문제를 확인하고 메시지를 생성하는 메서드
+    private String getRelatedEntitiesIssues(Warehouse warehouse) {
+        StringBuilder issues = new StringBuilder();
+
+        // 각 테이블에서 창고를 참조하는 데이터가 있는지 확인
+        if (inventoryRepository.existsByWarehouse(warehouse)) {
+            issues.append("재고가 존재합니다. ");
+        }
+        if (purchaseRequestRepository.existsByReceivingWarehouse(warehouse)) {
+            issues.append("해당 창고의 구매 지시가 존재합니다. ");
+        }
+        if (warehouseLocationRepository.existsByWarehouse(warehouse)) {
+            issues.append("해당 창고의 로케이션이 존재합니다. ");
+        }
+        if (warehouseTransferRepository.existsBySendingWarehouse(warehouse) ||
+                warehouseTransferRepository.existsByReceivingWarehouse(warehouse)) {
+            issues.append("해당 창고의 창고 이동 전표가 존재합니다. ");
+        }
+        if (inventoryInspectionRepository.existsByWarehouse(warehouse)) {
+            issues.append("해당 창고의 재고 실사 입력이 존재합니다. ");
+        }
+        if (shipmentRepository.existsByWarehouse(warehouse)) {
+            issues.append("해당 창고의 출하전표가 존재합니다. ");
+        }
+
+        return issues.toString().trim(); // 최종 문제 메시지 반환
+    }
 }
 

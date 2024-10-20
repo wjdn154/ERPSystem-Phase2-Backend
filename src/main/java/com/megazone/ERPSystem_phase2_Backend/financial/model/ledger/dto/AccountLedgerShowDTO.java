@@ -21,7 +21,7 @@ public class AccountLedgerShowDTO {
     private BigDecimal debitAmount;
     private BigDecimal creditAmount;
     private BigDecimal cashAmount;
-    private String voucherNumber;
+    private Long voucherNumber;
     private LocalDateTime voucherRegistrationTime;
     private String departmentName;
     private String voucherManagerName;
@@ -31,7 +31,7 @@ public class AccountLedgerShowDTO {
 
     public static AccountLedgerShowDTO create(Long voucherId, LocalDate voucherDate, String transactionDescription, String clientCode,
                                               String clientName, BigDecimal debitAmount, BigDecimal creditAmount, BigDecimal cashAmount,
-                                              String voucherNumber, LocalDateTime voucherRegistrationTime, String departmentName, String voucherManagerName) {
+                                              Long voucherNumber, LocalDateTime voucherRegistrationTime, String departmentName, String voucherManagerName) {
         return new AccountLedgerShowDTO(
                 voucherId,
                 voucherDate,

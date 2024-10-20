@@ -32,7 +32,7 @@ public class WarehouseRepositoryImpl implements WarehouseRepositoryCustom {
                         warehouse.code,
                         warehouse.name,
                         warehouse.warehouseType.stringValue().as("warehouseType"),
-                        warehouse.processDetail,
+                        processDetails.name.as("productionProcess"),
                         warehouse.isActive
                 ))
                 .from(warehouse)

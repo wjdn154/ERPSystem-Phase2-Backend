@@ -18,5 +18,4 @@ public class ProductGroupDto {
     private String code;    // 품목 그룹 코드를 받을 필드
     private String name;    // 품목 그룹명을 받을 필드
     private boolean isActive; // 품목 그룹 활성화 여부를 받을 필드
-
 }
