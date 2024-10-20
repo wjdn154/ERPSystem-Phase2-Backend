@@ -20,6 +20,10 @@ public class FinancialStatementsLedgerServiceImpl implements FinancialStatements
     private final ResolvedVoucherRepository resolvedVoucherRepository;
 
 
+    /**
+     * 표준재무재표 출력 로직
+     * 자본총계, 부채총계, 합계 방식 필요
+     */
     @Override
     public Object show(FinancialStatementsLedgerSearchDTO dto) {
         List<FinancialStatementsLedgerDTO> queryResults = resolvedVoucherRepository.financialStatementsShow(dto);
