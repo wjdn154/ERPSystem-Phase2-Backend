@@ -5,8 +5,8 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.QStructure;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.enums.FinancialStatementType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.QClient;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.FinancialStatementsLedgerSearchDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.FinancialStatementsLedgerShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.dto.FinancialStatementsLedgerSearchDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.dto.FinancialStatementsLedgerDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.enums.DailyAndMonthType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherDeleteDTO;
@@ -394,6 +394,7 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                     .between(Integer.valueOf(dto.getStartAccountCode()), Integer.valueOf(dto.getEndAccountCode())));
         }
 
+        whereCondition.and(voucher.voucherNumber.between(dto.getStartVoucherNumber(),dto.getEndVoucherNumber()));
 
         return queryFactory
                 .select(Projections.constructor(ResolvedVoucherShowDTO.class,
@@ -421,18 +422,20 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
     }
 
     @Override
-    public List<FinancialStatementsLedgerShowDTO> financialStatementsShow(FinancialStatementsLedgerSearchDTO dto) {
+    public List<FinancialStatementsLedgerDTO> financialStatementsShow(FinancialStatementsLedgerSearchDTO dto) {
         QStandardFinancialStatement standardFinancialStatement = QStandardFinancialStatement.standardFinancialStatement;
         QAccountSubject accountSubject = QAccountSubject.accountSubject;
         QResolvedVoucher resolvedVoucher = QResolvedVoucher.resolvedVoucher;
         QStructure structure = QStructure.structure;
 
         return queryFactory
-                .select(Projections.constructor(FinancialStatementsLedgerShowDTO.class,
+                .select(Projections.constructor(FinancialStatementsLedgerDTO.class,
                         Expressions.constant(BigDecimal.ZERO),
                         resolvedVoucher.debitAmount.sum(),
                         Expressions.constant(BigDecimal.ZERO),
                         resolvedVoucher.creditAmount.sum(),
+                        structure.code,
+                        structure.min,
                         standardFinancialStatement.id,
                         structure.mediumCategory,
                         structure.smallCategory,
@@ -443,7 +446,8 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                 .leftJoin(accountSubject).on(accountSubject.standardFinancialStatementCode.eq(standardFinancialStatement.code))
                 .leftJoin(resolvedVoucher).on(resolvedVoucher.accountSubject.id.eq(accountSubject.id))
                 .leftJoin(structure).on(structure.id.eq(accountSubject.structure.id).and(structure.id.eq(standardFinancialStatement.structure.id)))
-                .where(structure.financialStatementType.eq(FinancialStatementType.STANDARD_FINANCIAL_STATEMENT))
+                .where(structure.financialStatementType.eq(FinancialStatementType.STANDARD_FINANCIAL_STATEMENT)
+                        .and(resolvedVoucher.voucherDate.month().eq(dto.getSearchDate().getMonthValue())))
                 .groupBy(standardFinancialStatement.id,standardFinancialStatement.code)
                 .orderBy(standardFinancialStatement.id.asc())
                 .fetch();

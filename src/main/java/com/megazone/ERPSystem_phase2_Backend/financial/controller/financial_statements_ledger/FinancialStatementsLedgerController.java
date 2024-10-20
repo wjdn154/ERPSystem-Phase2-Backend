@@ -1,8 +1,9 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.controller.financial_statements_ledger;
 
-import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.FinancialStatementsLedgerSearchDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.dto.FinancialStatementsLedgerSearchDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.financial_statements_ledger.FinancialStatementsLedgerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,6 @@ public class FinancialStatementsLedgerController {
     @PostMapping("/api/financial/ledger/financialStatements/show")
     public ResponseEntity<Object> show(@RequestBody FinancialStatementsLedgerSearchDTO dto) {
         Object result = financialStatementsLedgerService.show(dto);
-        return null;
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }

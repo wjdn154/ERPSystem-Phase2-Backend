@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements;
+package com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
