@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UnresolvedVoucherRepository extends JpaRepository<UnresolvedVoucher, Long>, UnresolvedVoucherRepositoryCustom {
-    Optional<UnresolvedVoucher> findFirstByVoucherDateOrderByIdDesc(LocalDate voucherDate);
+    Optional<UnresolvedVoucher> findFirstByVoucherDateAndVoucherKindEqualsOrderByIdDesc(LocalDate voucherDate,VoucherKind voucherKind);
     List<UnresolvedVoucher> findByVoucherDateOrderByVoucherNumberAsc(LocalDate date);
 
     @Query("SELECT r FROM unresolved_voucher r WHERE r.voucherDate between :startDate AND :endDate")
