@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Bank;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.EmploymentStatus;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.EmploymentType;
 import lombok.AllArgsConstructor;
@@ -29,5 +30,5 @@ public class EmployeeDataDTO {
     private Long positionId; // 직위 ID
     private Long jobTitleId; // 직책 ID
     private String accountNumber;  // 계좌 번호
-    private String bankName;       // 은행 이름
+    private Bank bankName;       // 은행 이름
 }
