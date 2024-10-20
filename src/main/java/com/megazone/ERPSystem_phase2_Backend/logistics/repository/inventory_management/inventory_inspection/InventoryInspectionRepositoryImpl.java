@@ -15,7 +15,7 @@ import static com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_ma
 
 @Repository
 @RequiredArgsConstructor
-public class InventoryInspectionRepositoryCustomImpl implements InventoryInspectionRepositoryCustom {
+public class InventoryInspectionRepositoryImpl implements InventoryInspectionRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 

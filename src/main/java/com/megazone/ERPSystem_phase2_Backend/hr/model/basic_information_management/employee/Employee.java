@@ -1,6 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Attendance;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Leaves;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.EmploymentStatus;
@@ -10,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+//import org.hibernate.annotations.SQLDelete;
+//import org.hibernate.annotations.Where;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,10 +23,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = {"department", "position", "jobTitle", "performance", "transfer", "users", "bankAccount", "leaves", "attendance"})
+//@SQLDelete(sql = "UPDATE employee SET is_deleted = true WHERE id = ?")
+//@Where(clause = "is_deleted = false")
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
 
     @Column(name="employee_number",nullable = false,unique = true)
     private String employeeNumber; // 사원 번호
@@ -101,4 +105,5 @@ public class Employee {
 
     @Column
     private String profilePicture; // 프로필 사진
+
 }

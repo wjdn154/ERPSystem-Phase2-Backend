@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -66,9 +68,10 @@ public class VatTypeApiController {
         }
     }
     @PostMapping("/api/financial/vatType/vatType/id")
-    private ResponseEntity<Object> vatTypeGetId(@RequestParam String vatTypeCode) {
+    public ResponseEntity<Object> vatTypeGetId(@RequestBody Map<String, String> vatTypeCode) {
         try {
-            Long vatTypeId = vatTypeService.vatTypeGetId(vatTypeCode);
+            String targetCode = vatTypeCode.get("vatTypeCode");
+            Long vatTypeId = vatTypeService.vatTypeGetId(targetCode);
             return ResponseEntity.status(HttpStatus.OK).body(vatTypeId);
         }
         catch(RuntimeException e) {
@@ -77,9 +80,10 @@ public class VatTypeApiController {
     }
 
     @PostMapping("/api/financial/vatType/vatType/get")
-    private ResponseEntity<Object> vatTypeGet(@RequestParam Long vatTypeId) {
+    public ResponseEntity<Object> vatTypeGet(@RequestBody Map<String, Long> vatTypeId) {
         try {
-            VatTypeShowDTO vatType = vatTypeService.vatTypeGet(vatTypeId);
+            Long targetId = vatTypeId.get("vatTypeId");
+            VatTypeShowDTO vatType = vatTypeService.vatTypeGet(targetId);
             return ResponseEntity.status(HttpStatus.OK).body(vatType);
         }
         catch(RuntimeException e) {

@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.hr.controller.basic_information_ma
 
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentCreateDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Department.DepartmentService;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +28,8 @@ public class DepartmentController {
 
     // 부서id 로 부서 조회
     @PostMapping("/department/{id}")
-    public ResponseEntity<DepartmentShowDTO> getDepartmentById(@PathVariable("id") Long id) {
-        Optional<DepartmentShowDTO> department = departmentService.findDepartmentById(id);
+    public ResponseEntity<DepartmentDetailDTO> getDepartmentById(@PathVariable("id") Long id) {
+        Optional<DepartmentDetailDTO> department = departmentService.findDepartmentById(id);
 
         return department.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

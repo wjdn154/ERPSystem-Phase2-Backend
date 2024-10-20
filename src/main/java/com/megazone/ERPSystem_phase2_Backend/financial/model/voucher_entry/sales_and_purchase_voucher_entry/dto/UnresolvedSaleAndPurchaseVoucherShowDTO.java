@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sale
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.TransactionType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 public class UnresolvedSaleAndPurchaseVoucherShowDTO {
     private LocalDate voucherDate;
     private Long voucherNumber;
+    private String vatTypeCode;
     private String vatTypeName;
     private String itemName;
     private BigDecimal quantity;
@@ -26,11 +28,13 @@ public class UnresolvedSaleAndPurchaseVoucherShowDTO {
     private String voucherManagerName;
     private ElectronicTaxInvoiceStatus invoiceStatus;
     private String journalEntryName;
+    private TransactionType TransactionType;
 
     public static UnresolvedSaleAndPurchaseVoucherShowDTO create(UnresolvedSaleAndPurchaseVoucher voucher) {
         return new UnresolvedSaleAndPurchaseVoucherShowDTO(
                 voucher.getVoucherDate(),
                 voucher.getVoucherNumber(),
+                voucher.getVatType().getCode(),
                 voucher.getVatType().getVatName(),
                 voucher.getItemName(),
                 voucher.getQuantity(),
@@ -41,7 +45,8 @@ public class UnresolvedSaleAndPurchaseVoucherShowDTO {
                 voucher.getClient().getPrintClientName(),
                 voucher.getVoucherManager().getFirstName() + voucher.getVoucherManager().getLastName(),
                 voucher.getElectronicTaxInvoiceStatus(),
-                voucher.getJournalEntry().getName()
+                voucher.getJournalEntry().getName(),
+                voucher.getVatType().getTransactionType()
         );
     }
 }

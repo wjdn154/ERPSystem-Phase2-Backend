@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_manag
 
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentCreateDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentShowDTO;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface DepartmentService {
     List<DepartmentShowDTO> findAllDepartments();
 
     // 부서 id 로 조회
-    Optional<DepartmentShowDTO> findDepartmentById(Long id);
+    Optional<DepartmentDetailDTO> findDepartmentById(Long id);
 
     // 부서 등록
     DepartmentCreateDTO saveDepartment(DepartmentCreateDTO dto);

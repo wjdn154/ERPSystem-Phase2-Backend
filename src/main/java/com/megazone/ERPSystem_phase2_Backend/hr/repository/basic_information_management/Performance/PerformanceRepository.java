@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface PerformanceRepository extends JpaRepository<Performance, Long> {
     List<Performance> findByEmployeeId(Long employeeId); // 특정 사원의 성과 평가 조회
-    List<Performance> findByEvaluatorId(Long evaluatorId); // 특정 평가자가 한 평가 조회
+    //List<Performance> findByEvaluatorId(Long evaluatorId); // 특정 평가자가 한 평가 조회
 
-    void deleteByEvaluatorId(Long id);
+    void deleteByEmployeeId(Long employeeId);
 }

@@ -1,6 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.controller.basic_information_management.Employee;
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Transfer;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.TransferCreateDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.TransferShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Transfer.TransferService;
@@ -34,4 +33,10 @@ public class TransferController {
         List<TransferShowDTO> transfers = transferService.findAllTransfers();
         return ResponseEntity.ok(transfers);
     }
+
+    // 발령 기록 상세 조회
+    //@PostMapping("/transfer/detail/{id}")
+    //public ResponseEntity<TransferShowDTO> findTransferById(@PathVariable Long id) {
+    //
+    //}
 }
