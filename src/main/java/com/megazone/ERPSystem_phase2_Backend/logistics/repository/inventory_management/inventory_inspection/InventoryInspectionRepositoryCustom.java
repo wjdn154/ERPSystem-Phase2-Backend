@@ -10,4 +10,5 @@ public interface InventoryInspectionRepositoryCustom {
     List<InventoryInspection> findInspectionsByDateRange(LocalDate startDate, LocalDate endDate);
 
     Long findMaxInspectionNumberByDate(LocalDate inspectionDate);
+
 }

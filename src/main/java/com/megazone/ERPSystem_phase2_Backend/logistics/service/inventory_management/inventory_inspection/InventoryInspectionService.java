@@ -20,4 +20,5 @@ public interface InventoryInspectionService {
 
     void deleteInspectionById(Long id);
 
+    void adjustRequest(Long id);
 }

@@ -100,19 +100,32 @@ VALUES (1, 1, 0000000001, 30, null, 1, 1),
        (9, 2, 0000000009, 500, null, 1, 12),
        (10, 5, 0000000010, 240, null, 1, 13),
        (11, 6, 0000000011, 310, null, 1, 14),
-       (12, 7, 0000000012, 200, null, 1, 15);
+       (12, 7, 0000000012, 200, null, 1, 15),
+       (13, 1, 0000000013, 150, null, 2, 1),
+       (14, 1, 0000000014, 220, null, 3, 1);
 
 INSERT INTO inventory_inspection (id, employee_id, warehouse_id, inspection_date, inspection_number, status, comment)
-values (1, 1, 1, '2024-09-12', 1, '조정완료', '2024년 9월 정기 재고 실시'),
+values (1, 1, 1, '2024-09-12', 1, '미조정', '2024년 9월 정기 재고 실시'),
        (2, 1, 1, '2024-08-12', 1, '미조정', '2024년 8월 정기 재고 실시'),
-       (3, 2, 1, '2024-07-12', 1, '미조정', '2024년 7월 정기 재고 실시');
+       (3, 2, 1, '2024-07-12', 1, '미조정', '2024년 7월 정기 재고 실시'),
+       (4, 2, 1, '2024-10-12', 1, '미조정', '2024년 7월 정기 재고 실시'),
+       (5, 2, 1, '2024-10-03', 1, '미조정', '2024년 7월 정기 재고 실시'),
+       (6, 2, 1, '2024-10-04', 1, '미조정', '2024년 7월 정기 재고 실시'),
+       (7, 2, 1, '2024-10-07', 1, '미조정', '2024년 7월 정기 재고 실시');
 
-INSERT INTO inventory_inspection_detail (id, inventory_id, inventory_inspection_id, product_id, warehouse_location_id, product_code, product_name, actual_quantity, book_quantity, difference_quantity, comment)
-values (1, 1, 1, 1, 1, 'B0001', '즉석밥', 200, 30, 170, null),
-       (2, 2, 1, 1, 2, 'B0001', '즉석밥', 40, 30, 10, null),
-       (3, 3, 1, 1, 3, 'B0001', '즉석밥', 40, 70, -30, null),
-       (4, 4, 2, 1, 4, 'B0001', '즉석밥', 100, null, null, null),
-       (5, 5, 3, 1, 1, 'B0001', '즉석밥', 70, null, null, null);
+INSERT INTO inventory_inspection_detail (id, inventory_id, inventory_inspection_id, product_id, warehouse_location_id, product_code, product_name, actual_quantity, comment)
+VALUES
+    (1, 1, 1, 1, 1, 'B0001', '즉석밥', 250, '정확하게 확인됨'),
+    (2, 2, 1, 1, 2, 'B0001', '즉석밥', 50, '초과 재고 발견'),
+    (3, 3, 1, 1, 3, 'B0001', '즉석밥', 60, '수량 부족'),
+    (4, 4, 2, 1, 4, 'B0001', '즉석밥', 110, '재고 초과'),
+    (5, 5, 3, 1, 1, 'B0001', '즉석밥', 80, '정확하게 확인됨'),
+    (6, 6, 4, 1, 1, 'B0001', '즉석밥', 75, '재고 부족'),
+    (7, 7, 4, 1, 1, 'B0001', '즉석밥', 90, '정확하게 확인됨'),
+    (8, 8, 5, 1, 1, 'B0001', '즉석밥', 95, '초과 재고 확인됨'),
+    (9, 9, 6, 1, 1, 'B0001', '즉석밥', 85, '일치'),
+    (10, 10, 7, 1, 1, 'B0001', '즉석밥', 65, '부족 발생');
+
 
 INSERT INTO shipment (id, warehouse_id, warehouse_address_id, employee_id, client_id, contact_info_id, shipment_date, shipment_number, comment)
 values (1, 1, 1, 1, 1, 1, '2024-10-2', 1, null),

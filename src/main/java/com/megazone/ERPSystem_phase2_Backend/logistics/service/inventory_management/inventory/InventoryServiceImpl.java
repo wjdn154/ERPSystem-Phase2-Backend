@@ -65,4 +65,9 @@ public class InventoryServiceImpl implements InventoryService {
 
         return InventoryResponseDTO.mapToDTO(savedInventory);
     }
+
+    @Override
+    public List<InventoryResponseDTO> getInventoriesByWarehouseId(Long warehouseId) {
+        return inventoryRepository.findInventoriesByWarehouseId(warehouseId);
+    }
 }

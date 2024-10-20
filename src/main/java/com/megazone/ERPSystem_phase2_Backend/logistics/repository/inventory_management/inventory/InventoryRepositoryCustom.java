@@ -10,4 +10,6 @@ public interface InventoryRepositoryCustom {
     List<InventoryResponseDTO> findInventoriesByLocationId(Long locationId);
 
     boolean existsByInventoryNumber(Long inventoryNumber);
+
+    List<InventoryResponseDTO> findInventoriesByWarehouseId(Long warehouseId);
 }

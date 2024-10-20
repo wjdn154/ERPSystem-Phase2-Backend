@@ -11,4 +11,6 @@ public interface InventoryService {
     List<InventoryResponseDTO> getInventoriesByLocationId(Long locationId);
 
     InventoryResponseDTO createInventory(InventoryRequestDTO requestDTO);
+
+    List<InventoryResponseDTO> getInventoriesByWarehouseId(Long warehouseId);
 }

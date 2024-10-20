@@ -11,6 +11,7 @@ public class InventoryInspectionDetailResponseListDTO {
     private Long id;  // 실사 항목 ID
     private String productCode;  // 품목 코드
     private String productName;  // 품목 이름
+    private String standard;  // 규격
     private Long bookQuantity;  // 장부상의 수량
     private Long actualQuantity;  // 실사된 수량
     private Long differenceQuantity;  // 차이
