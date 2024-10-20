@@ -44,6 +44,9 @@ public class InventoryInspection {
     @Column(name = "inspection_number", nullable = false)
     private Long inspectionNumber;  // 같은 날짜 내에서 고유한 전표 번호
 
+    @Column(name = "adjustment_number")
+    private String adjustmentSlip; // 조정 전표
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private InspectionStatus status;  // '미조정', '조정 중', '조정 완료'
