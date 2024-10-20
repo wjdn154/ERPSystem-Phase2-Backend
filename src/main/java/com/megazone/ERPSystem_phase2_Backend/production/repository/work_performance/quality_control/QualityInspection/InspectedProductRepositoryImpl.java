@@ -2,9 +2,8 @@ package com.megazone.ERPSystem_phase2_Backend.production.repository.work_perform
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 @Repository
 @AllArgsConstructor
-public class QualityInspectionRepositoryImpl {
+public class InspectedProductRepositoryImpl implements InspectedProductRepositoryCustom{
 }

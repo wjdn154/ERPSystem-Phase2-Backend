@@ -2,6 +2,8 @@ package com.megazone.ERPSystem_phase2_Backend.production.controller.work_perform
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.dto.QualityInspectionDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.dto.QualityInspectionListDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.dto.QualityInspectionSaveDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.quality_control.dto.QualityInspectionUpdateDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.service.work_performance.quality_control.QualityInspectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,7 +44,7 @@ public class QualityInspectionController {
 
     //품질 검사 상세 등록
     @PostMapping("/qualityInspection/createQualityInspection")
-    public ResponseEntity<QualityInspectionDetailDTO> createQualityInspection(@RequestBody QualityInspectionDetailDTO dto) {
+    public ResponseEntity<QualityInspectionDetailDTO> createQualityInspection(@RequestBody QualityInspectionSaveDTO dto) {
 
         //서비스에서 품질 검사 상세 등록
         Optional<QualityInspectionDetailDTO> result = qualityInspectionService.createQualityInspection(dto);
@@ -52,7 +54,7 @@ public class QualityInspectionController {
 
     //품질 검사 상세 수정
     @PutMapping("/qualityInspection/updateQualityInspection/{id}")
-    public ResponseEntity<QualityInspectionDetailDTO> updateQualityInspection(@PathVariable("id") Long id, @RequestBody QualityInspectionDetailDTO dto) {
+    public ResponseEntity<QualityInspectionDetailDTO> updateQualityInspection(@PathVariable("id") Long id, @RequestBody QualityInspectionUpdateDTO dto) {
 
         //서비스에서 품질 검사 상세 수정
         Optional<QualityInspectionDetailDTO> result = qualityInspectionService.updateQualityInspection(id, dto);
@@ -60,7 +62,7 @@ public class QualityInspectionController {
         return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
-    //품질 검사 삭제
+    //품질 검사 삭제 . 삭제할때 inspectedProduct도 같이 삭제???
     @DeleteMapping("/qualityInspection/deleteQualityInspection/{id}")
     public ResponseEntity<Void> deleteQualityInspection(@PathVariable("id") Long id) {
 
