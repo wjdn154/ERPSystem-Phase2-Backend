@@ -46,7 +46,7 @@ public class MrpServiceImpl implements MrpService {
 
         // MRP 생성
         Mrp mrp = Mrp.builder()
-                .mps(mps)
+//                .mps(mps)
                 .materialData(materialData)
                 .requiredQuantity(mrpDto.getRequiredQuantity())
                 .onHandQuantity(mrpDto.getOnHandQuantity())
@@ -122,7 +122,7 @@ public class MrpServiceImpl implements MrpService {
     private MrpDTO convertToDto(Mrp mrp) {
         return MrpDTO.builder()
                 .id(mrp.getId())
-                .mpsId(mrp.getMps().getId())
+//                .mpsId(mrp.getMps().getId())
                 .materialDataId(mrp.getMaterialData().getId())
                 .requiredQuantity(mrp.getRequiredQuantity())
                 .onHandQuantity(mrp.getOnHandQuantity())
