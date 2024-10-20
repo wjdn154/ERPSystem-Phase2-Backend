@@ -26,6 +26,8 @@ INSERT INTO employee_job_title (code,description, title_name) VALUES
 
 INSERT INTO employee (date_of_birth, hire_date,is_household_head, department_id, job_title_id, position_id, address, email, employee_number, first_name, last_name, phone_number, profile_picture, employment_status, employment_type)
 VALUES
+('2000-10-16', '2027-07-07' ,TRUE, 3, 2, 3, '거제', 'wkdgywjd77@naver.com', '270707001', '정현', '박', '010-2234-5678', 'img7.jpg', 'RESIGNED', 'FREELANCE'),
+('2000-12-25', '2028-08-08',TRUE, 3, 2, 3, '서울', 'readyoun@omz.com', '280808001', '희연', '임', '010-2234-5678', 'img8.jpg', 'ON_LEAVE', 'PART_TIME'),
 ('1990-05-15', '2021-01-01' ,TRUE, 1, 1, 1, '서울', 'gj1563@naver.com', '210101001', '건호', '허', '010-1234-5678', 'img1.jpg', 'ACTIVE', 'FULL_TIME'),
 ('1985-11-22', '2022-02-02',FALSE, 2, 2, 2, '부산', 'ckacl2512@naver.com', '220202001', '민성', '김', '010-9876-5432', 'img2.jpg', 'ACTIVE', 'CONTRACT'),
 ('1995-03-10', '2023-03-03' ,TRUE, 1, 1, 1, '대구', 'hshdla@naver.com', '230303001', '홍스', '홍', '010-2234-5678', 'img3.jpg', 'ON_LEAVE', 'PART_TIME'),
