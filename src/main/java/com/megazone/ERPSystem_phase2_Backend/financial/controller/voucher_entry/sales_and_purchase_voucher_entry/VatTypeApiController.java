@@ -68,7 +68,7 @@ public class VatTypeApiController {
         }
     }
     @PostMapping("/api/financial/vatType/vatType/id")
-    private ResponseEntity<Object> vatTypeGetId(@RequestBody Map<String, String> vatTypeCode) {
+    public ResponseEntity<Object> vatTypeGetId(@RequestBody Map<String, String> vatTypeCode) {
         try {
             String targetCode = vatTypeCode.get("vatTypeCode");
             Long vatTypeId = vatTypeService.vatTypeGetId(targetCode);
@@ -80,7 +80,7 @@ public class VatTypeApiController {
     }
 
     @PostMapping("/api/financial/vatType/vatType/get")
-    private ResponseEntity<Object> vatTypeGet(@RequestBody Map<String, Long> vatTypeId) {
+    public ResponseEntity<Object> vatTypeGet(@RequestBody Map<String, Long> vatTypeId) {
         try {
             Long targetId = vatTypeId.get("vatTypeId");
             VatTypeShowDTO vatType = vatTypeService.vatTypeGet(targetId);

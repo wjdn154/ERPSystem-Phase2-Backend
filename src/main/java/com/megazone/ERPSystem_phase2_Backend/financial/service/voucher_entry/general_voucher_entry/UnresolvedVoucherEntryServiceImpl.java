@@ -186,7 +186,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
 
         switch (voucherKind) {
             case GENERAL:
-                voucherBox = unresolvedVoucherRepository.findFirstByVoucherDateOrderByIdDesc(voucherDate);
+                voucherBox = unresolvedVoucherRepository.findFirstByVoucherDateAndVoucherKindEqualsOrderByIdDesc(voucherDate,VoucherKind.GENERAL);
                 StartNumber = 1L;
                 break;
             case SALE_AND_PURCHASE:
