@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.List;
 
 @RestController
@@ -72,7 +73,7 @@ public class WorkerAssignmentController {
     public WorkerAssignmentSummaryDTO getTodayWorkerAssignmentsSummary(
             @RequestParam(value = "includeShiftType") boolean includeShiftType,
             @RequestParam(value = "shiftType") Long shiftTypeId) {
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(ZoneId.of("UTC")); // 서버와 DB의 타임존 일치
         return workerAssignmentService.getTodayWorkerAssignmentsSummary(today, includeShiftType, shiftTypeId);
     }
 

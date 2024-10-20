@@ -80,6 +80,8 @@ public class WorkerAssignmentServiceImpl implements WorkerAssignmentService {
     // 오늘의 작업장별 배정인원 상세명단과 인원수 조회
     @Override
     public WorkerAssignmentSummaryDTO getTodayWorkerAssignmentsSummary(LocalDate currentDate, boolean includeShiftType, Long shiftTypeId) {
+        System.out.println("요청 날짜: " + currentDate); // 디버깅용 로그
+
         List<WorkerAssignment> assignments;
 
         if (includeShiftType && shiftTypeId != null) {
