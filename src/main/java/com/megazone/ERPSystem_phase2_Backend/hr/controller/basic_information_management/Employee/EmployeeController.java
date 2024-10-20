@@ -56,7 +56,7 @@ public class EmployeeController {
 
 
     // 사원 정보 수정
-    @PutMapping("/employee/updateEmployee/{id}")
+    @PostMapping("/employee/updateEmployee/{id}")
     public ResponseEntity<EmployeeFindDTO> updateEmployeeById(@PathVariable("id") Long id, @RequestBody EmployeeDataDTO dto) {
         Optional<EmployeeFindDTO> updatedEmployee = employeeService.updateEmployee(id, dto);
         return updatedEmployee.map(ResponseEntity::ok)

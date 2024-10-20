@@ -30,8 +30,6 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted = false; // Soft Delete 필드
 
     @Column(name="employee_number",nullable = false,unique = true)
     private String employeeNumber; // 사원 번호
@@ -108,6 +106,4 @@ public class Employee {
     @Column
     private String profilePicture; // 프로필 사진
 
-    public void setIsDeleted(boolean b) {
-    }
 }
