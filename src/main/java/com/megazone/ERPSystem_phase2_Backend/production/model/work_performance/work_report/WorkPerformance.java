@@ -11,9 +11,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 /**작업실적
- * 생산된 총 수량을 기록함.
+ * 특정 작업 지시를 통해 만들어진 제품들의 총 생산량을 나타냄.
+ * 즉, 하나의 작업실적은 하나의 제품 타입(하나의 product)에 대한 생산 실적을 의미하며, 그 생산된 총량을 기록됨.
+ * 작업 실적은 제품의 묶음 전체를 다룸.
  * */
 @Entity(name = "work_report_work_performance")
 @Table(name = "work_report_work_performance")
@@ -35,7 +38,7 @@ public class WorkPerformance {
     private String description;   // 추가 설명 또는 비고
 
     @Column(nullable = false)
-    private BigDecimal actualQuantity;    // 실제 생산량
+    private Long actualQuantity;    // 실제 생산량
 
     /**인건비(작업에 투입된 시간 x 시간당 임금) -> 급여
      * 재료비(사용된 원자재의 양 x 원자재의 단가)
@@ -43,7 +46,11 @@ public class WorkPerformance {
      * 풀량품 처리 비용(불량품 수량 x 뷸량품 처리 단가)
      * */
     @Column(nullable = false)
-    private BigDecimal workCost;
+    private BigDecimal workCost;          //작업 비용
+
+    private LocalDate workDate;            //작업 시간
+
+    private Long workers;                //작업 인원
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

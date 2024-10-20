@@ -15,10 +15,19 @@ public class QualityInspectionListDTO {
     private Long id;
     private String inspectionCode;
     private String inspectionName;
-    private String description;
-    private Boolean isPassed;
-    private QualityInspectionType qualityInspectionType;
-    private Long workPerformanceId;
-    private String workPerformanceName;
+    private QualityInspectionType qualityInspectionType;  //품질 검사 유형
 
+    private Long workPerformanceId;        //작업실적 아이디
+    private String workPerformanceName;    //작업실적 이름
+
+    private String productCode;          //품목 코드
+    private String productName;          //품목 이름
+
+    private Long totalQuantity;        //총 수량 (workperformance-actualQuantity)
+    private Long defectiveQuantity;    //불량품 수량 (inspectedProduct-defectCount)
+    private Long passedQuantity;       //통과된 제품 수량
 }
+
+
+/**검사번호, 품목, 수량, 적격, 부적격, 종결 여부?
+ * */
