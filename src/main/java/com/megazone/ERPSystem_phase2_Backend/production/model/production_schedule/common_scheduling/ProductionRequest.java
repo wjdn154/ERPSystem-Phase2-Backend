@@ -1,5 +1,10 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Department;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.Orders;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.enums.ProductionRequestType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.enums.ProgressType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.production_strategy.PlanOfMakeToOrder;
@@ -47,15 +52,13 @@ public class ProductionRequest {
     @Column(nullable = true)
     private LocalDate dueDateToProvide; // 납기일: 실제 생산된 제품을 검사, 포장, 배송 등 완료 후 납품해야 하는 일자 ( 고객에게 제품 전달해야 하는 최종 기한 - 조정 거의 불가, 변경 시 계약조건 위반으로 페널티 )
 
-    @Column(nullable = true)
-    private String client; // TODO 거래처 연관관계 ( 고객사명 등 )
-//    private Client client;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", nullable = true)
+    private Client client;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "department_id", nullable = false)
-    @Column(nullable = true)
-    private String productionDepartment;
-//    private Department productionDepartment;     // TODO 생산부서 ( 요청 품목 생산을 담당하는 부서 ? )
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department productionDepartment;
 
     @Column(nullable = false)
     private BigDecimal requestQuantity; // 요청수량
@@ -66,21 +69,17 @@ public class ProductionRequest {
     @OneToMany(mappedBy = "productionRequest")
     private List<PlanOfMakeToOrder> planOfMakeToOrders; // TODO 연관 주문생산계획 : 계획 등록 시 생산의뢰에 자동으로 반영됨. 생산계획부서
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "product_id", nullable = false)
-    @Column(nullable = false)
-    private String product;
-//    private Product product; // TODO 연관 품목 ( req -> product 단방향 ? 품명, 품번, 규격 )
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product; // TODO 연관 품목 ( req -> product 단방향 ? 품명, 품번, 규격 )
 
-    @Column(nullable = false)
-    private String salesOrder;
-//    private SalesOrder salesOrder; // TODO 연관 영업 주문 ( 수주 번호 , 판매단위, P/O No., 판매계획 )
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sales_order_id", nullable = false)
+    private Orders salesOrder; // TODO 연관 영업 주문 ( 수주 번호 , 판매단위, P/O No., 판매계획 )
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "requester_id", nullable = false)
-    @Column(nullable = false)
-    private String requester;
-//    private Employee requester; // TODO 요청자, 부서 (dto - name, entity - id) // TODO 직원 연관관계 ( 의뢰자 )
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "requester_id", nullable = false)
+    private Employee requester; // TODO 요청자, 부서 (dto - name, entity - id)
 
     @Column(nullable = true)
     private String remarks; // 특이사항

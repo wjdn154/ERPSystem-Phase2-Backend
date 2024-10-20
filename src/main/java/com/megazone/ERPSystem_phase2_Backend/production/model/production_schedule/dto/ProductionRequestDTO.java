@@ -19,7 +19,7 @@ public class ProductionRequestDTO {
 
     private Long id;
 
-    private ProductionRequestType requestsType; // 생산의뢰구분 (Enum)
+    private ProductionRequestType requestType; // 생산의뢰구분 (Enum)
 
     private ProgressType progressType; // 진행상태구분 (Enum)
 
@@ -33,9 +33,9 @@ public class ProductionRequestDTO {
 
     private LocalDate dueDateToProvide; // 납기일 (고객에게 제품을 납품해야 하는 최종 기한)
 
-    private String client; // 거래처 (고객사명 등) TODO 연관
+    private Long clientId; // 거래처 (고객사명 등)
 
-    private String productionDepartment; // 생산부서 (요청 품목을 생산하는 부서명) TODO 연관
+    private Long departmentId; // 생산부서 (요청 품목을 생산하는 부서명)
 
     private BigDecimal requestQuantity; // 요청수량
 
@@ -43,11 +43,11 @@ public class ProductionRequestDTO {
 
     private List<Long> planOfMakeToOrderIds; // 연관된 주문생산계획 Ids
 
-    private String product; // 제품 (제품명, 제품 번호 등) TODO 연관
+    private Long productId; // 제품 (제품명, 제품 번호 등)
 
-    private String salesOrder; // 영업 주문 (수주 번호, 판매 단위, P/O No. 등) TODO 연관
+    private Long salesOrderId; // 영업 주문 (수주 번호, 판매 단위, P/O No. 등)
 
-    private String requester; // 요청자 (요청한 사람의 이름 또는 부서) TODO 연관
+    private Long requesterId; // 요청자 (요청한 사람의 이름 또는 부서)
 
     private String remarks; // 특이사항
 }

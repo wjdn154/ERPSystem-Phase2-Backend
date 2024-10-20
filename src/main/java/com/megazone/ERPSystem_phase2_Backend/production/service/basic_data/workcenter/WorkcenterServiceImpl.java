@@ -55,7 +55,8 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 
                 // 조건에 따라 factoryCode 설정
                 .factoryCode(isValidWarehouse ? workcenter.getFactory().getCode() : null)
-                .warehouseType(isValidWarehouse ? workcenter.getFactory().getWarehouseType() : null) // 확인용: 나중에 삭제
+                .factoryName(isValidWarehouse ? workcenter.getFactory().getName() : null)
+//                .warehouseType(isValidWarehouse ? workcenter.getFactory().getWarehouseType() : null) // 확인용: 나중에 삭제
                 // 생산공정
                 .processCode(workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getCode() : null)
                 // 설비
