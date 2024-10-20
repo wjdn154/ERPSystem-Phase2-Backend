@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Data
 public class UnresolvedSaleAndPurchaseVoucherShowDTO {
     private LocalDate voucherDate;
-    private String voucherNumber;
+    private Long voucherNumber;
     private String vatTypeName;
     private String itemName;
     private BigDecimal quantity;

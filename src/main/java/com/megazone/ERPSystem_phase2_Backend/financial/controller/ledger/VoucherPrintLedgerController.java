@@ -22,7 +22,9 @@ public class VoucherPrintLedgerController {
     public ResponseEntity<Object> show(@RequestBody VoucherPrintSearchDTO dto) {
         List<ResolvedVoucherShowDTO> voucherPrintList = voucherPrintLedgerService.VoucherPrintList(dto);
 
-        return voucherPrintList.isEmpty() ? ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("해당하는 전표가 없습니다.") :
-                ResponseEntity.status(HttpStatus.OK).body(voucherPrintList);
+//        return voucherPrintList.isEmpty() ? ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("해당하는 전표가 없습니다.") :
+//                ResponseEntity.status(HttpStatus.OK).body(voucherPrintList);
+
+        return ResponseEntity.status(HttpStatus.OK).body(voucherPrintList);
     }
 }

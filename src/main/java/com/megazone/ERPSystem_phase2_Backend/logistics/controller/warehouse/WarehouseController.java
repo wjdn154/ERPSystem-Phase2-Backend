@@ -68,9 +68,12 @@ public class WarehouseController {
         try {
             String result = warehouseService.deleteWarehouse(id);
             return ResponseEntity.ok(result);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("창고 삭제 중 오류가 발생했습니다.");
         }
     }
+
 }

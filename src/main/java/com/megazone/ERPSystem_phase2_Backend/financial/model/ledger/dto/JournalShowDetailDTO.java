@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class JournalShowDetailDTO {
     private Long id;
     private LocalDate voucherDate;
-    private String voucherNumber;
+    private Long voucherNumber;
     private VoucherType voucherType;
     private VoucherKind voucherKind;
     private String accountSubjectCode;

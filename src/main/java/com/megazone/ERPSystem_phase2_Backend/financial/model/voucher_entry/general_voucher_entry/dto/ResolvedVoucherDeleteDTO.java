@@ -12,6 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ResolvedVoucherDeleteDTO {
     private LocalDate searchDate;
-    private List<String> searchVoucherNumList;
+    private List<Long> searchVoucherNumList;
     private Long ApproveManagerId; // 담당자 ID
 }

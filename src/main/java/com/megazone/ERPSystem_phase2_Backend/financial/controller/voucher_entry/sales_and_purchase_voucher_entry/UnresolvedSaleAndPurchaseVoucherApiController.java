@@ -90,7 +90,7 @@ public class UnresolvedSaleAndPurchaseVoucherApiController {
      * @return
      */
     @PostMapping("/api/financial/sale-end-purchase-unresolved-voucher/show/{voucherNumber}")
-    public ResponseEntity<Object> showOne(@PathVariable("voucherNumber") String voucherNumber) {
+    public ResponseEntity<Object> showOne(@PathVariable("voucherNumber") Long voucherNumber) {
         try {
             List<UnresolvedVoucher> vouchers = unresolvedSaleAndPurchaseVoucherService.searchVoucher(voucherNumber);
 

@@ -39,9 +39,9 @@ public class ResolvedSaleAndPurchaseVoucherApiController {
 
         List<ResolvedSaleAndPurchaseVoucher> voucherList = resolvedSaleAndPurchaseVoucherService.searchAllVoucher(date);
 
-        if(voucherList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+//        if(voucherList.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//        }
         List<ResolvedSaleAndPurchaseVoucherShowDTO> showDTOS = voucherList.stream().map(
                 ResolvedSaleAndPurchaseVoucherShowDTO::create).toList();
 
@@ -56,7 +56,7 @@ public class ResolvedSaleAndPurchaseVoucherApiController {
      * @return
      */
     @PostMapping("/api/financial/sale-end-purchase-resolved-voucher/show/{voucherNumber}")
-    public ResponseEntity<Object> showOne(@PathVariable("voucherNumber") String voucherNumber) {
+    public ResponseEntity<Object> showOne(@PathVariable("voucherNumber") Long voucherNumber) {
         try {
             List<ResolvedVoucher> vouchers = resolvedSaleAndPurchaseVoucherService.searchEntryVoucher(voucherNumber);
 

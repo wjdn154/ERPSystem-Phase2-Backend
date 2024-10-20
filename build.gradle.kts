@@ -58,6 +58,10 @@ dependencies {
 
 	implementation("org.modelmapper:modelmapper:2.4.4") // ModelMapper
 
+	implementation("software.amazon.awssdk:s3:2.20.25") // AWS S3 SDK
+
+	implementation("io.github.cdimascio:java-dotenv:5.2.2") // dotenv-java 라이브러리 추가
+
 	// 어노테이션 프로세서로 Querydsl, Jakarta API 사용
 	annotationProcessor("com.querydsl:querydsl-apt:5.0.0:jakarta") // Querydsl APT 어노테이션 프로세서
 	annotationProcessor("jakarta.annotation:jakarta.annotation-api") // Jakarta 어노테이션 API
