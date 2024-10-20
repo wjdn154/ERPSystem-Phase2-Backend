@@ -9,6 +9,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -18,18 +20,21 @@ public class JournalEntryTypeSetupServiceImpl implements JournalEntryTypeSetupSe
 
 
     @Override
-    public String updateEntryTypeSetup(JournalEntryTypeSetupUpdateDTO dto) {
-        JournalEntryTypeSetup journalEntryTypeSetup = journalEntryTypeSetupRepository.findById(
-                dto.getJournalEntryTypeId()).orElse(null);
+    public String updateEntryTypeSetup(List<JournalEntryTypeSetupUpdateDTO> dto) {
 
+        dto.stream().forEach(updateDTO -> {
+            JournalEntryTypeSetup journalEntryTypeSetup = journalEntryTypeSetupRepository.findById(
+                    updateDTO.getJournalEntryTypeId()).orElseThrow(
+                    () -> new RuntimeException("해당하는 분개유형이 없습니다.")
+            );
+            AccountSubject accountSubject = accountSubjectRepository.findByCode(updateDTO.getAccountSubjectCode()).orElseThrow(
+                    () -> new RuntimeException("해당하는 계정과목이 없습니다.")
+            );
+            if (journalEntryTypeSetup != null && accountSubject != null) {
+                journalEntryTypeSetup.setAccountSubject(accountSubject);
+            }
+        });
 
-        AccountSubject accountSubject = accountSubjectRepository.findByCode(dto.getAccountSubjectCode()).orElse(null);
-
-        if (journalEntryTypeSetup != null && accountSubject != null) {
-            journalEntryTypeSetup.setAccountSubject(accountSubject);
-            return "분개유형 설정이 완료되었습니다.";
-        }
-
-        return null;
+        return "분개유형 설정이 완료되었습니다.";
     }
 }

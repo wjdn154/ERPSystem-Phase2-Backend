@@ -107,7 +107,7 @@ public class UnresolvedVoucherApiController {
             List<UnresolvedVoucher> unresolvedVoucherList = unresolvedVoucherEntryService.voucherApprovalProcessing(dto);
             return ResponseEntity.status(HttpStatus.OK).body("선택한 미결전표가 " + dto.approvalResult() + "되었습니다.");
         }catch(Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이유 : " + e.getMessage() + " " + dto.approvalResult() + "처리 실패");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("사유 : " + e.getMessage() + " " + dto.approvalResult() + "처리 실패");
         }
     }
 

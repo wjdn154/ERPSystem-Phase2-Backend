@@ -33,7 +33,7 @@ public class ResolvedVoucherApiController {
      * @return
      */
     @PostMapping("/api/financial/general-voucher-entry/showResolvedVoucherEntry")
-    public ResponseEntity<ResolvedVoucherShowAllDTO> showAllResolvedVoucher(@RequestBody Map<String, LocalDate> requestData) {
+    public ResponseEntity<Object> showAllResolvedVoucher(@RequestBody Map<String, LocalDate> requestData) {
         LocalDate date = requestData.get("searchDate");
 
         List<ResolvedVoucher> resolvedVoucherList = resolvedVoucherService.resolvedVoucherAllSearch(date);
@@ -51,7 +51,7 @@ public class ResolvedVoucherApiController {
 
         return (!resolvedVoucherList.isEmpty()) ?
                 ResponseEntity.status(HttpStatus.OK).body(showAllDto) :
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                ResponseEntity.status(HttpStatus.NO_CONTENT).body("해당하는 전표가 없습니다.");
     }
 
     /**

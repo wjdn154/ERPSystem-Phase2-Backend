@@ -7,6 +7,7 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_managemen
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.dto.WorkcenterDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessDetailsDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.workcenter.WorkcenterService;
 import com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.process_routing.ProcessDetails.ProcessDetailsService;
 import jakarta.persistence.EntityNotFoundException;
@@ -139,13 +140,14 @@ public class WorkcenterController {
         return processDetailsDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-// 굳이여서 주석
-//    @PostMapping("/equipments/{equipmentName}/")
-//    public ResponseEntity<List<EquipmentDataDTO>> getEquipmentsByWorkcenterCode(@PathVariable("equipmentName") String workcenterCode) {
-//
-//        List<EquipmentDataDTO> equipmentDataDTOs = workcenterService.findEquipmentByWorkcenterCode(company_id, equipmentName);
-//        return ResponseEntity.ok(equipmentDataDTOs);
-//    }
+    @PostMapping("/equipments/byWorkcenter/{workcenterCode}")
+    public ResponseEntity<List<EquipmentDataDTO>> getEquipmentsByWorkcenterCode(
+            @PathVariable("workcenterCode") String workcenterCode) {
+
+        List<EquipmentDataDTO> equipmentDataDTOs =
+                workcenterService.findEquipmentByWorkcenterCode(workcenterCode);
+        return ResponseEntity.ok(equipmentDataDTOs);
+    }
 
     // 10. 작업자 배정 이력 조회
     @PostMapping("/workerAssignments/{workcenterCode}")
