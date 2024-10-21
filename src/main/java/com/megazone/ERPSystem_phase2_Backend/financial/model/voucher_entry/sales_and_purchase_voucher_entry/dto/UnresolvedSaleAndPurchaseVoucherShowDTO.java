@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.TransactionType;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Data
 public class UnresolvedSaleAndPurchaseVoucherShowDTO {
+    private Long voucherId;
     private LocalDate voucherDate;
     private Long voucherNumber;
     private String vatTypeCode;
@@ -29,9 +31,11 @@ public class UnresolvedSaleAndPurchaseVoucherShowDTO {
     private ElectronicTaxInvoiceStatus invoiceStatus;
     private String journalEntryName;
     private TransactionType TransactionType;
+    private ApprovalStatus approvalStatus;
 
     public static UnresolvedSaleAndPurchaseVoucherShowDTO create(UnresolvedSaleAndPurchaseVoucher voucher) {
         return new UnresolvedSaleAndPurchaseVoucherShowDTO(
+                voucher.getId(),
                 voucher.getVoucherDate(),
                 voucher.getVoucherNumber(),
                 voucher.getVatType().getCode(),
@@ -46,7 +50,8 @@ public class UnresolvedSaleAndPurchaseVoucherShowDTO {
                 voucher.getVoucherManager().getFirstName() + voucher.getVoucherManager().getLastName(),
                 voucher.getElectronicTaxInvoiceStatus(),
                 voucher.getJournalEntry().getName(),
-                voucher.getVatType().getTransactionType()
+                voucher.getVatType().getTransactionType(),
+                voucher.getApprovalStatus()
         );
     }
 }

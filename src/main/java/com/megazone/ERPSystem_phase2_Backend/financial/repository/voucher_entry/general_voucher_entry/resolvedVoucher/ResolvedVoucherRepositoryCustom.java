@@ -2,6 +2,8 @@ package com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.dto.FinancialStatementsLedgerSearchDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.dto.FinancialStatementsLedgerDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.dto.IncomeStatementLedgerShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.dto.IncomeStatementSearchDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherShowDTO;
@@ -32,4 +34,6 @@ public interface ResolvedVoucherRepositoryCustom {
     List<ResolvedVoucherShowDTO> voucherPrintShowList(VoucherPrintSearchDTO dto);
 
     List<FinancialStatementsLedgerDTO> financialStatementsShow(FinancialStatementsLedgerSearchDTO dto);
+
+    List<IncomeStatementLedgerShowDTO> incomeStatementShow(IncomeStatementSearchDTO dto);
 }

@@ -86,13 +86,14 @@ public class UnresolvedSaleAndPurchaseVoucherApiController {
 
     /**
      * 선택한 매출매입전표의 분개 리스트를 출력하는 기능
-     * @param voucherNumber
+     * @param voucherId
      * @return
      */
-    @PostMapping("/api/financial/sale-end-purchase-unresolved-voucher/show/{voucherNumber}")
-    public ResponseEntity<Object> showOne(@PathVariable("voucherNumber") Long voucherNumber) {
+    @PostMapping("/api/financial/sale-end-purchase-unresolved-voucher/entryShow")
+    public ResponseEntity<Object> showOne(@RequestBody Map<String, Long> voucherId) {
         try {
-            List<UnresolvedVoucher> vouchers = unresolvedSaleAndPurchaseVoucherService.searchVoucher(voucherNumber);
+            Long searchId = voucherId.get("voucherId");
+            List<UnresolvedVoucher> vouchers = unresolvedSaleAndPurchaseVoucherService.searchVoucher(searchId);
 
             if (vouchers == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("등록된 전표가 없습니다.");

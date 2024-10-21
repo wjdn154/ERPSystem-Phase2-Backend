@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.common_scheduling.WorkerAssignment;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionOrder;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentCountDTO;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,7 +62,7 @@ public class WorkerAssignmentServiceImpl implements WorkerAssignmentService {
 
     // 현재 날짜 기준 작업자 배정명단 조회
     @Override
-    public WorkerAssignmentSummaryDTO getTodayWorkerAssignments(LocalDate currentDate, boolean includeShiftType, Long shiftTypeId) {
+    public List<WorkerAssignmentDTO> getTodayWorkerAssignments(LocalDate currentDate, boolean includeShiftType, Long shiftTypeId) {
         return getWorkerAssignments(currentDate, includeShiftType, shiftTypeId);
     }
 
@@ -72,7 +74,7 @@ public class WorkerAssignmentServiceImpl implements WorkerAssignmentService {
     }
 
     @Override
-    public WorkerAssignmentSummaryDTO getWorkerAssignmentsByDate(LocalDate date, boolean includeShiftType, Long shiftTypeId) {
+    public List<WorkerAssignmentDTO> getWorkerAssignmentsByDate(LocalDate date, boolean includeShiftType, Long shiftTypeId) {
         return getWorkerAssignments(date, includeShiftType, shiftTypeId);
     }
 
@@ -160,7 +162,7 @@ public class WorkerAssignmentServiceImpl implements WorkerAssignmentService {
 
 
     // 반복되는 공통작업을 처리하는 메서드
-    private WorkerAssignmentSummaryDTO getWorkerAssignments(
+    private List<WorkerAssignmentDTO> getWorkerAssignments(
             LocalDate date, boolean includeShiftType, Long shiftTypeId) {
         List<WorkerAssignment> assignments;
 
@@ -174,45 +176,80 @@ public class WorkerAssignmentServiceImpl implements WorkerAssignmentService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
 
-        Map<String, Long> workcenterCounts = assignmentDTOs.stream()
-                .collect(Collectors.groupingBy(WorkerAssignmentDTO::getWorkcenterCode, Collectors.counting()));
+//        Map<String, Long> workcenterCounts = assignmentDTOs.stream()
+//                .collect(Collectors.groupingBy(WorkerAssignmentDTO::getWorkcenterCode, Collectors.counting()));
+//
+//        return WorkerAssignmentSummaryDTO.builder()
+//                .details(assignmentDTOs)
+//                .workcenterCounts(workcenterCounts)
+//                .build();
+        return assignmentDTOs;
+    }
 
-        return WorkerAssignmentSummaryDTO.builder()
-                .details(assignmentDTOs)
-                .workcenterCounts(workcenterCounts)
-                .build();
+    @Override
+    public List<WorkerAssignmentDTO> getWorkerAssignmentsByDates(LocalDate startDate, LocalDate endDate, boolean includeShiftType, Long shiftTypeId, String factoryCode, String workcenterCode) {
+        List<WorkerAssignment> assignments;
+
+        if (includeShiftType && shiftTypeId != null) {
+            assignments = workerAssignmentRepository.findByAssignmentDateBetweenAndShiftTypeId(startDate, endDate, shiftTypeId);
+        } else {
+            assignments = workerAssignmentRepository.findByAssignmentDateBetween(startDate, endDate);
+        }
+
+        if (factoryCode != null && !factoryCode.isEmpty()) {
+            assignments = assignments.stream()
+                    .filter(a -> factoryCode.equals(a.getWorkcenter().getFactory().getCode()))
+                    .collect(Collectors.toList());
+        }
+        if (workcenterCode != null && !workcenterCode.isEmpty()) {
+            assignments = assignments.stream()
+                    .filter(a -> workcenterCode.equals(a.getWorkcenter().getCode()))
+                    .collect(Collectors.toList());
+        }
+        return assignments.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     // DTO 변환 메서드 (WorkerAssignment -> WorkerAssignmentDTO)
     private WorkerAssignmentDTO convertToDTO(WorkerAssignment assignment) {
         return WorkerAssignmentDTO.builder()
-                .workerName(assignment.getWorker().getEmployee().getLastName() + " " + assignment.getWorker().getEmployee().getFirstName())
-                .employeeNumber(assignment.getWorker().getEmployee().getEmployeeNumber())
+                .id(assignment.getId())
+                .workerName(Optional.ofNullable(assignment.getWorker())
+                        .map(worker -> worker.getEmployee().getLastName() + " " + worker.getEmployee().getFirstName())
+                        .orElse("N/A")) // worker가 null일 때 기본값으로 "N/A"를 사용
+                .employeeNumber(Optional.ofNullable(assignment.getWorker())
+                        .map(worker -> worker.getEmployee().getEmployeeNumber())
+                        .orElse("N/A")) // 마찬가지로 null일 경우 "N/A" 처리
                 .workcenterCode(assignment.getWorkcenter().getCode())
                 .workcenterName(assignment.getWorkcenter().getName())
                 .assignmentDate(assignment.getAssignmentDate())
-                .shiftTypeName(assignment.getShiftType().getName())
-                .productionOrderName(assignment.getProductionOrder().getName())
+                .shiftTypeName(Optional.ofNullable(assignment.getShiftType())
+                        .map(ShiftType::getName)
+                        .orElse("N/A")) // shiftType이 null일 때 "N/A"
+                .productionOrderName(Optional.ofNullable(assignment.getProductionOrder())
+                        .map(ProductionOrder::getName)
+                        .orElse("N/A")) // productionOrder가 null일 때 "N/A"
+                .factoryCode(Optional.ofNullable(assignment.getWorkcenter().getFactory().getCode()).orElse("N/A"))
                 .build();
     }
 
-    // 엔티티 변환 메서드 (WorkerAssignmentDTO -> WorkerAssignment)
-    private WorkerAssignment convertToEntity(WorkerAssignmentDTO dto) {
-        Worker worker = workerRepository.findById(dto.getWorkerId())
-                .orElseThrow(() -> new EntityNotFoundException("작업자를 찾을 수 없습니다."));
-        Workcenter workcenter = workcenterRepository.findByCode(dto.getWorkcenterCode())
-                .orElseThrow(() -> new EntityNotFoundException("작업장을 찾을 수 없습니다."));
-        ShiftType shiftType = shiftTypeRepository.findByName(dto.getShiftTypeName())
-                .orElseThrow(() -> new EntityNotFoundException("교대근무유형을 찾을 수 없습니다."));
-        ProductionOrder productionOrder = productionOrderRepository.findById(dto.getProductionOrderId())
-                .orElseThrow(() -> new EntityNotFoundException("작업지시를 찾을 수 없습니다."));
 
-        return WorkerAssignment.builder()
-                .worker(worker)
-                .workcenter(workcenter)
-                .shiftType(shiftType)
-                .assignmentDate(dto.getAssignmentDate())
-                .productionOrder(productionOrder)
-                .build();
-    }
+    // 쓸 일이 없네 엔티티 변환 메서드 (WorkerAssignmentDTO -> WorkerAssignment)
+//    private WorkerAssignment convertToEntity(WorkerAssignmentDTO dto) {
+//        Worker worker = workerRepository.findById(dto.getWorkerId())
+//                .orElseThrow(() -> new EntityNotFoundException("작업자를 찾을 수 없습니다."));
+//        Workcenter workcenter = workcenterRepository.findByCode(dto.getWorkcenterCode())
+//                .orElseThrow(() -> new EntityNotFoundException("작업장을 찾을 수 없습니다."));
+//        ShiftType shiftType = shiftTypeRepository.findByName(dto.getShiftTypeName())
+//                .orElseThrow(() -> new EntityNotFoundException("교대근무유형을 찾을 수 없습니다."));
+//        ProductionOrder productionOrder = productionOrderRepository.findById(dto.getProductionOrderId())
+//                .orElseThrow(() -> new EntityNotFoundException("작업지시를 찾을 수 없습니다."));
+//
+//        return WorkerAssignment.builder()
+//                .worker(worker)
+//                .workcenter(workcenter)
+//                .shiftType(shiftType)
+//                .assignmentDate(dto.getAssignmentDate())
+//                .productionOrder(productionOrder)
+//                .build();
+//    }
 }
