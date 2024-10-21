@@ -26,7 +26,7 @@ public interface UnresolvedSaleAndPurchaseVoucherService {
 
     BigDecimal calculateTotalAmount(List<UnresolvedVoucher> vouchers, Function<UnresolvedVoucher, BigDecimal> amount);
 
-    List<UnresolvedVoucher> searchVoucher(Long voucherNumber);
+    List<UnresolvedVoucher> searchVoucher(Long voucherId);
 
     List<UnresolvedSaleAndPurchaseVoucher> ApprovalProcessing(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto);
 
