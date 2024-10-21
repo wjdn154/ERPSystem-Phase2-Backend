@@ -25,6 +25,11 @@ public class UnresolvedSaleAndPurchaseVoucherRepositoryImpl implements Unresolve
     private final JPAQueryFactory queryFactory;
 
 
+    /**
+     *  미결 매출매입 전표 승인기능
+     *  승인대기, 반려, 승인 중 승인상태가 아닌 전표에대한 승인가능 로직
+     */
+
     @Override
     public List<UnresolvedSaleAndPurchaseVoucher> findApprovalTypeVoucher(UnresolvedSaleAndPurchaseVoucherApprovalDTO dto) {
         QUnresolvedSaleAndPurchaseVoucher qUnresolvedVoucher = QUnresolvedSaleAndPurchaseVoucher.unresolvedSaleAndPurchaseVoucher;
@@ -32,11 +37,15 @@ public class UnresolvedSaleAndPurchaseVoucherRepositoryImpl implements Unresolve
         List<UnresolvedSaleAndPurchaseVoucher> results = queryFactory.selectFrom(qUnresolvedVoucher)
                 .where(qUnresolvedVoucher.voucherDate.eq(dto.getSearchDate())
                                 .and(qUnresolvedVoucher.voucherNumber.in(dto.getSearchVoucherNumberList()))
-                        .and(qUnresolvedVoucher.approvalStatus.eq(ApprovalStatus.PENDING)))
+                        .and(qUnresolvedVoucher.approvalStatus.ne(ApprovalStatus.APPROVED)))
                 .fetch();
 
         return results;
     }
+
+    /**
+     * 미결 매출매입 전표 승인 조회기능
+     */
 
     @Override
     public List<UnresolvedSaleAndPurchaseVoucher> ApprovalAllSearch(LocalDate voucherDate) {
@@ -44,7 +53,7 @@ public class UnresolvedSaleAndPurchaseVoucherRepositoryImpl implements Unresolve
 
         List<UnresolvedSaleAndPurchaseVoucher> results = queryFactory.selectFrom(qUnresolvedVoucher)
                 .where(qUnresolvedVoucher.voucherDate.eq(voucherDate)
-                        .and(qUnresolvedVoucher.approvalStatus.ne(ApprovalStatus.APPROVED)))
+                        .and(qUnresolvedVoucher.approvalStatus.eq(ApprovalStatus.PENDING)))
                 .fetch();
         return results;
     }

@@ -360,8 +360,8 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
     }
 
     @Override
-    public List<UnresolvedVoucher> searchVoucher(Long voucherNumber) {
-        return unresolvedSaleAndPurchaseVoucherRepository.findByVoucherNumber(voucherNumber).getUnresolvedVouchers();
+    public List<UnresolvedVoucher> searchVoucher(Long voucherId) {
+        return unresolvedSaleAndPurchaseVoucherRepository.findById(voucherId).get().getUnresolvedVouchers();
     }
 
     @Override
