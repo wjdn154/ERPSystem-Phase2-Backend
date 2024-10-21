@@ -15,6 +15,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.gener
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.QDepartment;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.QEmployee;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
@@ -370,30 +371,31 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
         QClient client = QClient.client;
         QAccountSubject accountSubject = QAccountSubject.accountSubject;
         QEmployee employee = QEmployee.employee;
+        QDepartment department = QDepartment.department;
 
 
         BooleanBuilder whereCondition = new BooleanBuilder();
 
-
-        if(dto.getStartDate() != null && dto.getEndDate() != null) {
-            whereCondition.and(voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate()));
-        }
-
-        if (dto.getVoucherType() != null) {
-            whereCondition.and(voucher.voucherType.eq(dto.getVoucherType()));
-        }
-
-
-        if (dto.getVoucherKind() != null) {
-            whereCondition.and(voucher.voucherKind.eq(dto.getVoucherKind()));
-        }
-
-        if(dto.getStartAccountCode() != null && dto.getEndAccountCode() != null) {
-            whereCondition.and(accountSubject.code.castToNum(Integer.class)
-                    .between(Integer.valueOf(dto.getStartAccountCode()), Integer.valueOf(dto.getEndAccountCode())));
-        }
-
-        whereCondition.and(voucher.voucherNumber.between(dto.getStartVoucherNumber(),dto.getEndVoucherNumber()));
+//
+//        if(dto.getStartDate() != null && dto.getEndDate() != null) {
+//            whereCondition.and(voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate()));
+//        }
+//
+//        if (dto.getVoucherType() != null) {
+//            whereCondition.and(voucher.voucherType.eq(dto.getVoucherType()));
+//        }
+//
+//
+//        if (dto.getVoucherKind() != null) {
+//            whereCondition.and(voucher.voucherKind.eq(dto.getVoucherKind()));
+//        }
+//
+//        if(dto.getStartVoucherNumber() != null && dto.getEndVoucherNumber() != null) {
+//            whereCondition.and(voucher.voucherNumber.between(dto.getStartVoucherNumber(),dto.getEndVoucherNumber()));
+//        }
+//
+//        whereCondition.and(accountSubject.code.castToNum(Integer.class).
+//                between(Integer.parseInt(dto.getStartAccountCode()), Integer.parseInt(dto.getEndAccountCode())));
 
         return queryFactory
                 .select(Projections.constructor(ResolvedVoucherShowDTO.class,
@@ -404,6 +406,7 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                         accountSubject.code,
                         accountSubject.name,
                         employee.lastName.concat(employee.firstName),
+//                        accountSubject.name,
                         client.code,
                         client.printClientName,
                         voucher.transactionDescription,
@@ -412,9 +415,9 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                         voucher.voucherKind
                         ))
                 .from(voucher)
-                .innerJoin(accountSubject).on(voucher.accountSubject.id.eq(accountSubject.id))
-                .innerJoin(client).on(voucher.client.id.eq(client.id))
-                .innerJoin(employee).on(employee.id.eq(voucher.voucherManager.id))
+                .join(accountSubject).on(voucher.accountSubject.id.eq(accountSubject.id))
+                .join(client).on(voucher.client.id.eq(client.id))
+                .join(employee.department,department)
                 .where(whereCondition)
                 .orderBy(voucher.voucherDate.asc(),voucher.voucherNumber.asc())
                 .fetch();
@@ -426,30 +429,6 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
         QAccountSubject accountSubject = QAccountSubject.accountSubject;
         QResolvedVoucher resolvedVoucher = QResolvedVoucher.resolvedVoucher;
         QStructure structure = QStructure.structure;
-
-//        return queryFactory
-//                .select(Projections.constructor(FinancialStatementsLedgerDTO.class,
-//                        Expressions.constant(BigDecimal.ZERO),
-//                        resolvedVoucher.debitAmount.sum(),
-//                        Expressions.constant(BigDecimal.ZERO),
-//                        resolvedVoucher.creditAmount.sum(),
-//                        structure.code,
-//                        structure.min,
-//                        standardFinancialStatement.id,
-//                        structure.mediumCategory,
-//                        structure.smallCategory,
-//                        standardFinancialStatement.name,
-//                        standardFinancialStatement.code
-//                        ))
-//                .from(standardFinancialStatement)
-//                .leftJoin(accountSubject).on(accountSubject.standardFinancialStatementCode.eq(standardFinancialStatement.code))
-//                .leftJoin(resolvedVoucher).on(resolvedVoucher.accountSubject.id.eq(accountSubject.id))
-//                .leftJoin(structure).on(structure.id.eq(accountSubject.structure.id).and(structure.id.eq(standardFinancialStatement.structure.id)))
-//                .where(structure.financialStatementType.eq(FinancialStatementType.STANDARD_FINANCIAL_STATEMENT)
-//                        .and(resolvedVoucher.voucherDate.month().eq(dto.getSearchDate().getMonthValue())))
-//                .groupBy(standardFinancialStatement.id,standardFinancialStatement.code)
-//                .orderBy(standardFinancialStatement.id.asc())
-//                .fetch();
 
         return queryFactory
                 .select(Projections.constructor(FinancialStatementsLedgerDTO.class,

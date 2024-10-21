@@ -28,7 +28,7 @@ public class FinancialStatementsLedgerShowDTO {
             totalDebitBalance = node.getTotalDebitAmount().subtract(node.getTotalCreditAmount());
         }
         else if(node.getTotalDebitAmount().subtract(node.getTotalCreditAmount()).compareTo(BigDecimal.ZERO) < 0) {
-            totalCreditBalance = node.getTotalCreditAmount().subtract(node.getTotalDebitAmount());
+            totalCreditBalance = node.getTotalDebitAmount().subtract(node.getTotalCreditAmount());
         }
 
         return new FinancialStatementsLedgerShowDTO(
