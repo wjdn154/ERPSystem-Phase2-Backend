@@ -12,9 +12,9 @@ public interface WorkerAssignmentService {
 
     List<WorkerAssignmentDTO> getWorkersByWorkcenterCode(String workcenterCode);
 
-    WorkerAssignmentSummaryDTO getWorkerAssignmentsByDate(LocalDate date, boolean includeShiftType, Long shiftTypeId);
+    List<WorkerAssignmentDTO> getWorkerAssignmentsByDate(LocalDate date, boolean includeShiftType, Long shiftTypeId);
     List<WorkerAssignmentDTO> getWorkerAssignmentsByDateRange(LocalDate startOfMonth, LocalDate endOfMonth);
-    WorkerAssignmentSummaryDTO getTodayWorkerAssignments(LocalDate today, boolean includeShiftType, Long shiftTypeId);
+    List<WorkerAssignmentDTO> getTodayWorkerAssignments(LocalDate today, boolean includeShiftType, Long shiftTypeId);
     WorkerAssignmentSummaryDTO getTodayWorkerAssignmentsSummary(LocalDate currentDate, boolean includeShiftType, Long shiftTypeId);
 
 

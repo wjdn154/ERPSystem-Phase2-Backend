@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface WorkerAssignmentRepository extends JpaRepository<WorkerAssignment, Long>, WorkerAssignmentRepositoryCustom {
-    List<WorkerAssignment> findByAssignmentDate(LocalDate currentDate);
+//    List<WorkerAssignment> findByAssignmentDate(LocalDate currentDate);
 
     List<WorkerAssignment> findByAssignmentDateBetween(LocalDate startOfMonth, LocalDate endOfMonth);
 

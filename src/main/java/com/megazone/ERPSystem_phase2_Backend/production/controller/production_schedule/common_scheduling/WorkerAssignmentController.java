@@ -41,7 +41,7 @@ public class WorkerAssignmentController {
 
     // 일별 모든 작업장의 작업자 배정 이력 조회
     @PostMapping("/daily")
-    public WorkerAssignmentSummaryDTO getDailyWorkerAssignments(
+    public List<WorkerAssignmentDTO> getDailyWorkerAssignments(
             @RequestParam(value = "date") LocalDate date,
             @RequestParam(value = "includeShiftType", required = false, defaultValue = "false") boolean includeShiftType,
             @RequestParam(value = "shiftTypeId", required = false) Long shiftTypeId) {
@@ -58,12 +58,18 @@ public class WorkerAssignmentController {
     }
 
 
-//    // 오늘의 모든 작업장의 작업자 배정 조회. 단, 공장별로 구분해서 교대유형 구분없이 전체 조회하되, 교대유형 구분 옵션 또한 필요
+    // 오늘의 모든 작업장의 작업자 배정 조회. 단, 공장별로 구분해서 교대유형 구분없이 전체 조회하되, 교대유형 구분 옵션 또한 필요
 //    @PostMapping("/today")
 //    public List<WorkerAssignmentSummaryDTO> getTodayWorkerAssignments(
 //            @RequestParam(required = false, defaultValue = "false") boolean includeShiftType,
 //            @RequestParam(required = false) Long shiftTypeId) {
 //        LocalDate today = LocalDate.now();
+//
+//        // includeShiftType이 false인 경우 shiftTypeId는 무시하도록 처리
+//        if (!includeShiftType) {
+//            shiftTypeId = null; // shiftTypeId를 사용하지 않도록 설정
+//        }
+//
 //        return workerAssignmentService.getTodayWorkerAssignments(today, includeShiftType, shiftTypeId);
 //    }
 
@@ -73,7 +79,7 @@ public class WorkerAssignmentController {
     public WorkerAssignmentSummaryDTO getTodayWorkerAssignmentsSummary(
             @RequestParam(value = "includeShiftType", required = false, defaultValue = "false") boolean includeShiftType,
             @RequestParam(value = "shiftType", required = false) Long shiftTypeId) {
-        LocalDate today = LocalDate.now(ZoneId.of("UTC")); // 서버와 DB의 타임존 일치
+        LocalDate today = LocalDate.now(); // 서버의 로컬 타임존 기준으로 오늘 날짜 반환
         return workerAssignmentService.getTodayWorkerAssignmentsSummary(today, includeShiftType, shiftTypeId);
     }
 
