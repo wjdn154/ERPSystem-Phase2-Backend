@@ -19,7 +19,7 @@ public interface ResolvedSaleAndPurchaseVoucherService {
 
     void resolvedVoucherEntry(List<UnresolvedSaleAndPurchaseVoucher> unresolvedVoucherList);
 
-    List<ResolvedVoucher> searchEntryVoucher(Long voucherNumber);
+    List<ResolvedVoucher> searchEntryVoucher(Long voucherId);
 
     BigDecimal calculateTotalAmount(List<ResolvedVoucher> vouchers, Function<ResolvedVoucher, BigDecimal> amount);
 
