@@ -59,8 +59,8 @@ public class ResolvedSaleAndPurchaseVoucherServiceImpl implements ResolvedSaleAn
     }
 
     @Override
-    public List<ResolvedVoucher> searchEntryVoucher(Long voucherNumber) {
-        return resolvedSaleAndPurchaseVoucherRepository.findByVoucherNumber(voucherNumber).getResolvedVouchers();
+    public List<ResolvedVoucher> searchEntryVoucher(Long voucherId) {
+        return resolvedSaleAndPurchaseVoucherRepository.findById(voucherId).get().getResolvedVouchers();
     }
 
     @Override
