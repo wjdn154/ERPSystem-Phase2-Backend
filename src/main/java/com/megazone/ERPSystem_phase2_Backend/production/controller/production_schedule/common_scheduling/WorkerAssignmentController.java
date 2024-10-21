@@ -63,8 +63,10 @@ public class WorkerAssignmentController {
             @RequestParam(value = "startDate") LocalDate startDate,
             @RequestParam(value = "endDate") LocalDate endDate,
             @RequestParam(value = "includeShiftType", required = false, defaultValue = "false") boolean includeShiftType,
-            @RequestParam(value = "shiftTypeId", required = false) Long shiftTypeId) {
-        return workerAssignmentService.getWorkerAssignmentsByDates(startDate, endDate, includeShiftType, shiftTypeId);
+            @RequestParam(value = "shiftTypeId", required = false) Long shiftTypeId,
+            @RequestParam(value = "factoryCode", required = false) String factoryCode,
+            @RequestParam(value = "workcenterCode", required = false) String workcenterCode) {
+        return workerAssignmentService.getWorkerAssignmentsByDates(startDate, endDate, includeShiftType, shiftTypeId, factoryCode, workcenterCode);
     }
 
 

@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.common_scheduling.WorkerAssignment;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionOrder;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentCountDTO;
@@ -186,7 +187,7 @@ public class WorkerAssignmentServiceImpl implements WorkerAssignmentService {
     }
 
     @Override
-    public List<WorkerAssignmentDTO> getWorkerAssignmentsByDates(LocalDate startDate, LocalDate endDate, boolean includeShiftType, Long shiftTypeId) {
+    public List<WorkerAssignmentDTO> getWorkerAssignmentsByDates(LocalDate startDate, LocalDate endDate, boolean includeShiftType, Long shiftTypeId, String factoryCode, String workcenterCode) {
         List<WorkerAssignment> assignments;
 
         if (includeShiftType && shiftTypeId != null) {
@@ -195,6 +196,16 @@ public class WorkerAssignmentServiceImpl implements WorkerAssignmentService {
             assignments = workerAssignmentRepository.findByAssignmentDateBetween(startDate, endDate);
         }
 
+        if (factoryCode != null && !factoryCode.isEmpty()) {
+            assignments = assignments.stream()
+                    .filter(a -> factoryCode.equals(a.getWorkcenter().getFactory().getCode()))
+                    .collect(Collectors.toList());
+        }
+        if (workcenterCode != null && !workcenterCode.isEmpty()) {
+            assignments = assignments.stream()
+                    .filter(a -> workcenterCode.equals(a.getWorkcenter().getCode()))
+                    .collect(Collectors.toList());
+        }
         return assignments.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
@@ -217,6 +228,7 @@ public class WorkerAssignmentServiceImpl implements WorkerAssignmentService {
                 .productionOrderName(Optional.ofNullable(assignment.getProductionOrder())
                         .map(ProductionOrder::getName)
                         .orElse("N/A")) // productionOrder가 null일 때 "N/A"
+                .factoryCode(Optional.ofNullable(assignment.getWorkcenter().getFactory().getCode()).orElse("N/A"))
                 .build();
     }
 
