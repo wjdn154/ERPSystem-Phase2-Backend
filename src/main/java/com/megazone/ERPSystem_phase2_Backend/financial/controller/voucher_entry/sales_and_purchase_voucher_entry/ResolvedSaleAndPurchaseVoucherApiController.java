@@ -55,7 +55,7 @@ public class ResolvedSaleAndPurchaseVoucherApiController {
      * @param voucherId
      * @return
      */
-    @PostMapping("/api/financial/sale-end-purchase-resolved-voucher/show/entryShow")
+    @PostMapping("/api/financial/sale-and-purchase-resolved-voucher/show/entryShow")
     public ResponseEntity<Object> showOne(@RequestBody Map<String, Long> voucherId) {
         try {
             Long searchId = voucherId.get("voucherId");
