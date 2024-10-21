@@ -71,8 +71,8 @@ public class WorkerAssignmentController {
     // 작업장별 오늘의 배정인원 상세명단과 인원수 조회
     @PostMapping("/today/summary")
     public WorkerAssignmentSummaryDTO getTodayWorkerAssignmentsSummary(
-            @RequestParam(value = "includeShiftType") boolean includeShiftType,
-            @RequestParam(value = "shiftType") Long shiftTypeId) {
+            @RequestParam(value = "includeShiftType", required = false, defaultValue = "false") boolean includeShiftType,
+            @RequestParam(value = "shiftType", required = false) Long shiftTypeId) {
         LocalDate today = LocalDate.now(ZoneId.of("UTC")); // 서버와 DB의 타임존 일치
         return workerAssignmentService.getTodayWorkerAssignmentsSummary(today, includeShiftType, shiftTypeId);
     }
