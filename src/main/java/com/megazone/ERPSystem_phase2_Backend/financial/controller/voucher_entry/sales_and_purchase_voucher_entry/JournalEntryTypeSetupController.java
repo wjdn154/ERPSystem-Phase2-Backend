@@ -36,10 +36,10 @@ public class JournalEntryTypeSetupController {
     }
 
     @PostMapping("/api/financial/journal_entry_type_setup/update")
-    public ResponseEntity<String> updateEntrySetup(@RequestBody List<JournalEntryTypeSetupUpdateDTO> dto) {
+    public ResponseEntity<Object> updateEntrySetup(@RequestBody List<JournalEntryTypeSetupUpdateDTO> dto) {
         try {
-            String message = journalEntryTypeSetupService.updateEntryTypeSetup(dto);
-            return ResponseEntity.status(HttpStatus.OK).body(message);
+            List<JournalEntryTypeSetupShowDTO> updateResult = journalEntryTypeSetupService.updateEntryTypeSetup(dto);
+            return ResponseEntity.status(HttpStatus.OK).body(updateResult);
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
