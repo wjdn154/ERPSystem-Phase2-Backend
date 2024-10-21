@@ -7,10 +7,13 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.w
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceListDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkDailyReport;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.enums.WorkStatus;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.production_order.ProductionOrderRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.work_performance.work_report.WorkDailyReportRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.work_performance.work_report.WorkPerformanceRepository;
 
+import com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.common_scheduling.ProductionOrder.ProductionOrderService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +31,8 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
     private final ProductionOrderRepository productionOrderRepository;
     private final WorkDailyReportRepository workDailyReportRepository;
     private final ProductRepository productRepository;
+
+    private final ProductionOrderService productionOrderService;
 
     //모든 작업 실적 리스트 조회
     @Override
@@ -169,5 +174,34 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
         return workPerformance;
 
 
+    }
+
+    /**
+     * WorkPerformance 상태 변경 및 작업 지시 마감 여부 업데이트
+     */
+    public void changeWorkStatus(Long workPerformanceId, WorkStatus newStatus) {
+        // WorkPerformance 조회
+        WorkPerformance workPerformance = workPerformanceRepository.findById(workPerformanceId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 작업 실적을 찾을 수 없습니다."));
+
+        // 상태가 동일한 경우 업데이트 생략
+        if (workPerformance.getWorkStatus() == newStatus) {
+            throw new IllegalStateException("이미 동일한 상태로 설정되어 있습니다.");
+        }
+
+        // WorkPerformance 상태 변경
+        workPerformance.setWorkStatus(newStatus);
+        workPerformanceRepository.save(workPerformance);
+
+        // WorkPerformance와 연관된 ProductionOrder ID 조회 후 마감 여부 업데이트
+        Long productionOrderId = getProductionOrderIdByWorkPerformance(workPerformanceId);
+        productionOrderService.updateOrderClosure(productionOrderId);
+    }
+
+    /**
+     * WorkPerformance와 연관된 ProductionOrder ID 조회
+     */
+    private Long getProductionOrderIdByWorkPerformance(Long workPerformanceId) {
+        return workPerformanceRepository.findProductionOrderIdByWorkPerformanceId(workPerformanceId);
     }
 }

@@ -39,16 +39,16 @@ public class PlanOfMakeToOrder {
     @Column(nullable = false)
     private LocalDate endDate; // 종료 날짜
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "production_request_id", nullable = false)
-    private ProductionRequest productionRequest; // 생산의뢰와 연관
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "production_request_id", nullable = false)
+//    private ProductionRequest productionRequest; // 생산의뢰와 연관
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "mps_id", nullable = false)
+//    private Mps mps; // MPS와 연관 관계 추가
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mps_id", nullable = false)
-    private Mps mps; // MPS와 연관 관계 추가
-
-    @OneToMany(mappedBy = "planOfMakeToOrder")
-    private List<ProductionOrder> productionOrders; // 작업지시 목록
+//    @OneToMany(mappedBy = "planOfMakeToOrder")
+//    private List<ProductionOrder> productionOrders; // 작업지시 목록
 
     @Column(nullable = true)
     private String remarks; // 추가 설명

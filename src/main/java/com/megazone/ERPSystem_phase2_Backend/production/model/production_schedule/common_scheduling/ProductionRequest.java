@@ -7,6 +7,7 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registratio
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.Orders;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.enums.ProductionRequestType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.enums.ProgressType;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.planning.Mps;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.production_strategy.PlanOfMakeToOrder;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "common_scheduling_production_requests")
@@ -67,7 +69,8 @@ public class ProductionRequest {
     private BigDecimal confirmedQuantity; // TODO 확정수량 ( = Capacity에 따른 Return to Forecast 반영 )
 
     @OneToMany(mappedBy = "productionRequest")
-    private List<PlanOfMakeToOrder> planOfMakeToOrders; // TODO 연관 주문생산계획 : 계획 등록 시 생산의뢰에 자동으로 반영됨. 생산계획부서
+    private List<Mps> MpsList;
+//    private List<PlanOfMakeToOrder> planOfMakeToOrders; // 연관 주문생산계획 : 계획 등록 시 생산의뢰에 자동으로 반영됨. 생산계획부서
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)

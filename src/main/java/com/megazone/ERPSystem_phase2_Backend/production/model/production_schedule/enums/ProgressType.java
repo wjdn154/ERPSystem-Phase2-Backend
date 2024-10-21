@@ -2,6 +2,14 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.production_schedu
 
 /**
  * 생산의뢰 또는 생산계획의 진행상태를 나타내는 Enum
+ *
+ * 생산 의뢰(ProductionRequest) 생성 시 → ProgressType.CREATED 상태로 자동 설정.
+ * 생산 의뢰(ProductionRequest) 확정(isConfirmed = true && confirmedQuantity 입력) 시 → ProgressType.NOT_STARTED 상태로 전환 및 MPS 생성.
+ * MPS(주생산계획)를 통해 작업지시(ProductionOrder) 생성 시 → ProgressType.IN_PROGRESS로 자동 전환.
+ * 생산 계획이 완료되면 → ProgressType.COMPLETED 로 자동 전환.
+ * 생산 계획이 기한 내 완료되지 않으면 → ProgressType.INCOMPLETE 으로 자동 전환.
+ * 작업(WorkPerformance의 WorkStatus가 ON_HOLD, FAILED, CANCELLED) 중단 시 → ProgressType.HALTED 로 자동 전환.
+
  */
 public enum ProgressType {
 

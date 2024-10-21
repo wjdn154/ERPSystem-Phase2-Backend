@@ -22,16 +22,16 @@ public class ProductionOrderController {
     private final ProductionOrderRepository productionOrderRepository;
 
     /**
-     * 작업 지시 생성
+     * 작업 지시 저장
      *
      * @param productionOrderDTO 작업 지시 정보
      * @return 생성된 작업 지시 정보
      */
 
-    @PostMapping("/create")
-    public ResponseEntity<ProductionOrderDTO> createProductionOrder(@RequestBody ProductionOrderDTO productionOrderDTO) {
-        ProductionOrderDTO createdProductionOrder = productionOrderService.createProductionOrder(productionOrderDTO);
-        return ResponseEntity.ok(createdProductionOrder);
+    @PostMapping("/save")
+    public ResponseEntity<ProductionOrderDTO> saveProductionOrder(@RequestBody ProductionOrderDTO productionOrderDTO) {
+        ProductionOrderDTO savedProductionOrder = productionOrderService.saveProductionOrder(productionOrderDTO);
+        return ResponseEntity.ok(savedProductionOrder);
     }
 
     /**
@@ -58,6 +58,16 @@ public class ProductionOrderController {
 //            log.error("서버 오류 발생: ", e);  // 서버 로그에 구체적인 오류 정보 기록
 //            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.");
         }
+    }
+
+    /**
+     * 작업 지시 마감 여부 업데이트
+     * - WorkPerformance 상태 변경에 따른 작업 지시 마감 처리
+     */
+    @PostMapping("/{orderId}/closure")
+    public ResponseEntity<Void> updateOrderClosure(@PathVariable Long orderId) {
+        productionOrderService.updateOrderClosure(orderId);
+        return ResponseEntity.ok().build();
     }
 
 

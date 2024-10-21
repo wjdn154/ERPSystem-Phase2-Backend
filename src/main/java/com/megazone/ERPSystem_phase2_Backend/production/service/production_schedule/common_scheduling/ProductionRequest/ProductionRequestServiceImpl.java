@@ -11,8 +11,10 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.Or
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.ProductionRequestDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionRequest;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.enums.ProgressType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.production_strategy.PlanOfMakeToOrder;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.production_request.ProductionRequestsRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.planning.mps.MpsService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,8 @@ public class ProductionRequestServiceImpl implements ProductionRequestService {
     private final ProductRepository productRepository;
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
+
+    private final MpsService mpsService;
 //    private final OrdersRepository ordersRepository;
 
     @Override
@@ -43,6 +47,9 @@ public class ProductionRequestServiceImpl implements ProductionRequestService {
         }
 
         ProductionRequest entity = convertToEntity(dto);
+        // 생성 시 자동으로 '작성' 상태 설정
+        entity.setProgressType(ProgressType.CREATED);
+
         ProductionRequest savedEntity = productionRequestsRepository.save(entity);
         return convertToDTO(savedEntity);
     }
@@ -172,16 +179,61 @@ public class ProductionRequestServiceImpl implements ProductionRequestService {
     }
 
     /**
-     * 생산 요청 승인
+     * 생산 요청 승인 및 MPS 자동 생성
      */
-    public ProductionRequestDTO approveProductionRequest(Long id) {
-        ProductionRequest entity = productionRequestsRepository.findById(id)
+    public ProductionRequestDTO confirmProductionRequest(Long id, BigDecimal confirmedQuantity) {
+        ProductionRequest request = productionRequestsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("생산 요청을 찾을 수 없습니다."));
-        entity.setIsConfirmed(true);
-        ProductionRequest updatedEntity = productionRequestsRepository.save(entity);
-        return convertToDTO(updatedEntity);
+
+        // 1. 이미 확정된 경우 처리
+        if (request.getIsConfirmed()) {
+            throw new IllegalStateException("이미 확정된 생산 요청입니다.");
+        }
+
+        // 2. 납기일과 완료 요청일 검증
+        if (request.getDeadlineOfCompletion() != null &&
+                request.getDueDateToProvide() != null &&
+                request.getDueDateToProvide().isBefore(request.getDeadlineOfCompletion())) {
+            throw new IllegalArgumentException("납기일이 완료 요청일자보다 빠를 수 없습니다.");
+        }
+
+        if (confirmedQuantity.compareTo(request.getRequestQuantity()) > 0) {
+            throw new IllegalArgumentException("확정 수량이 요청 수량을 초과할 수 없습니다.");
+        }
+
+        // 확정 후 상태 변경 및 MPS 생성
+        request.setConfirmedQuantity(confirmedQuantity);
+        request.setIsConfirmed(true);
+        request.setProgressType(ProgressType.NOT_STARTED);
+
+        // MPS 자동 생성
+//        mpsService.createMps(request); TODO
+
+        ProductionRequest updatedRequest = productionRequestsRepository.save(request);
+        return convertToDTO(updatedRequest);
     }
 
+    /**
+     * MPS 진행에 따른 상태 변경
+     */
+    public void updateProgressToInProgress(Long productionRequestId) {
+        ProductionRequest request = productionRequestsRepository.findById(productionRequestId)
+                .orElseThrow(() -> new EntityNotFoundException("생산 요청을 찾을 수 없습니다."));
+
+        request.setProgressType(ProgressType.IN_PROGRESS);
+        productionRequestsRepository.save(request);
+    }
+
+    /**
+     * 생산 의뢰 상태 업데이트 (ProgressType에 따라)
+     */
+    public void updateProgress(Long requestId, ProgressType progressType) {
+        ProductionRequest request = productionRequestsRepository.findById(requestId)
+                .orElseThrow(() -> new EntityNotFoundException("생산 요청을 찾을 수 없습니다."));
+
+        request.setProgressType(progressType);
+        productionRequestsRepository.save(request);
+    }
 
     // DTO와 엔티티 변환 메서드
     private ProductionRequest convertToEntity(ProductionRequestDTO dto) {
@@ -227,8 +279,6 @@ public class ProductionRequestServiceImpl implements ProductionRequestService {
                 .productId(entity.getProduct().getId() != null ? entity.getProduct().getId() : null)
                 .salesOrderId(entity.getSalesOrder().getId() != null ? entity.getSalesOrder().getId() : null)
                 .requesterId(entity.getRequester().getId() != null ? entity.getRequester().getId() : null)
-                .planOfMakeToOrderIds(entity.getPlanOfMakeToOrders() != null ?
-                        entity.getPlanOfMakeToOrders().stream().map(PlanOfMakeToOrder::getId).toList() : null)
                 .build();
     }
 }
