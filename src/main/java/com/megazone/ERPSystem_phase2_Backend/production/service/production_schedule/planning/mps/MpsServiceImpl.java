@@ -36,6 +36,12 @@ public class MpsServiceImpl implements MpsService {
 //    private final CrpService crpService;
     private final ProductionOrderService productionOrderService;
 
+
+    /**
+     * 자동생성
+     * @param mpsDto
+     * @return
+     */
     public Mps createMps(MpsDTO mpsDto) {
         // 1. 연관된 ProductionRequest 조회
         ProductionRequest productionRequest = productionRequestsRepository.findById(mpsDto.getProductionRequestId())
@@ -47,7 +53,7 @@ public class MpsServiceImpl implements MpsService {
 
         // 3. MPS 엔티티 생성
         Mps mps = Mps.builder()
-                .name(mpsDto.getName())
+                .name("MPS - " + productionRequest.getName())
                 .productionRequest(productionRequest)
                 .product(product)
                 .quantity(mpsDto.getQuantity())

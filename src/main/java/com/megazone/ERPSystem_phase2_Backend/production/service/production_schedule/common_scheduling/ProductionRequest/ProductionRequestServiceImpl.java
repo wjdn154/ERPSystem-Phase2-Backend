@@ -46,12 +46,16 @@ public class ProductionRequestServiceImpl implements ProductionRequestService {
             throw new IllegalArgumentException("동일한 생산요청이 이미 존재합니다.");
         }
 
-        ProductionRequest entity = convertToEntity(dto);
-        // 생성 시 자동으로 '작성' 상태 설정
-        entity.setProgressType(ProgressType.CREATED);
+        ProductionRequest request = convertToEntity(dto);
+        // ProgressType 기본값 설정
+        if (dto.getProgressType() == null) {
+            request.setProgressType(ProgressType.CREATED);  // 기본 상태 설정
+        } else {
+            request.setProgressType(dto.getProgressType());
+        }
 
-        ProductionRequest savedEntity = productionRequestsRepository.save(entity);
-        return convertToDTO(savedEntity);
+        ProductionRequest savedRequest = productionRequestsRepository.save(request);
+        return convertToDTO(savedRequest);
     }
 
     // 중복방지 검증
@@ -207,7 +211,7 @@ public class ProductionRequestServiceImpl implements ProductionRequestService {
         request.setProgressType(ProgressType.NOT_STARTED);
 
         // MPS 자동 생성
-//        mpsService.createMps(request); TODO
+//        mpsService.createMps(request);
 
         ProductionRequest updatedRequest = productionRequestsRepository.save(request);
         return convertToDTO(updatedRequest);
@@ -247,6 +251,8 @@ public class ProductionRequestServiceImpl implements ProductionRequestService {
 
         return ProductionRequest.builder()
                 .id(dto.getId())
+                .progressType(dto.getProgressType())
+                .requestType(dto.getRequestType())
                 .name(dto.getName())
                 .isConfirmed(dto.getIsConfirmed())
                 .requestDate(dto.getRequestDate())
@@ -266,6 +272,8 @@ public class ProductionRequestServiceImpl implements ProductionRequestService {
     private ProductionRequestDTO convertToDTO(ProductionRequest entity) {
         return ProductionRequestDTO.builder()
                 .id(entity.getId())
+                .progressType(entity.getProgressType())
+                .requestType(entity.getRequestType())
                 .name(entity.getName())
                 .isConfirmed(entity.getIsConfirmed())
                 .requestDate(entity.getRequestDate())
