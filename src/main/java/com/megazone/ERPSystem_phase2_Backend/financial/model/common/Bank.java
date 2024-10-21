@@ -20,9 +20,6 @@ public class Bank {
     @Column(nullable = false)
     private String name; // 은행명
 
-    @OneToOne(mappedBy = "bank", fetch = FetchType.LAZY, cascade = CascadeType.ALL , orphanRemoval = true)
-    private BankAccount bankAccount;
-
     private String branchName; // 은행 지점명
 
     private String businessNumber; // 사업자등록번호
