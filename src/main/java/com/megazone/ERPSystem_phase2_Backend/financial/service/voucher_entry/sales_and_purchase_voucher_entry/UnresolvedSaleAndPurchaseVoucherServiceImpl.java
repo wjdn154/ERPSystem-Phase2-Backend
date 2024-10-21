@@ -405,9 +405,9 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
 
         List<UnresolvedSaleAndPurchaseVoucher> vouchers = unresolvedSaleAndPurchaseVoucherRepository.ApprovalAllSearch(date);
 
-        if(vouchers.isEmpty()) {
-            throw new NoSuchElementException("해당 날짜에 등록된 미결전표가 없습니다.");
-        }
+//        if(vouchers.isEmpty()) {
+//            throw new NoSuchElementException("해당 날짜에 등록된 미결전표가 없습니다.");
+//        }
 
         List<UnresolvedSaleAndPurchaseVoucherShowDTO> showDTOS = vouchers.stream().map(
                 UnresolvedSaleAndPurchaseVoucherShowDTO::create).toList();
