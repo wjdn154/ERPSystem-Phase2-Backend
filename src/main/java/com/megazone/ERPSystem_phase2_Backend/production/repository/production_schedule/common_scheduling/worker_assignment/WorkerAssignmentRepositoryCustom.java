@@ -71,5 +71,6 @@ public interface WorkerAssignmentRepositoryCustom {
      * @return 작업자 배정(Optional로 감싸서 반환)
      */
 
+    List<WorkerAssignment> findByAssignmentDate(LocalDate currentDate);
 
 }
