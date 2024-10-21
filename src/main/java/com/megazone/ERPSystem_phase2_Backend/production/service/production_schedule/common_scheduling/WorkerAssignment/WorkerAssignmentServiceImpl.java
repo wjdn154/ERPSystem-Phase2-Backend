@@ -185,6 +185,19 @@ public class WorkerAssignmentServiceImpl implements WorkerAssignmentService {
         return assignmentDTOs;
     }
 
+    @Override
+    public List<WorkerAssignmentDTO> getWorkerAssignmentsByDates(LocalDate startDate, LocalDate endDate, boolean includeShiftType, Long shiftTypeId) {
+        List<WorkerAssignment> assignments;
+
+        if (includeShiftType && shiftTypeId != null) {
+            assignments = workerAssignmentRepository.findByAssignmentDateBetweenAndShiftTypeId(startDate, endDate, shiftTypeId);
+        } else {
+            assignments = workerAssignmentRepository.findByAssignmentDateBetween(startDate, endDate);
+        }
+
+        return assignments.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
     // DTO 변환 메서드 (WorkerAssignment -> WorkerAssignmentDTO)
     private WorkerAssignmentDTO convertToDTO(WorkerAssignment assignment) {
         return WorkerAssignmentDTO.builder()

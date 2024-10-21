@@ -25,4 +25,6 @@ public interface WorkerAssignmentService {
 
     List<WorkerAssignmentDTO> getWorkerAssignmentsByWorker(Long workerId, boolean includeShiftType, Long shiftTypeId);
 
+    List<WorkerAssignmentDTO> getWorkerAssignmentsByDates(LocalDate startDate, LocalDate endDate, boolean includeShiftType, Long shiftTypeId);
+
 }

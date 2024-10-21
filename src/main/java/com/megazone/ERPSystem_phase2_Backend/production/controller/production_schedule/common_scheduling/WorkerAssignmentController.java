@@ -57,6 +57,16 @@ public class WorkerAssignmentController {
         return workerAssignmentService.getWorkerAssignmentsByDateRange(startOfMonth, endOfMonth);
     }
 
+    // 기간 조회
+    @PostMapping("/dates")
+    public List<WorkerAssignmentDTO> getWorkerAssignmentsByDates(
+            @RequestParam(value = "startDate") LocalDate startDate,
+            @RequestParam(value = "endDate") LocalDate endDate,
+            @RequestParam(value = "includeShiftType", required = false, defaultValue = "false") boolean includeShiftType,
+            @RequestParam(value = "shiftTypeId", required = false) Long shiftTypeId) {
+        return workerAssignmentService.getWorkerAssignmentsByDates(startDate, endDate, includeShiftType, shiftTypeId);
+    }
+
 
     // 오늘의 모든 작업장의 작업자 배정 조회. 단, 공장별로 구분해서 교대유형 구분없이 전체 조회하되, 교대유형 구분 옵션 또한 필요
 //    @PostMapping("/today")

@@ -9,9 +9,7 @@ import java.util.Optional;
 
 public interface WorkerAssignmentRepository extends JpaRepository<WorkerAssignment, Long>, WorkerAssignmentRepositoryCustom {
 //    List<WorkerAssignment> findByAssignmentDate(LocalDate currentDate);
-
-    List<WorkerAssignment> findByAssignmentDateBetween(LocalDate startOfMonth, LocalDate endOfMonth);
-
+//    List<WorkerAssignment> findByAssignmentDateBetween(LocalDate startOfMonth, LocalDate endOfMonth);
 
     Optional<WorkerAssignment> findByWorkerIdAndAssignmentDate(Long workerId, LocalDate assignmentDate);
     List<WorkerAssignment> findByAssignmentDateAndShiftTypeId(LocalDate currentDate, Long shiftTypeId);
@@ -23,4 +21,9 @@ public interface WorkerAssignmentRepository extends JpaRepository<WorkerAssignme
     List<WorkerAssignment> findByWorkerIdAndShiftTypeId(Long workerId, Long shiftTypeId);
 
     List<WorkerAssignment> findByWorkerId(Long workerId);
+
+    List<WorkerAssignment> findByAssignmentDateBetween(LocalDate startDate, LocalDate endDate);
+
+    List<WorkerAssignment> findByAssignmentDateBetweenAndShiftTypeId(LocalDate startDate, LocalDate endDate, Long shiftTypeId);
+    List<WorkerAssignment> findByShiftTypeId(Long shiftTypeId);
 }
