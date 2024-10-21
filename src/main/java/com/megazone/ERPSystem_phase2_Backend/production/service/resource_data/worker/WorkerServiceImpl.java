@@ -101,7 +101,7 @@ public class WorkerServiceImpl implements WorkerService {
                 .map(attendance -> new WorkerAttendanceDTO(
                         attendance.getAttendanceCode(),
                         attendance.getDate().toString(),
-                        attendance.getCheckTime().toString(),
+                        attendance.getCheckinTime().toString(),
                         attendance.getCheckoutTime().toString(),
                         attendance.getStatus().toString()
                 ))

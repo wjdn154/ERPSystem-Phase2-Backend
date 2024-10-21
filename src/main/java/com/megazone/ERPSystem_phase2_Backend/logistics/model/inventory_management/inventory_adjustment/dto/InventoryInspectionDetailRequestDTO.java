@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InventoryInspectionDetailRequestDTO {
-    private Long id;  // 품목 ID (재고 식별자 또는 품목 식별자)
+    private Long productId;  // 품목 ID
     private Long inventoryId;
     private Long warehouseLocationId; // 품목이 저장된 창고 위치 ID 추가
     private String productCode;  // 품목 코드

@@ -3,13 +3,13 @@ package com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.dto
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Attendance;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.enums.AttendanceStatus;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.JobTitle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -21,19 +21,19 @@ public class AttendanceShowDTO {
     private String titleName;
     private String attendanceCode;
     private LocalDate date;
-    private Time checkInTime;
-    private Time checkOutTime;
+    private LocalDateTime checkInTime;
+    private LocalDateTime checkOutTime;
     private AttendanceStatus status;
 
     public static AttendanceShowDTO create(Attendance attendance) {
           return new AttendanceShowDTO(
               attendance.getId(),
               attendance.getEmployee().getEmployeeNumber(),
-              attendance.getEmployee().getFirstName()+ attendance.getEmployee().getLastName(),
+              attendance.getEmployee().getLastName()+ attendance.getEmployee().getFirstName(),
               attendance.getEmployee().getJobTitle().getTitleName(),
               attendance.getAttendanceCode(),
               attendance.getDate(),
-              attendance.getCheckTime(),
+              attendance.getCheckinTime(),
               attendance.getCheckoutTime(),
               attendance.getStatus()
           );

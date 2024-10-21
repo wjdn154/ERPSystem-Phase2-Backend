@@ -61,4 +61,27 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                 .where(inventory.inventoryNumber.eq(inventoryNumber))
                 .fetchFirst() != null;
     }
+
+    @Override
+    public List<InventoryResponseDTO> findInventoriesByWarehouseId(Long warehouseId) {
+        return queryFactory.select(Projections.constructor(InventoryResponseDTO.class,
+                        inventory.id,
+                        inventory.inventoryNumber,
+                        product.id,
+                        product.code,
+                        product.name,
+                        inventory.product.standard,
+                        inventory.product.unit,
+                        inventory.quantity,
+                        warehouse.name,
+                        warehouseLocation.id,
+                        warehouseLocation.locationName))
+                .from(inventory)
+                .join(inventory.product, product)
+                .join(inventory.warehouse, warehouse)
+                .join(inventory.warehouseLocation, warehouseLocation)
+                .where(warehouse.id.eq(warehouseId))
+                .fetch();
+    }
+
 }
