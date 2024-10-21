@@ -1,9 +1,11 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Employee;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Bank;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.ResolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.repository.common.BankRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.resolvedVoucher.ResolvedVoucherRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.*;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.*;
@@ -40,6 +42,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeBankAccountRepository bankAccountRepository;
     private final CompanyRepository companyRepository;
     private final AttendanceRepository attendanceRepository;
+    private final BankRepository bankRepository;
     //private final ClientRepository clientRepository;
     //private final ResolvedVoucherRepository resolvedVoucherRepository;
 
@@ -97,9 +100,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         dto.setDepartmentCode(employee.getDepartment().getDepartmentCode());
         dto.setDepartmentName(employee.getDepartment().getDepartmentName());
         dto.setPositionName(employee.getPosition().getPositionName());
-        dto.setJobTitleName(employee.getJobTitle().getTitleName());
-        dto.setBankAccountName(employee.getBankAccount().getBank().getName());
-        dto.setBankAccountNumber(employee.getBankAccount().getAccountNumber());
+        dto.setTitleName(employee.getJobTitle().getTitleName());
+        // 이미 만들어진 BankAccountDTO 사용
+        if (employee.getBankAccount() != null && employee.getBankAccount().getBank() != null) {
+            BankAccountDTO bankAccountDTO = BankAccountDTO.create(employee.getBankAccount());
+            dto.setBankAccountDTO(bankAccountDTO);  // BankAccountDTO 설정
+        } else {
+            dto.setBankAccountDTO(null);  // BankAccount가 없는 경우 처리
+        }
+
         return dto;
     }
 
@@ -157,7 +166,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     // 사원 정보 수정
     @Override
-    public Optional<EmployeeFindDTO> updateEmployee(Long id, EmployeeDataDTO dto) {
+    public Optional<EmployeeShowToDTO> updateEmployee(Long id, EmployeeDataDTO dto) {
         // id 에 해당하는 엔티티 데이터 조회
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() ->  new RuntimeException(id+"에 해당하는 아이디를 찾을 수 없습니다."));
@@ -171,45 +180,70 @@ public class EmployeeServiceImpl implements EmployeeService {
             employee.setEmploymentStatus(dto.getEmploymentStatus());
             employee.setEmploymentType(dto.getEmploymentType());
             employee.setAddress(dto.getAddress());
-            employee.setHireDate(dto.getHireDate());
-            employee.setDateOfBirth(dto.getDateOfBirth());
             employee.setProfilePicture(dto.getProfilePicture());
             employee.setHouseholdHead(dto.isHouseholdHead());
 
             // Position 설정
-            if (dto.getPositionId() != null) {
-                Position position = positionRepository.findById(dto.getPositionId())
-                        .orElseThrow(() -> new EntityNotFoundException("직위를 찾을 수 없습니다"));
+            if (dto.getPositionName() != null) {
+                Position position = positionRepository.findByPositionName(dto.getPositionName()).orElseGet(() ->{
+                    Position newPosition = new Position();
+                    newPosition.setPositionName(dto.getPositionName());
+                    return positionRepository.save(newPosition);
+                });
                 employee.setPosition(position);
             }
 
             // Department 설정
-            if (dto.getDepartmentId() != null) {
-                Department department = departmentRepository.findById(dto.getDepartmentId())
-                        .orElseThrow(() -> new EntityNotFoundException("부서를 찾을 수 없습니다"));
+            if (dto.getDepartmentCode() != null) {
+                Department department = departmentRepository.findByDepartmentCode(dto.getDepartmentCode()).orElseGet(() -> {
+                    Department newDepartment = new Department();
+                    newDepartment.setDepartmentCode(dto.getDepartmentCode());
+                    return departmentRepository.save(newDepartment);
+                });
                 employee.setDepartment(department);
             }
 
             // JobTitle 설정
-            if (dto.getJobTitleId() != null) {
-                JobTitle jobTitle = jobTitleRepository.findById(dto.getJobTitleId())
-                        .orElseThrow(() -> new EntityNotFoundException("직책을 찾을 수 없습니다"));
+            if (dto.getTitleName() != null) {
+                JobTitle jobTitle = jobTitleRepository.findBytitleName(dto.getTitleName()).orElseGet(() -> {
+                    // 입력된 직책이 없을 경우 새로 생성
+                    JobTitle newJobTitle = new JobTitle();
+                    newJobTitle.setTitleName(dto.getTitleName());
+                    return jobTitleRepository.save(newJobTitle);  // 새로 생성한 직책을 저장 후 반환
+                });
                 employee.setJobTitle(jobTitle);
             }
 
-            // BankAccount는 무조건 존재해야 하므로, 예외 없이 수정 처리
+        // BankAccount 수정 로직
+        if (dto.getBankId() != null && dto.getAccountNumber() != null) {
+            // Bank 엔티티를 ID로 조회
+            Bank bank = bankRepository.findById(dto.getBankId())
+                    .orElseThrow(() -> new EntityNotFoundException("해당 은행을 찾을 수 없습니다."));
+
+            // 현재 BankAccount가 있는지 확인
             BankAccount currentBankAccount = employee.getBankAccount();
             if (currentBankAccount != null) {
+                // 기존 BankAccount 업데이트
                 currentBankAccount.setAccountNumber(dto.getAccountNumber());
-                currentBankAccount.setBank(dto.getBankName());
-                bankAccountRepository.save(currentBankAccount);  // 변경사항 저장
+                currentBankAccount.setBank(bank);
+                bankAccountRepository.save(currentBankAccount);  // BankAccount 변경사항 저장
+            } else {
+                // BankAccount가 없는 경우 새로 생성
+                BankAccount newBankAccount = new BankAccount();
+                newBankAccount.setAccountNumber(dto.getAccountNumber());
+                newBankAccount.setBank(bank);
+                employee.setBankAccount(newBankAccount); // Employee에 BankAccount 설정
+                bankAccountRepository.save(newBankAccount);  // 새로운 BankAccount 저장
             }
+        } else {
+            throw new IllegalArgumentException("은행 정보와 계좌번호는 필수 입력 사항입니다.");
+        }
 
             // 3. 엔티티 저장
             Employee updatedEmployee = employeeRepository.save(employee);
 
             // 4. DTO로 변환하여 반환
-            EmployeeFindDTO updatedEmployeeDTO = new EmployeeFindDTO(
+            EmployeeShowToDTO updatedEmployeeDTO = new EmployeeShowToDTO(
                     updatedEmployee.getId(),
                     updatedEmployee.getEmployeeNumber(),
                     updatedEmployee.getFirstName(),
@@ -223,10 +257,14 @@ public class EmployeeServiceImpl implements EmployeeService {
                     updatedEmployee.getHireDate(),
                     updatedEmployee.isHouseholdHead(),
                     updatedEmployee.getProfilePicture(),
-                    updatedEmployee.getDepartment() != null ? updatedEmployee.getDepartment().getId() : null,
-                    updatedEmployee.getPosition() != null ? updatedEmployee.getPosition().getId() : null,
-                    updatedEmployee.getJobTitle() != null ? updatedEmployee.getJobTitle().getId() : null,
-                    updatedEmployee.getBankAccount() != null ? updatedEmployee.getBankAccount().getId() : null
+                    updatedEmployee.getDepartment() != null ? updatedEmployee.getDepartment().getDepartmentName() : null,
+                    updatedEmployee.getDepartment() != null ? updatedEmployee.getDepartment().getDepartmentCode() : null,
+                    updatedEmployee.getPosition() != null ? updatedEmployee.getPosition().getPositionName() : null,
+                    updatedEmployee.getJobTitle() != null ? updatedEmployee.getJobTitle().getTitleName() : null,
+                    updatedEmployee.getBankAccount() != null ? updatedEmployee.getBankAccount().getId() : null,
+                    updatedEmployee.getBankAccount() != null ? updatedEmployee.getBankAccount().getBank().getCode() : null,
+                    updatedEmployee.getBankAccount() != null ? updatedEmployee.getBankAccount().getBank().getName() : null,  // 은행 이름 추가
+                    updatedEmployee.getBankAccount() != null ? updatedEmployee.getBankAccount().getAccountNumber() : null   // 계좌번호 추가
             );
             return Optional.of(updatedEmployeeDTO);
     }
@@ -274,10 +312,24 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         // BankAccount 설정
         BankAccount newBankAccount = new BankAccount();
-        newBankAccount.setBank(dto.getBankAccountDTO().getBankName());
-        newBankAccount.setAccountNumber(dto.getBankAccountDTO().getAccountNumber());
-        newBankAccount.setEmployee(employee);
-        employee.setBankAccount(newBankAccount);
+        if (dto.getBankAccountDTO().getBankId() != null) {  // BankId를 DTO에서 받아올 경우
+            Bank bank = bankRepository.findById(dto.getBankAccountDTO().getBankId())
+                    .orElseThrow(() -> new EntityNotFoundException("해당 은행을 찾을 수 없습니다."));
+            newBankAccount.setBank(bank);  // 조회한 은행 엔티티 설정
+        } else {
+            throw new IllegalArgumentException("은행 정보는 필수입니다.");
+        }
+
+        // BankAccount 설정
+        if (dto.getBankAccountDTO() != null) {
+            Bank bank = bankRepository.findById(dto.getBankAccountDTO().getBankId())
+                    .orElseThrow(() -> new EntityNotFoundException("은행을 찾을 수 없습니다."));
+            BankAccount bankAccount = new BankAccount();
+            bankAccount.setBank(bank);
+            bankAccount.setAccountNumber(dto.getBankAccountDTO().getAccountNumber());
+            employee.setBankAccount(bankAccount);  // Employee와 BankAccount 연결
+        }
+        // BankAccount 저장
         bankAccountRepository.save(newBankAccount);
 
         // 사원 정보를 저장합니다.
