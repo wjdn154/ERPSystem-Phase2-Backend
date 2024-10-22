@@ -23,4 +23,5 @@ public class WorkerAssignmentDTO {
     private String shiftTypeName; // 교대유형명
     private Long productionOrderId;
     private String productionOrderName; // 연관 작업지시
+    private String factoryCode;
 }

@@ -38,7 +38,7 @@ public class WorkPerformance {
     private String description;   // 추가 설명 또는 비고
 
     @Column(nullable = false)
-    private Long actualQuantity;    // 실제 생산량
+    private BigDecimal actualQuantity;    // 실제 생산량
 
     /**인건비(작업에 투입된 시간 x 시간당 임금) -> 급여
      * 재료비(사용된 원자재의 양 x 원자재의 단가)
@@ -69,3 +69,12 @@ public class WorkPerformance {
     private Product product;               // 연관 품목 (코드, 이름)
 
 }
+
+/**
+ * 위 내역을 가지고 WorkDailyReport에서 아래 내용 계산 가능
+ * 생산 효율성 (%) = (actualQuantity / 계획 생산량) × 100
+ * 단위당 생산 비용 = workCost / actualQuantity
+ * 인력 생산성 = actualQuantity / workers
+ * 불량률 (%) = (dailyDefectiveQuantity / dailyProductionQuantity) × 100 << 품질관리 제외하여 불가
+ * 작업시간 = ProductionOrder.endDateTime - startDateTime
+ */

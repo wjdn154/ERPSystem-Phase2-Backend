@@ -14,6 +14,7 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseOrderResponseDetailDto.PurchaseOrderItemDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseOrderResponseDetailDto.PurchaseOrderItemDetailDto.ClientDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseOrderResponseDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.SearchDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
@@ -25,10 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,15 +47,22 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService{
      * @return
      */
     @Override
-    public List<PurchaseOrderResponseDto> findAllPurchaseOrders() {
+    public List<PurchaseOrderResponseDto> findAllPurchaseOrders(SearchDTO dto) {
 
-        List<PurchaseOrder> purchaseOrders = purchaseOrderRepository.findAll();
+        List<PurchaseOrder> purchaseOrders;
 
-        if (purchaseOrders.isEmpty()) {
-            return new ArrayList<>();
+        // dto가 null이거나 조건이 모두 null일 경우 모든 발주서 조회
+        if (dto == null || (dto.getStartDate() == null && dto.getEndDate() == null && dto.getClientId() == null && dto.getState() == null)) {
+            purchaseOrders = purchaseOrderRepository.findAll(); // 전체 발주서 조회
+        } else {
+            // 조건이 있는 경우 QueryDSL을 사용하여 검색
+            purchaseOrders = purchaseOrderRepository.findBySearch(dto);
         }
 
-        return purchaseOrders.stream()
+        // 발주서가 없는 경우 빈 리스트 반환
+        return purchaseOrders.isEmpty()
+                ? Collections.emptyList()
+                : purchaseOrders.stream()
                 .map(this::toListDto)
                 .toList();
     }

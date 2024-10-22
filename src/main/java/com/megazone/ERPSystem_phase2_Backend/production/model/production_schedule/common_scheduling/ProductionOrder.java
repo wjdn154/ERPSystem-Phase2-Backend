@@ -1,6 +1,9 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling;
 
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessDetails;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.planning.Mps;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.production_strategy.PlanOfMakeToOrder;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.production_strategy.PlanOfMakeToStock;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
@@ -10,6 +13,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -33,13 +37,17 @@ public class ProductionOrder {
     @Column(nullable = false)
     private String name; // 작업지시명
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "plan_of_make_to_order_id", nullable = true)
-    private PlanOfMakeToOrder planOfMakeToOrder;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "plan_of_make_to_order_id", nullable = true)
+//    private PlanOfMakeToOrder planOfMakeToOrder;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "plan_of_make_to_stock_id", nullable = true)
+//    private PlanOfMakeToStock planOfMakeToStock;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "plan_of_make_to_stock_id", nullable = true)
-    private PlanOfMakeToStock planOfMakeToStock;
+    @JoinColumn(name = "mps_id", nullable = false)
+    private Mps mps; // 연관된 MPS에서 계획, 품목, 생산계획수량,
 
     @OneToMany(mappedBy = "productionOrder")
     @Column(nullable = false)
@@ -55,8 +63,23 @@ public class ProductionOrder {
     private Boolean confirmed; // 확정 여부
 
     @Column(nullable = false)
+    @Builder.Default
+    private Boolean closed = false; // 마감 여부 (기본값: 미마감)
+
+    @Column(nullable = false)
     private LocalDateTime startDateTime; // 작업 시작 날짜 및 시간
 
     @Column(nullable = false)
     private LocalDateTime endDateTime; // 작업 종료 날짜 및 시간
+
+    @Column(nullable = false)
+    private BigDecimal productionQuantity; // 생산 지시 수량
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "process_id", nullable = false)
+    private ProcessDetails processDetails; // 생산 공정과의 연관 관계
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "workcenter_id", nullable = false)
+    private Workcenter workcenter;
 }

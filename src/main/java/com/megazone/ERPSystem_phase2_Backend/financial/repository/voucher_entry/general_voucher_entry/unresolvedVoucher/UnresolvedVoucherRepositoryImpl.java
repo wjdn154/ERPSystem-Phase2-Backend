@@ -44,6 +44,10 @@ public class UnresolvedVoucherRepositoryImpl implements UnresolvedVoucherReposit
         return null;
     }
 
+    /**
+     *  미결전표 승인기능
+     *  승인대기, 반려, 승인 중 승인상태가 아닌 전표에대한 승인가능 로직
+     */
     @Override
     public List<UnresolvedVoucher> findApprovalTypeVoucher(UnresolvedVoucherApprovalDTO dto) {
         QUnresolvedVoucher qUnresolvedVoucher = QUnresolvedVoucher.unresolvedVoucher;
@@ -63,7 +67,7 @@ public class UnresolvedVoucherRepositoryImpl implements UnresolvedVoucherReposit
 
         List<UnresolvedVoucher> results = queryFactory.selectFrom(qUnresolvedVoucher)
                 .where(qUnresolvedVoucher.voucherDate.eq(date)
-                        .and(qUnresolvedVoucher.approvalStatus.ne(ApprovalStatus.APPROVED)
+                        .and(qUnresolvedVoucher.approvalStatus.eq(ApprovalStatus.PENDING)
                                 .and(qUnresolvedVoucher.voucherKind.eq(VoucherKind.GENERAL))))
                 .fetch();
         return results;

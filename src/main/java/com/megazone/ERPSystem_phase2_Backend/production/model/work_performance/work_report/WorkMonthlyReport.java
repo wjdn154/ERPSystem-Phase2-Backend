@@ -29,6 +29,8 @@ public class WorkMonthlyReport {
     @Column(nullable = true)
     private String remarks; // 비고
 
-    @OneToMany(mappedBy = "workMonthlyReport")
-    private List<WorkWeeklyReport> workWeeklyReports;
+    @ManyToOne
+    @JoinColumn(name = "work_monthly_report_id")
+    private WorkMonthlyReport workMonthlyReport;
+
 }

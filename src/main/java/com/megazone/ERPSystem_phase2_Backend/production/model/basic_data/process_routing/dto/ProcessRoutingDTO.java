@@ -24,11 +24,10 @@ public class ProcessRoutingDTO {
     private boolean isActive;
 
 
-    private List<RoutingStepDTO> routingStepDTOList; // 연관 RoutingStep 목록
+    private List<RoutingStepDTO> routingSteps; // 연관 RoutingStep 목록
     private List<ProductDto> products; // 연관 Product 목록
 //    private Long productId;
 
     public void setDeletedAt(LocalDateTime now) {
-
     }
 }

@@ -24,8 +24,12 @@ public class PurchaseRequestResponseDetailDto {
     // 납기 일자
     private LocalDate deliveryDate;
 
+    private String managerCode;
+
     // 담당자 이름
     private String managerName;
+
+    private String warehouseCode;
 
     // 입고 창고 이름
     private String warehouseName;
@@ -35,6 +39,9 @@ public class PurchaseRequestResponseDetailDto {
 
     // 통화 종류
     private String currency;
+
+    // 환율
+    private BigDecimal exchangeRate;
 
     // 비고
     private String remarks;

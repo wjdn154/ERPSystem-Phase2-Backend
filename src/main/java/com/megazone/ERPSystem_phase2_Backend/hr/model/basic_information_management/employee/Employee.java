@@ -46,23 +46,24 @@ public class Employee {
     @JoinColumn(name = "jobTitle_id", nullable = false) // 직책 참조
     private JobTitle jobTitle;
 
-    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // 성과 평가 참조
-    private List<Performance> performance;
+//    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // 성과 평가 참조
+//    private List<Performance> performance;
 
-    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval = true) // 발령 참조
-    private List<Transfer> transfer;
+//    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval = true) // 발령 참조
+//    private List<Transfer> transfer;
 
     @OneToOne(mappedBy = "employee",fetch = FetchType.LAZY, cascade = CascadeType.ALL , orphanRemoval = true) // Users 랑 1대1 참조
     private Users users;
 
-    @OneToOne(mappedBy = "employee",fetch = FetchType.LAZY, cascade = CascadeType.ALL , orphanRemoval = true) // 계좌번호랑 1대 1참조
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL , orphanRemoval = true) // 계좌번호랑 1대 1참조
+    @JoinColumn(name="bankAccount_id")
     private BankAccount bankAccount;
 
-    @OneToMany(mappedBy = "employee",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // 휴가 참조
-    private List<Leaves> leaves;
+//    @OneToMany(mappedBy = "employee",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // 휴가 참조
+//    private List<Leaves> leaves;
 
-    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // 근태 참조
-    private List<Attendance> attendance;
+//    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // 근태 참조
+//    private List<Attendance> attendance;
 
 //    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
 //    private List<Salary> salaries;

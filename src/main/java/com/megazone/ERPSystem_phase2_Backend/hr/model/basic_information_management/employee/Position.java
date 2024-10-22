@@ -19,9 +19,6 @@ public class Position {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "position")// 사원 참조
-    private List<Employee> employee;
-    
     @Column(nullable = false)
     private String code; // 직위 번호
 

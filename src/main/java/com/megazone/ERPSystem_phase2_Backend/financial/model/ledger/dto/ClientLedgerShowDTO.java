@@ -19,12 +19,13 @@ public class ClientLedgerShowDTO {
     private BigDecimal creditTotalAmount;
     private BigDecimal cashTotalAmount;
     private String managerDepartment;
+    private String managerCode;
     private String managerName;
 
     public static ClientLedgerShowDTO create(String clientCode, String clientName, String clientRegisterNumber,
                                              String ownerName, BigDecimal previousCash, BigDecimal debitTotalAmount,
                                              BigDecimal creditTotalAmount, BigDecimal cashTotalAmount, String managerDepartment,
-                                             String managerName) {
+                                             String managerCode, String managerName) {
 
         return new ClientLedgerShowDTO(
                 clientCode,
@@ -36,6 +37,7 @@ public class ClientLedgerShowDTO {
                 creditTotalAmount,
                 cashTotalAmount,
                 managerDepartment,
+                managerCode,
                 managerName
         );
     }

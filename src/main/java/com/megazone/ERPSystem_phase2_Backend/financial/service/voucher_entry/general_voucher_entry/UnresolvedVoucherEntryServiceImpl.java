@@ -186,7 +186,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
 
         switch (voucherKind) {
             case GENERAL:
-                voucherBox = unresolvedVoucherRepository.findFirstByVoucherDateAndVoucherKindEqualsOrderByIdDesc(voucherDate, VoucherKind.GENERAL);
+                voucherBox = unresolvedVoucherRepository.findFirstByVoucherDateAndVoucherKindEqualsOrderByIdDesc(voucherDate,VoucherKind.GENERAL);
                 StartNumber = 1L;
                 break;
             case SALE_AND_PURCHASE:
@@ -245,7 +245,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
     public List<UnresolvedVoucher> unresolvedVoucherAllSearch(LocalDate date) {
         List<UnresolvedVoucher> unresolvedVoucherList = new ArrayList<UnresolvedVoucher>();
         try {
-            unresolvedVoucherList = unresolvedVoucherRepository.findByVoucherDateOrderByVoucherNumberAsc(date);
+            unresolvedVoucherList = unresolvedVoucherRepository.findByVoucherDateAndVoucherKindEqualsOrderByVoucherNumberAsc(date,VoucherKind.GENERAL);
             if(unresolvedVoucherList.isEmpty()) {
                 throw new NoSuchElementException("해당 날짜에 등록된 미결전표가 없습니다.");
             }

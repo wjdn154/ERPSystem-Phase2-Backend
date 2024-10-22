@@ -77,6 +77,17 @@ public class WorkerAssignmentRepositoryImpl implements WorkerAssignmentRepositor
                 .fetch();
     }
 
+    @Override
+    public List<WorkerAssignment> findByAssignmentDate(LocalDate currentDate) {
+        return queryFactory
+                .selectFrom(workerAssignment)
+                .leftJoin(workerAssignment.worker).fetchJoin()
+                .leftJoin(workerAssignment.shiftType).fetchJoin()
+                .leftJoin(workerAssignment.productionOrder).fetchJoin()
+                .where(workerAssignment.assignmentDate.eq(currentDate))
+                .fetch();
+    }
+
 //    @Override
 //    public List<WorkerAssignmentDTO> findTodayWorkers(String code) {
 //        return queryFactory

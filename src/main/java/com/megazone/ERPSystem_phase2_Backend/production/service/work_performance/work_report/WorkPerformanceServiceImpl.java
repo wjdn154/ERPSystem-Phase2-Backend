@@ -7,14 +7,18 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.w
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceListDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkDailyReport;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.enums.WorkStatus;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.production_order.ProductionOrderRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.work_performance.work_report.WorkDailyReportRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.work_performance.work_report.WorkPerformanceRepository;
 
+import com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.common_scheduling.ProductionOrder.ProductionOrderService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +33,8 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
     private final WorkDailyReportRepository workDailyReportRepository;
     private final ProductRepository productRepository;
 
+    private final ProductionOrderService productionOrderService;
+
     //모든 작업 실적 리스트 조회
     @Override
     public List<WorkPerformanceListDTO> findAllWorkPerformance() {
@@ -37,7 +43,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
                 .map(workPerformance -> new WorkPerformanceListDTO(
                         workPerformance.getId(),
                         workPerformance.getName(),
-                        workPerformance.getActualQuantity(),
+                        workPerformance.getActualQuantity() != null ? workPerformance.getActualQuantity() : BigDecimal.ZERO,
                         workPerformance.getWorkCost(),
                         workPerformance.getWorkStatus(),
                         workPerformance.getWorkDailyReport().getWorkDailyReportCode(),
@@ -104,7 +110,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
                 .id(workPerformance.getId())
                 .name(workPerformance.getName())
                 .description(workPerformance.getDescription())
-                .actualQuantity(workPerformance.getActualQuantity())
+                .actualQuantity(workPerformance.getActualQuantity() != null ? workPerformance.getActualQuantity() : BigDecimal.ZERO)
                 .workCost(workPerformance.getWorkCost())
                 .workStatus(workPerformance.getWorkStatus())
                 .workDailyReportCode(workPerformance.getWorkDailyReport().getWorkDailyReportCode())
@@ -134,7 +140,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
                 .id(dto.getId())
                 .name(dto.getName())
                 .description(dto.getDescription())
-                .actualQuantity(dto.getActualQuantity())
+                .actualQuantity(dto.getActualQuantity() != null ? dto.getActualQuantity() : BigDecimal.ZERO)  // null 처리
                 .workCost(dto.getWorkCost())
                 .workStatus(dto.getWorkStatus())
                 .workDailyReport(workDailyReport)
@@ -159,7 +165,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
 
         workPerformance.setId(workPerformance.getId());
         workPerformance.setName(dto.getName());
-        workPerformance.setActualQuantity(dto.getActualQuantity());
+        workPerformance.setActualQuantity(dto.getActualQuantity() != null ? dto.getActualQuantity() : BigDecimal.ZERO);
         workPerformance.setWorkCost(dto.getWorkCost());
         workPerformance.setWorkStatus(dto.getWorkStatus());
         workPerformance.setWorkDailyReport(workDailyReport);
@@ -169,5 +175,12 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
         return workPerformance;
 
 
+    }
+
+    /**
+     * WorkPerformance와 연관된 ProductionOrder ID 조회
+     */
+    private Long getProductionOrderIdByWorkPerformance(Long workPerformanceId) {
+        return workPerformanceRepository.findProductionOrderIdByWorkPerformanceId(workPerformanceId);
     }
 }
