@@ -23,6 +23,7 @@ public class JournalShowDetailDTO {
     private String accountSubjectCode;
     private String accountSubjectName;
     private String departmentName;
+    private String voucherManagerCode;
     private String voucherManagerName;
     private String clientCode;
     private String clientName;
@@ -42,6 +43,7 @@ public class JournalShowDetailDTO {
                 unresolvedVoucher.getAccountSubject().getCode(),
                 unresolvedVoucher.getAccountSubject().getName(),
                 unresolvedVoucher.getVoucherManager().getDepartment().getDepartmentName(),
+                unresolvedVoucher.getVoucherManager().getEmployeeNumber(),
                 unresolvedVoucher.getVoucherManager().getLastName() + unresolvedVoucher.getVoucherManager().getFirstName(),
                 unresolvedVoucher.getClient().getCode(),
                 unresolvedVoucher.getClient().getPrintClientName(),

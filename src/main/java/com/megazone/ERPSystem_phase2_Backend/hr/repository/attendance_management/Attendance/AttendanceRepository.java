@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.repository.attendance_management.Attendance;
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Attendance;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -16,4 +17,8 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long>, A
     void delete(Attendance attendance);
 
     void deleteByEmployeeId(Long employeeId);
+
+    List<Attendance> findByEmployee(Employee employee);
+
+
 }

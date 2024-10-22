@@ -2,7 +2,9 @@ package com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.w
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Attendance;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.attendance_management.Attendance.AttendanceRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
@@ -39,6 +41,7 @@ public class WorkerServiceImpl implements WorkerService {
     private final WorkerRepository workerRepository;
     private final EmployeeRepository employeeRepository;
     private final WorkerAssignmentRepository workerAssignmentRepository;
+    private final AttendanceRepository attendanceRepository;
 
     //작업자 상세 정보 수정(교육 이수 여부만 등록 가능)
     @Override
@@ -96,8 +99,10 @@ public class WorkerServiceImpl implements WorkerService {
         Worker worker = workerRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(("작업자를 찾을 수 없습니다.") + id));
 
+        List<Attendance> attendances = attendanceRepository.findByEmployee(worker.getEmployee());
+
         //근태 관리 리스트 생성
-        List<WorkerAttendanceDTO> attendanceList = worker.getEmployee().getAttendance().stream()
+        List<WorkerAttendanceDTO> attendanceList = attendances.stream()
                 .map(attendance -> new WorkerAttendanceDTO(
                         attendance.getAttendanceCode(),
                         attendance.getDate().toString(),

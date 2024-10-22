@@ -109,5 +109,4 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     @Builder.Default
     private List<MaterialProduct> materialProducts = new ArrayList<>();
-
 }

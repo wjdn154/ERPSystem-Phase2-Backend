@@ -15,6 +15,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.gener
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.QDepartment;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.QEmployee;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
@@ -124,6 +125,7 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                         voucher.creditAmount.sum(), // creditTotalAmount
                         voucher.debitAmount.sum().subtract(voucher.creditAmount.sum()), // cashTotalAmount
                         department.departmentName, // managerDepartment
+                        employee.employeeNumber,
                         employee.lastName.concat(employee.firstName) // managerName
                 ))
                 .from(voucher)
@@ -266,6 +268,7 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                                     voucher.voucherNumber,
                                     voucher.voucherApprovalTime,
                                     employee.department.departmentName,
+                                    employee.employeeNumber,
                                     employee.lastName.concat(employee.firstName)
                         ))
                 .from(voucher)
@@ -371,9 +374,7 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
         QAccountSubject accountSubject = QAccountSubject.accountSubject;
         QEmployee employee = QEmployee.employee;
 
-
         BooleanBuilder whereCondition = new BooleanBuilder();
-
 
         if(dto.getStartDate() != null && dto.getEndDate() != null) {
             whereCondition.and(voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate()));
@@ -383,41 +384,45 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
             whereCondition.and(voucher.voucherType.eq(dto.getVoucherType()));
         }
 
-
         if (dto.getVoucherKind() != null) {
             whereCondition.and(voucher.voucherKind.eq(dto.getVoucherKind()));
         }
 
-        if(dto.getStartAccountCode() != null && dto.getEndAccountCode() != null) {
-            whereCondition.and(accountSubject.code.castToNum(Integer.class)
-                    .between(Integer.valueOf(dto.getStartAccountCode()), Integer.valueOf(dto.getEndAccountCode())));
+        if(dto.getStartVoucherNumber() != null && dto.getEndVoucherNumber() != null) {
+            whereCondition.and(voucher.voucherNumber.between(dto.getStartVoucherNumber(),dto.getEndVoucherNumber()));
         }
 
-        whereCondition.and(voucher.voucherNumber.between(dto.getStartVoucherNumber(),dto.getEndVoucherNumber()));
+        if(dto.getStartAccountCode() != null && dto.getEndAccountCode() != null) {
+            whereCondition.and(voucher.accountSubject.code.castToNum(Integer.class)
+                    .between(Integer.parseInt(dto.getStartAccountCode()), Integer.parseInt(dto.getEndAccountCode())));
+        }
 
         return queryFactory
-                .select(Projections.constructor(ResolvedVoucherShowDTO.class,
-                        voucher.id,
-                        voucher.voucherDate,
-                        voucher.voucherNumber,
-                        voucher.voucherType,
-                        accountSubject.code,
-                        accountSubject.name,
-                        employee.lastName.concat(employee.firstName),
-                        client.code,
-                        client.printClientName,
-                        voucher.transactionDescription,
-                        voucher.debitAmount,
-                        voucher.creditAmount,
-                        voucher.voucherKind
-                        ))
-                .from(voucher)
-                .innerJoin(accountSubject).on(voucher.accountSubject.id.eq(accountSubject.id))
-                .innerJoin(client).on(voucher.client.id.eq(client.id))
-                .innerJoin(employee).on(employee.id.eq(voucher.voucherManager.id))
+                .selectFrom(voucher) // ResolvedVoucher 엔티티 전체를 선택
+                .join(voucher.accountSubject, accountSubject)
+                .join(voucher.client, client)
+                .join(voucher.voucherManager, employee)
                 .where(whereCondition)
-                .orderBy(voucher.voucherDate.asc(),voucher.voucherNumber.asc())
-                .fetch();
+                .orderBy(voucher.voucherDate.asc(), voucher.voucherNumber.asc())
+                .fetch()
+                .stream()
+                .map(resolvedVoucher -> new ResolvedVoucherShowDTO(
+                        resolvedVoucher.getId(),
+                        resolvedVoucher.getVoucherDate(),
+                        resolvedVoucher.getVoucherNumber(),
+                        resolvedVoucher.getVoucherType(),
+                        resolvedVoucher.getAccountSubject().getCode(),
+                        resolvedVoucher.getAccountSubject().getName(),
+                        resolvedVoucher.getVoucherManager().getEmployeeNumber(),
+                        resolvedVoucher.getVoucherManager().getLastName().concat(resolvedVoucher.getVoucherManager().getFirstName()),
+                        resolvedVoucher.getClient().getCode(),
+                        resolvedVoucher.getClient().getPrintClientName(),
+                        resolvedVoucher.getTransactionDescription(),
+                        resolvedVoucher.getDebitAmount(),
+                        resolvedVoucher.getCreditAmount(),
+                        resolvedVoucher.getVoucherKind()
+                ))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -427,39 +432,22 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
         QResolvedVoucher resolvedVoucher = QResolvedVoucher.resolvedVoucher;
         QStructure structure = QStructure.structure;
 
-//        return queryFactory
-//                .select(Projections.constructor(FinancialStatementsLedgerDTO.class,
-//                        Expressions.constant(BigDecimal.ZERO),
-//                        resolvedVoucher.debitAmount.sum(),
-//                        Expressions.constant(BigDecimal.ZERO),
-//                        resolvedVoucher.creditAmount.sum(),
-//                        structure.code,
-//                        structure.min,
-//                        standardFinancialStatement.id,
-//                        structure.mediumCategory,
-//                        structure.smallCategory,
-//                        standardFinancialStatement.name,
-//                        standardFinancialStatement.code
-//                        ))
-//                .from(standardFinancialStatement)
-//                .leftJoin(accountSubject).on(accountSubject.standardFinancialStatementCode.eq(standardFinancialStatement.code))
-//                .leftJoin(resolvedVoucher).on(resolvedVoucher.accountSubject.id.eq(accountSubject.id))
-//                .leftJoin(structure).on(structure.id.eq(accountSubject.structure.id).and(structure.id.eq(standardFinancialStatement.structure.id)))
-//                .where(structure.financialStatementType.eq(FinancialStatementType.STANDARD_FINANCIAL_STATEMENT)
-//                        .and(resolvedVoucher.voucherDate.month().eq(dto.getSearchDate().getMonthValue())))
-//                .groupBy(standardFinancialStatement.id,standardFinancialStatement.code)
-//                .orderBy(standardFinancialStatement.id.asc())
-//                .fetch();
-
         return queryFactory
                 .select(Projections.constructor(FinancialStatementsLedgerDTO.class,
                         Expressions.constant(BigDecimal.ZERO),
-                        resolvedVoucher.debitAmount.sum(),
+                        new CaseBuilder()
+                                .when(resolvedVoucher.debitAmount.sum().isNull())
+                                .then(BigDecimal.ZERO)
+                                .otherwise(resolvedVoucher.debitAmount.sum()),
                         Expressions.constant(BigDecimal.ZERO),
-                        resolvedVoucher.creditAmount.sum(),
+                        new CaseBuilder()
+                                .when(resolvedVoucher.creditAmount.sum().isNull())
+                                .then(BigDecimal.ZERO)
+                                .otherwise(resolvedVoucher.creditAmount.sum()),
                         structure.code,
                         structure.min,
                         standardFinancialStatement.id,
+                        structure.largeCategory,
                         structure.mediumCategory,
                         structure.smallCategory,
                         standardFinancialStatement.name,
@@ -469,7 +457,7 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                 .leftJoin(accountSubject).on(accountSubject.standardFinancialStatementCode.eq(standardFinancialStatement.code))
                 .leftJoin(resolvedVoucher).on(resolvedVoucher.accountSubject.id.eq(accountSubject.id)
                         // 날짜 필터를 WHERE 절이 아닌 ON 절에 추가
-                        .and(resolvedVoucher.voucherDate.month().eq(dto.getSearchDate().getMonthValue())))
+                        .and(resolvedVoucher.voucherDate.month().eq(dto.getYearMonth().getMonthValue())))
                 .leftJoin(structure).on(structure.id.eq(accountSubject.structure.id)
                         .and(structure.id.eq(standardFinancialStatement.structure.id)))
                 .where(structure.financialStatementType.eq(FinancialStatementType.STANDARD_FINANCIAL_STATEMENT))

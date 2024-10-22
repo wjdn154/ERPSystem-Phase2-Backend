@@ -17,6 +17,7 @@ public class FinancialStatementsLedgerDTO {
     private String accountStructureCode;
     private Integer accountStructureMin;
     private Long financialStatementId;
+    private String financialStateCategory;
     private String mediumCategory;
     private String smallCategory;
     private String financialStatementsName;
@@ -25,8 +26,8 @@ public class FinancialStatementsLedgerDTO {
     public static FinancialStatementsLedgerDTO create(BigDecimal totalDebitBalance, BigDecimal totalDebitAmount,
                                                       BigDecimal totalCreditBalance, BigDecimal totalCreditAmount,
                                                       String accountStructureCode, Integer accountStructureMin,
-                                                      Long financialStatementId, String mediumCategory, String smallCategory,
-                                                      String financialStatementsName,
+                                                      Long financialStatementId, String financialStateCategory,
+                                                      String mediumCategory, String smallCategory, String financialStatementsName,
                                                       String financialStatementsCode) {
         return new FinancialStatementsLedgerDTO(
                 totalDebitBalance,
@@ -36,6 +37,7 @@ public class FinancialStatementsLedgerDTO {
                 accountStructureCode,
                 accountStructureMin,
                 financialStatementId,
+                financialStateCategory,
                 mediumCategory,
                 smallCategory,
                 financialStatementsName,

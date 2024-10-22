@@ -18,7 +18,7 @@ public class WorkPerformanceListDTO {
 
     private Long id;   //아이디
     private String name;    //이름
-    private Long actualQuantity;    //실제 생산량
+    private BigDecimal actualQuantity;    //실제 생산량
     private BigDecimal workCost;          //작업 비용
     private WorkStatus workStatus;        //작업 상태
 

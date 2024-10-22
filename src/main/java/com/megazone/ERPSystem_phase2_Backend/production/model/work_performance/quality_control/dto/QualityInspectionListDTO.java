@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,9 +25,9 @@ public class QualityInspectionListDTO {
     private String productCode;          //품목 코드
     private String productName;          //품목 이름
 
-    private Long totalQuantity;        //총 수량 (workperformance-actualQuantity)
-    private Long defectiveQuantity;    //불량품 수량 (inspectedProduct-defectCount)
-    private Long passedQuantity;       //통과된 제품 수량
+    private BigDecimal totalQuantity;        //총 수량 (workperformance-actualQuantity)
+    private BigDecimal defectiveQuantity;    //불량품 수량 (inspectedProduct-defectCount)
+    private BigDecimal passedQuantity;       //통과된 제품 수량
 }
 
 

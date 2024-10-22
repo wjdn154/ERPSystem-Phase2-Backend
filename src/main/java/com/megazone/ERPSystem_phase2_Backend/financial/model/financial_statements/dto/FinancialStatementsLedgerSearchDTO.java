@@ -5,10 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class FinancialStatementsLedgerSearchDTO {
-    private LocalDate searchDate;
+    private YearMonth yearMonth;
 }

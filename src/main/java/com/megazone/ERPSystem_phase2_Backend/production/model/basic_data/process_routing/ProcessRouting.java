@@ -26,7 +26,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(exclude = {"routingSteps"})
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ProcessRouting {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
