@@ -22,6 +22,6 @@ public class ProcessRoutingDetailDTO {
     private boolean isStandard;
     private boolean isActive;
 
-    private List<ProcessDetails> processDetails;
+    private List<ProcessDetailsDTO> processDetails;
     private List<ProductDto> products;
 }

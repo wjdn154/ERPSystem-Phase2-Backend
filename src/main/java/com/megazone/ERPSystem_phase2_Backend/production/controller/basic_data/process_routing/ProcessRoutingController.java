@@ -84,12 +84,10 @@ public class ProcessRoutingController {
 
     // 4. 수정
     @PostMapping("update")
-    public ResponseEntity<ProcessRoutingDetailDTO> updateProcessRouting(@RequestBody ProcessRoutingDetail2DTO processRoutingDetailDTO) {
-        System.out.println("processRoutingDetailDTO = " + processRoutingDetailDTO);
-//        ProcessRoutingDetailDTO updatedRouting = processRoutingService.updateProcessRouting(processRoutingDetailDTO);
-//        System.out.println("updatedRouting = " + updatedRouting);
-//        return ResponseEntity.ok(updatedRouting);
-        return null;
+    public ResponseEntity<ProcessRoutingDetailDTO> updateProcessRouting(@RequestBody ProcessRoutingDetailDTO processRoutingDetailDTO) {
+        ProcessRoutingDetailDTO updatedRouting = processRoutingService.updateProcessRouting(processRoutingDetailDTO);
+        System.out.println("updatedRouting = " + updatedRouting);
+        return ResponseEntity.ok(updatedRouting);
     }
 
     // 5. 삭제
