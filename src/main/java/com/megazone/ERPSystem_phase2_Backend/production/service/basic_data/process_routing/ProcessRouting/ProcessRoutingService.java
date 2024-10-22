@@ -1,6 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.process_routing.ProcessRouting;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessRoutingDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDto;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessRouting;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessDetailsDTO;
@@ -19,7 +19,7 @@ public interface ProcessRoutingService {
     ProcessRoutingDTO createProcessRoutingWithSteps(ProcessRoutingDTO routingDTO);
 
     // ProductionRouting 업데이트 로직
-    ProcessRoutingDTO updateProcessRouting(Long id, ProcessRoutingDTO processRoutingDTO);
+    ProcessRoutingDetailDTO updateProcessRouting(ProcessRoutingDetailDTO processRoutingDTO);
 
     // ProductionRouting 삭제 로직
     ProcessRoutingDTO deleteProcessRouting(Long id);
@@ -27,11 +27,12 @@ public interface ProcessRoutingService {
     ProcessRoutingDTO convertToDTO(ProcessRouting processRouting);
 
     // Search
-    List<ProcessDetailsDTO> searchProcessDetails(String keyword);
+    List<ProcessDetailsDTO> searchProcessDetails();
     List<ProductDto> searchProducts(String keyword);
 
 
 //    ProductDetailDto getProductById(Long id);
     ProcessDetailsDTO getProcessDetailsById(Long id);
 
+    ProcessRoutingDetailDTO getProcessRoutingById(Long id);
 }
