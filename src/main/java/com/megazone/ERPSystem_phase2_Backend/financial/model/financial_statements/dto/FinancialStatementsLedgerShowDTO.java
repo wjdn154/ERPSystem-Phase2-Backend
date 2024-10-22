@@ -28,7 +28,7 @@ public class FinancialStatementsLedgerShowDTO {
             totalDebitBalance = node.getTotalDebitAmount().subtract(node.getTotalCreditAmount());
         }
         else if(node.getTotalDebitAmount().subtract(node.getTotalCreditAmount()).compareTo(BigDecimal.ZERO) < 0) {
-            totalCreditBalance = node.getTotalCreditAmount().subtract(node.getTotalDebitAmount());
+            totalCreditBalance = node.getTotalDebitAmount().subtract(node.getTotalCreditAmount());
         }
 
         return new FinancialStatementsLedgerShowDTO(
@@ -38,6 +38,27 @@ public class FinancialStatementsLedgerShowDTO {
                 node.getTotalDebitAmount(),
                 totalCreditBalance,
                 node.getTotalCreditAmount()
+        );
+    }
+
+    public static FinancialStatementsLedgerShowDTO create(String level, String name,BigDecimal totalDebitAmount,BigDecimal totalCreditAmount) {
+        BigDecimal totalDebitBalance = BigDecimal.ZERO;
+        BigDecimal totalCreditBalance = BigDecimal.ZERO;
+
+        if(totalDebitAmount.subtract(totalCreditAmount).compareTo(BigDecimal.ZERO) > 0) {
+            totalDebitBalance = totalDebitAmount.subtract(totalCreditAmount);
+        }
+        else if(totalDebitAmount.subtract(totalCreditAmount).compareTo(BigDecimal.ZERO) < 0) {
+            totalCreditBalance = totalDebitAmount.subtract(totalCreditAmount);
+        }
+
+        return new FinancialStatementsLedgerShowDTO(
+                level,
+                name,
+                totalDebitBalance,
+                totalDebitAmount,
+                totalCreditBalance,
+                totalCreditAmount
         );
     }
 }
