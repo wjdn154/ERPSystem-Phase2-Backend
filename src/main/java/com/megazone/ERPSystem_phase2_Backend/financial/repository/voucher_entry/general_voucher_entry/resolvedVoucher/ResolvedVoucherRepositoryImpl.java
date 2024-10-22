@@ -449,7 +449,7 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                 .leftJoin(accountSubject).on(accountSubject.standardFinancialStatementCode.eq(standardFinancialStatement.code))
                 .leftJoin(resolvedVoucher).on(resolvedVoucher.accountSubject.id.eq(accountSubject.id)
                         // 날짜 필터를 WHERE 절이 아닌 ON 절에 추가
-                        .and(resolvedVoucher.voucherDate.month().eq(dto.getSearchDate().getMonthValue())))
+                        .and(resolvedVoucher.voucherDate.month().eq(dto.getYearMonth().getMonthValue())))
                 .leftJoin(structure).on(structure.id.eq(accountSubject.structure.id)
                         .and(structure.id.eq(standardFinancialStatement.structure.id)))
                 .where(structure.financialStatementType.eq(FinancialStatementType.STANDARD_FINANCIAL_STATEMENT))
