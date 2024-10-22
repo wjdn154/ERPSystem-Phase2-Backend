@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.enums.TransactionType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Address;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
@@ -16,7 +17,6 @@ import java.time.LocalDate;
 @Table(name = "client")
 @Getter
 @Setter
-@ToString
 public class Client {
 
     @Id
@@ -46,7 +46,7 @@ public class Client {
     @JoinColumn(name = "manager_info_id")
     private ManagerInfo managerInfo; // 업체 담당자 정보
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee; // 담당자
 

@@ -21,9 +21,6 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
-    private List<Employee> employees; // 사원 참조 : 양방향
-
     @OneToMany(mappedBy = "fromDepartment") // 출발 부서 : Transfer 엔티티에서 출발 부서로 설정된 부서와 연결된 모든 전보 기록을 가지고 있음.
     private List<Transfer> transferFrom;    // 해당 부서가 직원 이동의 출발 부서였던 모든 Transfer 기록을 가져옴.
 

@@ -39,7 +39,7 @@ public class ResolvedVoucherShowDTO {
                 resolvedVoucher.getAccountSubject().getName(),
                 resolvedVoucher.getVoucherManager().getEmployeeNumber(),
                 resolvedVoucher.getVoucherManager().getFirstName() +
-                        resolvedVoucher.getVoucherManager().getLastName(),
+                resolvedVoucher.getVoucherManager().getLastName(),
                 resolvedVoucher.getClient().getCode(),
                 resolvedVoucher.getClient().getPrintClientName(),
                 resolvedVoucher.getTransactionDescription(),

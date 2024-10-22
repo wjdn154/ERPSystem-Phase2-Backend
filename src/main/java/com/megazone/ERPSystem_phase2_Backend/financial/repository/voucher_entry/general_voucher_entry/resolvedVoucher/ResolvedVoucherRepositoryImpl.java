@@ -373,13 +373,8 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
         QClient client = QClient.client;
         QAccountSubject accountSubject = QAccountSubject.accountSubject;
         QEmployee employee = QEmployee.employee;
-        QDepartment department = QDepartment.department;
-
 
         BooleanBuilder whereCondition = new BooleanBuilder();
-
-
-        whereCondition.and(accountSubject.code.castToNum(Integer.class).between(Integer.valueOf(dto.getStartAccountCode()), Integer.valueOf(dto.getEndAccountCode())));
 
         if(dto.getStartDate() != null && dto.getEndDate() != null) {
             whereCondition.and(voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate()));
@@ -389,7 +384,6 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
             whereCondition.and(voucher.voucherType.eq(dto.getVoucherType()));
         }
 
-
         if (dto.getVoucherKind() != null) {
             whereCondition.and(voucher.voucherKind.eq(dto.getVoucherKind()));
         }
@@ -398,30 +392,37 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
             whereCondition.and(voucher.voucherNumber.between(dto.getStartVoucherNumber(),dto.getEndVoucherNumber()));
         }
 
+        if(dto.getStartAccountCode() != null && dto.getEndAccountCode() != null) {
+            whereCondition.and(voucher.accountSubject.code.castToNum(Integer.class)
+                    .between(Integer.parseInt(dto.getStartAccountCode()), Integer.parseInt(dto.getEndAccountCode())));
+        }
+
         return queryFactory
-                .select(Projections.constructor(ResolvedVoucherShowDTO.class,
-                        voucher.id,
-                        voucher.voucherDate,
-                        voucher.voucherNumber,
-                        voucher.voucherType,
-                        accountSubject.code,
-                        accountSubject.name,
-                        employee.employeeNumber,
-                        employee.lastName.concat(employee.firstName),
-                        client.code,
-                        client.printClientName,
-                        voucher.transactionDescription,
-                        voucher.debitAmount,
-                        voucher.creditAmount,
-                        voucher.voucherKind
-                        ))
-                .from(voucher)
-                .join(accountSubject).on(accountSubject.id.eq(voucher.accountSubject.id))
-                .join(client).on(client.id.eq(voucher.client.id))
-                .join(voucher.voucherManager,employee)
+                .selectFrom(voucher) // ResolvedVoucher 엔티티 전체를 선택
+                .join(voucher.accountSubject, accountSubject)
+                .join(voucher.client, client)
+                .join(voucher.voucherManager, employee)
                 .where(whereCondition)
-                .orderBy(voucher.voucherDate.asc(),voucher.voucherNumber.asc())
-                .fetch();
+                .orderBy(voucher.voucherDate.asc(), voucher.voucherNumber.asc())
+                .fetch()
+                .stream()
+                .map(resolvedVoucher -> new ResolvedVoucherShowDTO(
+                        resolvedVoucher.getId(),
+                        resolvedVoucher.getVoucherDate(),
+                        resolvedVoucher.getVoucherNumber(),
+                        resolvedVoucher.getVoucherType(),
+                        resolvedVoucher.getAccountSubject().getCode(),
+                        resolvedVoucher.getAccountSubject().getName(),
+                        resolvedVoucher.getVoucherManager().getEmployeeNumber(),
+                        resolvedVoucher.getVoucherManager().getLastName().concat(resolvedVoucher.getVoucherManager().getFirstName()),
+                        resolvedVoucher.getClient().getCode(),
+                        resolvedVoucher.getClient().getPrintClientName(),
+                        resolvedVoucher.getTransactionDescription(),
+                        resolvedVoucher.getDebitAmount(),
+                        resolvedVoucher.getCreditAmount(),
+                        resolvedVoucher.getVoucherKind()
+                ))
+                .collect(Collectors.toList());
     }
 
     @Override

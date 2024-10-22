@@ -57,10 +57,10 @@ public class ProcessRoutingServiceImpl implements ProcessRoutingService {
         routing = processRoutingRepository.save(routing);
 
         // 3. 순서 검증 로직 호출
-        validateStepOrder(routingDTO.getRoutingStepDTOList());
+        validateStepOrder(routingDTO.getRoutingSteps());
 
         // 4. 공정단계에서 생산공정, 라우팅 연결하는 RoutingSteps 생성
-        List<RoutingStep> routingSteps = createRoutingSteps(routingDTO.getRoutingStepDTOList(), routing);
+        List<RoutingStep> routingSteps = createRoutingSteps(routingDTO.getRoutingSteps(), routing);
         routing.setRoutingSteps(routingSteps);
 
         // 5. 최소 두 개 이상의 공정이 입력되었는지 확인
@@ -240,7 +240,7 @@ public class ProcessRoutingServiceImpl implements ProcessRoutingService {
         existingRouting.setActive(processRoutingDTO.isActive());
 
         // 3. 연관된 RoutingSteps 업데이트
-        List<RoutingStep> updatedRoutingSteps = createRoutingSteps(processRoutingDTO.getRoutingStepDTOList(), existingRouting);
+        List<RoutingStep> updatedRoutingSteps = createRoutingSteps(processRoutingDTO.getRoutingSteps(), existingRouting);
 
         // 기존의 RoutingSteps를 제거하고 새로 추가
         existingRouting.getRoutingSteps().clear();
@@ -305,7 +305,7 @@ public class ProcessRoutingServiceImpl implements ProcessRoutingService {
                 .description(processRouting.getDescription())
                 .isStandard(processRouting.isStandard())
                 .isActive(processRouting.isActive())
-                .routingStepDTOList(
+                .routingSteps(
                         processRouting.getRoutingSteps().stream()
                                 .map(this::convertToRoutingStepDTO)
                                 .collect(Collectors.toList())

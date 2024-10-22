@@ -1,8 +1,7 @@
-package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto;
+package com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.dto;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDto;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.RoutingStepDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProcessRoutingDTO {
+public class getProcessRoutingByIdDTO {
     private Long id;
     private String code;
     private String name;
@@ -26,7 +25,6 @@ public class ProcessRoutingDTO {
 
     private List<RoutingStepDTO> routingSteps; // 연관 RoutingStep 목록
     private List<ProductDto> products; // 연관 Product 목록
-//    private Long productId;
 
     public void setDeletedAt(LocalDateTime now) {
 
