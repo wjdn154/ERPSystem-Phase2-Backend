@@ -14,7 +14,8 @@ public class ShipmentRequestDTO {
     private Long warehouseId; // 창고 ID
     private Long employeeId; // 담당자 ID
     private Long clientId; // 고객 ID
-    private Long contactInfoId; // 연락처 ID
+    private String contactInfo; // 고객 연락처
+    private String address; // 창고 주소
     private Long warehouseAddressId; // 창고 주소 ID
     private LocalDate shipmentDate; // 출하 일자
     private String comment; // 비고
