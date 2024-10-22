@@ -30,7 +30,7 @@ public class ProductionRequestController {
     // 2. 생산 의뢰 확정 및 MPS 생성 (ProgressType = NOT_STARTED)
     @PostMapping("/{id}/confirm")
     public ResponseEntity<Void> confirmProductionRequest(
-            @PathVariable Long id, @RequestParam BigDecimal confirmedQuantity) {
+            @PathVariable("id") Long id, @RequestParam("confirmedQuantity") BigDecimal confirmedQuantity) {
         productionRequestService.confirmProductionRequest(id, confirmedQuantity);
         return ResponseEntity.ok().build();
     }
@@ -39,7 +39,7 @@ public class ProductionRequestController {
      * 생산 요청 조회
      */
     @PostMapping("/{id}")
-    public ResponseEntity<ProductionRequestDTO> getProductionRequestById(@PathVariable Long id) {
+    public ResponseEntity<ProductionRequestDTO> getProductionRequestById(@PathVariable("id") Long id) {
         ProductionRequestDTO productionRequestDTO = productionRequestService.getProductionRequestById(id);
         return ResponseEntity.ok(productionRequestDTO);
     }
@@ -57,7 +57,7 @@ public class ProductionRequestController {
      * 생산 요청 수정
      */
     @PostMapping("/update/{id}")
-    public ResponseEntity<ProductionRequestDTO> updateProductionRequest(@PathVariable Long id, @RequestBody ProductionRequestDTO productionRequestDTO) {
+    public ResponseEntity<ProductionRequestDTO> updateProductionRequest(@PathVariable("id") Long id, @RequestBody ProductionRequestDTO productionRequestDTO) {
         ProductionRequestDTO updatedRequest = productionRequestService.updateProductionRequest(id, productionRequestDTO);
         return ResponseEntity.ok(updatedRequest);
     }
@@ -66,7 +66,7 @@ public class ProductionRequestController {
      * 생산 요청 삭제
      */
     @PostMapping("delete/{id}")
-    public ResponseEntity<Void> deleteProductionRequest(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProductionRequest(@PathVariable("id") Long id) {
         productionRequestService.deleteProductionRequest(id);
         return ResponseEntity.noContent().build();
     }

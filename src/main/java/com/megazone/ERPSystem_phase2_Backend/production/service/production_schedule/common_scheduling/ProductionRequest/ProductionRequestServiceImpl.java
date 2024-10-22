@@ -84,7 +84,7 @@ public class ProductionRequestServiceImpl implements ProductionRequestService {
         if (!productRepository.existsById(dto.getProductId())) {
             throw new EntityNotFoundException("해당 제품을 찾을 수 없습니다.");
         }
-//        if (!ordersRepository.existsById(dto.getSalesOrderId())) {
+//        if (!salesOrder.existsById(dto.getSalesOrderId())) {
 //            throw new EntityNotFoundException("해당 영업 주문을 찾을 수 없습니다.");
 //        } todo
         if (!employeeRepository.existsById(dto.getRequesterId())) {
@@ -250,9 +250,8 @@ public class ProductionRequestServiceImpl implements ProductionRequestService {
                 .orElseThrow(() -> new EntityNotFoundException("요청자를 찾을 수 없습니다."));
 
         return ProductionRequest.builder()
-                .id(dto.getId())
-                .progressType(dto.getProgressType())
                 .requestType(dto.getRequestType())
+                .progressType(dto.getProgressType())
                 .name(dto.getName())
                 .isConfirmed(dto.getIsConfirmed())
                 .requestDate(dto.getRequestDate())
@@ -263,7 +262,7 @@ public class ProductionRequestServiceImpl implements ProductionRequestService {
                 .product(Product.builder().id(dto.getProductId()).build())
                 .client(client)
                 .productionDepartment(department)
-                .salesOrder(Orders.builder().id(dto.getSalesOrderId()).build())
+                .salesOrder(dto.getSalesOrderId() != null ? Orders.builder().id(dto.getSalesOrderId()).build() : null)
                 .requester(requester)
                 .remarks(dto.getRemarks())
                 .build();
