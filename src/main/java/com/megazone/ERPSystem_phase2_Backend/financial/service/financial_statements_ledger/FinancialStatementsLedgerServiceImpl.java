@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -90,10 +91,77 @@ public class FinancialStatementsLedgerServiceImpl implements FinancialStatements
         List<FinancialStateMediumCategoryNode> sortedMediumNodes = new ArrayList<>(root.values());
         Collections.sort(sortedMediumNodes);
 
+        BigDecimal totalDebitBalance = BigDecimal.ZERO;
+        BigDecimal totalDebitAmount = BigDecimal.ZERO;
+        BigDecimal totalCreditBalance = BigDecimal.ZERO;
+        BigDecimal totalCreditAmount = BigDecimal.ZERO;
+
         for (FinancialStateMediumCategoryNode mediumNode : sortedMediumNodes) {
             result.add(FinancialStatementsLedgerShowDTO.create(mediumNode, "Medium_category"));
 
-
+            switch(mediumNode.getName())
+            {
+                case "유동자산":
+                    totalDebitBalance = totalDebitBalance.add(mediumNode.getTotalDebitBalance());
+                    totalDebitAmount = totalDebitAmount.add(mediumNode.getTotalDebitAmount());
+                    totalCreditBalance = totalCreditBalance.add(mediumNode.getTotalCreditBalance());
+                    totalCreditAmount = totalCreditAmount.add(mediumNode.getTotalCreditAmount());
+                    break;
+                case "비유동자산":
+                    totalDebitBalance = totalDebitBalance.add(mediumNode.getTotalDebitBalance());
+                    totalDebitAmount = totalDebitAmount.add(mediumNode.getTotalDebitAmount());
+                    totalCreditBalance = totalCreditBalance.add(mediumNode.getTotalCreditBalance());
+                    totalCreditAmount = totalCreditAmount.add(mediumNode.getTotalCreditAmount());
+                    result.add(new FinancialStatementsLedgerShowDTO(
+                            "Large_Category",
+                            "자산총계",
+                            totalDebitBalance,
+                            totalDebitAmount,
+                            totalCreditBalance,
+                            totalCreditAmount
+                    ));
+                    totalDebitBalance = BigDecimal.ZERO;
+                    totalDebitAmount = BigDecimal.ZERO;
+                    totalCreditBalance = BigDecimal.ZERO;
+                    totalCreditAmount = BigDecimal.ZERO;
+                    break;
+                case "유동부채":
+                    totalDebitBalance = totalDebitBalance.add(mediumNode.getTotalDebitBalance());
+                    totalDebitAmount = totalDebitAmount.add(mediumNode.getTotalDebitAmount());
+                    totalCreditBalance = totalCreditBalance.add(mediumNode.getTotalCreditBalance());
+                    totalCreditAmount = totalCreditAmount.add(mediumNode.getTotalCreditAmount());
+                    break;
+                case "비유동부채":
+                    totalDebitBalance = totalDebitBalance.add(mediumNode.getTotalDebitBalance());
+                    totalDebitAmount = totalDebitAmount.add(mediumNode.getTotalDebitAmount());
+                    totalCreditBalance = totalCreditBalance.add(mediumNode.getTotalCreditBalance());
+                    totalCreditAmount = totalCreditAmount.add(mediumNode.getTotalCreditAmount());
+                    result.add(new FinancialStatementsLedgerShowDTO(
+                            "Large_Category",
+                            "부채총계",
+                            totalDebitBalance,
+                            totalDebitAmount,
+                            totalCreditBalance,
+                            totalCreditAmount
+                    ));
+                    totalDebitBalance = BigDecimal.ZERO;
+                    totalDebitAmount = BigDecimal.ZERO;
+                    totalCreditBalance = BigDecimal.ZERO;
+                    totalCreditAmount = BigDecimal.ZERO;
+                default:
+                    totalDebitBalance = totalDebitBalance.add(mediumNode.getTotalDebitBalance());
+                    totalDebitAmount = totalDebitAmount.add(mediumNode.getTotalDebitAmount());
+                    totalCreditBalance = totalCreditBalance.add(mediumNode.getTotalCreditBalance());
+                    totalCreditAmount = totalCreditAmount.add(mediumNode.getTotalCreditAmount());
+                    break;
+            }
+            /**
+             * 대분류 카테고리
+             * 유동자산 + 비유동자산 = 자산총계
+             * 유동부채 + 비유동부채 = 부채총계
+             * 자본금 이하 모두 = 자본총계
+             * 부채총계 + 자본총계 = 부채와 자본총계
+             */
             List<FinancialStateNode> sortedSmallNodes = mediumNode.getChildren();
             for (FinancialStateNode childNode : sortedSmallNodes) {
                 if (childNode instanceof FinancialStateSmallCategoryNode) {
@@ -107,6 +175,14 @@ public class FinancialStatementsLedgerServiceImpl implements FinancialStatements
                 }
             }
         }
+        result.add(new FinancialStatementsLedgerShowDTO(
+                "Large_Category",
+                "자본총계",
+                totalDebitBalance,
+                totalDebitAmount,
+                totalCreditBalance,
+                totalCreditAmount
+        ));
         // 결과 반환
         return result;
     }

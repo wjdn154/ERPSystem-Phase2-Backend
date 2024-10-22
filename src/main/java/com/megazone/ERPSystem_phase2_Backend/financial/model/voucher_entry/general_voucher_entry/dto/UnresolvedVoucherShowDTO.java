@@ -20,6 +20,7 @@ public class UnresolvedVoucherShowDTO {
     private VoucherType voucherType;
     private String accountSubjectCode;
     private String accountSubjectName;
+    private String voucherManagerCode;
     private String voucherManagerName;
     private String clientCode;
     private String clientName;
@@ -36,6 +37,7 @@ public class UnresolvedVoucherShowDTO {
                 unresolvedVoucher.getVoucherType(),
                 unresolvedVoucher.getAccountSubject().getCode(),
                 unresolvedVoucher.getAccountSubject().getName(),
+                unresolvedVoucher.getVoucherManager().getEmployeeNumber(),
 unresolvedVoucher.getVoucherManager().getLastName() + unresolvedVoucher.getVoucherManager().getFirstName(),
                 unresolvedVoucher.getClient().getCode(),
                 unresolvedVoucher.getClient().getPrintClientName(),
