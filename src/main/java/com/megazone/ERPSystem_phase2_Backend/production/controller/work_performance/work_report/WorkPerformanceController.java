@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.controller.work_perform
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceListDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.enums.WorkStatus;
 import com.megazone.ERPSystem_phase2_Backend.production.service.work_performance.work_report.WorkPerformanceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -63,6 +64,18 @@ public class WorkPerformanceController {
         Optional<WorkPerformanceDetailDTO> result = workPerformanceService.updateWorkPerformance(id, dto);
 
         return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+    }
+
+    /**
+     * WorkPerformance 상태 변경
+     */
+    @PatchMapping("/{performanceId}/status")
+    public ResponseEntity<Void> changeWorkStatus(
+            @PathVariable Long performanceId,
+            @RequestParam WorkStatus newStatus) {
+
+        workPerformanceService.changeWorkStatus(performanceId, newStatus);
+        return ResponseEntity.ok().build();
     }
 
 }

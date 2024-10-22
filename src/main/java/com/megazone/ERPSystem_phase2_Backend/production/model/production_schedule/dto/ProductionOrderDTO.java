@@ -26,6 +26,9 @@ public class ProductionOrderDTO {
 
 //    private List<WorkPerformanceDTO> workPerformances; // 작업 실적 DTO 리스트
 
+    @Builder.Default
+    private Boolean closed = false;
+
     private String remarks; // 추가 설명 또는 비고
 
     private Boolean confirmed;
