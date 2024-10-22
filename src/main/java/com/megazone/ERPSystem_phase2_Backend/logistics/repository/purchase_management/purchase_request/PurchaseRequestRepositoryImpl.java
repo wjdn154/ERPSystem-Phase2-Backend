@@ -5,11 +5,10 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.QPurchaseRequestDetail;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.State;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestResponseDto;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestSearchDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.SearchDTO;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -25,7 +24,7 @@ public class PurchaseRequestRepositoryImpl implements PurchaseRequestRepositoryC
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<PurchaseRequestResponseDto> searchPurchaseRequests(PurchaseRequestSearchDTO dto) {
+    public List<PurchaseRequestResponseDto> searchPurchaseRequests(SearchDTO dto) {
 
         QPurchaseRequest purchaseRequest = QPurchaseRequest.purchaseRequest;
         QPurchaseRequestDetail purchaseRequestDetail = QPurchaseRequestDetail.purchaseRequestDetail;
@@ -37,8 +36,8 @@ public class PurchaseRequestRepositoryImpl implements PurchaseRequestRepositoryC
             builder.and(purchaseRequest.date.between(dto.getStartDate(), dto.getEndDate()));
         }
 
-        if (dto.getClientCode() != null && !dto.getClientCode().isEmpty()) {
-            builder.and(client.code.eq(dto.getClientCode()));
+        if (dto.getClientId() != null) {
+            builder.and(client.id.eq(dto.getClientId()));
         }
 
         if (dto.getState() != null && !dto.getState().isEmpty()) {

@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.controller.purchase_mana
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseOrderCreateDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseOrderResponseDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseOrderResponseDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.SearchDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.service.purchase_management.purchase_order.PurchaseOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,13 +21,24 @@ public class PurchaseOrderController {
 
     private final PurchaseOrderService purchaseOrderService;
 
+//    @PostMapping("/")
+//    public ResponseEntity<?> getPurchaseOrders() {
+//        List<PurchaseOrderResponseDto> response = purchaseOrderService.findAllPurchaseOrders();
+//
+//        if(response.isEmpty()){
+//            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("발주가 한 건도 존재하지 않습니다.");
+//        }
+//
+//        return ResponseEntity.ok(response);
+//    }
     /**
      * 발주서 목록 조회
      * @return
      */
     @PostMapping("/")
-    public ResponseEntity<?> getPurchaseOrders() {
-        List<PurchaseOrderResponseDto> response = purchaseOrderService.findAllPurchaseOrders();
+    public ResponseEntity<?> getPurchaseOrders(@RequestBody(required = false) SearchDTO dto) {
+        System.out.println("dto = " + dto);
+        List<PurchaseOrderResponseDto> response = purchaseOrderService.findAllPurchaseOrders(dto);
 
         if(response.isEmpty()){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("발주가 한 건도 존재하지 않습니다.");
