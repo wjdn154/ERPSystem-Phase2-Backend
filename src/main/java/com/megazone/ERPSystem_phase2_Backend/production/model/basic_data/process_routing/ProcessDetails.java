@@ -6,6 +6,9 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.proces
  * 작업장, 작업 시간, 작업자, 사용되는 기계 및 도구, 품질 기준 등이 포함
  */
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.planning.mrp.MaterialInputStatus;
 import jakarta.persistence.*;
@@ -56,13 +59,13 @@ public class ProcessDetails {
     @Column(name="process_is_used", nullable = false)
     private Boolean isUsed; // 사용 여부
 
-    @OneToMany(mappedBy = "processDetails", fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<Workcenter> workcenters = new ArrayList<>(); // 연관 (공정수행) 작업장 목록
+//    @OneToMany(mappedBy = "processDetails", fetch = FetchType.LAZY)
+//    @Builder.Default
+//    private List<Workcenter> workcenters = new ArrayList<>(); // 연관 (공정수행) 작업장 목록
 
-    @OneToMany(mappedBy = "processDetails", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<RoutingStep> routingSteps = new ArrayList<>(); // 연관 RoutingStep 목록
+//    @OneToMany(mappedBy = "processDetails", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @Builder.Default
+//    private List<RoutingStep> routingSteps = new ArrayList<>(); // 연관 RoutingStep 목록
 
     @OneToMany(mappedBy = "processDetails")
     private List<MaterialInputStatus>  materialInputStatus;
