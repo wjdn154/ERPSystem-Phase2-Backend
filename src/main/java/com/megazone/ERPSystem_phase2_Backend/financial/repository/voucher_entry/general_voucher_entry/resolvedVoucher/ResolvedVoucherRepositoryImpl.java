@@ -125,6 +125,7 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                         voucher.creditAmount.sum(), // creditTotalAmount
                         voucher.debitAmount.sum().subtract(voucher.creditAmount.sum()), // cashTotalAmount
                         department.departmentName, // managerDepartment
+                        employee.employeeNumber,
                         employee.lastName.concat(employee.firstName) // managerName
                 ))
                 .from(voucher)
@@ -267,6 +268,7 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                                     voucher.voucherNumber,
                                     voucher.voucherApprovalTime,
                                     employee.department.departmentName,
+                                    employee.employeeNumber,
                                     employee.lastName.concat(employee.firstName)
                         ))
                 .from(voucher)
@@ -376,26 +378,25 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
 
         BooleanBuilder whereCondition = new BooleanBuilder();
 
-//
-//        if(dto.getStartDate() != null && dto.getEndDate() != null) {
-//            whereCondition.and(voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate()));
-//        }
-//
-//        if (dto.getVoucherType() != null) {
-//            whereCondition.and(voucher.voucherType.eq(dto.getVoucherType()));
-//        }
-//
-//
-//        if (dto.getVoucherKind() != null) {
-//            whereCondition.and(voucher.voucherKind.eq(dto.getVoucherKind()));
-//        }
-//
-//        if(dto.getStartVoucherNumber() != null && dto.getEndVoucherNumber() != null) {
-//            whereCondition.and(voucher.voucherNumber.between(dto.getStartVoucherNumber(),dto.getEndVoucherNumber()));
-//        }
-//
-//        whereCondition.and(accountSubject.code.castToNum(Integer.class).
-//                between(Integer.parseInt(dto.getStartAccountCode()), Integer.parseInt(dto.getEndAccountCode())));
+
+        whereCondition.and(accountSubject.code.castToNum(Integer.class).between(Integer.valueOf(dto.getStartAccountCode()), Integer.valueOf(dto.getEndAccountCode())));
+
+        if(dto.getStartDate() != null && dto.getEndDate() != null) {
+            whereCondition.and(voucher.voucherDate.between(dto.getStartDate(), dto.getEndDate()));
+        }
+
+        if (dto.getVoucherType() != null) {
+            whereCondition.and(voucher.voucherType.eq(dto.getVoucherType()));
+        }
+
+
+        if (dto.getVoucherKind() != null) {
+            whereCondition.and(voucher.voucherKind.eq(dto.getVoucherKind()));
+        }
+
+        if(dto.getStartVoucherNumber() != null && dto.getEndVoucherNumber() != null) {
+            whereCondition.and(voucher.voucherNumber.between(dto.getStartVoucherNumber(),dto.getEndVoucherNumber()));
+        }
 
         return queryFactory
                 .select(Projections.constructor(ResolvedVoucherShowDTO.class,
@@ -405,8 +406,8 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                         voucher.voucherType,
                         accountSubject.code,
                         accountSubject.name,
+                        employee.employeeNumber,
                         employee.lastName.concat(employee.firstName),
-//                        accountSubject.name,
                         client.code,
                         client.printClientName,
                         voucher.transactionDescription,
@@ -415,9 +416,9 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                         voucher.voucherKind
                         ))
                 .from(voucher)
-                .join(accountSubject).on(voucher.accountSubject.id.eq(accountSubject.id))
-                .join(client).on(voucher.client.id.eq(client.id))
-                .join(employee.department,department)
+                .join(accountSubject).on(accountSubject.id.eq(voucher.accountSubject.id))
+                .join(client).on(client.id.eq(voucher.client.id))
+                .join(voucher.voucherManager,employee)
                 .where(whereCondition)
                 .orderBy(voucher.voucherDate.asc(),voucher.voucherNumber.asc())
                 .fetch();
