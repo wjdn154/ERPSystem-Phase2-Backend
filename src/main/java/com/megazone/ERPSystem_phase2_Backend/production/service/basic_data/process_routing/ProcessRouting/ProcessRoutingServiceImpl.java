@@ -1,7 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.process_routing.ProcessRouting;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessRoutingDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
@@ -25,11 +23,11 @@ import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.pr
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.process_routing.RoutingStep.RoutingStepRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
@@ -237,7 +235,7 @@ public class ProcessRoutingServiceImpl implements ProcessRoutingService {
         processRoutingDetailDTO.setDescription(processRoutingDTO.getDescription());
         processRoutingDetailDTO.setStandard(processRoutingDTO.isStandard());
         processRoutingDetailDTO.setActive(processRoutingDTO.isActive());
-        processRoutingDetailDTO.setProcessDetails(processDetailsList);
+        processRoutingDetailDTO.setProcessDetails(processDetailsList.stream().map(this::convertProcessDetailsToDTO).collect(Collectors.toList()));
         processRoutingDetailDTO.setProducts(productDTOList);
 
         return processRoutingDetailDTO;
@@ -265,43 +263,65 @@ public class ProcessRoutingServiceImpl implements ProcessRoutingService {
 
 
     /**
-     * @param processRoutingDTO
+     * @param processRoutingDetailDTO
      * @return
      */
-    public ProcessRoutingDetailDTO updateProcessRouting(ProcessRoutingDetailDTO processRoutingDTO) {
-//        // 1. 기존 라우팅을 조회
-//        ProcessRouting existingRouting = processRoutingRepository.findById(processRoutingDTO.getId())
-//                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 공정경로를 찾을 수 없습니다: " + processRoutingDTO.getId()));
-//
-//        // 2. 기본 필드 업데이트
-//        existingRouting.setCode(processRoutingDTO.getCode());
-//        existingRouting.setName(processRoutingDTO.getName());
-//        existingRouting.setDescription(processRoutingDTO.getDescription());
-//        existingRouting.setStandard(processRoutingDTO.isStandard());
-//        existingRouting.setActive(processRoutingDTO.isActive());
-//
-//        // 3. 연관된 RoutingSteps 업데이트
-//        List<RoutingStep> updatedRoutingSteps = createRoutingSteps(processRoutingDTO.getRoutingSteps(), existingRouting);
-//
-//        // 기존의 RoutingSteps를 제거하고 새로 추가
-//        existingRouting.getRoutingSteps().clear();
-//        existingRouting.getRoutingSteps().addAll(updatedRoutingSteps);
-//
-////        // 4. 연관된 Products 업데이트
-////        List<Product> updatedProducts = processRoutingDTO.getProducts().stream()
-////                .map(this::convertProductDtoToEntity)
-////                .collect(Collectors.toList());
-//
-//        // 기존의 Products를 제거하고 새로 추가
-//        existingRouting.getProducts().clear();
-////        existingRouting.getProducts().addAll(updatedProducts);
-//
-//        // 5. 변경된 엔티티 저장 및 반환
-//        ProcessRouting savedRouting = processRoutingRepository.save(existingRouting);
-//        return convertToDTO(savedRouting);
+    public ProcessRoutingDetailDTO updateProcessRouting(ProcessRoutingDetailDTO processRoutingDetailDTO) {
 
-        return null;
+        ProcessRouting existingRouting = processRoutingRepository.findById(processRoutingDetailDTO.getId()).orElseThrow(() -> new IllegalArgumentException("해당 ID의 공정경로를 찾을 수 없습니다: " + processRoutingDetailDTO.getId()));
 
+        if (!existingRouting.getCode().equals(processRoutingDetailDTO.getCode())) {
+            boolean isDuplicate = processRoutingRepository.existsByCodeAndIdNot(processRoutingDetailDTO.getCode(), processRoutingDetailDTO.getId());
+            if (isDuplicate) throw new IllegalArgumentException("중복된 공정경로 코드가 존재합니다: " + processRoutingDetailDTO.getCode());
+        }
+
+        existingRouting.setCode(processRoutingDetailDTO.getCode());
+        existingRouting.setName(processRoutingDetailDTO.getName());
+        existingRouting.setDescription(processRoutingDetailDTO.getDescription());
+        existingRouting.setStandard(processRoutingDetailDTO.isStandard());
+        existingRouting.setActive(processRoutingDetailDTO.isActive());
+
+        List<ProcessDetailsDTO> processDetails = processRoutingDetailDTO.getProcessDetails();
+
+        routingStepRepository.deleteByProcessRoutingId(existingRouting.getId());
+
+        if (processDetails != null || !processDetails.isEmpty()) {
+            AtomicReference<Long> index = new AtomicReference<>(1L);
+            processDetails.forEach(processDetailsDTO -> {
+                Long processId = getProcessIdByCodeOrName(processDetailsDTO);
+                RoutingStepId id = new RoutingStepId(existingRouting.getId(), processId);
+
+                ProcessDetails processDetailsEntity = processDetailsRepository.findById(processId)
+                        .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 공정 ID: " + processId));
+
+                RoutingStep routingStep = RoutingStep.builder()
+                        .id(id)
+                        .processRouting(existingRouting)
+                        .processDetails(processDetailsEntity)
+                        .stepOrder(index.getAndSet(index.get() + 1))
+                        .build();
+
+                routingStepRepository.save(routingStep);
+            });
+        }
+
+        routingStepRepository.flush();
+
+        return new ProcessRoutingDetailDTO(
+                existingRouting.getId(),
+                existingRouting.getCode(),
+                existingRouting.getName(),
+                existingRouting.getDescription(),
+                existingRouting.isStandard(),
+                existingRouting.isActive(),
+                existingRouting.getRoutingSteps().stream()
+                        .map(RoutingStep::getProcessDetails)
+                        .map(this::convertProcessDetailsToDTO)
+                        .collect(Collectors.toList()),
+                existingRouting.getProducts().stream()
+                        .map(this::convertProductToDTO)
+                        .collect(Collectors.toList())
+        );
     }
 
 

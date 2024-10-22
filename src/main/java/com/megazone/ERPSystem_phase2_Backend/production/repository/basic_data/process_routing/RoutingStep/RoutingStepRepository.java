@@ -13,4 +13,6 @@ public interface RoutingStepRepository extends JpaRepository<RoutingStep, Routin
 
     @Query("SELECT rs FROM process_routing_routing_step rs WHERE rs.id.processRoutingId = :processRoutingId")
     List<RoutingStep> findAllByProcessRoutingIdWithDetails(@Param("processRoutingId") Long processRoutingId);
+
+    void deleteByProcessRoutingId(Long processRoutingId);
 }
