@@ -1,5 +1,5 @@
 -- 판매계획(SalePlan) 초기 데이터 삽입
-INSERT INTO SalePlan (client_id, manager_id, product_id, quantity, expectedSales, remarks)
+INSERT INTO sale_plan (client_id, manager_id, product_id, quantity, expected_sales, remarks)
 VALUES
     (1, 2, 3, 100, 500000.00, '고객 요청에 따른 추가 주문'),
     (2, 3, 4, 200, 1200000.00, '분기별 정기 판매 계획'),
