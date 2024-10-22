@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.QAccountSubject;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.QStandardFinancialStatement;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.QStructure;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.enums.EntryType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.enums.FinancialStatementType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.QClient;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.dto.*;
@@ -466,38 +467,37 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
     }
 
     @Override
-    public List<IncomeStatementLedgerShowDTO> incomeStatementShow(IncomeStatementSearchDTO dto) {
+    public List<IncomeStatementLedgerDTO> incomeStatementShow(IncomeStatementSearchDTO dto) {
         QStandardFinancialStatement standardFinancialStatement = QStandardFinancialStatement.standardFinancialStatement;
         QAccountSubject accountSubject = QAccountSubject.accountSubject;
         QResolvedVoucher resolvedVoucher = QResolvedVoucher.resolvedVoucher;
         QStructure structure = QStructure.structure;
 
-//        return queryFactory
-//                .select(Projections.constructor(IncomeStatementLedgerDTO.class,
-//                        Expressions.constant(BigDecimal.ZERO),
-//                        resolvedVoucher.debitAmount.sum(),
-//                        Expressions.constant(BigDecimal.ZERO),
-//                        resolvedVoucher.creditAmount.sum(),
-//                        structure.code,
-//                        structure.min,
-//                        standardFinancialStatement.id,
-//                        structure.mediumCategory,
-//                        structure.smallCategory,
-//                        standardFinancialStatement.name,
-//                        standardFinancialStatement.code
-//                ))
-//                .from(standardFinancialStatement)
-//                .leftJoin(accountSubject).on(accountSubject.standardFinancialStatementCode.eq(standardFinancialStatement.code))
-//                .leftJoin(resolvedVoucher).on(resolvedVoucher.accountSubject.id.eq(accountSubject.id)
-//                        // 날짜 필터를 WHERE 절이 아닌 ON 절에 추가
-//                        .and(resolvedVoucher.voucherDate.month().eq(dto.getSearchDate().getMonthValue())))
-//                .leftJoin(structure).on(structure.id.eq(accountSubject.structure.id)
-//                        .and(structure.id.eq(standardFinancialStatement.structure.id)))
-//                .where(structure.financialStatementType.eq(FinancialStatementType.STANDARD_FINANCIAL_STATEMENT))
-//                .groupBy(standardFinancialStatement.id, standardFinancialStatement.code)
-//                .orderBy(standardFinancialStatement.id.asc())
-//                .fetch();
-        return null;
+        return queryFactory
+                .select(Projections.constructor(IncomeStatementLedgerDTO.class,
+                        new CaseBuilder()
+                                .when(resolvedVoucher.accountSubject.entryType.eq(EntryType.CREDIT))
+                                .then(resolvedVoucher.creditAmount.sum())
+                                .otherwise(resolvedVoucher.debitAmount.sum()),
+                        structure.code,
+                        structure.min,
+                        structure.mediumCategory,
+                        structure.smallCategory,
+                        standardFinancialStatement.id,
+                        standardFinancialStatement.name,
+                        standardFinancialStatement.code
+                ))
+                .from(standardFinancialStatement)
+                .leftJoin(accountSubject).on(accountSubject.standardFinancialStatementCode.eq(standardFinancialStatement.code))
+                .leftJoin(resolvedVoucher).on(resolvedVoucher.accountSubject.id.eq(accountSubject.id)
+                        // 날짜 필터를 WHERE 절이 아닌 ON 절에 추가
+                        .and(resolvedVoucher.voucherDate.month().eq(dto.getYearMonth().getMonthValue())))
+                .leftJoin(structure).on(structure.id.eq(accountSubject.structure.id)
+                        .and(structure.id.eq(standardFinancialStatement.structure.id)))
+                .where(structure.financialStatementType.eq(FinancialStatementType.INCOME_STATEMENT))
+                .groupBy(standardFinancialStatement.id, standardFinancialStatement.code)
+                .orderBy(standardFinancialStatement.id.asc())
+                .fetch();
     }
 
 

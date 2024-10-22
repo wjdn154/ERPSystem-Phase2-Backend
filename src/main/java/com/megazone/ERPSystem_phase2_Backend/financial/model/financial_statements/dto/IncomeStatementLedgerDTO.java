@@ -13,9 +13,9 @@ public class IncomeStatementLedgerDTO {
     private BigDecimal amount;
     private String accountStructureCode;
     private Integer accountStructureMin;
-    private Long financialStatementId;
     private String mediumCategory;
     private String smallCategory;
+    private Long financialStatementId;
     private String financialStatementsName;
     private String financialStatementsCode;
 
@@ -28,9 +28,9 @@ public class IncomeStatementLedgerDTO {
                 amount,
                 accountStructureCode,
                 accountStructureMin,
-                financialStatementId,
                 mediumCategory,
                 smallCategory,
+                financialStatementId,
                 financialStatementsName,
                 financialStatementsCode
         );
