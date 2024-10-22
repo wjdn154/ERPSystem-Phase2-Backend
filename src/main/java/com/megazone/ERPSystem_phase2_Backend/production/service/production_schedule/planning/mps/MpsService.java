@@ -5,7 +5,7 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedul
 import java.util.List;
 
 public interface MpsService {
-    MpsDTO createMps(MpsDTO dto);
+    MpsDTO saveMps(MpsDTO dto);
 
     List<MpsDTO> getAllMps();
 
@@ -14,5 +14,7 @@ public interface MpsService {
     MpsDTO updateMps(Long id, MpsDTO dto);
 
     String deleteMps(Long id);
+
+    void updateMpsStatusBasedOnOrders(Long mpsId);
 
 }

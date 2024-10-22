@@ -8,4 +8,5 @@ import java.util.List;
 public interface WorkPerformanceRepository extends JpaRepository<WorkPerformance, Long> , WorkPerformanceRepositoryCustom {
 
     List<WorkPerformance> findAllByOrderByIdDesc();
+
 }

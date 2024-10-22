@@ -6,9 +6,11 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedul
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ShiftType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.ProductionOrderDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.WorkerAssignment;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.planning.Mps;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.production_strategy.PlanOfMakeToOrder;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.production_strategy.PlanOfMakeToStock;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.Worker;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.enums.WorkStatus;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.production_strategy.mto.PlanOfMakeToOrderRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.production_strategy.mts.PlanOfMakeToStockRepository;
@@ -22,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,8 +38,21 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
     private final WorkerRepository workerRepository;
     private final WorkcenterRepository workcenterRepository;
     private final ShiftTypeRepository shiftTypeRepository;
-    private final PlanOfMakeToOrderRepository planOfMakeToOrderRepository;
-    private final PlanOfMakeToStockRepository planOfMakeToStockRepository;
+//    private final PlanOfMakeToOrderRepository planOfMakeToOrderRepository;
+//    private final PlanOfMakeToStockRepository planOfMakeToStockRepository;
+
+    // MPS로부터 자동으로 ProductionOrder 생성
+    public void createOrdersFromMps(Mps mps) {
+        ProductionOrder order = ProductionOrder.builder()
+                .name(mps.getName() + " 작업 지시")
+                .mps(mps)
+                .startDateTime(mps.getStartDate().atStartOfDay())
+                .endDateTime(mps.getEndDate().atStartOfDay())
+                .closed(false) // 초기에는 미마감
+                .build();
+
+        productionOrderRepository.save(order);
+    }
 
     /**
      * 작업 지시 조회 by ID
@@ -63,7 +79,7 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
      * 작업 지시 생성
      */
     @Override
-    public ProductionOrderDTO createProductionOrder(ProductionOrderDTO productionOrderDTO) {
+    public ProductionOrderDTO saveProductionOrder(ProductionOrderDTO productionOrderDTO) {
         ProductionOrder productionOrder = convertToEntity(productionOrderDTO);
         ProductionOrder savedProductionOrder = productionOrderRepository.save(productionOrder);
 
@@ -132,8 +148,6 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
         });
     }
 
-
-
     /**
      * 작업자 배정 엔티티 생성
      */
@@ -178,19 +192,19 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
             productionOrder.setName(productionOrderDTO.getName());
         }
 
-        // PlanOfMakeToOrder가 변경되었을 때만 업데이트
-        if (productionOrderDTO.getPlanOfMakeToOrderId() != null) {
-            PlanOfMakeToOrder planOfMakeToOrder = planOfMakeToOrderRepository.findById(productionOrderDTO.getPlanOfMakeToOrderId())
-                    .orElseThrow(() -> new EntityNotFoundException("생산 주문 계획을 찾을 수 없습니다."));
-            productionOrder.setPlanOfMakeToOrder(planOfMakeToOrder);
-        }
-
-        // PlanOfMakeToStock이 변경되었을 때만 업데이트
-        if (productionOrderDTO.getPlanOfMakeToStockId() != null) {
-            PlanOfMakeToStock planOfMakeToStock = planOfMakeToStockRepository.findById(productionOrderDTO.getPlanOfMakeToStockId())
-                    .orElseThrow(() -> new EntityNotFoundException("생산 재고 계획을 찾을 수 없습니다."));
-            productionOrder.setPlanOfMakeToStock(planOfMakeToStock);
-        }
+//        // PlanOfMakeToOrder가 변경되었을 때만 업데이트
+//        if (productionOrderDTO.getPlanOfMakeToOrderId() != null) {
+//            PlanOfMakeToOrder planOfMakeToOrder = planOfMakeToOrderRepository.findById(productionOrderDTO.getPlanOfMakeToOrderId())
+//                    .orElseThrow(() -> new EntityNotFoundException("생산 주문 계획을 찾을 수 없습니다."));
+//            productionOrder.setPlanOfMakeToOrder(planOfMakeToOrder);
+//        }
+//
+//        // PlanOfMakeToStock이 변경되었을 때만 업데이트
+//        if (productionOrderDTO.getPlanOfMakeToStockId() != null) {
+//            PlanOfMakeToStock planOfMakeToStock = planOfMakeToStockRepository.findById(productionOrderDTO.getPlanOfMakeToStockId())
+//                    .orElseThrow(() -> new EntityNotFoundException("생산 재고 계획을 찾을 수 없습니다."));
+//            productionOrder.setPlanOfMakeToStock(planOfMakeToStock);
+//        }
 
         // Remarks가 null이 아니면 업데이트
         if (productionOrderDTO.getRemarks() != null) {
@@ -204,14 +218,35 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
         }
     }
 
+    /**
+     * WorkPerformance의 상태 변경에 따른 작업 지시 마감 여부 업데이트
+     */
+    public void updateOrderClosure(Long productionOrderId) {
+        ProductionOrder productionOrder = productionOrderRepository.findById(productionOrderId)
+                .orElseThrow(() -> new EntityNotFoundException("작업 지시를 찾을 수 없습니다."));
+
+        // 모든 WorkPerformance가 'IN_PROGRESS'가 아니면 마감 처리
+        boolean allNotInProgress = productionOrder.getWorkPerformances().stream()
+                .noneMatch(performance -> performance.getWorkStatus() == WorkStatus.IN_PROGRESS);
+
+        productionOrder.setClosed(allNotInProgress);
+
+        // 작업 종료 시점 설정 (마감 시)
+        if (allNotInProgress) {
+            productionOrder.setEndDateTime(LocalDateTime.now());
+        }
+
+        productionOrderRepository.save(productionOrder);
+    }
+
 
     // 엔티티를 DTO로 변환
     private ProductionOrderDTO convertToDTO(ProductionOrder productionOrder) {
         return ProductionOrderDTO.builder()
                 .id(productionOrder.getId())
                 .name(productionOrder.getName())
-                .planOfMakeToOrderId(productionOrder.getPlanOfMakeToOrder() != null ? productionOrder.getPlanOfMakeToOrder().getId() : null)
-                .planOfMakeToStockId(productionOrder.getPlanOfMakeToStock() != null ? productionOrder.getPlanOfMakeToStock().getId() : null)
+//                .planOfMakeToOrderId(productionOrder.getPlanOfMakeToOrder() != null ? productionOrder.getPlanOfMakeToOrder().getId() : null)
+//                .planOfMakeToStockId(productionOrder.getPlanOfMakeToStock() != null ? productionOrder.getPlanOfMakeToStock().getId() : null)
                 .workerAssignments(productionOrder.getWorkerAssignments().stream()
                         .map(this::convertWorkerAssignmentToDTO)
                         .toList())
@@ -227,10 +262,10 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
         return ProductionOrder.builder()
                 .id(productionOrderDTO.getId())
                 .name(productionOrderDTO.getName())
-                .planOfMakeToOrder(productionOrderDTO.getPlanOfMakeToOrderId() != null ? planOfMakeToOrderRepository.findById(productionOrderDTO.getPlanOfMakeToOrderId())
-                        .orElseThrow(() -> new EntityNotFoundException("생산 주문 계획을 찾을 수 없습니다.")) : null)
-                .planOfMakeToStock(productionOrderDTO.getPlanOfMakeToStockId() != null ? planOfMakeToStockRepository.findById(productionOrderDTO.getPlanOfMakeToStockId())
-                        .orElseThrow(() -> new EntityNotFoundException("생산 재고 계획을 찾을 수 없습니다.")) : null)
+//                .planOfMakeToOrder(productionOrderDTO.getPlanOfMakeToOrderId() != null ? planOfMakeToOrderRepository.findById(productionOrderDTO.getPlanOfMakeToOrderId())
+//                        .orElseThrow(() -> new EntityNotFoundException("생산 주문 계획을 찾을 수 없습니다.")) : null)
+//                .planOfMakeToStock(productionOrderDTO.getPlanOfMakeToStockId() != null ? planOfMakeToStockRepository.findById(productionOrderDTO.getPlanOfMakeToStockId())
+//                        .orElseThrow(() -> new EntityNotFoundException("생산 재고 계획을 찾을 수 없습니다.")) : null)
                 .remarks(productionOrderDTO.getRemarks())
                 .confirmed(productionOrderDTO.getConfirmed())
                 .startDateTime(productionOrderDTO.getStartDateTime())

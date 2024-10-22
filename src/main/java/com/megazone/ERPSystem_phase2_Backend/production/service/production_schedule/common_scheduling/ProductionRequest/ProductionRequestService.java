@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.service.production_sche
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.ProductionRequestDTO;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductionRequestService {
@@ -14,5 +15,7 @@ public interface ProductionRequestService {
     ProductionRequestDTO updateProductionRequest(Long id, ProductionRequestDTO productionRequestDTO);
 
     void deleteProductionRequest(Long id);
+
+    ProductionRequestDTO confirmProductionRequest(Long id, BigDecimal confirmedQuantity);
 
 }
