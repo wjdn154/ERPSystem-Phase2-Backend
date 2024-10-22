@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,7 +43,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
                 .map(workPerformance -> new WorkPerformanceListDTO(
                         workPerformance.getId(),
                         workPerformance.getName(),
-                        workPerformance.getActualQuantity(),
+                        workPerformance.getActualQuantity() != null ? workPerformance.getActualQuantity() : BigDecimal.ZERO,
                         workPerformance.getWorkCost(),
                         workPerformance.getWorkStatus(),
                         workPerformance.getWorkDailyReport().getWorkDailyReportCode(),
@@ -109,7 +110,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
                 .id(workPerformance.getId())
                 .name(workPerformance.getName())
                 .description(workPerformance.getDescription())
-                .actualQuantity(workPerformance.getActualQuantity())
+                .actualQuantity(workPerformance.getActualQuantity() != null ? workPerformance.getActualQuantity() : BigDecimal.ZERO)
                 .workCost(workPerformance.getWorkCost())
                 .workStatus(workPerformance.getWorkStatus())
                 .workDailyReportCode(workPerformance.getWorkDailyReport().getWorkDailyReportCode())
@@ -139,7 +140,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
                 .id(dto.getId())
                 .name(dto.getName())
                 .description(dto.getDescription())
-                .actualQuantity(dto.getActualQuantity())
+                .actualQuantity(dto.getActualQuantity() != null ? dto.getActualQuantity() : BigDecimal.ZERO)  // null 처리
                 .workCost(dto.getWorkCost())
                 .workStatus(dto.getWorkStatus())
                 .workDailyReport(workDailyReport)
@@ -164,7 +165,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
 
         workPerformance.setId(workPerformance.getId());
         workPerformance.setName(dto.getName());
-        workPerformance.setActualQuantity(dto.getActualQuantity());
+        workPerformance.setActualQuantity(dto.getActualQuantity() != null ? dto.getActualQuantity() : BigDecimal.ZERO);
         workPerformance.setWorkCost(dto.getWorkCost());
         workPerformance.setWorkStatus(dto.getWorkStatus());
         workPerformance.setWorkDailyReport(workDailyReport);
@@ -174,28 +175,6 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
         return workPerformance;
 
 
-    }
-
-    /**
-     * WorkPerformance 상태 변경 및 작업 지시 마감 여부 업데이트
-     */
-    public void changeWorkStatus(Long workPerformanceId, WorkStatus newStatus) {
-        // WorkPerformance 조회
-        WorkPerformance workPerformance = workPerformanceRepository.findById(workPerformanceId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 작업 실적을 찾을 수 없습니다."));
-
-        // 상태가 동일한 경우 업데이트 생략
-        if (workPerformance.getWorkStatus() == newStatus) {
-            throw new IllegalStateException("이미 동일한 상태로 설정되어 있습니다.");
-        }
-
-        // WorkPerformance 상태 변경
-        workPerformance.setWorkStatus(newStatus);
-        workPerformanceRepository.save(workPerformance);
-
-        // WorkPerformance와 연관된 ProductionOrder ID 조회 후 마감 여부 업데이트
-        Long productionOrderId = getProductionOrderIdByWorkPerformance(workPerformanceId);
-        productionOrderService.updateOrderClosure(productionOrderId);
     }
 
     /**

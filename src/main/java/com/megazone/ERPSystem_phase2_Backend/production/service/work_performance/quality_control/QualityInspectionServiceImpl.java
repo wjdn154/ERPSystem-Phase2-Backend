@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.IllformedLocaleException;
 import java.util.List;
 import java.util.Optional;
@@ -31,15 +32,21 @@ public class QualityInspectionServiceImpl implements QualityInspectionService{
         return qualityInspectionRepository.findAllByOrderByIdDesc().stream()
                 .map(qualityInspection -> {
                     // 총 수량
-                    Long totalQuantity = qualityInspection.getWorkPerformance().getActualQuantity();
+                    BigDecimal totalQuantity = qualityInspection.getWorkPerformance().getActualQuantity();
+
+//                    // 불량 수량 계산: `isPassed`가 `false`인 `InspectedProduct`의 개수
+//                    Long defectiveQuantity = qualityInspection.getInspectedProducts().stream()
+//                            .filter(inspectedProduct -> !inspectedProduct.getIsPassed()) // 검사 불통과 제품
+//                            .count();
 
                     // 불량 수량 계산: `isPassed`가 `false`인 `InspectedProduct`의 개수
-                    Long defectiveQuantity = qualityInspection.getInspectedProducts().stream()
+                    BigDecimal defectiveQuantity = BigDecimal.valueOf(qualityInspection.getInspectedProducts().stream()
                             .filter(inspectedProduct -> !inspectedProduct.getIsPassed()) // 검사 불통과 제품
-                            .count();
+                            .count());
+
 
                     // 통과 수량 계산
-                    Long passedQuantity = totalQuantity - defectiveQuantity;
+                    BigDecimal passedQuantity = totalQuantity.subtract(defectiveQuantity);
 
                     // `QualityInspectionListDTO` 생성 및 반환
                     return new QualityInspectionListDTO(
