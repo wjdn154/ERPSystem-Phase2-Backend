@@ -1,11 +1,9 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.basic_data.process_routing;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.common.dto.BankDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessRoutingDetail2DTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessRoutingDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessRouting;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessDetailsDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessRoutingDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.process_routing.PrcessRouting.ProcessRoutingRepository;
@@ -43,14 +41,9 @@ public class ProcessRoutingController {
 
     // 2. processRouting 개별상세조회
     @PostMapping("/{id}")
-    public ResponseEntity<ProcessRoutingDTO> getProcessRoutingById(@PathVariable("id") Long id) {
+    public ResponseEntity<ProcessRoutingDetailDTO> getProcessRoutingById(@PathVariable("id") Long id) {
 
-        System.out.println(processRoutingRepository.findById(id).toString());
-
-        ModelMapper modelMapper = new ModelMapper();
-        ProcessRoutingDTO processRoutings = processRoutingRepository.findById(id)
-                .map(bank -> modelMapper.map(bank, ProcessRoutingDTO.class))
-                .orElse(null);
+        ProcessRoutingDetailDTO processRoutings = processRoutingService.getProcessRoutingById(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(processRoutings);
     }
@@ -64,8 +57,8 @@ public class ProcessRoutingController {
 
     // 3.1 생성 시 등록창 내에서 생산공정 검색 (RoutingStep 등록 위함)
     @PostMapping("/searchProcessDetails")
-    public ResponseEntity<List<ProcessDetailsDTO>> searchProcessDetails(@RequestParam(value = "keyword") String keyword) {
-        List<ProcessDetailsDTO> processDetailsList = processRoutingService.searchProcessDetails(keyword);
+    public ResponseEntity<List<ProcessDetailsDTO>> searchProcessDetails() {
+        List<ProcessDetailsDTO> processDetailsList = processRoutingService.searchProcessDetails();
         return ResponseEntity.ok(processDetailsList);
     }
 
@@ -90,14 +83,14 @@ public class ProcessRoutingController {
     }
 
     // 4. 수정
-    @PostMapping("update/{id}")
-    public ResponseEntity<ProcessRoutingDTO> updateProcessRouting(
-            @PathVariable("id") Long id,
-            @RequestBody ProcessRoutingDTO processRoutingDTO) {
-        ProcessRoutingDTO updatedRouting = processRoutingService.updateProcessRouting(id, processRoutingDTO);
-        return ResponseEntity.ok(updatedRouting);
+    @PostMapping("update")
+    public ResponseEntity<ProcessRoutingDetailDTO> updateProcessRouting(@RequestBody ProcessRoutingDetail2DTO processRoutingDetailDTO) {
+        System.out.println("processRoutingDetailDTO = " + processRoutingDetailDTO);
+//        ProcessRoutingDetailDTO updatedRouting = processRoutingService.updateProcessRouting(processRoutingDetailDTO);
+//        System.out.println("updatedRouting = " + updatedRouting);
+//        return ResponseEntity.ok(updatedRouting);
+        return null;
     }
-
 
     // 5. 삭제
     @PostMapping("delete/{id}")

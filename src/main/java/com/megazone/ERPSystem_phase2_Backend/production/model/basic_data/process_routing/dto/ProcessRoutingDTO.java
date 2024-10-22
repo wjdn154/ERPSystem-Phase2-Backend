@@ -29,6 +29,5 @@ public class ProcessRoutingDTO {
 //    private Long productId;
 
     public void setDeletedAt(LocalDateTime now) {
-
     }
 }
