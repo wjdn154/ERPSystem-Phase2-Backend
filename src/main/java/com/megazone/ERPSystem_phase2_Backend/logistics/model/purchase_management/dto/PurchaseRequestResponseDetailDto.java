@@ -40,6 +40,9 @@ public class PurchaseRequestResponseDetailDto {
     // 통화 종류
     private String currency;
 
+    // 환율
+    private BigDecimal exchangeRate;
+
     // 비고
     private String remarks;
 
