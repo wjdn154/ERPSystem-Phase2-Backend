@@ -10,6 +10,7 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedul
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.production_strategy.PlanOfMakeToOrder;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.production_strategy.PlanOfMakeToStock;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.Worker;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.enums.WorkStatus;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.production_strategy.mto.PlanOfMakeToOrderRepository;
@@ -18,11 +19,13 @@ import com.megazone.ERPSystem_phase2_Backend.production.repository.production_sc
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.production_order.ProductionOrderRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.worker_assignment.WorkerAssignmentRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.resource_data.worker.WorkerRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.work_performance.work_report.WorkPerformanceRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,6 +41,7 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
     private final WorkerRepository workerRepository;
     private final WorkcenterRepository workcenterRepository;
     private final ShiftTypeRepository shiftTypeRepository;
+    private final WorkPerformanceRepository workPerformanceRepository;
 //    private final PlanOfMakeToOrderRepository planOfMakeToOrderRepository;
 //    private final PlanOfMakeToStockRepository planOfMakeToStockRepository;
 
@@ -219,22 +223,33 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
     }
 
     /**
-     * WorkPerformance의 상태 변경에 따른 작업 지시 마감 여부 업데이트
+     * 작업지시를 마감처리하면 해당 마감한 작업지시에 대한 작업실적 자동 생성
      */
     public void updateOrderClosure(Long productionOrderId) {
         ProductionOrder productionOrder = productionOrderRepository.findById(productionOrderId)
                 .orElseThrow(() -> new EntityNotFoundException("작업 지시를 찾을 수 없습니다."));
 
-        // 모든 WorkPerformance가 'IN_PROGRESS'가 아니면 마감 처리
-        boolean allNotInProgress = productionOrder.getWorkPerformances().stream()
-                .noneMatch(performance -> performance.getWorkStatus() == WorkStatus.IN_PROGRESS);
+        // 작업 지시 마감 처리 (상태만 변경)
+        productionOrder.setClosed(true);
+        productionOrder.setEndDateTime(LocalDateTime.now());
 
-        productionOrder.setClosed(allNotInProgress);
+        // 작업 지시 마감처리시, 작업종료시간 자동으로 입력되고, 시작시간과의 차이를 구해서 그 시간을 작업실적으로 전달함
 
-        // 작업 종료 시점 설정 (마감 시)
-        if (allNotInProgress) {
-            productionOrder.setEndDateTime(LocalDateTime.now());
+        // 작업 실적 생성 로직 추가
+        BigDecimal productionQuantity = productionOrder.getProductionQuantity();
+        if (productionQuantity == null || productionQuantity.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("유효하지 않은 생산 수량입니다.");
         }
+
+        // 작업 실적 생성 로직 추가
+        WorkPerformance workPerformance = WorkPerformance.builder()
+                .productionOrder(productionOrder)
+                .workStatus(WorkStatus.COMPLETED)
+                .actualQuantity(productionOrder.getProductionQuantity())
+                .workDate(productionOrder.getStartDateTime().toLocalDate())
+                .build();
+        workPerformanceRepository.save(workPerformance);
+        productionOrder.getWorkPerformances().add(workPerformance);
 
         productionOrderRepository.save(productionOrder);
     }

@@ -66,16 +66,4 @@ public class WorkPerformanceController {
         return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
-    /**
-     * WorkPerformance 상태 변경
-     */
-    @PatchMapping("/{performanceId}/status")
-    public ResponseEntity<Void> changeWorkStatus(
-            @PathVariable Long performanceId,
-            @RequestParam WorkStatus newStatus) {
-
-        workPerformanceService.changeWorkStatus(performanceId, newStatus);
-        return ResponseEntity.ok().build();
-    }
-
 }

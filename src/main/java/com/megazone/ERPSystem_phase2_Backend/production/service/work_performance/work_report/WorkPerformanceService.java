@@ -16,6 +16,4 @@ public interface WorkPerformanceService {
 
     Optional<WorkPerformanceDetailDTO> updateWorkPerformance(Long id, WorkPerformanceDetailDTO dto);
 
-    void changeWorkStatus(Long performanceId, WorkStatus newStatus);
-
 }
