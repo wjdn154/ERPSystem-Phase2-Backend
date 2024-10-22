@@ -17,8 +17,15 @@ public class MpsController {
 
     @PostMapping("/new")
     public ResponseEntity<MpsDTO> createMps(@RequestBody MpsDTO dto) {
-        MpsDTO createdMps = mpsService.createMps(dto);
+        MpsDTO createdMps = mpsService.saveMps(dto);
         return new ResponseEntity<>(createdMps, HttpStatus.CREATED);
+    }
+
+    // MPS의 모든 작업지시가 완료되면 상태 자동 전환
+    @PostMapping("/{mpsId}/complete")
+    public ResponseEntity<Void> completeMps(@PathVariable Long mpsId) {
+        mpsService.updateMpsStatusBasedOnOrders(mpsId);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping

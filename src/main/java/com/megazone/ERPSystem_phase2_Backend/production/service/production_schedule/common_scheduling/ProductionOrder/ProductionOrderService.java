@@ -11,11 +11,14 @@ public interface ProductionOrderService {
 
     List<ProductionOrderDTO> getAllProductionOrders();
 
-    ProductionOrderDTO createProductionOrder(ProductionOrderDTO productionOrderDTO);
+    ProductionOrderDTO saveProductionOrder(ProductionOrderDTO productionOrderDTO);
     ProductionOrderDTO updateProductionOrder(Long productionOrderId, ProductionOrderDTO productionOrderDTO);
 
     void deleteProductionOrder(Long productionOrderId);
 
     void assignWorkersToWorkcenter(ProductionOrderDTO productionOrderDTO, ProductionOrder productionOrder);
+    void updateOrderClosure(Long productionOrderId);
+
+    void createOrdersFromMps(Mps savedMps);
 
 }
