@@ -434,17 +434,15 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
         return queryFactory
                 .select(Projections.constructor(FinancialStatementsLedgerDTO.class,
                         Expressions.constant(BigDecimal.ZERO),
-//                        new CaseBuilder()
-//                                .when(resolvedVoucher.debitAmount.sum().isNull())
-//                                .then(BigDecimal.ZERO)
-//                                .otherwise(resolvedVoucher.debitAmount.sum()),
-                        resolvedVoucher.debitAmount.sum(),
+                        new CaseBuilder()
+                                .when(resolvedVoucher.debitAmount.sum().isNull())
+                                .then(BigDecimal.ZERO)
+                                .otherwise(resolvedVoucher.debitAmount.sum()),
                         Expressions.constant(BigDecimal.ZERO),
-//                        new CaseBuilder()
-//                                .when(resolvedVoucher.creditAmount.sum().isNull())
-//                                .then(BigDecimal.ZERO)
-//                                .otherwise(resolvedVoucher.creditAmount.sum()),
-                        resolvedVoucher.creditAmount.sum(),
+                        new CaseBuilder()
+                                .when(resolvedVoucher.creditAmount.sum().isNull())
+                                .then(BigDecimal.ZERO)
+                                .otherwise(resolvedVoucher.creditAmount.sum()),
                         structure.code,
                         structure.min,
                         standardFinancialStatement.id,
