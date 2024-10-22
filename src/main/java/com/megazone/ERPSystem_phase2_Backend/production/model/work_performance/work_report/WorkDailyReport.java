@@ -46,6 +46,6 @@ public class WorkDailyReport {
     private BigDecimal dailyDefectiveQuantity; // 일 집계 불량수량
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "work_weekly_report_id")
-    private WorkWeeklyReport workWeeklyReport;
+    @JoinColumn(name = "work_monthly_report_id")
+    private WorkMonthlyReport workMonthlyReport;
 }

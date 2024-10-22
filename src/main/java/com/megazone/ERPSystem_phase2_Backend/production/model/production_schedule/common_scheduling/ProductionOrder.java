@@ -1,6 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling;
 
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessDetails;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.planning.Mps;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.production_strategy.PlanOfMakeToOrder;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.production_strategy.PlanOfMakeToStock;
@@ -11,6 +13,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -44,7 +47,7 @@ public class ProductionOrder {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mps_id", nullable = false)
-    private Mps mps; // 연관된 MPS
+    private Mps mps; // 연관된 MPS에서 계획, 품목, 생산계획수량,
 
     @OneToMany(mappedBy = "productionOrder")
     @Column(nullable = false)
@@ -68,4 +71,15 @@ public class ProductionOrder {
 
     @Column(nullable = false)
     private LocalDateTime endDateTime; // 작업 종료 날짜 및 시간
+
+    @Column(nullable = false)
+    private BigDecimal productionQuantity; // 생산 지시 수량
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "process_id", nullable = false)
+    private ProcessDetails processDetails; // 생산 공정과의 연관 관계
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "workcenter_id", nullable = false)
+    private Workcenter workcenter;
 }
