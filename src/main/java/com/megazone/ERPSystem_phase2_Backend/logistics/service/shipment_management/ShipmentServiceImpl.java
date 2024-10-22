@@ -1,7 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.shipment_management;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.ContactInfo;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ContactInfoRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
@@ -9,10 +8,10 @@ import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_man
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.Shipment;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.ShipmentProduct;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.dto.ShipmentProductListResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.dto.ShipmentRequestDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.dto.ShipmentResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.dto.ShipmentResponseListDTO;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Address;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseAddressRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
@@ -85,13 +84,6 @@ public class ShipmentServiceImpl implements ShipmentService{
                 .orElseThrow(() -> new RuntimeException("담당자 정보를 찾을 수 없습니다."));
         Client client = clientRepository.findById(requestDTO.getClientId())
                 .orElseThrow(() -> new RuntimeException("고객 정보를 찾을 수 없습니다."));
-        ContactInfo contactInfo = requestDTO.getContactInfoId() != null
-                ? contactInfoRepository.findById(requestDTO.getContactInfoId())
-                .orElseThrow(() -> new RuntimeException("연락처 정보를 찾을 수 없습니다."))
-                : null;
-        Address address = addressRepository.findById(requestDTO.getWarehouseAddressId())
-                .orElseThrow(() -> new RuntimeException("창고 주소 정보를 찾을 수 없습니다."));
-
         Long maxShipmentNumber = shipmentRepository.findMaxShipmentNumberByDate(requestDTO.getShipmentDate());
 
         Long newShipmentNumber = maxShipmentNumber + 1;
@@ -100,8 +92,9 @@ public class ShipmentServiceImpl implements ShipmentService{
                 .warehouse(warehouse)
                 .employee(employee)
                 .client(client)
-                .contactInfo(contactInfo)
-                .address(address)
+                .clientName(client.getPrintClientName())
+                .contactInfo(requestDTO.getContactInfo())
+                .address(requestDTO.getAddress())
                 .shipmentDate(requestDTO.getShipmentDate())
                 .shipmentNumber(newShipmentNumber)
                 .comment(requestDTO.getComment())
@@ -141,12 +134,6 @@ public class ShipmentServiceImpl implements ShipmentService{
                 .orElseThrow(() -> new RuntimeException("담당자 정보를 찾을 수 없습니다."));
         Client client = clientRepository.findById(requestDTO.getClientId())
                 .orElseThrow(() -> new RuntimeException("고객 정보를 찾을 수 없습니다."));
-        ContactInfo contactInfo = requestDTO.getContactInfoId() != null
-                ? contactInfoRepository.findById(requestDTO.getContactInfoId())
-                .orElseThrow(() -> new RuntimeException("연락처 정보를 찾을 수 없습니다."))
-                : null;
-        Address address = addressRepository.findById(requestDTO.getWarehouseAddressId())
-                .orElseThrow(() -> new RuntimeException("창고 주소 정보를 찾을 수 없습니다."));
 
         LocalDate originalShipmentDate = existingShipment.getShipmentDate();
         LocalDate newShipmentDate = requestDTO.getShipmentDate();
@@ -162,8 +149,9 @@ public class ShipmentServiceImpl implements ShipmentService{
                 .warehouse(warehouse)
                 .employee(employee)
                 .client(client)
-                .contactInfo(contactInfo)
-                .address(address)
+                .clientName(client.getPrintClientName())
+                .contactInfo(requestDTO.getContactInfo())
+                .address(requestDTO.getAddress())
                 .shipmentDate(newShipmentDate)
                 .shipmentNumber(newShipmentNumber)
                 .comment(requestDTO.getComment())
@@ -201,6 +189,16 @@ public class ShipmentServiceImpl implements ShipmentService{
 
         shipmentRepository.deleteById(shipmentId);
     }
+
+    @Override
+    public List<ShipmentProductListResponseDTO> findShipmentItemsByDateRange(LocalDate startDate, LocalDate endDate) {
+        List<ShipmentProduct> shipmentProducts = shipmentProductRepository.findShipmentItemsByDateRange(startDate, endDate);
+
+        return shipmentProducts.stream()
+                .map(ShipmentProductListResponseDTO::mapToDto)
+                .collect(Collectors.toList());
+    }
+
 
     private String generateFirstProductName(Shipment shipment) {
         List<ShipmentProduct> products = shipment.getProducts();

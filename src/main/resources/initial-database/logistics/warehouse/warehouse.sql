@@ -127,19 +127,19 @@ VALUES
     (10, 10, 7, 1, 1, 'B0001', '즉석밥', 65, '부족 발생');
 
 
-INSERT INTO shipment (id, warehouse_id, warehouse_address_id, employee_id, client_id, contact_info_id, shipment_date, shipment_number, comment)
-values (1, 1, 1, 1, 1, 1, '2024-10-2', 1, null),
-       (2, 2, 2, 2, 2, 2, '2024-10-1', 1, null),
-       (3, 3, 3, 3, 3, 3, '2024-09-27', 1, null),
-       (4, 4, 4, 4, 4, 4, '2024-09-26', 1, null),
-       (5, 5, 5, 5, 5, 5, '2024-09-24', 1, null),
-       (6, 6, 6, 1, 6, 6, '2024-09-23', 1, null),
-       (7, 7, 7, 2, 7, 7, '2024-09-21', 1, null),
-       (8, 8, 8, 3, 8, 8, '2024-09-20', 1, null),
-       (9, 9, 9, 4, 9, 9, '2024-09-19', 1, null),
-       (10, 10, 10, 5, 10, 10, '2024-09-15', 1, null),
-       (11, 11, 11, 1, 11, 11, '2024-09-14', 1, null),
-       (12, 16, 1, 1, 11, 11, '2024-09-11', 1, null);
+INSERT INTO shipment (id, warehouse_id, employee_id, client_id, shipment_date, shipment_number, comment)
+values (1, 1, 1, 1, '2024-10-2', 1, null),
+       (2, 2, 2, 2, '2024-10-1', 1, null),
+       (3, 3, 3, 3, '2024-09-27', 1, null),
+       (4, 4, 4, 4, '2024-09-26', 1, null),
+       (5, 5, 5, 5, '2024-09-24', 1, null),
+       (6, 6, 1, 6, '2024-09-23', 1, null),
+       (7, 7, 2, 7, '2024-09-21', 1, null),
+       (8, 8, 3, 8, '2024-09-20', 1, null),
+       (9, 9, 4, 9, '2024-09-19', 1, null),
+       (10, 10, 5, 10, '2024-09-15', 1, null),
+       (11, 11, 1, 11, '2024-09-14', 1, null),
+       (12, 16, 1, 11, '2024-09-11', 1, null);
 
 INSERT INTO shipment_product (id, comment, product_code, product_name, quantity, standard, unit, product_id, shipment_id)
 values (1, null, 'B0001', '즉석밥', 100, null, null, 1, 1),
