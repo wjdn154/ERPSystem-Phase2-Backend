@@ -6,28 +6,33 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeDataDTO {
+public class EmployeeShowToDTO {
+    private Long id;
+    private String employeeNumber;
     private String firstName;
     private String lastName;
+    private LocalDate dateOfBirth;
     private String phoneNumber;
     private EmploymentStatus employmentStatus;
     private EmploymentType employmentType;
     private String email;
     private String address;
+    private LocalDate hireDate;
     private boolean isHouseholdHead;
     private String profilePicture;
 
 
+    private String departmentName;
     private String departmentCode; // 부서 ID
-    private String positionName;
-    private String titleName;
-    private Long bankId;
-    private String name;
+    private String positionName; // 직위 ID
+    private String titleName; // 직책 ID
+    private Long bankAccountId; // 은행 계좌 ID
     private String code;
-    private String accountNumber;  // 계좌 번호
-
+    private String bankName;
+    private String accountNumber;
 }

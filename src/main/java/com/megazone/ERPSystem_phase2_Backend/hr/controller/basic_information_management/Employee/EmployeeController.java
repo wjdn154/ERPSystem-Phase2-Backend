@@ -34,7 +34,6 @@ public class EmployeeController {
     // 사원 상세 조회
     @GetMapping("/employee/{id}")
     public ResponseEntity<EmployeeOneDTO> getEmployeeById(@PathVariable("id") Long id) {
-        System.out.println("id = " + id);
         // 서비스에서 해당 아이디의 사원 상세 정보를 가져옴
         Optional<EmployeeOneDTO> employee = employeeService.findEmployeeById(id);
 
@@ -57,8 +56,8 @@ public class EmployeeController {
 
     // 사원 정보 수정
     @PostMapping("/employee/updateEmployee/{id}")
-    public ResponseEntity<EmployeeFindDTO> updateEmployeeById(@PathVariable("id") Long id, @RequestBody EmployeeDataDTO dto) {
-        Optional<EmployeeFindDTO> updatedEmployee = employeeService.updateEmployee(id, dto);
+    public ResponseEntity<EmployeeShowToDTO> updateEmployeeById(@PathVariable("id") Long id, @RequestBody EmployeeDataDTO dto) {
+        Optional<EmployeeShowToDTO> updatedEmployee = employeeService.updateEmployee(id, dto);
         return updatedEmployee.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }

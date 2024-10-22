@@ -10,11 +10,13 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statement
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.resolvedVoucher.ResolvedVoucherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class FinancialStatementsLedgerServiceImpl implements FinancialStatementsLedgerService {
 
     private final ResolvedVoucherRepository resolvedVoucherRepository;
