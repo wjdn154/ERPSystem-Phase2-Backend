@@ -28,17 +28,17 @@ public class FinancialStatementsLedgerServiceImpl implements FinancialStatements
      * 자본총계, 부채총계, 합계 방식 필요
      */
     @Override
-    public Object show(FinancialStatementsLedgerSearchDTO dto) {
+    public List<FinancialStatementsLedgerShowDTO> show(FinancialStatementsLedgerSearchDTO dto) {
         List<FinancialStatementsLedgerDTO> queryResults = resolvedVoucherRepository.financialStatementsShow(dto);
-        // 트리 구조 생성
+// 트리 구조 생성
         Map<String, FinancialStateMediumCategoryNode> root = new LinkedHashMap<>();
 
         for (FinancialStatementsLedgerDTO data : queryResults) {
-            String mediumCategoryName = data.getMediumCategory(); // 중분류 카테고리
-            String smallCategoryName = data.getSmallCategory();   // 소분류 카테고리
+            String mediumCategoryName = data.getMediumCategory(); // 중분류 카테고리 이름
+            String smallCategoryName = data.getSmallCategory();   // 소분류 카테고리 이름
             String statementsName = data.getFinancialStatementsName(); // 계정명
-            int mediumStructureMin = data.getAccountStructureMin();    // 중분류의 구조 최소 값
-            int smallStructureMin = Integer.parseInt(data.getAccountStructureCode()); // 소분류의 구조 최소 값
+            int mediumStructureMin = data.getAccountStructureMin();    // 중분류 구조 코드 최소값
+            int smallStructureMin = Integer.parseInt(data.getAccountStructureCode()); // 소분류 구조 코드 최소값
             int accountStructureMin = Integer.parseInt(data.getFinancialStatementsCode()); // 계정 구조 코드
 
             // 중분류와 소분류가 동일한 경우 처리
@@ -47,20 +47,20 @@ public class FinancialStatementsLedgerServiceImpl implements FinancialStatements
                 smallStructureMin = mediumStructureMin;
             }
 
-            // AssetCategoryNode 가져오기 또는 생성
+            // 중분류 노드 가져오기 또는 생성
             FinancialStateMediumCategoryNode mediumNode = root.get(mediumCategoryName);
             if (mediumNode == null) {
                 mediumNode = new FinancialStateMediumCategoryNode(mediumCategoryName, mediumStructureMin);
                 root.put(mediumCategoryName, mediumNode);
             }
 
-            // AssetCategoryNode에 합계 추가
+            // 중분류 노드에 값 추가
             mediumNode.addValues(data);
 
             FinancialStateNode parentNode;
 
             if (smallCategoryName != null) {
-                // SubAssetCategoryNode 가져오기 또는 생성
+                // 소분류 노드 가져오기 또는 생성
                 FinancialStateSmallCategoryNode smallNode = null;
                 for (FinancialStateNode node : mediumNode.getChildren()) {
                     if (node.getName().equals(smallCategoryName)) {
@@ -72,7 +72,7 @@ public class FinancialStatementsLedgerServiceImpl implements FinancialStatements
                     smallNode = new FinancialStateSmallCategoryNode(smallCategoryName, smallStructureMin);
                     mediumNode.addChild(smallNode);
                 }
-                // SubAssetCategoryNode에 합계 추가
+                // 소분류 노드에 값 추가
                 smallNode.addValues(data);
                 parentNode = smallNode;
             } else {
@@ -80,88 +80,52 @@ public class FinancialStatementsLedgerServiceImpl implements FinancialStatements
                 parentNode = mediumNode;
             }
 
-            // 계정 노드 생성 및 추가
+            // 계정 노드 생성 및 부모 노드에 추가
             FinancialStateAccountNode accountNode = new FinancialStateAccountNode(statementsName, accountStructureMin);
             accountNode.addValues(data);
             parentNode.addChild(accountNode);
         }
 
-        // 트리를 순회하여 FinancialStatementsLedgerShowDTO 리스트로 변환
+// 트리를 순회하여 FinancialStatementsLedgerShowDTO 리스트로 변환
         List<FinancialStatementsLedgerShowDTO> result = new ArrayList<>();
         List<FinancialStateMediumCategoryNode> sortedMediumNodes = new ArrayList<>(root.values());
         Collections.sort(sortedMediumNodes);
 
-        BigDecimal totalDebitBalance = BigDecimal.ZERO;
-        BigDecimal totalDebitAmount = BigDecimal.ZERO;
-        BigDecimal totalCreditBalance = BigDecimal.ZERO;
-        BigDecimal totalCreditAmount = BigDecimal.ZERO;
+// 중분류와 대분류의 매핑 설정
+        Map<String, String> mediumToLargeCategoryMap = new HashMap<>();
+        mediumToLargeCategoryMap.put("유동자산", "자산총계");
+        mediumToLargeCategoryMap.put("비유동자산", "자산총계");
+        mediumToLargeCategoryMap.put("유동부채", "부채총계");
+        mediumToLargeCategoryMap.put("비유동부채", "부채총계");
+// 기타 중분류는 "자본총계"로 처리
 
+// 대분류별 합계를 저장할 맵 초기화
+        Map<String, MediumTotal> largeCategoryTotals = new HashMap<>();
+
+// 대분류별 중분류 리스트를 저장할 맵 초기화
+        Map<String, List<String>> largeToMediumCategories = new LinkedHashMap<>();
+
+// 중분류 노드를 순회하며 대분류별 중분류 리스트 구성
         for (FinancialStateMediumCategoryNode mediumNode : sortedMediumNodes) {
+            String mediumCategoryName = mediumNode.getName();
+            String largeCategoryName = mediumToLargeCategoryMap.getOrDefault(mediumCategoryName, "자본총계");
+
+            // 대분류별 중분류 리스트에 추가
+            largeToMediumCategories.computeIfAbsent(largeCategoryName, k -> new ArrayList<>()).add(mediumCategoryName);
+        }
+
+// 중분류 노드를 순회하며 결과 리스트 구성
+        for (FinancialStateMediumCategoryNode mediumNode : sortedMediumNodes) {
+            String mediumCategoryName = mediumNode.getName();
+            String largeCategoryName = mediumToLargeCategoryMap.getOrDefault(mediumCategoryName, "자본총계");
+
             result.add(FinancialStatementsLedgerShowDTO.create(mediumNode, "Medium_category"));
 
-            switch(mediumNode.getName())
-            {
-                case "유동자산":
-                    totalDebitBalance = totalDebitBalance.add(mediumNode.getTotalDebitBalance());
-                    totalDebitAmount = totalDebitAmount.add(mediumNode.getTotalDebitAmount());
-                    totalCreditBalance = totalCreditBalance.add(mediumNode.getTotalCreditBalance());
-                    totalCreditAmount = totalCreditAmount.add(mediumNode.getTotalCreditAmount());
-                    break;
-                case "비유동자산":
-                    totalDebitBalance = totalDebitBalance.add(mediumNode.getTotalDebitBalance());
-                    totalDebitAmount = totalDebitAmount.add(mediumNode.getTotalDebitAmount());
-                    totalCreditBalance = totalCreditBalance.add(mediumNode.getTotalCreditBalance());
-                    totalCreditAmount = totalCreditAmount.add(mediumNode.getTotalCreditAmount());
-                    result.add(new FinancialStatementsLedgerShowDTO(
-                            "Large_Category",
-                            "자산총계",
-                            totalDebitBalance,
-                            totalDebitAmount,
-                            totalCreditBalance,
-                            totalCreditAmount
-                    ));
-                    totalDebitBalance = BigDecimal.ZERO;
-                    totalDebitAmount = BigDecimal.ZERO;
-                    totalCreditBalance = BigDecimal.ZERO;
-                    totalCreditAmount = BigDecimal.ZERO;
-                    break;
-                case "유동부채":
-                    totalDebitBalance = totalDebitBalance.add(mediumNode.getTotalDebitBalance());
-                    totalDebitAmount = totalDebitAmount.add(mediumNode.getTotalDebitAmount());
-                    totalCreditBalance = totalCreditBalance.add(mediumNode.getTotalCreditBalance());
-                    totalCreditAmount = totalCreditAmount.add(mediumNode.getTotalCreditAmount());
-                    break;
-                case "비유동부채":
-                    totalDebitBalance = totalDebitBalance.add(mediumNode.getTotalDebitBalance());
-                    totalDebitAmount = totalDebitAmount.add(mediumNode.getTotalDebitAmount());
-                    totalCreditBalance = totalCreditBalance.add(mediumNode.getTotalCreditBalance());
-                    totalCreditAmount = totalCreditAmount.add(mediumNode.getTotalCreditAmount());
-                    result.add(new FinancialStatementsLedgerShowDTO(
-                            "Large_Category",
-                            "부채총계",
-                            totalDebitBalance,
-                            totalDebitAmount,
-                            totalCreditBalance,
-                            totalCreditAmount
-                    ));
-                    totalDebitBalance = BigDecimal.ZERO;
-                    totalDebitAmount = BigDecimal.ZERO;
-                    totalCreditBalance = BigDecimal.ZERO;
-                    totalCreditAmount = BigDecimal.ZERO;
-                default:
-                    totalDebitBalance = totalDebitBalance.add(mediumNode.getTotalDebitBalance());
-                    totalDebitAmount = totalDebitAmount.add(mediumNode.getTotalDebitAmount());
-                    totalCreditBalance = totalCreditBalance.add(mediumNode.getTotalCreditBalance());
-                    totalCreditAmount = totalCreditAmount.add(mediumNode.getTotalCreditAmount());
-                    break;
-            }
-            /**
-             * 대분류 카테고리
-             * 유동자산 + 비유동자산 = 자산총계
-             * 유동부채 + 비유동부채 = 부채총계
-             * 자본금 이하 모두 = 자본총계
-             * 부채총계 + 자본총계 = 부채와 자본총계
-             */
+            // 대분류 합계 가져오기 또는 생성
+            MediumTotal totals = largeCategoryTotals.computeIfAbsent(largeCategoryName, k -> new MediumTotal());
+            totals.add(mediumNode);
+
+            // 자식 노드 처리
             List<FinancialStateNode> sortedSmallNodes = mediumNode.getChildren();
             for (FinancialStateNode childNode : sortedSmallNodes) {
                 if (childNode instanceof FinancialStateSmallCategoryNode) {
@@ -174,17 +138,65 @@ public class FinancialStatementsLedgerServiceImpl implements FinancialStatements
                     result.add(FinancialStatementsLedgerShowDTO.create(childNode, "Account_name"));
                 }
             }
+
+            // 현재 중분류가 해당 대분류의 마지막 중분류인지 확인
+            List<String> mediumCategoriesInLarge = largeToMediumCategories.get(largeCategoryName);
+            if (mediumCategoriesInLarge != null && mediumCategoryName.equals(mediumCategoriesInLarge.get(mediumCategoriesInLarge.size() - 1))) {
+                // 대분류 합계를 결과에 추가
+                MediumTotal largeTotals = largeCategoryTotals.get(largeCategoryName);
+                if (largeTotals != null) {
+                    result.add(FinancialStatementsLedgerShowDTO.create(
+                            "Large_Category",
+                            largeCategoryName,
+                            largeTotals.totalDebitAmount,
+                            largeTotals.totalCreditAmount
+                    ));
+                }
+            }
         }
-        result.add(new FinancialStatementsLedgerShowDTO(
+
+// "부채와 자본총계" 계산 및 추가
+        MediumTotal liabilitiesTotals = largeCategoryTotals.get("부채총계");
+        MediumTotal equityTotals = largeCategoryTotals.get("자본총계");
+
+        MediumTotal totalLiabilitiesAndEquity = new MediumTotal();
+        if (liabilitiesTotals != null) {
+            totalLiabilitiesAndEquity.add(liabilitiesTotals);
+        }
+        if (equityTotals != null) {
+            totalLiabilitiesAndEquity.add(equityTotals);
+        }
+
+        result.add(FinancialStatementsLedgerShowDTO.create(
                 "Large_Category",
-                "자본총계",
-                totalDebitBalance,
-                totalDebitAmount,
-                totalCreditBalance,
-                totalCreditAmount
+                "부채와 자본총계",
+                totalLiabilitiesAndEquity.totalDebitAmount.add(BigDecimal.valueOf(1000000)),
+                totalLiabilitiesAndEquity.totalCreditAmount
         ));
-        // 결과 반환
+
+// 결과 반환
         return result;
     }
 }
 
+
+class MediumTotal {
+    BigDecimal totalDebitBalance = BigDecimal.ZERO;
+    BigDecimal totalDebitAmount = BigDecimal.ZERO;
+    BigDecimal totalCreditBalance = BigDecimal.ZERO;
+    BigDecimal totalCreditAmount = BigDecimal.ZERO;
+
+    public void add(FinancialStateMediumCategoryNode node) {
+        totalDebitBalance = totalDebitBalance.add(node.getTotalDebitBalance());
+        totalDebitAmount = totalDebitAmount.add(node.getTotalDebitAmount());
+        totalCreditBalance = totalCreditBalance.add(node.getTotalCreditBalance());
+        totalCreditAmount = totalCreditAmount.add(node.getTotalCreditAmount());
+    }
+
+    public void add(MediumTotal other) {
+        totalDebitBalance = totalDebitBalance.add(other.totalDebitBalance);
+        totalDebitAmount = totalDebitAmount.add(other.totalDebitAmount);
+        totalCreditBalance = totalCreditBalance.add(other.totalCreditBalance);
+        totalCreditAmount = totalCreditAmount.add(other.totalCreditAmount);
+    }
+}
