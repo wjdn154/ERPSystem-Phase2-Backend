@@ -15,7 +15,7 @@ public interface EmployeeService {
     Optional<EmployeeOneDTO> findEmployeeById(Long id);
 
     // 사원 수정
-    Optional<EmployeeFindDTO> updateEmployee(Long id, EmployeeDataDTO dto);
+    Optional<EmployeeShowToDTO> updateEmployee(Long id, EmployeeDataDTO dto);
 
     // 사원 등록. 저장
     EmployeeDTO saveEmployee(EmployeeCreateDTO dto);

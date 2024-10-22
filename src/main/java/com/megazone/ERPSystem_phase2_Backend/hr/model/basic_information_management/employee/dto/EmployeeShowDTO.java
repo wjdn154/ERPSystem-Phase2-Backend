@@ -26,7 +26,7 @@ public class EmployeeShowDTO {
     private String departmentCode;
     private String departmentName; // 부서 이름
     private String positionName; // 직위 이름
-    private String jobTitleName; // 직책 이름
+    private String titleName; // 직책 이름
 //    private String bankAccountNumber; // 계좌 번호
 
 

@@ -36,7 +36,44 @@ public class StandardBomServiceImpl implements StandardBomService {
 
     @Override
     public StandardBomDTO createStandardBom(@Valid StandardBomDTO standardBomDTO) {
+        // BOM 유효성 검사
+        validateBomDTO(standardBomDTO);
 
+        // StandardBom 엔티티로 변환 및 저장
+        StandardBom savedBom = standardBomRepository.save(convertToEntity(standardBomDTO));
+
+        // 자재 목록이 포함된 경우, 중간 엔티티(StandardBomMaterial) 생성 및 저장
+        if (standardBomDTO.getBomMaterials() != null && !standardBomDTO.getBomMaterials().isEmpty()) {
+            List<StandardBomMaterial> bomMaterials = standardBomDTO.getBomMaterials().stream()
+                    .map(bomMaterialDTO -> {
+                        // MaterialData 조회
+                        MaterialData materialData = materialDataRepository.findById(bomMaterialDTO.getMaterialId())
+                                .orElseThrow(() -> new EntityNotFoundException("ID: " + bomMaterialDTO.getMaterialId() + "에 해당하는 자재를 찾을 수 없습니다."));
+
+                        // Product 조회 (품목)
+                        Product product = productRepository.findById(bomMaterialDTO.getProductId())
+                                .orElseThrow(() -> new EntityNotFoundException("ID: " + bomMaterialDTO.getProductId() + "에 해당하는 품목을 찾을 수 없습니다."));
+
+                        // StandardBomMaterial 빌드
+                        return StandardBomMaterial.builder()
+                                .bom(savedBom)  // 특정 BOM 참조
+                                .product(product) // 품목 참조
+                                .material(materialData)  // 자재 참조
+                                .quantity(bomMaterialDTO.getQuantity())
+                                .lossRate(bomMaterialDTO.getLossRate())
+                                .build();
+                    })
+                    .toList();
+
+            // StandardBomMaterial 저장
+            standardBomMaterialRepository.saveAll(bomMaterials);
+        }
+
+        // BOM 저장 후 DTO 반환
+        return convertToDTO(savedBom);
+    }
+
+    private void validateBomDTO(StandardBomDTO standardBomDTO) {
         if (standardBomDTO.getBomCode() == null || standardBomDTO.getBomCode().trim().isEmpty()) {
             throw new IllegalArgumentException("BOM 코드를 입력해 주세요.");
         }
@@ -49,36 +86,13 @@ public class StandardBomServiceImpl implements StandardBomService {
             throw new IllegalArgumentException("손실율은 0 이상이어야 합니다.");
         }
 
-        if (standardBomDTO.getStartDate().isAfter(standardBomDTO.getExpiredDate())) {
+        if (standardBomDTO.getStartDate() != null && standardBomDTO.getExpiredDate() != null &&
+                standardBomDTO.getStartDate().isAfter(standardBomDTO.getExpiredDate())) {
             throw new IllegalArgumentException("유효 시작일은 종료일 이전이어야 합니다.");
         }
-
-        // sBom 선저장
-//        StandardBom savedBom = standardBomRepository.save(convertToEntity(standardBomDTO));
-        StandardBom savedBom = standardBomRepository.saveAndFlush(convertToEntity(standardBomDTO));
-
-        // bomMaterials가 있을 경우 bom_id 할당하여 저장
-        if (standardBomDTO.getBomMaterials() != null) {
-            List<StandardBomMaterial> bomMaterials = standardBomDTO.getBomMaterials().stream()
-                    .map(bomMaterialDTO -> {
-                        MaterialData materialData = materialDataRepository.findById(bomMaterialDTO.getMaterialId())
-                                .orElseThrow(() -> new EntityNotFoundException("자재를 찾을 수 없습니다."));
-
-                        return StandardBomMaterial.builder()
-                                .bom(savedBom) // 저장된 sBom 객체 참조
-                                .material(materialData)
-                                .quantity(bomMaterialDTO.getQuantity())
-                                .lossRate(bomMaterialDTO.getLossRate())
-                                .build();
-                    }).toList();
-
-            standardBomMaterialRepository.saveAll(bomMaterials); // bomMaterials DB 저장
-            savedBom.setBomMaterials(bomMaterials); // 저장된 자재 목록 -> sBom에 설정
-        }
-
-
-        return convertToDTO(savedBom);
     }
+
+
 
     // 기본적으로 부모-자식 관계에서 false로 시작
     private StandardBomDTO convertToDTO(StandardBom standardBom) {
@@ -112,21 +126,7 @@ public class StandardBomServiceImpl implements StandardBomService {
         // 기존 BOM 조회
         StandardBom existingBom = standardBomRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("요청하신 BOM을 찾을 수 없습니다."));
 
-        if (updatedBomDTO.getBomCode() == null || updatedBomDTO.getBomCode().trim().isEmpty()) {
-            throw new IllegalArgumentException("BOM 코드를 입력해 주세요.");
-        }
-
-        if (updatedBomDTO.getVersion() == null) {
-            throw new IllegalArgumentException("BOM 버전을 입력해 주세요.");
-        }
-
-        if (updatedBomDTO.getLossRate() < 0) {
-            throw new IllegalArgumentException("손실율은 0 이상이어야 합니다.");
-        }
-
-        if (updatedBomDTO.getStartDate().isAfter(updatedBomDTO.getExpiredDate())) {
-            throw new IllegalArgumentException("유효 시작일은 종료일 이전이어야 합니다.");
-        }
+        validateBomDTO(updatedBomDTO);
 
         // 상위 품목 처리: 상위 품목 없으면 null, 예외 처리 없이 정상 수정 가능
         Product parentProduct = productRepository.findById(updatedBomDTO.getParentProductId()).orElse(null);
@@ -148,22 +148,22 @@ public class StandardBomServiceImpl implements StandardBomService {
 //        Product parentProduct = productRepository.findById(updatedBomDTO.getParentProductId()).orElseThrow(() -> new EntityNotFoundException("상위 품목을 찾을 수 없습니다."));
 //        newBomVersion.setParentProduct(parentProduct);
 
-//        // 자재목록
-//        List<StandardBomMaterial> bomMaterials = Optional.ofNullable(standardBomDTO.getBomMaterials())
-//                .orElse(Collections.emptyList())
-//                .stream()
-//                .map(materialDTO -> {
-//                    MaterialData materialData = materialDataRepository.findById(materialDTO.getMaterialId())
-//                            .orElseThrow(() -> new EntityNotFoundException("자재를 찾을 수 없습니다."));
-//                    return StandardBomMaterial.builder()
-//                            .bom(newBomVersion)
-//                            .material(materialData)
-//                            .quantity(materialDTO.getQuantity())
-//                            .lossRate(materialDTO.getLossRate())
-//                            .build();
-//                })
-//                .collect(Collectors.toList());
-//        newBomVersion.setBomMaterials(bomMaterials);
+        // 자재목록
+        List<StandardBomMaterial> bomMaterials = Optional.ofNullable(updatedBomDTO.getBomMaterials())
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(materialDTO -> {
+                    MaterialData materialData = materialDataRepository.findById(materialDTO.getMaterialId())
+                            .orElseThrow(() -> new EntityNotFoundException("자재를 찾을 수 없습니다."));
+                    return StandardBomMaterial.builder()
+                            .bom(newBomVersion)
+                            .material(materialData)
+                            .quantity(materialDTO.getQuantity())
+                            .lossRate(materialDTO.getLossRate())
+                            .build();
+                })
+                .collect(Collectors.toList());
+        newBomVersion.setBomMaterials(bomMaterials);
 
         StandardBom savedBom = standardBomRepository.save(newBomVersion);
         return convertToDTO(savedBom);
@@ -281,20 +281,20 @@ public class StandardBomServiceImpl implements StandardBomService {
                 .build();
     }
 
-//    private StandardBomMaterial convertToEntity(BomMaterialDTO materialDTO) {
-//        StandardBom bom = standardBomRepository.findById(materialDTO.getBomId())
-//                .orElseThrow(() -> new EntityNotFoundException("BOM을 찾을 수 없습니다."));
-//
-//        MaterialData material = materialDataRepository.findById(materialDTO.getMaterialId())
-//                .orElseThrow(() -> new EntityNotFoundException("자재를 찾을 수 없습니다."));
-//
-//        return StandardBomMaterial.builder()
-//                .bom(bom)  // BOM 참조
-//                .material(material)
-//                .quantity(materialDTO.getQuantity())
-//                .lossRate(materialDTO.getLossRate())
-//                .build();
-//    }
+    private StandardBomMaterial convertToEntity(BomMaterialDTO materialDTO) {
+        StandardBom bom = standardBomRepository.findById(materialDTO.getBomId())
+                .orElseThrow(() -> new EntityNotFoundException("BOM을 찾을 수 없습니다."));
+
+        MaterialData material = materialDataRepository.findById(materialDTO.getMaterialId())
+                .orElseThrow(() -> new EntityNotFoundException("자재를 찾을 수 없습니다."));
+
+        return StandardBomMaterial.builder()
+                .bom(bom)  // BOM 참조
+                .material(material)
+                .quantity(materialDTO.getQuantity())
+                .lossRate(materialDTO.getLossRate())
+                .build();
+    }
 
     // 부모와 자식 관계를 관리하는 메서드
     private StandardBomDTO convertToDTO(StandardBom standardBom, boolean isParent) {

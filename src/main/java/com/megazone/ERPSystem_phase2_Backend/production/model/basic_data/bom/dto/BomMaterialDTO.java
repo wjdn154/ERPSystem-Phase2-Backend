@@ -21,7 +21,7 @@ public class BomMaterialDTO {
     private String BomCode;
     private Double version; // BOM 버전
 
-//    private Long productId;           // 품목 ID
+    private Long productId;           // 품목 ID
 //    private String productCode;       // 품목 코드
 //    private String productName;       // 품목명
 //    private String productCategory;   // 품목군 (카테고리)

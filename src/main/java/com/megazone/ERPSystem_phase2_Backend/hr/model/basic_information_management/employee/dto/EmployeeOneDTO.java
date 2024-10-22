@@ -33,7 +33,8 @@ public class EmployeeOneDTO {
     private String departmentName; // 부서 이름
     private String departmentCode;
     private String positionName; // 직위 이름
-    private String jobTitleName; // 직책 이름
-    private String bankAccountName;
-    private String bankAccountNumber; // 계좌 번호
+    private String titleName; // 직책 이름
+    private BankAccountDTO bankAccountDTO;
+//    private String bankName;
+//    private String bankAccountNumber; // 계좌 번호
 }

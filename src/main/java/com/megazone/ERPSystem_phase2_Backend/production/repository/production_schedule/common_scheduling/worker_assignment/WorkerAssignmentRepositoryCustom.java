@@ -64,12 +64,7 @@ public interface WorkerAssignmentRepositoryCustom {
 //     */
 //    List<WorkerAssignmentDTO> findTodayWorkers(String code);
 
-    /**
-     * 특정 작업자와 날짜로 작업자 배정 조회
-     * @param workerId 작업자 ID
-     * @param assignmentDate 배정 날짜
-     * @return 작업자 배정(Optional로 감싸서 반환)
-     */
 
+    List<WorkerAssignment> findByAssignmentDate(LocalDate currentDate);
 
 }
