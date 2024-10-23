@@ -276,20 +276,20 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
 
     // 엔티티를 DTO로 변환
     private ProductionOrderDTO convertToDTO(ProductionOrder productionOrder) {
-        return null;
-//        return ProductionOrderDTO.builder()
-//                .id(productionOrder.getId())
-//                .name(productionOrder.getName())
-////                .planOfMakeToOrderId(productionOrder.getPlanOfMakeToOrder() != null ? productionOrder.getPlanOfMakeToOrder().getId() : null)
-////                .planOfMakeToStockId(productionOrder.getPlanOfMakeToStock() != null ? productionOrder.getPlanOfMakeToStock().getId() : null)
+//        return null;
+        return ProductionOrderDTO.builder()
+                .id(productionOrder.getId())
+                .name(productionOrder.getName())
+//                .planOfMakeToOrderId(productionOrder.getPlanOfMakeToOrder() != null ? productionOrder.getPlanOfMakeToOrder().getId() : null)
+//                .planOfMakeToStockId(productionOrder.getPlanOfMakeToStock() != null ? productionOrder.getPlanOfMakeToStock().getId() : null)
 //                .workerAssignments(productionOrder.getWorkerAssignments().stream()
 //                        .map(this::convertWorkerAssignmentToDTO)
 //                        .toList())
-//                .remarks(productionOrder.getRemarks())
-//                .confirmed(productionOrder.getConfirmed())
-//                .startDateTime(productionOrder.getStartDateTime())
-//                .endDateTime(productionOrder.getEndDateTime())
-//                .build();
+                .remarks(productionOrder.getRemarks())
+                .confirmed(productionOrder.getConfirmed())
+                .startDateTime(productionOrder.getStartDateTime())
+                .endDateTime(productionOrder.getEndDateTime())
+                .build();
     }
 
     // DTO를 엔티티로 변환
