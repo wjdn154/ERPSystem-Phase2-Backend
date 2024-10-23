@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.service.production_sche
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessDetails;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionOrder;
@@ -17,6 +18,8 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.w
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceListDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceUpdateDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.process_routing.ProcessDetails.ProcessDetailsRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.planning.mps.MpsRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.production_strategy.mto.PlanOfMakeToOrderRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.production_strategy.mts.PlanOfMakeToStockRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.shift_type.ShiftTypeRepository;
@@ -47,6 +50,8 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
     private final ShiftTypeRepository shiftTypeRepository;
     private final WorkPerformanceRepository workPerformanceRepository;
     private final ProductRepository productRepository;
+    private final MpsRepository mpsRepository;
+    private final ProcessDetailsRepository processDetailsRepository;
 //    private final PlanOfMakeToOrderRepository planOfMakeToOrderRepository;
 //    private final PlanOfMakeToStockRepository planOfMakeToStockRepository;
 
@@ -90,9 +95,10 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
     @Override
     public ProductionOrderDTO saveProductionOrder(ProductionOrderDTO productionOrderDTO) {
         ProductionOrder productionOrder = convertToEntity(productionOrderDTO);
+
         ProductionOrder savedProductionOrder = productionOrderRepository.save(productionOrder);
 
-        assignWorkersToWorkcenter(productionOrderDTO, savedProductionOrder);
+//        assignWorkersToWorkcenter(productionOrderDTO, savedProductionOrder);
 
         return convertToDTO(savedProductionOrder);
     }
@@ -268,35 +274,47 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
 
     // 엔티티를 DTO로 변환
     private ProductionOrderDTO convertToDTO(ProductionOrder productionOrder) {
-        return null;
-//        return ProductionOrderDTO.builder()
-//                .id(productionOrder.getId())
-//                .name(productionOrder.getName())
-////                .planOfMakeToOrderId(productionOrder.getPlanOfMakeToOrder() != null ? productionOrder.getPlanOfMakeToOrder().getId() : null)
-////                .planOfMakeToStockId(productionOrder.getPlanOfMakeToStock() != null ? productionOrder.getPlanOfMakeToStock().getId() : null)
-//                .workerAssignments(productionOrder.getWorkerAssignments().stream()
-//                        .map(this::convertWorkerAssignmentToDTO)
-//                        .toList())
-//                .remarks(productionOrder.getRemarks())
-//                .confirmed(productionOrder.getConfirmed())
-//                .startDateTime(productionOrder.getStartDateTime())
-//                .endDateTime(productionOrder.getEndDateTime())
-//                .build();
+        return ProductionOrderDTO.builder()
+                .id(productionOrder.getId())
+                .name(productionOrder.getName())
+                .remarks(productionOrder.getRemarks())
+                .confirmed(productionOrder.getConfirmed())
+                .closed(productionOrder.getClosed())
+                .startDateTime(productionOrder.getStartDateTime())
+                .endDateTime(productionOrder.getEndDateTime())
+                .productionQuantity(productionOrder.getProductionQuantity())
+                .actualStartDateTime(productionOrder.getActualStartDateTime())
+                .actualEndDateTime(productionOrder.getActualEndDateTime())
+                .actualProductionQuantity(productionOrder.getActualProductionQuantity())
+                .workers(productionOrder.getWorkers())
+                .actualWorkers(productionOrder.getActualWorkers())
+                .mpsId(productionOrder.getMps() != null ? productionOrder.getMps().getId() : null)
+                .processDetailsId(productionOrder.getProcessDetails() != null ? productionOrder.getProcessDetails().getId() : null)
+                .build();
     }
 
     // DTO를 엔티티로 변환
     private ProductionOrder convertToEntity(ProductionOrderDTO productionOrderDTO) {
+        Mps mps = mpsRepository.findById(productionOrderDTO.getMpsId()).orElseThrow(() -> new EntityNotFoundException("MPS를 찾을 수 없습니다."));
+        ProcessDetails processDetails = processDetailsRepository.findById(productionOrderDTO.getProcessDetailsId()).orElseThrow(() -> new EntityNotFoundException("공정 세부를 찾을 수 없습니다."));
+        Workcenter workcenter = workcenterRepository.findByProcessDetailsId(processDetails.getId()).orElseThrow(() -> new EntityNotFoundException("작업장을 찾을 수 없습니다."));
+
         return ProductionOrder.builder()
-                .id(productionOrderDTO.getId())
                 .name(productionOrderDTO.getName())
-//                .planOfMakeToOrder(productionOrderDTO.getPlanOfMakeToOrderId() != null ? planOfMakeToOrderRepository.findById(productionOrderDTO.getPlanOfMakeToOrderId())
-//                        .orElseThrow(() -> new EntityNotFoundException("생산 주문 계획을 찾을 수 없습니다.")) : null)
-//                .planOfMakeToStock(productionOrderDTO.getPlanOfMakeToStockId() != null ? planOfMakeToStockRepository.findById(productionOrderDTO.getPlanOfMakeToStockId())
-//                        .orElseThrow(() -> new EntityNotFoundException("생산 재고 계획을 찾을 수 없습니다.")) : null)
                 .remarks(productionOrderDTO.getRemarks())
                 .confirmed(productionOrderDTO.getConfirmed())
+                .closed(productionOrderDTO.getClosed())
                 .startDateTime(productionOrderDTO.getStartDateTime())
                 .endDateTime(productionOrderDTO.getEndDateTime())
+                .productionQuantity(productionOrderDTO.getProductionQuantity())
+                .actualStartDateTime(productionOrderDTO.getActualStartDateTime())
+                .actualEndDateTime(productionOrderDTO.getActualEndDateTime())
+                .actualProductionQuantity(productionOrderDTO.getActualProductionQuantity())
+                .workers(productionOrderDTO.getWorkers())
+                .actualWorkers(productionOrderDTO.getActualWorkers())
+                .mps(mps)
+                .processDetails(processDetails)
+                .workcenter(workcenter)
                 .build();
     }
 

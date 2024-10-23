@@ -45,13 +45,6 @@ public class ProductionOrder {
     @JoinColumn(name = "mps_id", nullable = false)
     private Mps mps; // 연관된 MPS
 
-//    @OneToMany(mappedBy = "productionOrder")
-//    @Column(nullable = false)
-//    private List<WorkerAssignment> workerAssignments; // 작업자 배정
-//
-//    @OneToMany(mappedBy = "productionOrder", orphanRemoval = true)
-//    private List<WorkPerformance> workPerformances; // 여러 작업 실적과의 연관 관계
-
     @Column(nullable = true)
     private String remarks; // 추가 설명 또는 비고
 
@@ -79,18 +72,14 @@ public class ProductionOrder {
     @JoinColumn(name = "workcenter_id", nullable = false)
     private Workcenter workcenter; // 작업 센터
 
-    @Column(nullable = false)
     private LocalDateTime actualStartDateTime; // 실제 작업 시작 시간
 
-    @Column(nullable = false)
     private LocalDateTime actualEndDateTime; // 실제 작업 종료 시간
 
-    @Column(nullable = false)
     private BigDecimal actualProductionQuantity; // 실제 생산량
 
     @Column(nullable = false)
     private Long workers; // 작업 인원
 
-    @Column(nullable = false)
     private Long actualWorkers; // 실제 작업 인원
 }
