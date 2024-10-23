@@ -111,7 +111,6 @@ public class FinancialStatementsLedgerServiceImpl implements FinancialStatements
 //            // 대분류 표시할라면 주석제거
 //             result.add(FinancialStatementsLedgerShowDTO.create(largeNode, "Large_Category"));
 
-            //             대분류 합계를 결과에 추가 (각 대분류의 모든 내용을 출력한 후에 합계를 추가)
             result.add(FinancialStatementsLedgerShowDTO.create(
                     "Large_category",
                     largeNode.getName() + " 총계",

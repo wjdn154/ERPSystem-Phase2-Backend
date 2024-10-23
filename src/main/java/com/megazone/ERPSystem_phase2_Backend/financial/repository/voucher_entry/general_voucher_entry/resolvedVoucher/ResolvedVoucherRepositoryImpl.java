@@ -476,9 +476,12 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
         return queryFactory
                 .select(Projections.constructor(IncomeStatementLedgerDTO.class,
                         new CaseBuilder()
-                                .when(resolvedVoucher.accountSubject.entryType.eq(EntryType.CREDIT))
-                                .then(resolvedVoucher.creditAmount.sum())
-                                .otherwise(resolvedVoucher.debitAmount.sum()),
+                                .when(accountSubject.entryType.eq(EntryType.CREDIT))
+                                .then(resolvedVoucher.creditAmount.coalesce(BigDecimal.ZERO))
+                                .when(accountSubject.entryType.eq(EntryType.DEBIT))
+                                .then(resolvedVoucher.debitAmount.coalesce(BigDecimal.ZERO))
+                                .otherwise(BigDecimal.ZERO)
+                                .sum().as("sumAmount"),
                         structure.code,
                         structure.min,
                         structure.mediumCategory,
@@ -494,7 +497,13 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                         .and(accountSubject.standardFinancialStatementCode.eq(standardFinancialStatement.code)
                                 .and(resolvedVoucher.voucherDate.month().eq(dto.getYearMonth().getMonthValue()))))
                 .where(structure.financialStatementType.eq(FinancialStatementType.INCOME_STATEMENT))
-                .groupBy(standardFinancialStatement.id)
+                .groupBy(standardFinancialStatement.id,
+                        structure.code,
+                        structure.min,
+                        structure.mediumCategory,
+                        structure.smallCategory,
+                        standardFinancialStatement.name,
+                        standardFinancialStatement.code)
                 .orderBy(standardFinancialStatement.id.asc())
                 .fetch();
     }
