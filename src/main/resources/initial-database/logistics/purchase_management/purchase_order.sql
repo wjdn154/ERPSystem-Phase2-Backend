@@ -1,12 +1,12 @@
 -- 발주서 초기 데이터 삽입
 INSERT INTO purchase_order (purchase_request_id, client_id, manager_id, warehouse_id, vat_type, currency_id, date, delivery_date, remarks, status)
 VALUES
-    (1, 1, 1, 1, TRUE, 1, '2024-09-01', '2024-09-15', '고급 전자제품 긴급 발주 처리', 'WAITING_FOR_PURCHASE'),
-    (2, 2, 2, 2, FALSE, 2, '2024-09-05', '2024-09-20', '정기 부품 발주 처리', 'WAITING_FOR_PURCHASE'),
-    (3, 3, 3, 3, TRUE, 1, '2024-09-10', '2024-09-25', '재고 보충 발주 처리', 'WAITING_FOR_PURCHASE'),
-    (4, 4, 4, 1, TRUE, 2, '2024-09-15', '2024-09-30', '신제품 출시 관련 발주 처리', 'WAITING_FOR_PURCHASE'),
-    (5, 5, 5, 2, FALSE, 1, '2024-09-18', '2024-10-05', '고객 주문 대비 발주 처리', 'WAITING_FOR_PURCHASE'),
-    (6, 6, 6, 3, TRUE, 1, '2024-09-20', '2024-10-10', '특별 프로모션 발주 처리', 'WAITING_FOR_PURCHASE');
+    (1, 1, 1, 1, TRUE, 6, '2024-09-01', '2024-09-15', '고급 전자제품 긴급 발주 처리', 'PURCHASE_COMPLETED'),
+    (2, 2, 2, 2, FALSE, 6, '2024-09-05', '2024-09-20', '정기 부품 발주 처리', 'WAITING_FOR_PURCHASE'),
+    (3, 3, 3, 3, TRUE, 6, '2024-09-10', '2024-09-25', '재고 보충 발주 처리', 'WAITING_FOR_PURCHASE'),
+    (4, 4, 4, 1, TRUE, 6, '2024-09-15', '2024-09-30', '신제품 출시 관련 발주 처리', 'WAITING_FOR_PURCHASE'),
+    (5, 5, 5, 2, FALSE, 6, '2024-09-18', '2024-10-05', '고객 주문 대비 발주 처리', 'WAITING_FOR_PURCHASE'),
+    (6, 6, 6, 3, TRUE, 6, '2024-09-20', '2024-10-10', '특별 프로모션 발주 처리', 'WAITING_FOR_PURCHASE');
 
 -- 발주서 상세 초기 데이터 삽입
 INSERT INTO purchase_order_detail (purchase_order_id, product_id, quantity, price, supply_price, local_amount, vat, remarks)

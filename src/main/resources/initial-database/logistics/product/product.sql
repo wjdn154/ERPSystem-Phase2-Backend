@@ -66,37 +66,37 @@ INSERT INTO product (
 
       ('B0030', 2, 5, 3, 'SEMI_FINISHED_PRODUCT', 35000, 45000, '브레이크 캘리퍼', '1세트', 'SET', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/8e060ebf-b07e-401b-9a4e-411bda0e2090_브레이크 캘리퍼.jpg', '브레이크 시스템용 캘리퍼', TRUE),
 
-      ('B0031', 2, 1, 1, 'SEMI_FINISHED_PRODUCT', 1600, 2100, '브레이크 디스크', '220mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123469_브레이크디스크.png', '자동차 브레이크 디스크', TRUE),
+      ('B0031', 2, 1, 1, 'SEMI_FINISHED_PRODUCT', 1600, 2100, '브레이크 디스크', '220mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/0f492cef-1637-4a31-8fdc-3cb2fa9de5d7_브레이크 디스크.jpg', '자동차 브레이크 디스크', TRUE),
 
-      ('B0032', 6, 2, 1, 'SEMI_FINISHED_PRODUCT', 5200, 7500, 'ABS 모듈', '300mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123470_ABS모듈.png', '자동차 ABS 시스템 모듈', TRUE),
+      ('B0032', 6, 2, 1, 'SEMI_FINISHED_PRODUCT', 5200, 7500, 'ABS 모듈', '300mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/1407fabe-a6c4-4a06-92d9-1e162c019923_ABS 모듈.jpg', '자동차 ABS 시스템 모듈', TRUE),
 
-      ('B0033', 5, 3, 2, 'SEMI_FINISHED_PRODUCT', 8200, 10500, '냉각 팬', '350mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123471_냉각팬.png', '엔진 냉각 시스템용 팬', TRUE),
+      ('B0033', 5, 3, 2, 'SEMI_FINISHED_PRODUCT', 8200, 10500, '냉각 팬', '350mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/836ae7e1-0779-46be-8433-560a8374c7c3_냉각 팬.jpg', '엔진 냉각 시스템용 팬', TRUE),
 
-      ('B0034', 3, 4, 1, 'SEMI_FINISHED_PRODUCT', 13000, 16000, '연료 펌프', '150mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123472_연료펌프.png', '자동차 연료 시스템용 펌프', TRUE),
+      ('B0034', 3, 4, 1, 'SEMI_FINISHED_PRODUCT', 13000, 16000, '연료 펌프', '150mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/a1bf0f8d-bbec-4efd-86d2-546d7df43ec8_연료 펌프.jpg', '자동차 연료 시스템용 펌프', TRUE),
 
-      ('B0035', 4, 5, 4, 'SEMI_FINISHED_PRODUCT', 3200, 4800, '점화 코일', '120mm', 'EA', null, '자동차 점화 시스템용 코일', TRUE),
+      ('B0035', 4, 5, 4, 'SEMI_FINISHED_PRODUCT', 3200, 4800, '점화 코일', '120mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/754994c9-1758-4940-94cc-0e61ef896358_점화 코일.jpg', '자동차 점화 시스템용 코일', TRUE),
 
-      ('B0036', 6, 6, 5, 'SEMI_FINISHED_PRODUCT', 61000, 81000, '발전기 벨트', '2m', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123473_발전기벨트.png', '자동차 발전기 벨트', TRUE),
+      ('B0036', 6, 6, 5, 'SEMI_FINISHED_PRODUCT', 61000, 81000, '발전기 벨트', '2m', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/aa54a8f2-0b67-4894-99d9-2776beb5a8be_발전기 벨트.jpg', '자동차 발전기 벨트', TRUE),
 
-      ('B0037', 7, 7, 6, 'SEMI_FINISHED_PRODUCT', 21000, 32000, '쇼크 업소버', '1개', 'SET', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123474_쇼크업소버.png', '차량 서스펜션용 쇼크 업소버', TRUE),
+      ('B0037', 7, 7, 6, 'SEMI_FINISHED_PRODUCT', 21000, 32000, '쇼크 업소버', '1개', 'SET', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/5f9a88f5-673e-4067-8814-205f1c5b78c3_쇼크 업소버.jpg', '차량 서스펜션용 쇼크 업소버', TRUE),
 
-      ('B0038', 6, 8, 2, 'SEMI_FINISHED_PRODUCT', 46000, 62000, '배터리 케이블', '3m', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123475_배터리케이블.png', '자동차 배터리 연결 케이블', TRUE),
+      ('B0038', 6, 8, 2, 'SEMI_FINISHED_PRODUCT', 46000, 62000, '배터리 케이블', '3m', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/b4fbf095-d7a3-4e40-a85c-83542050a3cc_배터리 케이블.jpg', '자동차 배터리 연결 케이블', TRUE),
 
-      ('B0039', 1, 9, 3, 'SEMI_FINISHED_PRODUCT', 91000, 122000, '터보차저', '1개', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123476_터보차저.png', '자동차 엔진용 터보차저', TRUE),
+      ('B0039', 1, 9, 3, 'SEMI_FINISHED_PRODUCT', 91000, 122000, '터보차저', '1개', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/5677df7d-30b4-46fa-b30d-01b5aaf06332_터보차저.jpg', '자동차 엔진용 터보차저', TRUE),
 
-      ('B0040', 8, 10, 4, 'SEMI_FINISHED_PRODUCT', 11000, 17000, '배기 가스 센서', '1개', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123477_배기가스센서.png', '자동차 배기가스 제어 센서', TRUE),
+      ('B0040', 8, 10, 4, 'SEMI_FINISHED_PRODUCT', 11000, 17000, '배기 가스 센서', '1개', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/d76e8be3-f39b-4da4-8ddf-9d28d5979609_배기 가스 센서.jpg', '자동차 배기가스 제어 센서', TRUE),
 
-      ('B0041', 5, 1, 5, 'SEMI_FINISHED_PRODUCT', 2000, 3100, '서모스탯', '90mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123478_서모스탯.png', '자동차 냉각 시스템용 서모스탯', TRUE),
+      ('B0041', 5, 1, 5, 'SEMI_FINISHED_PRODUCT', 2000, 3100, '서모스탯', '90mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/a7b5e02b-9b07-444f-b440-ae98fb117552_서모스탯.jpg', '자동차 냉각 시스템용 서모스탯', TRUE),
 
-      ('B0042', 7, 2, 6, 'SEMI_FINISHED_PRODUCT', 4200, 5700, '핸들 조인트', '250mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123479_핸들조인트.png', '자동차 스티어링 시스템용 조인트', TRUE),
+      ('B0042', 7, 2, 6, 'SEMI_FINISHED_PRODUCT', 4200, 5700, '핸들 조인트', '250mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/be608458-668a-4476-97fb-630f2adc8ce7_핸들 조인트.jpg', '자동차 스티어링 시스템용 조인트', TRUE),
 
-      ('B0043', 3, 3, 2, 'SEMI_FINISHED_PRODUCT', 7500, 9500, '연료 레일', '1.5m', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123480_연료레일.png', '엔진 연료 공급 레일', TRUE),
+      ('B0043', 3, 3, 2, 'SEMI_FINISHED_PRODUCT', 7500, 9500, '연료 레일', '1.5m', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/969f6fe4-22ca-42bf-8636-7441c1f2275e_연료 레일.jpg', '엔진 연료 공급 레일', TRUE),
 
-      ('B0044', 3, 4, 1, 'SEMI_FINISHED_PRODUCT', 12500, 15500, '변속기 오일 팬', '400mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123481_변속기오일팬.png', '자동차 변속기 오일 팬', TRUE),
+      ('B0044', 3, 4, 1, 'SEMI_FINISHED_PRODUCT', 12500, 15500, '변속기 오일 팬', '400mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/7c6bcf73-a733-4764-84bc-24f61d410c11_변속기 오일 팬.jpg', '자동차 변속기 오일 팬', TRUE),
 
-      ('B0045', 7, 5, 3, 'SEMI_FINISHED_PRODUCT', 36000, 47000, '스티어링 휠', '1개', 'SET', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123482_스티어링휠.png', '자동차 스티어링 휠', TRUE),
+      ('B0045', 7, 5, 3, 'SEMI_FINISHED_PRODUCT', 36000, 47000, '스티어링 휠', '1개', 'SET', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/f7debf3e-4f3a-4f9e-b364-fd047e31de8e_스티어링 휠.jpg', '자동차 스티어링 휠', TRUE),
 
-      ('B0046', 5, 6, 4, 'SEMI_FINISHED_PRODUCT', 5000, 7200, '워터 펌프', '200mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123483_워터펌프.png', '자동차 냉각 시스템 워터 펌프', TRUE),
+      ('B0046', 5, 6, 4, 'SEMI_FINISHED_PRODUCT', 5000, 7200, '워터 펌프', '200mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/af752ce6-53ee-4489-9569-cf75797a3aae_워터 펌프.jpg', '자동차 냉각 시스템 워터 펌프', TRUE),
 
       ('B0047', 5, 7, 5, 'SEMI_FINISHED_PRODUCT', 2800, 4000, '라디에이터 호스', '1m', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123484_라디에이터호스.png', '자동차 라디에이터 연결 호스', TRUE),
 
