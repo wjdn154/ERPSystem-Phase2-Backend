@@ -159,6 +159,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService{
     private PurchaseOrderItemDetailDto toItemDetailDto(PurchaseOrderDetail detail) {
         Product product = detail.getProduct();
         return PurchaseOrderItemDetailDto.builder()
+                .detailId(detail.getId())
                 .productName(product.getName())
                 .productCode(product.getCode())
                 .quantity(detail.getQuantity())

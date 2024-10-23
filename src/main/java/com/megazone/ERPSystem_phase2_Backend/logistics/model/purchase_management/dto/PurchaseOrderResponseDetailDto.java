@@ -65,6 +65,8 @@ public class PurchaseOrderResponseDetailDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class PurchaseOrderItemDetailDto {
+        private Long detailId;
+
         // 품목명
         private String productName;
 
