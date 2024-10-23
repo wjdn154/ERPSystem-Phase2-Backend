@@ -4,6 +4,8 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.ShipmentProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ShipmentProductRepository extends JpaRepository<ShipmentProduct, Long> {
+public interface ShipmentProductRepository extends JpaRepository<ShipmentProduct, Long>, ShipmentProductRepositoryCustom {
+
     void deleteAllByShipment(Shipment existingShipment);
+
 }

@@ -14,4 +14,5 @@ public class WarehouseResponseListDTO {
     private String warehouseType; // 창고 타입
     private String productionProcess; // 생산 공정
     private Boolean isActive; // 사용 여부
+    private String warehouseAddress; // 창고 주소
 }
