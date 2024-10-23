@@ -225,7 +225,7 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
     /**
      * 작업지시를 마감처리하면 해당 마감한 작업지시에 대한 작업실적 자동 생성
      */
-    public void updateOrderClosure(Long productionOrderId) {
+    public ProductionOrderDTO updateOrderClosure(Long productionOrderId) {
         ProductionOrder productionOrder = productionOrderRepository.findById(productionOrderId)
                 .orElseThrow(() -> new EntityNotFoundException("작업 지시를 찾을 수 없습니다."));
 
@@ -241,17 +241,21 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
             throw new IllegalArgumentException("유효하지 않은 생산 수량입니다.");
         }
 
-        // 작업 실적 생성 로직 추가
         WorkPerformance workPerformance = WorkPerformance.builder()
+                .name(productionOrder.getName() + " 작업 실적")
                 .productionOrder(productionOrder)
                 .workStatus(WorkStatus.COMPLETED)
                 .actualQuantity(productionOrder.getProductionQuantity())
+                .workCost(BigDecimal.valueOf(1000)) // 예시 비용 설정
                 .workDate(productionOrder.getStartDateTime().toLocalDate())
+                .product(productionOrder.getMps().getProduct()) // 연관 제품 설정
                 .build();
+
         workPerformanceRepository.save(workPerformance);
         productionOrder.getWorkPerformances().add(workPerformance);
 
-        productionOrderRepository.save(productionOrder);
+        ProductionOrder savedOrder = productionOrderRepository.save(productionOrder);
+        return convertToDTO(savedOrder);
     }
 
 

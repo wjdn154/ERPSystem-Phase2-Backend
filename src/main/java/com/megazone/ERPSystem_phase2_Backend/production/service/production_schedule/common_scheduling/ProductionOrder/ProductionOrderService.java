@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.service.production_sche
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionOrder;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.ProductionOrderDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.planning.Mps;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -17,8 +18,8 @@ public interface ProductionOrderService {
     void deleteProductionOrder(Long productionOrderId);
 
     void assignWorkersToWorkcenter(ProductionOrderDTO productionOrderDTO, ProductionOrder productionOrder);
-    void updateOrderClosure(Long productionOrderId);
 
+    ProductionOrderDTO updateOrderClosure(@PathVariable Long orderId);
     void createOrdersFromMps(Mps savedMps);
 
 }
