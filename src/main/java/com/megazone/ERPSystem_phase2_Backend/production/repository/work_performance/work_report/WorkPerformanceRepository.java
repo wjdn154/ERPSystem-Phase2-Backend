@@ -9,4 +9,6 @@ public interface WorkPerformanceRepository extends JpaRepository<WorkPerformance
 
     List<WorkPerformance> findAllByOrderByIdDesc();
 
+    List<WorkPerformance> findByProductionOrderId(Long productionOrderId);
+
 }

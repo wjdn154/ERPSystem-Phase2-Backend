@@ -1,5 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto;
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.enums.ProductionRequestType;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.enums.ProgressType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,8 +17,10 @@ import java.util.List;
 public class ProductionOrderDTO {
 
     private Long id;
-
     private String name; // 작업지시명
+
+    private ProgressType progressType;
+    private ProductionRequestType productionRequestType;
 
     private List<WorkerAssignmentDTO> workerAssignments; // 작업자 배정 DTO 리스트
 
@@ -30,7 +34,6 @@ public class ProductionOrderDTO {
     private Boolean confirmed;
 
     private LocalDateTime startDateTime; // 작업 시작 날짜 및 시간
-
     private LocalDateTime endDateTime; // 작업 종료 날짜 및 시간
 
     private String processDetailsCode;

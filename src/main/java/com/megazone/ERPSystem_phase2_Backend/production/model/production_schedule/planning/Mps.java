@@ -44,7 +44,7 @@ public class Mps {
     private String status; // 계획 상태 (계획, 확정, 진행 중, 완료)
 
     @ManyToOne
-    @JoinColumn(name = "production_request_id", nullable = false)
+    @JoinColumn(name = "production_request_id", nullable = true)
     private ProductionRequest productionRequest; // 연관된 생산 의뢰
 
     @ManyToOne
@@ -59,8 +59,8 @@ public class Mps {
     @JoinColumn(name = "sale_id", nullable = true)
     private Sale sale; // 관련된 판매계획 (Sale 엔티티와 연관)
 
-    @OneToMany(mappedBy = "mps", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductionOrder> productionOrders;
+//    @OneToMany(mappedBy = "mps", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<ProductionOrder> productionOrders;
 
     @Column(nullable = false)
     private BigDecimal quantity; // 생산 수량
