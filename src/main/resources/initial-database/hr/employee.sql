@@ -64,11 +64,11 @@ INSERT INTO employee_bank_account (bank_id,account_number) VALUES
 
 INSERT INTO employee (date_of_birth, hire_date,is_household_head, department_id, job_title_id, position_id, bank_account_id ,address, email, employee_number, first_name, last_name, phone_number, profile_picture, employment_status, employment_type)
 VALUES
-('2000-10-16', '2022-01-01' ,TRUE, 3, 2, 3, 1,'거제', 'wkdgywjd77@naver.com', '220101001', '정현', '박', '010-2234-5678', 'img7.jpg', 'RESIGNED', 'FREELANCE'),
-('2000-12-25', '2022-02-01',TRUE, 3, 2, 3, 2,'서울', 'readyoun@omz.com', '220201001', '희연', '임', '010-2234-5678', 'img8.jpg', 'ON_LEAVE', 'PART_TIME'),
-('1990-05-15', '2022-03-01' ,TRUE, 1, 1, 1, 3,'경기', 'gj1563@naver.com', '220301001', '건호', '허', '010-1234-5678', 'img1.jpg', 'ACTIVE', 'FULL_TIME'),
-('1985-11-22', '2022-04-01',FALSE, 2, 2, 2, 4,'부산', 'ckacl2512@naver.com', '220401001', '민성', '김', '010-9876-5432', 'img2.jpg', 'ACTIVE', 'CONTRACT'),
-('1995-03-10', '2022-05-01' ,TRUE, 1, 1, 1, 5,'대구', 'hshdla@naver.com', '220501001', '홍스', '홍', '010-2234-5678', 'img3.jpg', 'ON_LEAVE', 'PART_TIME'),
+('2000-10-16', '2022-01-01' ,TRUE, 3, 2, 3, 1,'거제', 'wkdgywjd77@naver.com', '220101001', '정현', '박', '010-2234-5678', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/00b6a3ac-026f-49a7-bfe3-5e34f0e0786d_준형이 닮음.png', 'RESIGNED', 'FREELANCE'),
+('2000-12-25', '2022-02-01',TRUE, 3, 2, 3, 2,'서울', 'readyoun@omz.com', '220201001', '희연', '임', '010-2234-5678', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/00b6a3ac-026f-49a7-bfe3-5e34f0e0786d_준형이 닮음.png', 'ON_LEAVE', 'PART_TIME'),
+('1990-05-15', '2022-03-01' ,TRUE, 1, 1, 1, 3,'경기', 'gj1563@naver.com', '220301001', '건호', '허', '010-1234-5678', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/00b6a3ac-026f-49a7-bfe3-5e34f0e0786d_준형이 닮음.png', 'ACTIVE', 'FULL_TIME'),
+('1985-11-22', '2022-04-01',FALSE, 2, 2, 2, 4,'부산', 'ckacl2512@naver.com', '220401001', '민성', '김', '010-9876-5432', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/00b6a3ac-026f-49a7-bfe3-5e34f0e0786d_준형이 닮음.png', 'ACTIVE', 'CONTRACT'),
+('1995-03-10', '2022-05-01' ,TRUE, 1, 1, 1, 5,'대구', 'hshdla@naver.com', '220501001', '홍스', '홍', '010-2234-5678', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/00b6a3ac-026f-49a7-bfe3-5e34f0e0786d_준형이 닮음.png', 'ON_LEAVE', 'PART_TIME'),
 ('1999-12-12', '2022-06-01' ,TRUE, 4, 1, 2, 6,'울산', 'chlwlgur0407@naver.com', '220601001', '지혁', '최', '010-2234-5678', 'img4.jpg', 'ACTIVE', 'TEMPORARY'),
 ('2000-01-01', '2022-07-01' ,TRUE, 4, 3, 1, 7,'제주', 'cksals@naver.com', '220701001', '찬민', '김', '010-2234-5678', 'img5.jpg', 'ACTIVE', 'INTERN'),
 ('2000-10-16', '2022-08-01' ,TRUE, 2, 2, 3, 8,'진주', 'labe1827@gmail.com', '220801001', '태종', '하', '010-2234-5678', 'img6.jpg', 'RESIGNED', 'CASUAL'),

@@ -24,7 +24,7 @@ public class EmployeeShowToDTO {
     private String address;
     private LocalDate hireDate;
     private boolean isHouseholdHead;
-    private String profilePicture;
+    private String imagePath;
 
 
     private String departmentName;

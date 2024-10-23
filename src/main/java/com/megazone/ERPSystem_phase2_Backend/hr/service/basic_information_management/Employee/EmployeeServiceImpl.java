@@ -2,11 +2,8 @@ package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_manag
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Bank;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.ResolvedVoucher;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.common.BankRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.resolvedVoucher.ResolvedVoucherRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.*;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.attendance_management.Attendance.AttendanceRepository;
@@ -16,16 +13,22 @@ import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_man
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.JobTitle.JobTitleRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Performance.PerformanceRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Position.PositionRepository;
+import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.EmployeeImage.EmployeeImageService;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -43,6 +46,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final CompanyRepository companyRepository;
     private final AttendanceRepository attendanceRepository;
     private final BankRepository bankRepository;
+    private final EmployeeImageService employeeImageService;
+
+    // 이미지가 저장된 경로 (src/main/resources/static/uploads/)
+    private static final String UPLOAD_DIR = "src/main/resources/static";
+
     //private final ClientRepository clientRepository;
     //private final ResolvedVoucherRepository resolvedVoucherRepository;
 
@@ -96,7 +104,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         dto.setAddress(employee.getAddress());
         dto.setHireDate(employee.getHireDate());
         dto.setHouseholdHead(employee.isHouseholdHead());
-        dto.setProfilePicture(employee.getProfilePicture());
+        dto.setProfilePicture(employee.getImagePath());
         dto.setDepartmentCode(employee.getDepartment().getDepartmentCode());
         dto.setDepartmentName(employee.getDepartment().getDepartmentName());
         dto.setPositionName(employee.getPosition().getPositionName());
@@ -111,19 +119,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         return dto;
     }
-
-   ///**
-   // * 특정 ID에 해당하는 사원의 상세 정보를 조회함.
-   // *
-   // * @param employeeNumber 조회할 사원의 사원번호
-   // * @return 해당 ID의 사원 상세 정보를 담은 EmployeeDTO 객체를 반환함.
-   // */
-   //@Override
-   //public Optional<EmployeeOneDTO> findEmployeeByEmployeeNumber(String employeeNumber) {
-   //    return employeeRepository.findByEmployeeNumber(employeeNumber)
-   //            .map(this::convertToDTO); // 여기서 변환 메서드를 사용
-   //}
-
     // 사원 삭제
     @Override
     public void deleteEmployee(Long employeeId) {
@@ -166,7 +161,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     // 사원 정보 수정
     @Override
-    public Optional<EmployeeShowToDTO> updateEmployee(Long id, EmployeeDataDTO dto) {
+    public Optional<EmployeeShowToDTO> updateEmployee(Long id, EmployeeDataDTO dto, MultipartFile imageFile) {
         // id 에 해당하는 엔티티 데이터 조회
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() ->  new RuntimeException(id+"에 해당하는 아이디를 찾을 수 없습니다."));
@@ -180,7 +175,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             employee.setEmploymentStatus(dto.getEmploymentStatus());
             employee.setEmploymentType(dto.getEmploymentType());
             employee.setAddress(dto.getAddress());
-            employee.setProfilePicture(dto.getProfilePicture());
+            employee.setImagePath(dto.getProfilePicture());
             employee.setHouseholdHead(dto.isHouseholdHead());
 
             // Position 설정
@@ -238,6 +233,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         } else {
             throw new IllegalArgumentException("은행 정보와 계좌번호는 필수 입력 사항입니다.");
         }
+        // 이미지가 전송된 경우 기존 이미지 삭제 후 새 이미지 저장
+        if (imageFile != null && !imageFile.isEmpty()) {
+            // 기존 이미지 경로 삭제 로직
+            String oldImagePath = employee.getImagePath();
+            if (oldImagePath != null) {
+                deleteOldImage(oldImagePath);  // 기존 이미지 삭제
+            }
+
+            // 새로운 이미지 업로드 및 경로 설정
+            String newImagePath = employeeImageService.uploadEmployeeImage(imageFile);
+            employee.setImagePath(newImagePath);
+        }
 
             // 3. 엔티티 저장
             Employee updatedEmployee = employeeRepository.save(employee);
@@ -256,7 +263,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                     updatedEmployee.getAddress(),
                     updatedEmployee.getHireDate(),
                     updatedEmployee.isHouseholdHead(),
-                    updatedEmployee.getProfilePicture(),
+                    updatedEmployee.getImagePath(),
                     updatedEmployee.getDepartment() != null ? updatedEmployee.getDepartment().getDepartmentName() : null,
                     updatedEmployee.getDepartment() != null ? updatedEmployee.getDepartment().getDepartmentCode() : null,
                     updatedEmployee.getPosition() != null ? updatedEmployee.getPosition().getPositionName() : null,
@@ -271,11 +278,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     // 사원 등록. 저장
     @Override
-    public EmployeeDTO saveEmployee(EmployeeCreateDTO dto) {
+    public EmployeeDTO saveEmployee(EmployeeCreateDTO dto, MultipartFile imageFile) {
 
         String employeeNumber = createEmployeeNumber(dto);
         // Employee 엔티티를 초기화합니다.
         Employee employee = new Employee();
+        employee.setHireDate(dto.getHireDate());
         employee.setEmployeeNumber(employeeNumber);
         employee.setFirstName(dto.getFirstName());
         employee.setLastName(dto.getLastName());
@@ -285,9 +293,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setEmploymentType(dto.getEmploymentType());
         employee.setEmail(dto.getEmail());
         employee.setAddress(dto.getAddress());
-        employee.setHireDate(dto.getHireDate());
         employee.setHouseholdHead(dto.isHouseholdHead());
-        employee.setProfilePicture(dto.getProfilePicture());
 
         // Department 설정
         if (dto.getDepartmentId() != null) {
@@ -310,33 +316,55 @@ public class EmployeeServiceImpl implements EmployeeService {
             employee.setJobTitle(jobTitle);
         }
 
-        // BankAccount 설정
-        BankAccount newBankAccount = new BankAccount();
-        if (dto.getBankAccountDTO().getBankId() != null) {  // BankId를 DTO에서 받아올 경우
+        // BankAccount 설정 및 저장
+        if (dto.getBankAccountDTO() != null && dto.getBankAccountDTO().getBankId() != null) {
+            // Bank 조회
             Bank bank = bankRepository.findById(dto.getBankAccountDTO().getBankId())
                     .orElseThrow(() -> new EntityNotFoundException("해당 은행을 찾을 수 없습니다."));
-            newBankAccount.setBank(bank);  // 조회한 은행 엔티티 설정
+
+            // BankAccount 생성 및 설정
+            BankAccount newBankAccount = new BankAccount();
+            newBankAccount.setBank(bank);
+            newBankAccount.setAccountNumber(dto.getBankAccountDTO().getAccountNumber());
+
+            // BankAccount 저장
+            bankAccountRepository.save(newBankAccount);
+            // Employee와 BankAccount 연결
+            employee.setBankAccount(newBankAccount);
+
+            // BankAccount 저장
+            bankAccountRepository.save(newBankAccount);
         } else {
             throw new IllegalArgumentException("은행 정보는 필수입니다.");
         }
 
-        // BankAccount 설정
-        if (dto.getBankAccountDTO() != null) {
-            Bank bank = bankRepository.findById(dto.getBankAccountDTO().getBankId())
-                    .orElseThrow(() -> new EntityNotFoundException("은행을 찾을 수 없습니다."));
-            BankAccount bankAccount = new BankAccount();
-            bankAccount.setBank(bank);
-            bankAccount.setAccountNumber(dto.getBankAccountDTO().getAccountNumber());
-            employee.setBankAccount(bankAccount);  // Employee와 BankAccount 연결
+        // 이미지 파일 업로드 및 경로 가져오기
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String imagePath = employeeImageService.uploadEmployeeImage(imageFile);
+            employee.setImagePath(imagePath);
         }
-        // BankAccount 저장
-        bankAccountRepository.save(newBankAccount);
 
-        // 사원 정보를 저장합니다.
+// 사원 정보 저장
         Employee savedEmployee = employeeRepository.save(employee);
 
-        // 저장된 정보를 DTO로 변환하여 반환합니다.
+// 저장된 정보를 DTO로 변환하여 반환
         return EmployeeDTO.create(savedEmployee);
+    }
+
+    private void deleteOldImage(String oldImagePath) {
+        try {
+            // 이미지 경로를 완전한 파일 시스템 경로로 변환
+            File file = new File(UPLOAD_DIR + oldImagePath);
+
+            if (file.exists()) {
+                Files.delete(Paths.get(file.getPath()));  // 파일 삭제
+                System.out.println("기존 이미지 파일이 삭제되었습니다: " + file.getPath());
+            }
+        } catch (IOException e) {
+            // 삭제 실패 시 예외 처리
+            System.err.println("이미지 파일 삭제 실패: " + e.getMessage());
+            throw new RuntimeException("이미지 파일 삭제 실패", e);
+        }
     }
 
 //    @Override
@@ -370,6 +398,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     public String createEmployeeNumber(EmployeeCreateDTO dto) {
         LocalDate hireDate = dto.getHireDate();  // dto에서 hireDate 가져오기
+        // hireDate가 null인 경우 예외 처리
+        if (hireDate == null) {
+            throw new IllegalArgumentException("입사일은 필수 값입니다.");
+        }
 
         // hireDate를 "yyMMdd" 형식으로 변환
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
@@ -397,31 +429,4 @@ public class EmployeeServiceImpl implements EmployeeService {
         return newEmployeeNumber;  // 예: "240914001", "240914002"
     }
 
-//    @Transactional
-//    public void softDeleteEmployee(Long employeeId) {
-//        Optional<Employee> employeeOpt = employeeRepository.findById(employeeId);
-//
-//        if (employeeOpt.isPresent()) {
-//            Employee employee = employeeOpt.get();
-//            employee.setIsDeleted(true);  // Soft Delete 적용
-//            employeeRepository.save(employee);  // 저장 (논리적 삭제 처리)
-//        } else {
-//            throw new EntityNotFoundException("사원을 찾을 수 없습니다.");
-//        }
-//    }
-
-//    @Transactional
-//    public void softDeleteEmployee(Long employeeId) {
-//        // 사원 조회
-//        Employee employee = employeeRepository.findById(employeeId)
-//                .orElseThrow(() -> new IllegalArgumentException("사원을 찾을 수 없습니다."));
-//
-//        // 해당 사원이 담당한 Client와 ResolvedVoucher의 employee 필드를 null로 설정
-//        clientRepository.updateEmployeeToNull(employeeId);
-//        resolvedVoucherRepository.updateEmployeeToNull(employeeId);
-//
-//        // 사원의 isDeleted를 true로 설정하여 논리적으로 삭제
-//        employee.setIsDeleted(true);
-//        employeeRepository.save(employee);
-//    }
 }

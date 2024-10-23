@@ -104,7 +104,7 @@ public class Employee {
     @Column(nullable = false)
     private boolean isHouseholdHead; // 세대주 여부
 
-    @Column
-    private String profilePicture; // 프로필 사진
+    @Column(name = "profile_Picture")
+    private String imagePath; // 프로필 사진
 
 }

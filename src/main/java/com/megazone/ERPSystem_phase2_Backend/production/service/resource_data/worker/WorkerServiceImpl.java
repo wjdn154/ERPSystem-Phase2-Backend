@@ -153,7 +153,7 @@ public class WorkerServiceImpl implements WorkerService {
         workerDetailShowDTO.setEmploymentStatus(worker.getEmployee().getEmploymentStatus());
         workerDetailShowDTO.setEmploymentType(worker.getEmployee().getEmploymentType());
         workerDetailShowDTO.setHireDate(worker.getEmployee().getHireDate());
-        workerDetailShowDTO.setProfilePicture(worker.getEmployee().getProfilePicture());
+        workerDetailShowDTO.setProfilePicture(worker.getEmployee().getImagePath());
 
         //작업배치가 비어있지 않다면 배치 날짜 기준으로 가장 최근의 작업배치 정보 가져오기
         if(worker.getWorkerAssignments() != null && !worker.getWorkerAssignments().isEmpty()){

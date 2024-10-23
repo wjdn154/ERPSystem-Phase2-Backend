@@ -47,7 +47,7 @@ public class EmployeeDTO {
                 employee.getAddress(),
                 employee.getHireDate(),
                 employee.isHouseholdHead(),
-                employee.getProfilePicture(),
+                employee.getImagePath(),
                 employee.getDepartment().getId(),
                 employee.getPosition().getId(),
                 employee.getJobTitle().getId(),

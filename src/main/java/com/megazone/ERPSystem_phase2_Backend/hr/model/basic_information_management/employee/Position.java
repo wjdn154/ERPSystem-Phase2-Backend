@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 
 // 직위 정보 저장
 
@@ -19,7 +18,7 @@ public class Position {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(unique = true)
     private String code; // 직위 번호
 
     @Column(nullable = false)
