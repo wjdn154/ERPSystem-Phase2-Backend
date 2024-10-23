@@ -60,7 +60,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                 // 생산공정
                 .processCode(workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getCode() : null)
                 // 설비
-                .equipmentIds(workcenter.getEquipmentList().stream().map(EquipmentData::getId).collect(Collectors.toList()))
+//                .equipmentIds(workcenter.getEquipmentList().stream().map(EquipmentData::getId).collect(Collectors.toList()))
                 // 작업자 배치
 //                .workerAssignmentIds(workcenter.getWorkerAssignments().stream().map(WorkerAssignment::getId).collect(Collectors.toList()))
                 .build();
@@ -84,11 +84,11 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                         processDetailsRepository.findByCode(workcenterDTO.getProcessCode())
                                 .orElseThrow(() -> new RuntimeException("해당 생산공정코드를 찾을 수 없습니다: " + workcenterDTO.getProcessCode())) : null)
 
-                .equipmentList(Optional.ofNullable(workcenterDTO.getEquipmentIds())
-                        .orElseGet(ArrayList::new).stream()
-                        .map(id -> equipmentDataRepository.findById(id)
-                                .orElseThrow(() -> new RuntimeException("해당 설비ID를 찾을 수 없습니다: " + id)))
-                        .collect(Collectors.toList()))
+//                .equipmentList(Optional.ofNullable(workcenterDTO.getEquipmentIds())
+//                        .orElseGet(ArrayList::new).stream()
+//                        .map(id -> equipmentDataRepository.findById(id)
+//                                .orElseThrow(() -> new RuntimeException("해당 설비ID를 찾을 수 없습니다: " + id)))
+//                        .collect(Collectors.toList()))
 
 //                .workerAssignments(Optional.ofNullable(workcenterDTO.getWorkerAssignmentIds())
 //                        .orElseGet(ArrayList::new).stream()
@@ -169,7 +169,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 //            workcenterDTO.setTodayWorkers(todayWorkers);
 
             // 설치된 설비 수 가져오기
-            List<Long> equipmentIds = workcenter.getEquipmentList().stream()
+            List<Long> equipmentIds = equipmentDataRepository.findByWorkcenterId(workcenter.getId()).stream()
                     .map(EquipmentData::getId)
                     .collect(Collectors.toList());
             workcenterDTO.setEquipmentIds(equipmentIds); // 설비 ID 설정
@@ -278,7 +278,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                 .orElseThrow(() -> new EntityNotFoundException("작업장 코드를 찾을 수 없습니다: " + workcenterCode));
 
         // 설비 목록이 null일 경우 빈 리스트로 처리
-        List<EquipmentData> equipmentList = Optional.ofNullable(workcenter.getEquipmentList()).orElse(Collections.emptyList());
+        List<EquipmentData> equipmentList = Optional.ofNullable(equipmentDataRepository.findByWorkcenterId(workcenter.getId())).orElse(Collections.emptyList());
 
         if (equipmentList.isEmpty()) {
             throw new EntityNotFoundException("해당 작업장에 설치된 설비가 없습니다: " + workcenterCode);

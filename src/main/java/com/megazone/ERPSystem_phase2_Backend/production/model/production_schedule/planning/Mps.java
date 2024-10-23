@@ -59,8 +59,8 @@ public class Mps {
     @JoinColumn(name = "sale_id", nullable = true)
     private Sale sale; // 관련된 판매계획 (Sale 엔티티와 연관)
 
-    @OneToMany(mappedBy = "mps", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductionOrder> productionOrders;
+//    @OneToMany(mappedBy = "mps", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<ProductionOrder> productionOrders;
 
     @Column(nullable = false)
     private BigDecimal quantity; // 생산 수량

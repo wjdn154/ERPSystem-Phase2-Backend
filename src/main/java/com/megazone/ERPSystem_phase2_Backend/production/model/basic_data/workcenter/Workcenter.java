@@ -59,10 +59,10 @@ public class Workcenter {
     @JoinColumn(name = "warehouse_id", nullable = true)
     private Warehouse factory;  // 공장 엔티티 from 물류 창고관리의 공장
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "workcenter")
-//    @BatchSize(size = 10) // 컬렉션을 한 번에 최대 10개 로딩
-//    @Builder.Default @Fetch(FetchMode.SUBSELECT)
-    private List<EquipmentData> equipmentList; // 설비 목록
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "workcenter")
+////    @BatchSize(size = 10) // 컬렉션을 한 번에 최대 10개 로딩
+////    @Builder.Default @Fetch(FetchMode.SUBSELECT)
+//    private List<EquipmentData> equipmentList; // 설비 목록
 
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "workcenter")
 //    @BatchSize(size = 10) // 컬렉션을 한 번에 최대 10개 로딩

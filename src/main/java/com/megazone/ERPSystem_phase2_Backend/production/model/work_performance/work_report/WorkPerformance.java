@@ -34,9 +34,6 @@ public class WorkPerformance {
     @Column(nullable = false)
     private String name;    // 작업실적명
 
-    @Column
-    private String description;   // 추가 설명 또는 비고
-
     @Column(nullable = false)
     private BigDecimal actualQuantity;    // 실제 생산량
 
@@ -45,8 +42,6 @@ public class WorkPerformance {
      * 장비 및 기계 사용 비용(장비의 유지보수 비용, 전력 사용 비용 등 )
      * 풀량품 처리 비용(불량품 수량 x 뷸량품 처리 단가)
      * */
-    @Column(nullable = false)
-    private BigDecimal workCost;          //작업 비용
 
     private LocalDate workDate;            //작업 시간
 
