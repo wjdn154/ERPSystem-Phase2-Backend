@@ -455,14 +455,13 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                         standardFinancialStatement.code
                 ))
                 .from(standardFinancialStatement)
-                .leftJoin(accountSubject).on(accountSubject.standardFinancialStatementCode.eq(standardFinancialStatement.code))
+                .join(structure).on(structure.id.eq(standardFinancialStatement.structure.id))
+                .leftJoin(accountSubject).on(accountSubject.structure.id.eq(structure.id))
                 .leftJoin(resolvedVoucher).on(resolvedVoucher.accountSubject.id.eq(accountSubject.id)
-                        // 날짜 필터를 WHERE 절이 아닌 ON 절에 추가
-                        .and(resolvedVoucher.voucherDate.month().eq(dto.getYearMonth().getMonthValue())))
-                .leftJoin(structure).on(structure.id.eq(accountSubject.structure.id)
-                        .and(structure.id.eq(standardFinancialStatement.structure.id)))
+                        .and(accountSubject.standardFinancialStatementCode.eq(standardFinancialStatement.code)
+                                .and(resolvedVoucher.voucherDate.month().eq(dto.getYearMonth().getMonthValue()))))
                 .where(structure.financialStatementType.eq(FinancialStatementType.STANDARD_FINANCIAL_STATEMENT))
-                .groupBy(standardFinancialStatement.id, standardFinancialStatement.code)
+                .groupBy(standardFinancialStatement.id)
                 .orderBy(standardFinancialStatement.id.asc())
                 .fetch();
     }
@@ -489,14 +488,13 @@ public class ResolvedVoucherRepositoryImpl implements ResolvedVoucherRepositoryC
                         standardFinancialStatement.code
                 ))
                 .from(standardFinancialStatement)
-                .leftJoin(accountSubject).on(accountSubject.standardFinancialStatementCode.eq(standardFinancialStatement.code))
+                .join(structure).on(structure.id.eq(standardFinancialStatement.structure.id))
+                .leftJoin(accountSubject).on(accountSubject.structure.id.eq(structure.id))
                 .leftJoin(resolvedVoucher).on(resolvedVoucher.accountSubject.id.eq(accountSubject.id)
-                        // 날짜 필터를 WHERE 절이 아닌 ON 절에 추가
-                        .and(resolvedVoucher.voucherDate.month().eq(dto.getYearMonth().getMonthValue())))
-                .leftJoin(structure).on(structure.id.eq(accountSubject.structure.id)
-                        .and(structure.id.eq(standardFinancialStatement.structure.id)))
+                        .and(accountSubject.standardFinancialStatementCode.eq(standardFinancialStatement.code)
+                                .and(resolvedVoucher.voucherDate.month().eq(dto.getYearMonth().getMonthValue()))))
                 .where(structure.financialStatementType.eq(FinancialStatementType.INCOME_STATEMENT))
-                .groupBy(standardFinancialStatement.id, standardFinancialStatement.code)
+                .groupBy(standardFinancialStatement.id)
                 .orderBy(standardFinancialStatement.id.asc())
                 .fetch();
     }
