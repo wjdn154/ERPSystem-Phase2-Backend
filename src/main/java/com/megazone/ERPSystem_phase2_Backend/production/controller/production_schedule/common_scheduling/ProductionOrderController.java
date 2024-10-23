@@ -62,14 +62,13 @@ public class ProductionOrderController {
 
     /**
      * 작업 지시 마감 여부 업데이트
+     * - WorkPerformance 상태 변경에 따른 작업 지시 마감 처리
      */
-    @PostMapping("/{orderId}/closure")
-    public ResponseEntity<ProductionOrderDTO> updateOrderClosure(@PathVariable("orderId") Long orderId) {
-
-        ProductionOrderDTO orderDTO = productionOrderService.updateOrderClosure(orderId);
-        return ResponseEntity.ok(orderDTO);
+    @PostMapping("/closure/{orderId}")
+    public ResponseEntity<Void> updateOrderClosure(@PathVariable("orderId") Long orderId) {
+        productionOrderService.updateOrderClosure(orderId);
+        return ResponseEntity.ok().build();
     }
-
 
 
     /**

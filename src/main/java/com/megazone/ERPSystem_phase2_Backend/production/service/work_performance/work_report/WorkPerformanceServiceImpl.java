@@ -44,7 +44,6 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
                         workPerformance.getId(),
                         workPerformance.getName(),
                         workPerformance.getActualQuantity() != null ? workPerformance.getActualQuantity() : BigDecimal.ZERO,
-                        workPerformance.getWorkCost(),
                         workPerformance.getWorkStatus(),
                         workPerformance.getWorkDailyReport().getWorkDailyReportCode(),
                         workPerformance.getWorkDailyReport().getTitle(),
@@ -111,7 +110,6 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
                 .name(workPerformance.getName())
                 .description(workPerformance.getDescription())
                 .actualQuantity(workPerformance.getActualQuantity() != null ? workPerformance.getActualQuantity() : BigDecimal.ZERO)
-                .workCost(workPerformance.getWorkCost())
                 .workStatus(workPerformance.getWorkStatus())
                 .workDailyReportCode(workPerformance.getWorkDailyReport().getWorkDailyReportCode())
                 .workDailyReportName(workPerformance.getWorkDailyReport().getTitle())
@@ -141,7 +139,6 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .actualQuantity(dto.getActualQuantity() != null ? dto.getActualQuantity() : BigDecimal.ZERO)  // null 처리
-                .workCost(dto.getWorkCost())
                 .workStatus(dto.getWorkStatus())
                 .workDailyReport(workDailyReport)
                 .productionOrder(productionOrder)
@@ -166,7 +163,6 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
         workPerformance.setId(workPerformance.getId());
         workPerformance.setName(dto.getName());
         workPerformance.setActualQuantity(dto.getActualQuantity() != null ? dto.getActualQuantity() : BigDecimal.ZERO);
-        workPerformance.setWorkCost(dto.getWorkCost());
         workPerformance.setWorkStatus(dto.getWorkStatus());
         workPerformance.setWorkDailyReport(workDailyReport);
         workPerformance.setProductionOrder(productionOrder);

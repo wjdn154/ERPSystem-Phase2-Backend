@@ -105,7 +105,7 @@ public class MpsServiceImpl implements MpsService {
                 .orElseThrow(() -> new EntityNotFoundException("해당 MPS를 찾을 수 없습니다."));
 
         // 모든 ProductionOrder가 마감되었는지 확인
-        boolean allOrdersClosed = mps.getProductionOrders().stream()
+        boolean allOrdersClosed = productionOrderRepository.findByMpsId(mpsId).stream()
                 .allMatch(ProductionOrder::getClosed);
 
         // MPS 상태 업데이트
@@ -278,7 +278,7 @@ public class MpsServiceImpl implements MpsService {
                 .ordersId(mps.getOrders() != null ? mps.getOrders().getId() : null)
                 .saleId(mps.getSale() != null ? mps.getSale().getId() : null)
                 .productionOrderIds(
-                        mps.getProductionOrders().stream()
+                        productionOrderRepository.findByMpsId(mps.getId()).stream()
                                 .map(ProductionOrder::getId)
                                 .collect(Collectors.toList())
                 )
@@ -309,7 +309,6 @@ public class MpsServiceImpl implements MpsService {
                 .quantity(dto.getQuantity())
                 .remarks(dto.getRemarks())
                 .productionRequest(productionRequest)
-                .productionOrders(productionOrders) // ProductionOrder 리스트 연결
                 .build();
     }
 }
