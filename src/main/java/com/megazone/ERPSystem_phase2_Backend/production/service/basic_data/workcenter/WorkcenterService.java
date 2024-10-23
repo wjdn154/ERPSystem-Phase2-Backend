@@ -29,7 +29,7 @@ public interface WorkcenterService {
 
     List<EquipmentDataDTO> findEquipmentByWorkcenterCode(String workcenterCode);
 
-    List<WorkerAssignmentDTO> findWorkerAssignmentsByWorkcenterCode(String workcenterCode);
+//    List<WorkerAssignmentDTO> findWorkerAssignmentsByWorkcenterCode(String workcenterCode);
 
     List<WorkerAssignmentDTO> findTodayWorkers(String workcenterCode);
 }

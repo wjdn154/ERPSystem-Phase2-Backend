@@ -44,7 +44,7 @@ public class Mps {
     private String status; // 계획 상태 (계획, 확정, 진행 중, 완료)
 
     @ManyToOne
-    @JoinColumn(name = "production_request_id", nullable = false)
+    @JoinColumn(name = "production_request_id", nullable = true)
     private ProductionRequest productionRequest; // 연관된 생산 의뢰
 
     @ManyToOne
