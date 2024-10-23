@@ -108,7 +108,6 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
         WorkPerformanceDetailDTO dto = WorkPerformanceDetailDTO.builder()
                 .id(workPerformance.getId())
                 .name(workPerformance.getName())
-                .description(workPerformance.getDescription())
                 .actualQuantity(workPerformance.getActualQuantity() != null ? workPerformance.getActualQuantity() : BigDecimal.ZERO)
                 .workStatus(workPerformance.getWorkStatus())
                 .workDailyReportCode(workPerformance.getWorkDailyReport().getWorkDailyReportCode())
@@ -137,7 +136,6 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
         WorkPerformance workPerformance = WorkPerformance.builder()
                 .id(dto.getId())
                 .name(dto.getName())
-                .description(dto.getDescription())
                 .actualQuantity(dto.getActualQuantity() != null ? dto.getActualQuantity() : BigDecimal.ZERO)  // null 처리
                 .workStatus(dto.getWorkStatus())
                 .workDailyReport(workDailyReport)

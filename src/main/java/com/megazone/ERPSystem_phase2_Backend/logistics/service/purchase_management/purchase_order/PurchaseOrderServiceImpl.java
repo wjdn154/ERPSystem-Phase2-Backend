@@ -136,10 +136,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService{
                 .date(purchaseOrder.getDate())
                 .deliveryDate(purchaseOrder.getDeliveryDate())
                 .status(purchaseOrder.getStatus().toString())
+                .managerCode(purchaseOrder.getManager().getEmployeeNumber())
                 .managerName(purchaseOrder.getManager().getLastName() + purchaseOrder.getManager().getFirstName())
+                .warehouseCode(purchaseOrder.getReceivingWarehouse().getCode())
                 .warehouseName(purchaseOrder.getReceivingWarehouse().getName())
                 .vatType(purchaseOrder.getVatType())
                 .currency(purchaseOrder.getCurrency().getName())
+                .exchangeRate(purchaseOrder.getCurrency().getExchangeRate())
                 .remarks(purchaseOrder.getRemarks())
                 .purchaseOrderDetails(toItemDetailDtoList(purchaseOrder.getPurchaseOrderDetails()))
                 .build();
@@ -156,6 +159,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService{
     private PurchaseOrderItemDetailDto toItemDetailDto(PurchaseOrderDetail detail) {
         Product product = detail.getProduct();
         return PurchaseOrderItemDetailDto.builder()
+                .detailId(detail.getId())
                 .productName(product.getName())
                 .productCode(product.getCode())
                 .quantity(detail.getQuantity())

@@ -27,8 +27,14 @@ public class PurchaseOrderResponseDetailDto {
     // 납기 일자
     private LocalDate deliveryDate;
 
+    // 담당자 코드
+    private String managerCode;
+
     // 담당자 이름
     private String managerName;
+
+    // 입고 창고 코드
+    private String warehouseCode;
 
     // 입고 창고 이름
     private String warehouseName;
@@ -59,6 +65,8 @@ public class PurchaseOrderResponseDetailDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class PurchaseOrderItemDetailDto {
+        private Long detailId;
+
         // 품목명
         private String productName;
 
