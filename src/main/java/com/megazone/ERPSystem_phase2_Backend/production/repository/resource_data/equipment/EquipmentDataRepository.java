@@ -14,5 +14,6 @@ public interface EquipmentDataRepository extends JpaRepository<EquipmentData, Lo
 
     List<EquipmentData> findAllByCompanyIdOrderByPurchaseDateDesc(Long companyId);
 
+    List<EquipmentData> findByWorkcenterId(Long workcenterId);
 
 }

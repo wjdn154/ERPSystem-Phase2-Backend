@@ -21,6 +21,10 @@ import java.util.List;
  * 작업지시 엔티티
  */
 
+/**
+ * 작업지시 엔티티
+ */
+
 @Entity(name = "common_scheduling_production_order")
 @Table(name = "common_scheduling_production_order")
 @Data
@@ -37,24 +41,16 @@ public class ProductionOrder {
     @Column(nullable = false)
     private String name; // 작업지시명
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "plan_of_make_to_order_id", nullable = true)
-//    private PlanOfMakeToOrder planOfMakeToOrder;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "plan_of_make_to_stock_id", nullable = true)
-//    private PlanOfMakeToStock planOfMakeToStock;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mps_id", nullable = false)
-    private Mps mps; // 연관된 MPS에서 계획, 품목, 생산계획수량,
+    private Mps mps; // 연관된 MPS
 
-    @OneToMany(mappedBy = "productionOrder")
-    @Column(nullable = false)
-    private List<WorkerAssignment> workerAssignments;
-
-    @OneToMany(mappedBy = "productionOrder", orphanRemoval = true)
-    private List<WorkPerformance> workPerformances; // 여러 작업 실적과의 연관 관계
+//    @OneToMany(mappedBy = "productionOrder")
+//    @Column(nullable = false)
+//    private List<WorkerAssignment> workerAssignments; // 작업자 배정
+//
+//    @OneToMany(mappedBy = "productionOrder", orphanRemoval = true)
+//    private List<WorkPerformance> workPerformances; // 여러 작업 실적과의 연관 관계
 
     @Column(nullable = true)
     private String remarks; // 추가 설명 또는 비고
@@ -81,5 +77,15 @@ public class ProductionOrder {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workcenter_id", nullable = false)
-    private Workcenter workcenter;
+    private Workcenter workcenter; // 작업 센터
+
+    // 실제 시작 시간, 종료 시간 및 실제 생산량 추가
+    @Column(nullable = true)
+    private LocalDateTime actualStartDateTime; // 실제 작업 시작 시간
+
+    @Column(nullable = true)
+    private LocalDateTime actualEndDateTime; // 실제 작업 종료 시간
+
+    @Column(nullable = true)
+    private BigDecimal actualProductionQuantity; // 실제 생산량
 }
