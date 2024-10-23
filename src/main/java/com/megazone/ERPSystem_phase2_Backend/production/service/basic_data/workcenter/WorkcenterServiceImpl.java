@@ -84,7 +84,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                         processDetailsRepository.findByCode(workcenterDTO.getProcessCode())
                                 .orElseThrow(() -> new RuntimeException("해당 생산공정코드를 찾을 수 없습니다: " + workcenterDTO.getProcessCode())) : null)
 
-//                .equipmentList(Optional.ofNullable(workcenterDTO.getEquipmentIds())
+//                .(Optional.ofNullable(workcenterDTO.getEquipmentIds())
 //                        .orElseGet(ArrayList::new).stream()
 //                        .map(id -> equipmentDataRepository.findById(id)
 //                                .orElseThrow(() -> new RuntimeException("해당 설비ID를 찾을 수 없습니다: " + id)))
