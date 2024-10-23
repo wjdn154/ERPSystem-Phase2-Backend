@@ -5,11 +5,8 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_regist
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionOrder;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceListDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkDailyReport;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.enums.WorkStatus;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.production_order.ProductionOrderRepository;
-import com.megazone.ERPSystem_phase2_Backend.production.repository.work_performance.work_report.WorkDailyReportRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.work_performance.work_report.WorkPerformanceRepository;
 
 import com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.common_scheduling.ProductionOrder.ProductionOrderService;
@@ -30,7 +27,6 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
 
     private final WorkPerformanceRepository workPerformanceRepository;
     private final ProductionOrderRepository productionOrderRepository;
-    private final WorkDailyReportRepository workDailyReportRepository;
     private final ProductRepository productRepository;
 
     private final ProductionOrderService productionOrderService;
@@ -42,11 +38,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
         return workPerformanceRepository.findAllByOrderByIdDesc().stream()
                 .map(workPerformance -> new WorkPerformanceListDTO(
                         workPerformance.getId(),
-                        workPerformance.getName(),
-                        workPerformance.getActualQuantity() != null ? workPerformance.getActualQuantity() : BigDecimal.ZERO,
-                        workPerformance.getWorkStatus(),
-                        workPerformance.getWorkDailyReport().getWorkDailyReportCode(),
-                        workPerformance.getWorkDailyReport().getTitle(),
+                        workPerformance.getQuantity() != null ? workPerformance.getQuantity() : BigDecimal.ZERO,
                         workPerformance.getProductionOrder().getId(),
                         workPerformance.getProductionOrder().getName(),
                         workPerformance.getProduct().getCode(),
@@ -107,12 +99,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
 
         WorkPerformanceDetailDTO dto = WorkPerformanceDetailDTO.builder()
                 .id(workPerformance.getId())
-                .name(workPerformance.getName())
-                .description(workPerformance.getDescription())
-                .actualQuantity(workPerformance.getActualQuantity() != null ? workPerformance.getActualQuantity() : BigDecimal.ZERO)
-                .workStatus(workPerformance.getWorkStatus())
-                .workDailyReportCode(workPerformance.getWorkDailyReport().getWorkDailyReportCode())
-                .workDailyReportName(workPerformance.getWorkDailyReport().getTitle())
+                .actualQuantity(workPerformance.getQuantity() != null ? workPerformance.getQuantity() : BigDecimal.ZERO)
                 .productionOrderId(workPerformance.getProductionOrder().getId())
                 .productionOrderName(workPerformance.getProductionOrder().getName())
                 .productCode(workPerformance.getProduct().getCode())
@@ -125,8 +112,8 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
     //등록 dto를 엔티티로 변환
     private WorkPerformance workPerformanceToEntity(WorkPerformanceDetailDTO dto) {
 
-        WorkDailyReport workDailyReport = workDailyReportRepository.findByWorkDailyReportCode(dto.getWorkDailyReportCode())
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 일별 보고서 코드가 존재하지 않습니다."));
+//        WorkDailyReport workDailyReport = workDailyReportRepository.findByWorkDailyReportCode(dto.getWorkDailyReportCode())
+//                .orElseThrow(() -> new IllegalArgumentException("해당하는 일별 보고서 코드가 존재하지 않습니다."));
 
         ProductionOrder productionOrder = productionOrderRepository.findById(dto.getProductionOrderId())
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 작업지시 아이디가 없습니다."));
@@ -136,11 +123,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
 
         WorkPerformance workPerformance = WorkPerformance.builder()
                 .id(dto.getId())
-                .name(dto.getName())
-                .description(dto.getDescription())
-                .actualQuantity(dto.getActualQuantity() != null ? dto.getActualQuantity() : BigDecimal.ZERO)  // null 처리
-                .workStatus(dto.getWorkStatus())
-                .workDailyReport(workDailyReport)
+                .quantity(dto.getActualQuantity() != null ? dto.getActualQuantity() : BigDecimal.ZERO)  // null 처리
                 .productionOrder(productionOrder)
                 .product(product)
                 .build();
@@ -151,8 +134,8 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
     //수정 엔티티를 dto로 변환
     private WorkPerformance updateWorkPerformanceToEntity(WorkPerformance workPerformance , WorkPerformanceDetailDTO dto) {
 
-        WorkDailyReport workDailyReport = workDailyReportRepository.findByWorkDailyReportCode(dto.getWorkDailyReportCode())
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 일별 보고서 코드가 존재하지 않습니다."));
+//        WorkDailyReport workDailyReport = workDailyReportRepository.findByWorkDailyReportCode(dto.getWorkDailyReportCode())
+//                .orElseThrow(() -> new IllegalArgumentException("해당하는 일별 보고서 코드가 존재하지 않습니다."));
 
         ProductionOrder productionOrder = productionOrderRepository.findById(dto.getProductionOrderId())
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 작업지시 아이디가 없습니다."));
@@ -161,10 +144,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 품목 코드가 존재하지 않습니다."));
 
         workPerformance.setId(workPerformance.getId());
-        workPerformance.setName(dto.getName());
-        workPerformance.setActualQuantity(dto.getActualQuantity() != null ? dto.getActualQuantity() : BigDecimal.ZERO);
-        workPerformance.setWorkStatus(dto.getWorkStatus());
-        workPerformance.setWorkDailyReport(workDailyReport);
+        workPerformance.setQuantity(dto.getActualQuantity() != null ? dto.getActualQuantity() : BigDecimal.ZERO);
         workPerformance.setProductionOrder(productionOrder);
         workPerformance.setProduct(product);
 

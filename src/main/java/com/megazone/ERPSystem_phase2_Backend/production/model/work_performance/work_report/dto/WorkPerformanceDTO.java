@@ -13,10 +13,14 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class WorkPerformanceListDTO {
+public class WorkPerformanceDTO {
 
     private Long id;   //아이디
-    private BigDecimal quantity;    //실제 생산량
+    private String name;    //이름
+    private BigDecimal actualQuantity;    //실제 생산량
+
+    private String workDailyReportCode;    //일별 보고서 코드
+    private String workDailyReportTitle;    //일별 보고서 제목
 
     private Long productionOrderId;       //작업지시 아이디
     private String productionOrderName;   //작업지시 이름

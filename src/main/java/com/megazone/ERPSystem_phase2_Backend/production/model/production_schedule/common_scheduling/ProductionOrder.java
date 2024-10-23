@@ -79,13 +79,18 @@ public class ProductionOrder {
     @JoinColumn(name = "workcenter_id", nullable = false)
     private Workcenter workcenter; // 작업 센터
 
-    // 실제 시작 시간, 종료 시간 및 실제 생산량 추가
-    @Column(nullable = true)
+    @Column(nullable = false)
     private LocalDateTime actualStartDateTime; // 실제 작업 시작 시간
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private LocalDateTime actualEndDateTime; // 실제 작업 종료 시간
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private BigDecimal actualProductionQuantity; // 실제 생산량
+
+    @Column(nullable = false)
+    private Long workers; // 작업 인원
+
+    @Column(nullable = false)
+    private Long actualWorkers; // 실제 작업 인원
 }

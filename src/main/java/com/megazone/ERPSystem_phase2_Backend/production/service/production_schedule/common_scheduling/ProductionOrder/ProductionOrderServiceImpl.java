@@ -13,7 +13,9 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedul
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.production_strategy.PlanOfMakeToStock;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.Worker;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.enums.WorkStatus;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceListDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceUpdateDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.production_strategy.mto.PlanOfMakeToOrderRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.production_strategy.mts.PlanOfMakeToStockRepository;
@@ -228,49 +230,39 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
     /**
      * 작업지시를 마감처리하면 해당 마감한 작업지시에 대한 작업실적 자동 생성
      */
-    public void updateOrderClosure(Long productionOrderId) {
-        ProductionOrder productionOrder = productionOrderRepository.findById(productionOrderId)
+    public WorkPerformanceDTO updateOrderClosure(WorkPerformanceUpdateDTO dto) {
+        ProductionOrder productionOrder = productionOrderRepository.findById(dto.getProductionOrderId())
                 .orElseThrow(() -> new EntityNotFoundException("작업 지시를 찾을 수 없습니다."));
-        System.out.println("------------1------------");
-        System.out.println("productionOrder = " + productionOrder);
+
+        if (productionOrder.getClosed()) throw new IllegalArgumentException("이미 마감된 작업 지시입니다.");
 
         // 작업 지시 마감 처리 (상태만 변경)
         productionOrder.setClosed(true);
-        productionOrder.setEndDateTime(LocalDateTime.now());
+        productionOrder.setActualStartDateTime(productionOrder.getStartDateTime());
+        productionOrder.setActualEndDateTime(dto.getActualEndDateTime());
+        productionOrder.setActualProductionQuantity(dto.getQuantity());
+        productionOrder.setActualWorkers(dto.getWorkers());
+        productionOrderRepository.save(productionOrder);
 
         // 작업 지시 마감처리시, 작업종료시간 자동으로 입력되고, 시작시간과의 차이를 구해서 그 시간을 작업실적으로 전달함
 
         // 작업 실적 생성 로직 추가
-        BigDecimal productionQuantity = productionOrder.getProductionQuantity();
-        if (productionQuantity == null || productionQuantity.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("유효하지 않은 생산 수량입니다.");
-        }
+        if (dto.getQuantity() == null || dto.getQuantity().compareTo(BigDecimal.ZERO) < 0) throw new IllegalArgumentException("유효하지 않은 생산 수량입니다.");
 
 
         // 작업 실적 생성 로직 추가
         WorkPerformance workPerformance = WorkPerformance.builder()
-                .product(productionOrder.getMps().getProduct())
-                .name(productionOrder.getName())
+                .quantity(dto.getQuantity())
+                .defectiveQuantity(dto.getDefectiveQuantity())
+                .acceptableQuantity(dto.getQuantity().subtract(dto.getDefectiveQuantity()))
+                .workDate(dto.getWorkDate())
+                .workers(dto.getWorkers())
                 .productionOrder(productionOrder)
-                .workStatus(WorkStatus.COMPLETED)
-                .actualQuantity(productionOrder.getProductionQuantity())
-                .workDate(productionOrder.getStartDateTime().toLocalDate())
+                .product(productionOrder.getMps().getProduct())
                 .build();
         workPerformanceRepository.save(workPerformance);
 
-
-        List<WorkPerformance> workPerformance2 = workPerformanceRepository.findByProductionOrderId(productionOrder.getId());
-
-        workPerformance2.add(workPerformance);
-        workPerformanceRepository.saveAll(workPerformance2);
-
-        System.out.println("------------2------------");
-        System.out.println("workPerformance = " + workPerformance);
-
-        ProductionOrder save = productionOrderRepository.save(productionOrder);
-        System.out.println("------------3------------");
-        System.out.println("save = " + save);
-
+        return null;
     }
 
 
