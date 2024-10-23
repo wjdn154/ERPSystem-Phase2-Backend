@@ -136,10 +136,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService{
                 .date(purchaseOrder.getDate())
                 .deliveryDate(purchaseOrder.getDeliveryDate())
                 .status(purchaseOrder.getStatus().toString())
+                .managerCode(purchaseOrder.getManager().getEmployeeNumber())
                 .managerName(purchaseOrder.getManager().getLastName() + purchaseOrder.getManager().getFirstName())
+                .warehouseCode(purchaseOrder.getReceivingWarehouse().getCode())
                 .warehouseName(purchaseOrder.getReceivingWarehouse().getName())
                 .vatType(purchaseOrder.getVatType())
                 .currency(purchaseOrder.getCurrency().getName())
+                .exchangeRate(purchaseOrder.getCurrency().getExchangeRate())
                 .remarks(purchaseOrder.getRemarks())
                 .purchaseOrderDetails(toItemDetailDtoList(purchaseOrder.getPurchaseOrderDetails()))
                 .build();
