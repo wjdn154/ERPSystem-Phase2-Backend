@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.State;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,10 +11,10 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PurchaseRequestSearchDTO {
+public class SearchDTO {
     private LocalDate startDate;
     private LocalDate endDate;
-    private String clientCode;
+    private Long clientId;
     private String state;
 
 

@@ -21,37 +21,20 @@ public class FinancialStatementsLedgerShowDTO {
     private BigDecimal totalCreditAmount;
 
     public static FinancialStatementsLedgerShowDTO create(FinancialStateNode node, String level) {
-        BigDecimal totalDebitBalance = BigDecimal.ZERO;
-        BigDecimal totalCreditBalance = BigDecimal.ZERO;
-
-        if(node.getTotalDebitAmount().subtract(node.getTotalCreditAmount()).compareTo(BigDecimal.ZERO) > 0) {
-            totalDebitBalance = node.getTotalDebitAmount().subtract(node.getTotalCreditAmount());
-        }
-        else if(node.getTotalDebitAmount().subtract(node.getTotalCreditAmount()).compareTo(BigDecimal.ZERO) < 0) {
-            totalCreditBalance = node.getTotalDebitAmount().subtract(node.getTotalCreditAmount());
-        }
 
         return new FinancialStatementsLedgerShowDTO(
                 level,
                 node.getName(),
-                totalDebitBalance,
+                node.getTotalDebitBalance(),
                 node.getTotalDebitAmount(),
-                totalCreditBalance,
+                node.getTotalCreditBalance(),
                 node.getTotalCreditAmount()
         );
     }
 
-    public static FinancialStatementsLedgerShowDTO create(String level, String name,BigDecimal totalDebitAmount,BigDecimal totalCreditAmount) {
-        BigDecimal totalDebitBalance = BigDecimal.ZERO;
-        BigDecimal totalCreditBalance = BigDecimal.ZERO;
-
-        if(totalDebitAmount.subtract(totalCreditAmount).compareTo(BigDecimal.ZERO) > 0) {
-            totalDebitBalance = totalDebitAmount.subtract(totalCreditAmount);
-        }
-        else if(totalDebitAmount.subtract(totalCreditAmount).compareTo(BigDecimal.ZERO) < 0) {
-            totalCreditBalance = totalDebitAmount.subtract(totalCreditAmount);
-        }
-
+    public static FinancialStatementsLedgerShowDTO create(String level, String name,BigDecimal totalDebitBalance,
+                                                          BigDecimal totalDebitAmount,BigDecimal totalCreditBalance,
+                                                          BigDecimal totalCreditAmount) {
         return new FinancialStatementsLedgerShowDTO(
                 level,
                 name,

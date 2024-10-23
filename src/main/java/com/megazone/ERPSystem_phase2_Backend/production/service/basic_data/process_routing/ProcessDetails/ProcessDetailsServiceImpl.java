@@ -199,16 +199,16 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
                 .defectRate(processDetails.getDefectRate())  // 불량률
                 .description(processDetails.getDescription())  // 설명
                 .isUsed(processDetails.getIsUsed())  // 사용 여부
-                .workcenterDTOList(
-                        processDetails.getWorkcenters().stream()
-                                .map(this::convertToWorkcenterDTO)  // Workcenter를 WorkcenterDTO로 변환
-                                .collect(Collectors.toList())
-                )
-                .routingStepIdList(
-                        processDetails.getRoutingSteps().stream()
-                                .map(RoutingStep::getId)
-                                .collect(Collectors.toList())
-                )
+//                .workcenterDTOList(
+//                        processDetails.getWorkcenters().stream()
+//                                .map(this::convertToWorkcenterDTO)  // Workcenter를 WorkcenterDTO로 변환
+//                                .collect(Collectors.toList())
+//                )
+//                .routingStepIdList(
+//                        processDetails.getRoutingSteps().stream()
+//                                .map(RoutingStep::getId)
+//                                .collect(Collectors.toList())
+//                )
                 .build();
     }
 
@@ -287,13 +287,13 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
                 .defectRate(processDetailsDTO.getDefectRate())  // 불량률
                 .description(processDetailsDTO.getDescription())  // 설명
                 .isUsed(processDetailsDTO.getIsUsed())  // 사용 여부
-                .workcenters(
-                        processDetailsDTO.getWorkcenterDTOList() != null ?
-                                processDetailsDTO.getWorkcenterDTOList().stream()
-                                        .map(this::convertToWorkcenter)
-                                        .collect(Collectors.toList())
-                                : Collections.emptyList()
-                )
+//                .workcenters(
+//                        processDetailsDTO.getWorkcenterDTOList() != null ?
+//                                processDetailsDTO.getWorkcenterDTOList().stream()
+//                                        .map(this::convertToWorkcenter)
+//                                        .collect(Collectors.toList())
+//                                : Collections.emptyList()
+//                )
                 .build();
     }
 }

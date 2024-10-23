@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 class ShipmentProductResponseDTO {
     private Long id; // 출하 제품 ID
+    private Long productId; // 제품 ID
     private String productCode; // 제품 코드
     private String productName; // 제품명
     private String standard; // 규격
@@ -20,6 +21,7 @@ class ShipmentProductResponseDTO {
     public static ShipmentProductResponseDTO mapToDto(ShipmentProduct shipmentProduct) {
         return new ShipmentProductResponseDTO(
                 shipmentProduct.getId(),
+                shipmentProduct.getProduct().getId(),
                 shipmentProduct.getProduct().getCode(),
                 shipmentProduct.getProduct().getName(),
                 shipmentProduct.getStandard(),

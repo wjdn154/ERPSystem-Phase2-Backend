@@ -286,13 +286,15 @@ public class InventoryInspectionServiceImpl implements InventoryInspectionServic
     private InventoryInspectionResponseListDTO mapToDto(InventoryInspection inspection) {
         String productSummary = inspection.getDetails().isEmpty()
                 ? "품목 없음"
+                : inspection.getDetails().size() == 1
+                ? inspection.getDetails().get(0).getProduct().getName()
                 : inspection.getDetails().get(0).getProduct().getName() + " 외 " + (inspection.getDetails().size() - 1) + "건";
 
         Long totalBookQuantity = inspection.getDetails() != null ?
                 inspection.getDetails().stream()
-                        .filter(detail -> detail.getBookQuantity() != null)  // null 값인 항목을 제외
-                        .mapToLong(InventoryInspectionDetail::getBookQuantity)
-                        .sum() : null;  //
+                        .filter(detail -> detail.getProduct() != null && detail.getInventory() != null)
+                        .mapToLong(detail -> detail.getInventory().getQuantity())
+                        .sum() : null;
 
         Long totalActualQuantity = inspection.getDetails() != null ?
                 inspection.getDetails().stream()
@@ -313,7 +315,7 @@ public class InventoryInspectionServiceImpl implements InventoryInspectionServic
                 productSummary,
                 inspection.getStatus(),
                 inspection.getWarehouse().getName(),
-                totalBookQuantity,
+                totalBookQuantity,  // 원래 재고 수량의 합계를 장부 수량으로 표시
                 totalActualQuantity,
                 totalDifferenceQuantity,
                 inspection.getDetails().stream().map(detail -> new InventoryInspectionDetailResponseListDTO(
@@ -321,7 +323,7 @@ public class InventoryInspectionServiceImpl implements InventoryInspectionServic
                         detail.getProductCode(),
                         detail.getProductName(),
                         detail.getStandard(),
-                        detail.getBookQuantity(),
+                        detail.getInventory().getQuantity(),  // 개별 원래 재고 수량을 표시
                         detail.getActualQuantity(),
                         detail.getDifferenceQuantity(),
                         detail.getComment()

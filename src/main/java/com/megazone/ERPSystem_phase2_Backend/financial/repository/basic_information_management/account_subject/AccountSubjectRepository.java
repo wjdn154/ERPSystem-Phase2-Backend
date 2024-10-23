@@ -2,6 +2,8 @@ package com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_informa
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubject;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,5 +25,9 @@ public interface AccountSubjectRepository extends JpaRepository<AccountSubject, 
      */
     Optional<AccountSubject> findByCode(String code);
 
-    List<AccountSubject> findByNameOrCodeContaining(String name, String code);
+    @Query("SELECT a FROM account_subject a WHERE a.name LIKE %:name% OR a.code LIKE %:code% ORDER BY LENGTH(a.code), a.code ASC")
+    List<AccountSubject> findByNameOrCodeContainingOrderByCodeAsc(@Param("name") String name, @Param("code") String code);
+
+    @Query("SELECT a FROM account_subject a ORDER BY LENGTH(a.code), a.code ASC")
+    List<AccountSubject> findAllByOrderByCodeAsc();
 }

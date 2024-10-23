@@ -140,6 +140,7 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
                 .warehouseName(purchaseRequest.getReceivingWarehouse().getName())  // 입고 창고 이름
                 .vatType(purchaseRequest.getVatType())
                 .currency(purchaseRequest.getCurrency().getName())  // 통화 종류
+                .exchangeRate(purchaseRequest.getCurrency().getExchangeRate())
                 .remarks(purchaseRequest.getRemarks())
                 .purchaseRequestDetails(toItemDetailDtoList(purchaseRequest.getPurchaseRequestDetails()))  // 상세 목록 변환
                 .build();

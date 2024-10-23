@@ -1,13 +1,15 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.basic_data.process_routing;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessRoutingDetail2DTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessRoutingDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessRouting;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessDetailsDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessRoutingDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.process_routing.PrcessRouting.ProcessRoutingRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.process_routing.ProcessRouting.ProcessRoutingService;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,18 +29,23 @@ public class ProcessRoutingController {
 
     // 1. processRouting 전체 조회
     @PostMapping
-    public ResponseEntity<List<ProcessRouting>> getAllProcessRoutings() {
+    public ResponseEntity<List<ProcessRoutingDTO>> getAllProcessRoutings() {
 
-        List<ProcessRouting> processRoutings = processRoutingRepository.findAll();
-        return ResponseEntity.ok(processRoutings);
+        ModelMapper modelMapper = new ModelMapper();
+        List<ProcessRoutingDTO> processRoutings = processRoutingRepository.findAll().stream()
+                .map(bank -> modelMapper.map(bank, ProcessRoutingDTO.class))
+                .toList();
+
+        return ResponseEntity.status(HttpStatus.OK).body(processRoutings);
     }
 
     // 2. processRouting 개별상세조회
     @PostMapping("/{id}")
-    public ResponseEntity<ProcessRouting> getProcessRoutingById(@PathVariable("id") Long id) {
-        return processRoutingRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<ProcessRoutingDetailDTO> getProcessRoutingById(@PathVariable("id") Long id) {
+
+        ProcessRoutingDetailDTO processRoutings = processRoutingService.getProcessRoutingById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(processRoutings);
     }
 
     // 3. processRouting 생성(등록)
@@ -50,8 +57,8 @@ public class ProcessRoutingController {
 
     // 3.1 생성 시 등록창 내에서 생산공정 검색 (RoutingStep 등록 위함)
     @PostMapping("/searchProcessDetails")
-    public ResponseEntity<List<ProcessDetailsDTO>> searchProcessDetails(@RequestParam(value = "keyword") String keyword) {
-        List<ProcessDetailsDTO> processDetailsList = processRoutingService.searchProcessDetails(keyword);
+    public ResponseEntity<List<ProcessDetailsDTO>> searchProcessDetails() {
+        List<ProcessDetailsDTO> processDetailsList = processRoutingService.searchProcessDetails();
         return ResponseEntity.ok(processDetailsList);
     }
 
@@ -76,14 +83,12 @@ public class ProcessRoutingController {
     }
 
     // 4. 수정
-    @PostMapping("update/{id}")
-    public ResponseEntity<ProcessRoutingDTO> updateProcessRouting(
-            @PathVariable("id") Long id,
-            @RequestBody ProcessRoutingDTO processRoutingDTO) {
-        ProcessRoutingDTO updatedRouting = processRoutingService.updateProcessRouting(id, processRoutingDTO);
+    @PostMapping("update")
+    public ResponseEntity<ProcessRoutingDetailDTO> updateProcessRouting(@RequestBody ProcessRoutingDetailDTO processRoutingDetailDTO) {
+        ProcessRoutingDetailDTO updatedRouting = processRoutingService.updateProcessRouting(processRoutingDetailDTO);
+        System.out.println("updatedRouting = " + updatedRouting);
         return ResponseEntity.ok(updatedRouting);
     }
-
 
     // 5. 삭제
     @PostMapping("delete/{id}")
