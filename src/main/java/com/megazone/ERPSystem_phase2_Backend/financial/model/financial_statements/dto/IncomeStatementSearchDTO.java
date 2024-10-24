@@ -3,8 +3,9 @@ package com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statemen
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 
 @Data
 public class IncomeStatementSearchDTO {
-    private LocalDate searchDate;
+    private YearMonth yearMonth;
 }

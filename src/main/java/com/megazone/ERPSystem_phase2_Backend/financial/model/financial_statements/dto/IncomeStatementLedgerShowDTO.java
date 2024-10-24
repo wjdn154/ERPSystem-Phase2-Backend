@@ -23,4 +23,8 @@ public class IncomeStatementLedgerShowDTO {
                 node.getTotalAmount()
         );
     }
+
+    public static IncomeStatementLedgerShowDTO create(String level, String name, BigDecimal totalAmount) {
+        return new IncomeStatementLedgerShowDTO(level, name, totalAmount);
+    }
 }

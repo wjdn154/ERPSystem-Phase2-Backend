@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.dto;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.enums.EntryType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,24 +14,23 @@ public class IncomeStatementLedgerDTO {
     private BigDecimal amount;
     private String accountStructureCode;
     private Integer accountStructureMin;
-    private Long financialStatementId;
     private String mediumCategory;
     private String smallCategory;
+    private Long financialStatementId;
     private String financialStatementsName;
     private String financialStatementsCode;
 
     public static IncomeStatementLedgerDTO create(BigDecimal amount,
                                                   String accountStructureCode, Integer accountStructureMin,
                                                   Long financialStatementId, String mediumCategory, String smallCategory,
-                                                  String financialStatementsName,
-                                                  String financialStatementsCode) {
+                                                  String financialStatementsName, String financialStatementsCode) {
         return new IncomeStatementLedgerDTO(
                 amount,
                 accountStructureCode,
                 accountStructureMin,
-                financialStatementId,
                 mediumCategory,
                 smallCategory,
+                financialStatementId,
                 financialStatementsName,
                 financialStatementsCode
         );

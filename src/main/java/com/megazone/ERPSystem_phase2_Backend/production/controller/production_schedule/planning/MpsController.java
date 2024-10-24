@@ -1,13 +1,16 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.production_schedule.planning;
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.planning.dto.MpsDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.planning.dto.searchMpsDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.planning.mps.MpsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/production/mps")
@@ -28,9 +31,11 @@ public class MpsController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping
-    public ResponseEntity<List<MpsDTO>> getAllMps() {
-        List<MpsDTO> mpsList = mpsService.getAllMps();
+    @PostMapping("/search")
+    public ResponseEntity<Object> searchMps(@RequestBody Map<String, LocalDate> requestData) {
+        LocalDate date = requestData.get("searchDate");
+        System.out.println("date = " + date);
+        List<searchMpsDTO> mpsList = mpsService.searchMps(date);
         return new ResponseEntity<>(mpsList, HttpStatus.OK);
     }
 

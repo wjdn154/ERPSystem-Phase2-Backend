@@ -39,4 +39,5 @@ public interface WorkcenterRepository extends JpaRepository<Workcenter, Long>, W
      * @return 선택한 작업장 유형에 해당하는 Workcenter 리스트
      */
     List<Workcenter> findByWorkcenterTypeIn(List<WorkcenterType> workcenterType);
+    Optional<Workcenter> findByProcessDetailsId(Long processDetailsId);
 }

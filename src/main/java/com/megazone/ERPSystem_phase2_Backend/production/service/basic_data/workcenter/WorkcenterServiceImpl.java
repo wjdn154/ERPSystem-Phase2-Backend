@@ -58,6 +58,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                 .factoryName(isValidWarehouse ? workcenter.getFactory().getName() : null)
 //                .warehouseType(isValidWarehouse ? workcenter.getFactory().getWarehouseType() : null) // 확인용: 나중에 삭제
                 // 생산공정
+                .processId(workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getId() : null)
                 .processCode(workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getCode() : null)
                 // 설비
 //                .equipmentIds(workcenter.getEquipmentList().stream().map(EquipmentData::getId).collect(Collectors.toList()))
@@ -84,7 +85,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                         processDetailsRepository.findByCode(workcenterDTO.getProcessCode())
                                 .orElseThrow(() -> new RuntimeException("해당 생산공정코드를 찾을 수 없습니다: " + workcenterDTO.getProcessCode())) : null)
 
-//                .equipmentList(Optional.ofNullable(workcenterDTO.getEquipmentIds())
+//                .(Optional.ofNullable(workcenterDTO.getEquipmentIds())
 //                        .orElseGet(ArrayList::new).stream()
 //                        .map(id -> equipmentDataRepository.findById(id)
 //                                .orElseThrow(() -> new RuntimeException("해당 설비ID를 찾을 수 없습니다: " + id)))
@@ -168,18 +169,30 @@ public class WorkcenterServiceImpl implements WorkcenterService {
             // 오늘의 작업자 리스트 설정 (작업자 명단이 없으면 '배정없음' 설정)
 //            workcenterDTO.setTodayWorkers(todayWorkers);
 
-            // 설치된 설비 수 가져오기
-            List<Long> equipmentIds = equipmentDataRepository.findByWorkcenterId(workcenter.getId()).stream()
-                    .map(EquipmentData::getId)
-                    .collect(Collectors.toList());
+//            // 설치된 설비 수 가져오기
+//            List<Long> equipmentIds = equipmentDataRepository.findByWorkcenterId(workcenter.getId()).stream()
+//                    .map(EquipmentData::getId)
+//                    .collect(Collectors.toList());
+//            workcenterDTO.setEquipmentIds(equipmentIds); // 설비 ID 설정
+
+            // 설비 정보 가져오기 (설비 ID, 이름, 모델명 모두 설정)
+            List<EquipmentData> equipmentDataList = equipmentDataRepository.findByWorkcenterId(workcenter.getId());
+            List<Long> equipmentIds = equipmentDataList.stream().map(EquipmentData::getId).collect(Collectors.toList());
+            List<String> equipmentNames = equipmentDataList.stream().map(EquipmentData::getEquipmentName).collect(Collectors.toList());
+            List<String> modelNames = equipmentDataList.stream().map(EquipmentData::getModelName).collect(Collectors.toList());
+
             workcenterDTO.setEquipmentIds(equipmentIds); // 설비 ID 설정
+            workcenterDTO.setEquipmentNames(equipmentNames);
+            workcenterDTO.setModelNames(modelNames);
 
             // 소속 공장명 가져오기 (공장이 있으면 이름 설정, 없으면 null)
             String factoryCode = workcenter.getFactory() != null ? workcenter.getFactory().getCode() : null;
             workcenterDTO.setFactoryCode(factoryCode);
 
             // 생산 공정명 가져오기 (공정이 있으면 이름 설정, 없으면 null)
+            Long processId = workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getId() : null;
             String processCode = workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getCode() : null;
+//            workcenterDTO.setProcessCode(processId);
             workcenterDTO.setProcessCode(processCode);
 
             return workcenterDTO;

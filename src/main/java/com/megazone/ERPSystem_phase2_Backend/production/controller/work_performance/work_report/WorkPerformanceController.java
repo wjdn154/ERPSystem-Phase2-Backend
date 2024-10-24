@@ -1,14 +1,18 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.work_performance.work_report;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.DailyAndMonthJournalSearchDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.DailyAndMonthJournalShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.DailyAndMonthReportSearchDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceListDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.enums.WorkStatus;
 import com.megazone.ERPSystem_phase2_Backend.production.service.work_performance.work_report.WorkPerformanceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +68,16 @@ public class WorkPerformanceController {
         Optional<WorkPerformanceDetailDTO> result = workPerformanceService.updateWorkPerformance(id, dto);
 
         return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+    }
+
+    @PostMapping("/workPerformance/dailyReport")
+    public ResponseEntity<Object> getDailyMonthlyAndWorkPerformanceReport(@RequestBody DailyAndMonthReportSearchDTO dto) {
+        try{
+            List<DailyAndMonthReportSearchDTO> report = workPerformanceService.dailyAndMonthlyReport(dto);
+            return ResponseEntity.status(HttpStatus.OK).body(report);
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("일일 보고서 조회 실패, 이유 : " + e.getMessage());
+        }
     }
 
 }

@@ -20,7 +20,6 @@ public class QualityInspectionListDTO {
     private QualityInspectionType qualityInspectionType;  //품질 검사 유형
 
     private Long workPerformanceId;        //작업실적 아이디
-    private String workPerformanceName;    //작업실적 이름
 
     private String productCode;          //품목 코드
     private String productName;          //품목 이름

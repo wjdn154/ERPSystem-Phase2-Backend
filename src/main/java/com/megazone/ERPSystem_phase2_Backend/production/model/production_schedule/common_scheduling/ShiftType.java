@@ -29,8 +29,8 @@ public class ShiftType {
     @Column(nullable = false)
     private Double duration;  // 근무 시간 (시간 단위)
 
-    @OneToMany(mappedBy = "shiftType")
-    private List<WorkerAssignment> workerAssignments;
+//    @OneToMany(mappedBy = "shiftType")
+//    private List<WorkerAssignment> workerAssignments;
 
     @Column(nullable = false)
     private Boolean isUsed;

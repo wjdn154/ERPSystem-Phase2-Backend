@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface WorkcenterRepositoryCustom {
 
+
+
     /**
      * 전체 조회할 때 여러 엔티티 정보 한번에 담기
      * @return

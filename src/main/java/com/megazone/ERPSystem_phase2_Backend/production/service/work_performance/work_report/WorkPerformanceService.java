@@ -1,8 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.work_performance.work_report;
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.DailyAndMonthReportSearchDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceListDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.enums.WorkStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,5 +15,7 @@ public interface WorkPerformanceService {
     Optional<WorkPerformanceDetailDTO> createWorkPerformance(WorkPerformanceDetailDTO dto);
 
     Optional<WorkPerformanceDetailDTO> updateWorkPerformance(Long id, WorkPerformanceDetailDTO dto);
+
+    List<DailyAndMonthReportSearchDTO> dailyAndMonthlyReport(DailyAndMonthReportSearchDTO dto);
 
 }

@@ -16,5 +16,4 @@ public class RoutingStepDetailDTO {
     private Long stepOrder;
     private ProcessRouting processRouting;
     private ProcessDetailsDTO processDetails;
-
 }

@@ -108,8 +108,17 @@ public class FinancialStatementsLedgerServiceImpl implements FinancialStatements
             MediumTotal totals = largeCategoryTotals.computeIfAbsent(largeNode.getName(), k -> new MediumTotal());
             totals.add(largeNode);
 
-            // 대분류 표시할라면 주석제거
-            // result.add(FinancialStatementsLedgerShowDTO.create(largeNode, "Large_Category"));
+//            // 대분류 표시할라면 주석제거
+//             result.add(FinancialStatementsLedgerShowDTO.create(largeNode, "Large_Category"));
+
+            result.add(FinancialStatementsLedgerShowDTO.create(
+                    "Large_category",
+                    largeNode.getName() + " 총계",
+                    totals.totalDebitBalance,
+                    totals.totalDebitAmount,
+                    totals.totalCreditBalance,
+                    totals.totalCreditAmount
+            ));
 
             List<FinancialStateNode> sortedMediumNodes = largeNode.getChildren();
             for (FinancialStateNode mediumNode : sortedMediumNodes) {
@@ -130,15 +139,6 @@ public class FinancialStatementsLedgerServiceImpl implements FinancialStatements
                 }
             }
 
-            // 대분류 합계를 결과에 추가 (각 대분류의 모든 내용을 출력한 후에 합계를 추가)
-            result.add(FinancialStatementsLedgerShowDTO.create(
-                    "Large_category",
-                    largeNode.getName() + " 총계",
-                    totals.totalDebitBalance,
-                    totals.totalDebitAmount,
-                    totals.totalCreditBalance,
-                    totals.totalCreditAmount
-            ));
         }
 
 // "부채"와 "자본"의 합계를 계산하여 "부채와 자본 총계"를 출력
