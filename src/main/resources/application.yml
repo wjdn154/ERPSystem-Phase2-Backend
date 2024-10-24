@@ -114,8 +114,9 @@ spring:
   #        - classpath:initial-database/production/production_schedule/planning/mps.sql
   #        - classpath:initial-database/production/production_schedule/common_scheduling/production_order.sql
   #        - classpath:initial-database/production/work_report/workPerformance.sql
-#        - classpath:initial-database/production/work_report/mps-order.sql
-#        - classpath:initial-database/production/production_schedule/common_scheduling/worker_assignment.sql
+        - classpath:initial-database/production/work_report/mps.sql
+        - classpath:initial-database/production/production_schedule/common_scheduling/production_order.sql
+        - classpath:initial-database/production/production_schedule/common_scheduling/worker_assignment.sql
 
         - classpath:initial-database/financial/unresolved_sale_and_purchase_voucher.sql
         - classpath:initial-database/financial/unresolved_voucher.sql
@@ -127,15 +128,12 @@ logging:
   level:
 #    root: DEBUG
     root: INFO
-    com.megazone: DEBUG
+#    com.megazone: DEBUG
+#    org.flywaydb: DEBUG
+#    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %highlight(%-5level) %logger{36} - %msg%n"
-    org:
-      hibernate:
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql: TRACE
 jwt:
   secret: ${JWT_SECRET}
   expiration: 86400

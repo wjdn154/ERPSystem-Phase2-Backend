@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.service.production_sche
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessDetails;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionOrder;
@@ -13,8 +14,12 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedul
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.production_strategy.PlanOfMakeToStock;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.Worker;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.enums.WorkStatus;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceListDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceUpdateDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.process_routing.ProcessDetails.ProcessDetailsRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.planning.mps.MpsRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.production_strategy.mto.PlanOfMakeToOrderRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.production_strategy.mts.PlanOfMakeToStockRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.shift_type.ShiftTypeRepository;
@@ -45,6 +50,8 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
     private final ShiftTypeRepository shiftTypeRepository;
     private final WorkPerformanceRepository workPerformanceRepository;
     private final ProductRepository productRepository;
+    private final MpsRepository mpsRepository;
+    private final ProcessDetailsRepository processDetailsRepository;
 //    private final PlanOfMakeToOrderRepository planOfMakeToOrderRepository;
 //    private final PlanOfMakeToStockRepository planOfMakeToStockRepository;
 
@@ -88,9 +95,10 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
     @Override
     public ProductionOrderDTO saveProductionOrder(ProductionOrderDTO productionOrderDTO) {
         ProductionOrder productionOrder = convertToEntity(productionOrderDTO);
+
         ProductionOrder savedProductionOrder = productionOrderRepository.save(productionOrder);
 
-        assignWorkersToWorkcenter(productionOrderDTO, savedProductionOrder);
+//        assignWorkersToWorkcenter(productionOrderDTO, savedProductionOrder);
 
         return convertToDTO(savedProductionOrder);
     }
@@ -228,81 +236,85 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
     /**
      * 작업지시를 마감처리하면 해당 마감한 작업지시에 대한 작업실적 자동 생성
      */
-    public void updateOrderClosure(Long productionOrderId) {
-        ProductionOrder productionOrder = productionOrderRepository.findById(productionOrderId)
+    public WorkPerformanceDTO updateOrderClosure(WorkPerformanceUpdateDTO dto) {
+        ProductionOrder productionOrder = productionOrderRepository.findById(dto.getProductionOrderId())
                 .orElseThrow(() -> new EntityNotFoundException("작업 지시를 찾을 수 없습니다."));
-        System.out.println("------------1------------");
-        System.out.println("productionOrder = " + productionOrder);
+
+        if (productionOrder.getClosed()) throw new IllegalArgumentException("이미 마감된 작업 지시입니다.");
 
         // 작업 지시 마감 처리 (상태만 변경)
         productionOrder.setClosed(true);
-        productionOrder.setEndDateTime(LocalDateTime.now());
+        productionOrder.setActualStartDateTime(productionOrder.getStartDateTime());
+        productionOrder.setActualEndDateTime(dto.getActualEndDateTime());
+        productionOrder.setActualProductionQuantity(dto.getQuantity());
+        productionOrder.setActualWorkers(dto.getWorkers());
+        productionOrderRepository.save(productionOrder);
 
         // 작업 지시 마감처리시, 작업종료시간 자동으로 입력되고, 시작시간과의 차이를 구해서 그 시간을 작업실적으로 전달함
 
         // 작업 실적 생성 로직 추가
-        BigDecimal productionQuantity = productionOrder.getProductionQuantity();
-        if (productionQuantity == null || productionQuantity.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("유효하지 않은 생산 수량입니다.");
-        }
+        if (dto.getQuantity() == null || dto.getQuantity().compareTo(BigDecimal.ZERO) < 0) throw new IllegalArgumentException("유효하지 않은 생산 수량입니다.");
 
 
         // 작업 실적 생성 로직 추가
         WorkPerformance workPerformance = WorkPerformance.builder()
-                .product(productionOrder.getMps().getProduct())
+                .quantity(dto.getQuantity())
+                .defectiveQuantity(dto.getDefectiveQuantity())
+                .acceptableQuantity(dto.getQuantity().subtract(dto.getDefectiveQuantity()))
+                .workDate(dto.getWorkDate())
+                .workers(dto.getWorkers())
                 .productionOrder(productionOrder)
-                .actualQuantity(productionOrder.getProductionQuantity())
-                .workDate(productionOrder.getStartDateTime().toLocalDate())
+//                .product(productionOrder.getMps().getProduct())
                 .build();
         workPerformanceRepository.save(workPerformance);
 
-
-        List<WorkPerformance> workPerformance2 = workPerformanceRepository.findByProductionOrderId(productionOrder.getId());
-
-        workPerformance2.add(workPerformance);
-        workPerformanceRepository.saveAll(workPerformance2);
-
-        System.out.println("------------2------------");
-        System.out.println("workPerformance = " + workPerformance);
-
-        ProductionOrder save = productionOrderRepository.save(productionOrder);
-        System.out.println("------------3------------");
-        System.out.println("save = " + save);
-
+        return null;
     }
 
 
     // 엔티티를 DTO로 변환
     private ProductionOrderDTO convertToDTO(ProductionOrder productionOrder) {
-//        return null;
         return ProductionOrderDTO.builder()
                 .id(productionOrder.getId())
                 .name(productionOrder.getName())
-//                .planOfMakeToOrderId(productionOrder.getPlanOfMakeToOrder() != null ? productionOrder.getPlanOfMakeToOrder().getId() : null)
-//                .planOfMakeToStockId(productionOrder.getPlanOfMakeToStock() != null ? productionOrder.getPlanOfMakeToStock().getId() : null)
-//                .workerAssignments(productionOrder.getWorkerAssignments().stream()
-//                        .map(this::convertWorkerAssignmentToDTO)
-//                        .toList())
                 .remarks(productionOrder.getRemarks())
                 .confirmed(productionOrder.getConfirmed())
+                .closed(productionOrder.getClosed())
                 .startDateTime(productionOrder.getStartDateTime())
                 .endDateTime(productionOrder.getEndDateTime())
+                .productionQuantity(productionOrder.getProductionQuantity())
+                .actualStartDateTime(productionOrder.getActualStartDateTime())
+                .actualEndDateTime(productionOrder.getActualEndDateTime())
+                .actualProductionQuantity(productionOrder.getActualProductionQuantity())
+                .workers(productionOrder.getWorkers())
+                .actualWorkers(productionOrder.getActualWorkers())
+                .mpsId(productionOrder.getMps() != null ? productionOrder.getMps().getId() : null)
+                .processDetailsId(productionOrder.getProcessDetails() != null ? productionOrder.getProcessDetails().getId() : null)
                 .build();
     }
 
     // DTO를 엔티티로 변환
     private ProductionOrder convertToEntity(ProductionOrderDTO productionOrderDTO) {
+        Mps mps = mpsRepository.findById(productionOrderDTO.getMpsId()).orElseThrow(() -> new EntityNotFoundException("MPS를 찾을 수 없습니다."));
+        ProcessDetails processDetails = processDetailsRepository.findById(productionOrderDTO.getProcessDetailsId()).orElseThrow(() -> new EntityNotFoundException("공정 세부를 찾을 수 없습니다."));
+        Workcenter workcenter = workcenterRepository.findByProcessDetailsId(processDetails.getId()).orElseThrow(() -> new EntityNotFoundException("작업장을 찾을 수 없습니다."));
+
         return ProductionOrder.builder()
-                .id(productionOrderDTO.getId())
                 .name(productionOrderDTO.getName())
-//                .planOfMakeToOrder(productionOrderDTO.getPlanOfMakeToOrderId() != null ? planOfMakeToOrderRepository.findById(productionOrderDTO.getPlanOfMakeToOrderId())
-//                        .orElseThrow(() -> new EntityNotFoundException("생산 주문 계획을 찾을 수 없습니다.")) : null)
-//                .planOfMakeToStock(productionOrderDTO.getPlanOfMakeToStockId() != null ? planOfMakeToStockRepository.findById(productionOrderDTO.getPlanOfMakeToStockId())
-//                        .orElseThrow(() -> new EntityNotFoundException("생산 재고 계획을 찾을 수 없습니다.")) : null)
                 .remarks(productionOrderDTO.getRemarks())
                 .confirmed(productionOrderDTO.getConfirmed())
+                .closed(productionOrderDTO.getClosed())
                 .startDateTime(productionOrderDTO.getStartDateTime())
                 .endDateTime(productionOrderDTO.getEndDateTime())
+                .productionQuantity(productionOrderDTO.getProductionQuantity())
+                .actualStartDateTime(productionOrderDTO.getActualStartDateTime())
+                .actualEndDateTime(productionOrderDTO.getActualEndDateTime())
+                .actualProductionQuantity(productionOrderDTO.getActualProductionQuantity())
+                .workers(productionOrderDTO.getWorkers())
+                .actualWorkers(productionOrderDTO.getActualWorkers())
+                .mps(mps)
+                .processDetails(processDetails)
+                .workcenter(workcenter)
                 .build();
     }
 
