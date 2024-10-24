@@ -7,24 +7,24 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+/**
+ * 수당
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "employee_salarystep")
-@Table(name = "employee_salarystep")
-/**
- *  호봉 정보 테이블
- */
-public class SalaryStep {
+@Entity(name = "employee_allowance")
+@Table
+public class Allowance {
     @Id
     @GeneratedValue
-    private Long id;
+    private long id;
 
-    @Column
-    private String code; // 호봉코드
+    @Column(nullable = false,unique = true)
+    private String code; // 수당코드
 
     @Column(nullable = false)
-    private String name; // 호봉 1호봉,2호봉 ~~ 10호봉
+    private BigDecimal amount; // 수당금액
 
-    private String description;
+    private String description; // 비고
 }
