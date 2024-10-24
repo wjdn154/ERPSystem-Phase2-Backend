@@ -36,6 +36,10 @@ public class ReceivingOrderDetail {
     @Column(nullable = false)
     private Integer quantity;
 
+    // 미입고 수량
+    @Column
+    private Integer unreceivedQuantity;
+
     // 비고
     @Column
     private String remarks;

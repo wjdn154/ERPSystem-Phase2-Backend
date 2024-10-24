@@ -8,10 +8,7 @@ import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_man
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.Shipment;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.ShipmentProduct;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.dto.ShipmentProductListResponseDTO;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.dto.ShipmentRequestDTO;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.dto.ShipmentResponseDTO;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.dto.ShipmentResponseListDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseAddressRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
@@ -191,12 +188,21 @@ public class ShipmentServiceImpl implements ShipmentService{
     }
 
     @Override
-    public List<ShipmentProductListResponseDTO> findShipmentItemsByDateRange(LocalDate startDate, LocalDate endDate) {
-        List<ShipmentProduct> shipmentProducts = shipmentProductRepository.findShipmentItemsByDateRange(startDate, endDate);
+    public ShipmentTotalProductsDTO findShipmentItemsByDateRange(LocalDate startDate, LocalDate endDate) {
 
-        return shipmentProducts.stream()
+        // 실사 품목 목록 조회
+        List<ShipmentProduct> shipmentProducts = shipmentProductRepository.findShipmentProductsByDateRange(startDate, endDate);
+
+        // DTO로 변환
+        List<ShipmentProductListResponseDTO> shipmentProductDTOs = shipmentProducts.stream()
                 .map(ShipmentProductListResponseDTO::mapToDto)
                 .collect(Collectors.toList());
+
+        // 총 수량 계산
+        Long totalQuantity = shipmentProductRepository.findTotalQuantityByDateRange(startDate, endDate);
+
+        // ShipmentTotalProductsDTO로 반환
+        return new ShipmentTotalProductsDTO(shipmentProductDTOs, totalQuantity);
     }
 
 
