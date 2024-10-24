@@ -94,12 +94,12 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
 
 
 
-    //엔티티를 WorkPerformanceDetailDTO로 변환
+    // 엔티티를 WorkPerformanceDetailDTO로 변환
     private WorkPerformanceDetailDTO workPerformanceToDTO(WorkPerformance workPerformance) {
 
         WorkPerformanceDetailDTO dto = WorkPerformanceDetailDTO.builder()
                 .id(workPerformance.getId())
-                .actualQuantity(workPerformance.getQuantity() != null ? workPerformance.getQuantity() : BigDecimal.ZERO)
+                .actualQuantity(workPerformance.getQuantity() != null ? workPerformance.getQuantity() : BigDecimal.ZERO)  // HEAD 기준
                 .productionOrderId(workPerformance.getProductionOrder().getId())
                 .productionOrderName(workPerformance.getProductionOrder().getName())
                 .productCode(workPerformance.getProduct().getCode())
@@ -109,11 +109,8 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
         return dto;
     }
 
-    //등록 dto를 엔티티로 변환
+    // 등록 dto를 엔티티로 변환
     private WorkPerformance workPerformanceToEntity(WorkPerformanceDetailDTO dto) {
-
-//        WorkDailyReport workDailyReport = workDailyReportRepository.findByWorkDailyReportCode(dto.getWorkDailyReportCode())
-//                .orElseThrow(() -> new IllegalArgumentException("해당하는 일별 보고서 코드가 존재하지 않습니다."));
 
         ProductionOrder productionOrder = productionOrderRepository.findById(dto.getProductionOrderId())
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 작업지시 아이디가 없습니다."));
@@ -123,7 +120,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
 
         WorkPerformance workPerformance = WorkPerformance.builder()
                 .id(dto.getId())
-                .quantity(dto.getActualQuantity() != null ? dto.getActualQuantity() : BigDecimal.ZERO)  // null 처리
+                .quantity(dto.getActualQuantity() != null ? dto.getActualQuantity() : BigDecimal.ZERO)  // HEAD 기준
                 .productionOrder(productionOrder)
                 .product(product)
                 .build();
