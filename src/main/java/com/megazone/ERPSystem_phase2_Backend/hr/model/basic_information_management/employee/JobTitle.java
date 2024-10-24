@@ -25,6 +25,4 @@ public class JobTitle {
     
     @Column
     private String description; // 직책 설명
-
-
 }

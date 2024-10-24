@@ -16,7 +16,7 @@ public class EmployeeDTO {
     private String employeeNumber;
     private String firstName;
     private String lastName;
-    private LocalDate dateOfBirth;
+    private String registrationNumber;
     private String phoneNumber;
     private EmploymentStatus employmentStatus;
     private EmploymentType employmentType;
@@ -39,7 +39,7 @@ public class EmployeeDTO {
                 employee.getEmployeeNumber(),
                 employee.getFirstName(),
                 employee.getLastName(),
-                employee.getDateOfBirth(),
+                employee.getRegistrationNumber(),
                 employee.getPhoneNumber(),
                 employee.getEmploymentStatus(),
                 employee.getEmploymentType(),

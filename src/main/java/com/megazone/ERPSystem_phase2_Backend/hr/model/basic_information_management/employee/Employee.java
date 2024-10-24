@@ -1,7 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee;
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Attendance;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Leaves;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.EmploymentStatus;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.EmploymentType;
 import jakarta.persistence.*;
@@ -13,7 +11,6 @@ import lombok.ToString;
 //import org.hibernate.annotations.Where;
 
 import java.time.LocalDate;
-import java.util.List;
 
 // 사원 엔티티
 
@@ -31,7 +28,7 @@ public class Employee {
     private Long id;
 
 
-    @Column(name="employee_number",nullable = false,unique = true)
+    @Column(name="employee_number",unique = true)
     private String employeeNumber; // 사원 번호
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -79,9 +76,6 @@ public class Employee {
     private String lastName; // 성
 
     @Column(nullable = false)
-    private LocalDate dateOfBirth; // 생년월일
-
-    @Column(nullable = false)
     private String phoneNumber; // 휴대폰 번호
 
     @Enumerated(EnumType.STRING)
@@ -106,5 +100,8 @@ public class Employee {
 
     @Column(name = "profile_Picture")
     private String imagePath; // 프로필 사진
+
+    @Column(name = "registration_Number", nullable = false)
+    private String registrationNumber;
 
 }

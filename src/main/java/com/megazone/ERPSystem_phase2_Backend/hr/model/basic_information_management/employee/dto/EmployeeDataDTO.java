@@ -18,16 +18,19 @@ public class EmployeeDataDTO {
     private EmploymentType employmentType;
     private String email;
     private String address;
-    private boolean isHouseholdHead;
+    private boolean householdHead;
     private String profilePicture;
-
-
-    private String departmentCode; // 부서 ID
+    private Long departmentId;
+    private String departmentCode;
+    private String departmentName;
+    private Long positionId;
+    private String positionCode;
     private String positionName;
+    private Long titleId;
+    private String titleCode;
     private String titleName;
     private Long bankId;
     private String name;
     private String code;
     private String accountNumber;  // 계좌 번호
-
 }

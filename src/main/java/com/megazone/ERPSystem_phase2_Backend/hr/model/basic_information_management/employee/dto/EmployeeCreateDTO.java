@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class EmployeeCreateDTO {
     private String firstName;      // 이름
     private String lastName;       // 성
-    private LocalDate dateOfBirth; // 생년월일
+    private String registrationNumber; // 생년월일
     private String phoneNumber;    // 전화번호
     private EmploymentStatus employmentStatus;
     private EmploymentType employmentType;
@@ -22,9 +22,13 @@ public class EmployeeCreateDTO {
     private String address;        // 주소
     private LocalDate hireDate;    // 채용일
     private boolean householdHead; // 가구주 여부
-    private Long departmentId;     // 부서 ID
-    private Long positionId;       // 직책 ID
-    private Long jobTitleId;       // 직무명 ID
+    private String imagePath;
+    private String departmentCode;
+    private String positionName;
+    private String titleName;
+    private Long departmentId;
+    private Long positionId;
+    private Long jobTitleId;
     //private Long bankAccountId;    // 은행 계좌 ID
     private BankAccountDTO bankAccountDTO;
 
@@ -32,14 +36,18 @@ public class EmployeeCreateDTO {
         return new EmployeeCreateDTO(
                 dto.getFirstName(),
                 dto.getLastName(),
-                LocalDate.parse(dto.getDateOfBirth()),
+                dto.getRegistrationNumber(),
                 dto.getPhoneNumber(),
                 dto.getEmploymentStatus(),
                 dto.getEmploymentType(),
                 dto.getEmail(),
                 dto.getAddress(),
-                LocalDate.parse(dto.getHireDate()),
+                dto.getHireDate() != null ? LocalDate.parse(dto.getHireDate()) : null, // null 값 체크
                 dto.isHouseholdHead(),
+                dto.getImagePath(),
+                dto.getDepartmentCode(),
+                dto.getPositionName(),
+                dto.getTitleName(),
                 dto.getDepartmentId(),
                 dto.getPositionId(),
                 dto.getJobTitleId(),

@@ -64,7 +64,6 @@ public class EmployeeController {
 
         // JSON 문자열을 EmployeeCreateDTO로 변환
         ObjectMapper objectMapper = new ObjectMapper();
-        System.out.println("objectMapper = " + objectMapper);
         // ObjectMapper의 readValue함수가 Json 파싱할때 LocalDate 타입을 지원하지않음.
         // 별도의 String 으로받아서 LocalDate 변환 처리
         EmployeeCreateParseDTO employeeCreateParseDTO = objectMapper.readValue(formattedValues, EmployeeCreateParseDTO.class);

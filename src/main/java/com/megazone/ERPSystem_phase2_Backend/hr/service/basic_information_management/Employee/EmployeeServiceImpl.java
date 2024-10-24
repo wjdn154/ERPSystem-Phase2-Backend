@@ -14,7 +14,6 @@ import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_man
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Performance.PerformanceRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Position.PositionRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.EmployeeImage.EmployeeImageService;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -68,6 +67,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                         employee.getEmploymentType(),
                         employee.getEmail(),
                         employee.getHireDate(),
+                        employee.getImagePath(),
                         employee.getDepartment().getDepartmentCode(),
                         employee.getDepartment().getDepartmentName(),
                         employee.getPosition().getPositionName(),
@@ -96,7 +96,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         dto.setEmployeeNumber(employee.getEmployeeNumber());
         dto.setFirstName(employee.getFirstName());
         dto.setLastName(employee.getLastName());
-        dto.setDateOfBirth(employee.getDateOfBirth());
+        dto.setRegistrationNumber(employee.getRegistrationNumber());
         dto.setPhoneNumber(employee.getPhoneNumber());
         dto.setEmploymentStatus(employee.getEmploymentStatus());
         dto.setEmploymentType(employee.getEmploymentType());
@@ -105,9 +105,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         dto.setHireDate(employee.getHireDate());
         dto.setHouseholdHead(employee.isHouseholdHead());
         dto.setProfilePicture(employee.getImagePath());
+        dto.setDepartmentId(employee.getDepartment().getId());
         dto.setDepartmentCode(employee.getDepartment().getDepartmentCode());
         dto.setDepartmentName(employee.getDepartment().getDepartmentName());
+        dto.setPositionId(employee.getPosition().getId());
+        dto.setPositionCode(employee.getPosition().getPositionCode());
         dto.setPositionName(employee.getPosition().getPositionName());
+        dto.setTitleId(employee.getJobTitle().getId());
+        dto.setTitleCode(employee.getJobTitle().getCode());
         dto.setTitleName(employee.getJobTitle().getTitleName());
         // 이미 만들어진 BankAccountDTO 사용
         if (employee.getBankAccount() != null && employee.getBankAccount().getBank() != null) {
@@ -143,7 +148,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         dto.setId(employee.getId());
         dto.setFirstName(employee.getFirstName());
         dto.setLastName(employee.getLastName());
-        dto.setDateOfBirth(employee.getDateOfBirth());
+        dto.setRegistrationNumber(employee.getRegistrationNumber());
         dto.setPhoneNumber(employee.getPhoneNumber());
         dto.setEmploymentStatus(employee.getEmploymentStatus());
         dto.setEmploymentType(employee.getEmploymentType());
@@ -255,7 +260,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                     updatedEmployee.getEmployeeNumber(),
                     updatedEmployee.getFirstName(),
                     updatedEmployee.getLastName(),
-                    updatedEmployee.getDateOfBirth(),
+                    updatedEmployee.getRegistrationNumber(),
                     updatedEmployee.getPhoneNumber(),
                     updatedEmployee.getEmploymentStatus(),
                     updatedEmployee.getEmploymentType(),
@@ -287,13 +292,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setEmployeeNumber(employeeNumber);
         employee.setFirstName(dto.getFirstName());
         employee.setLastName(dto.getLastName());
-        employee.setDateOfBirth(dto.getDateOfBirth());
+        employee.setRegistrationNumber(dto.getRegistrationNumber());
         employee.setPhoneNumber(dto.getPhoneNumber());
         employee.setEmploymentStatus(dto.getEmploymentStatus());
         employee.setEmploymentType(dto.getEmploymentType());
         employee.setEmail(dto.getEmail());
         employee.setAddress(dto.getAddress());
         employee.setHouseholdHead(dto.isHouseholdHead());
+        employee.setImagePath(dto.getImagePath());
 
         // Department 설정
         if (dto.getDepartmentId() != null) {

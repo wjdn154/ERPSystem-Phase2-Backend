@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -14,7 +13,7 @@ import java.time.LocalDate;
 public class EmployeeCreateParseDTO {
     private String firstName;      // 이름
     private String lastName;       // 성
-    private String dateOfBirth; // 생년월일
+    private String registrationNumber; // 생년월일
     private String phoneNumber;    // 전화번호
     private EmploymentStatus employmentStatus;
     private EmploymentType employmentType;
@@ -22,9 +21,16 @@ public class EmployeeCreateParseDTO {
     private String address;        // 주소
     private String hireDate;    // 채용일
     private boolean householdHead; // 가구주 여부
-    private Long departmentId;     // 부서 ID
-    private Long positionId;       // 직책 ID
-    private Long jobTitleId;       // 직무명 ID
+    private String imagePath;
+    private Long departmentId;
+    private String departmentCode;
+    private String positionName;
+    private String titleName;
+    private Long positionId;
+    private Long jobTitleId;
     //private Long bankAccountId;    // 은행 계좌 ID
-    private BankAccountDTO bankAccountDTO;
+    private Long bankId;
+    private String name;
+    private String accountNumber;
+    private String code;
 }
