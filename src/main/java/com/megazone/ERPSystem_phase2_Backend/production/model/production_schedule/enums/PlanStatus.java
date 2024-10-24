@@ -4,6 +4,6 @@
 //public enum PlanStatus {
 //    PLANNED("Planned"),
 //    CONFIRMED("Confirmed"),
-//    ONGOING("Ongoing")
+//    ONGOING("Ongoing"),
 //    COMPLETED("Completed");
 //}
