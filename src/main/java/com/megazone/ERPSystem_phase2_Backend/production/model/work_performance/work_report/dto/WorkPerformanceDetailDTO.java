@@ -1,6 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto;
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.enums.WorkStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +19,6 @@ public class WorkPerformanceDetailDTO {
 
     private BigDecimal actualQuantity;    //실제 생산량
     private BigDecimal workCost;          //작업 비용
-    private WorkStatus workStatus;        //작업 상태
 
     private String workDailyReportCode;    //일별 보고서 코드
     private String workDailyReportName;    //일별 보고서 이름

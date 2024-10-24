@@ -1,15 +1,21 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.production_schedule.common_scheduling;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucher;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionOrder;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.ProductionOrderDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceUpdateDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.production_order.ProductionOrderRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.common_scheduling.ProductionOrder.ProductionOrderService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.apache.tools.ant.taskdefs.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,10 +70,17 @@ public class ProductionOrderController {
      * 작업 지시 마감 여부 업데이트
      * - WorkPerformance 상태 변경에 따른 작업 지시 마감 처리
      */
-    @PostMapping("/closure/{orderId}")
-    public ResponseEntity<Void> updateOrderClosure(@PathVariable("orderId") Long orderId) {
-        productionOrderService.updateOrderClosure(orderId);
-        return ResponseEntity.ok().build();
+    @PostMapping("/closure")
+    public ResponseEntity<Object> updateOrderClosure(@RequestBody WorkPerformanceUpdateDTO dto) {
+        System.out.println("dto = " + dto.toString());
+        System.out.println(LocalDateTime.now());
+        try{
+            WorkPerformanceDTO workPerformanceDTO = productionOrderService.updateOrderClosure(dto);
+            return ResponseEntity.status(HttpStatus.OK).body(workPerformanceDTO);
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("마감처리 실패, 이유 : " + e.getMessage());
+        }
+
     }
 
 

@@ -29,41 +29,41 @@ public class QualityInspectionServiceImpl implements QualityInspectionService{
     //모든 품질 검사 리스트 조회
     @Override
     public List<QualityInspectionListDTO> findAllQualityInspection() {
-        return qualityInspectionRepository.findAllByOrderByIdDesc().stream()
-                .map(qualityInspection -> {
-                    // 총 수량
-                    BigDecimal totalQuantity = qualityInspection.getWorkPerformance().getActualQuantity();
-
+        return null;
+//        return qualityInspectionRepository.findAllByOrderByIdDesc().stream()
+//                .map(qualityInspection -> {
+//                    // 총 수량
+//                    BigDecimal totalQuantity = qualityInspection.getWorkPerformance().getQuantity();
+//
+////                    // 불량 수량 계산: `isPassed`가 `false`인 `InspectedProduct`의 개수
+////                    Long defectiveQuantity = qualityInspection.getInspectedProducts().stream()
+////                            .filter(inspectedProduct -> !inspectedProduct.getIsPassed()) // 검사 불통과 제품
+////                            .count();
+//
 //                    // 불량 수량 계산: `isPassed`가 `false`인 `InspectedProduct`의 개수
-//                    Long defectiveQuantity = qualityInspection.getInspectedProducts().stream()
+//                    BigDecimal defectiveQuantity = BigDecimal.valueOf(qualityInspection.getInspectedProducts().stream()
 //                            .filter(inspectedProduct -> !inspectedProduct.getIsPassed()) // 검사 불통과 제품
-//                            .count();
-
-                    // 불량 수량 계산: `isPassed`가 `false`인 `InspectedProduct`의 개수
-                    BigDecimal defectiveQuantity = BigDecimal.valueOf(qualityInspection.getInspectedProducts().stream()
-                            .filter(inspectedProduct -> !inspectedProduct.getIsPassed()) // 검사 불통과 제품
-                            .count());
-
-
-                    // 통과 수량 계산
-                    BigDecimal passedQuantity = totalQuantity.subtract(defectiveQuantity);
-
-                    // `QualityInspectionListDTO` 생성 및 반환
-                    return new QualityInspectionListDTO(
-                            qualityInspection.getId(),
-                            qualityInspection.getInspectionCode(),
-                            qualityInspection.getInspectionName(),
-                            qualityInspection.getQualityInspectionType(),
-                            qualityInspection.getWorkPerformance().getId(),
-                            qualityInspection.getWorkPerformance().getName(),
-                            qualityInspection.getProduct().getCode(),
-                            qualityInspection.getProduct().getName(),
-                            totalQuantity,
-                            defectiveQuantity,
-                            passedQuantity
-                    );
-                })
-                .collect(Collectors.toList());
+//                            .count());
+//
+//
+//                    // 통과 수량 계산
+//                    BigDecimal passedQuantity = totalQuantity.subtract(defectiveQuantity);
+//
+//                    // `QualityInspectionListDTO` 생성 및 반환
+//                    return new QualityInspectionListDTO(
+//                            qualityInspection.getId(),
+//                            qualityInspection.getInspectionCode(),
+//                            qualityInspection.getInspectionName(),
+//                            qualityInspection.getQualityInspectionType(),
+//                            qualityInspection.getWorkPerformance().getId(),
+//                            qualityInspection.getProduct().getCode(),
+//                            qualityInspection.getProduct().getName(),
+//                            totalQuantity,
+//                            defectiveQuantity,
+//                            passedQuantity
+//                    );
+//                })
+//                .collect(Collectors.toList());
     }
 
 
@@ -196,7 +196,6 @@ public class QualityInspectionServiceImpl implements QualityInspectionService{
                 .inspectionName(qualityInspection.getInspectionName())
                 .qualityInspectionType(qualityInspection.getQualityInspectionType())
                 .workPerformanceId(qualityInspection.getWorkPerformance().getId())
-                .workPerformanceName(qualityInspection.getWorkPerformance().getName())
                 .productCode(qualityInspection.getProduct().getCode())
                 .productName(qualityInspection.getProduct().getName())
                 .inspectedProducts(inspectedProducts)
