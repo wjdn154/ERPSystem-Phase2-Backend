@@ -40,9 +40,9 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
                         workPerformance.getId(),
                         workPerformance.getQuantity() != null ? workPerformance.getQuantity() : BigDecimal.ZERO,
                         workPerformance.getProductionOrder().getId(),
-                        workPerformance.getProductionOrder().getName(),
-                        workPerformance.getProduct().getCode(),
-                        workPerformance.getProduct().getName()
+                        workPerformance.getProductionOrder().getName()
+//                        workPerformance.getProduct().getCode(),
+//                        workPerformance.getProduct().getName()
                         )
                 ).collect(Collectors.toList());
     }
@@ -102,8 +102,8 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
                 .actualQuantity(workPerformance.getQuantity() != null ? workPerformance.getQuantity() : BigDecimal.ZERO)  // HEAD 기준
                 .productionOrderId(workPerformance.getProductionOrder().getId())
                 .productionOrderName(workPerformance.getProductionOrder().getName())
-                .productCode(workPerformance.getProduct().getCode())
-                .productName(workPerformance.getProduct().getName())
+//                .productCode(workPerformance.getProduct().getCode())
+//                .productName(workPerformance.getProduct().getName())
                 .build();
 
         return dto;
@@ -122,7 +122,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
                 .id(dto.getId())
                 .quantity(dto.getActualQuantity() != null ? dto.getActualQuantity() : BigDecimal.ZERO)  // HEAD 기준
                 .productionOrder(productionOrder)
-                .product(product)
+//                .product(product)
                 .build();
 
         return workPerformance;
@@ -143,7 +143,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
         workPerformance.setId(workPerformance.getId());
         workPerformance.setQuantity(dto.getActualQuantity() != null ? dto.getActualQuantity() : BigDecimal.ZERO);
         workPerformance.setProductionOrder(productionOrder);
-        workPerformance.setProduct(product);
+//        workPerformance.setProduct(product);
 
         return workPerformance;
 

@@ -21,7 +21,7 @@ public class WorkPerformanceListDTO {
     private Long productionOrderId;       //작업지시 아이디
     private String productionOrderName;   //작업지시 이름
 
-    private String productCode;         //품목 코드
-    private String productName;         //품목 이름
+//    private String productCode;         //품목 코드
+//    private String productName;         //품목 이름
 
 }

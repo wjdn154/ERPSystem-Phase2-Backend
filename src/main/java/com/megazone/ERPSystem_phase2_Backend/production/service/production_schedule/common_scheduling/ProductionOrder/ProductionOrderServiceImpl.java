@@ -264,7 +264,7 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
                 .workDate(dto.getWorkDate())
                 .workers(dto.getWorkers())
                 .productionOrder(productionOrder)
-                .product(productionOrder.getMps().getProduct())
+//                .product(productionOrder.getMps().getProduct())
                 .build();
         workPerformanceRepository.save(workPerformance);
 

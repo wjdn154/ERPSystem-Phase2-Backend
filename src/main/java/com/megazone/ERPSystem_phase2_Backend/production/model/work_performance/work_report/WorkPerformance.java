@@ -39,9 +39,9 @@ public class WorkPerformance {
     @JoinColumn(name = "production_order_id", nullable = false)
     private ProductionOrder productionOrder; // 연관 작업지시
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product; // 연관 품목 (코드, 이름)
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "product_id", nullable = false)
+//    private Product product; // 연관 품목 (코드, 이름)
 }
 
 /**인건비(작업에 투입된 시간 x 시간당 임금) -> 급여
