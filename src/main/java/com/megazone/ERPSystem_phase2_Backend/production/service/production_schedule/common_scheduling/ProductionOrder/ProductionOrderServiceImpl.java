@@ -244,7 +244,7 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
 
         // 작업 지시 마감 처리 (상태만 변경)
         productionOrder.setClosed(true);
-        productionOrder.setActualStartDateTime(productionOrder.getStartDateTime());
+        productionOrder.setActualStartDateTime(dto.getActualStartDateTime());
         productionOrder.setActualEndDateTime(dto.getActualEndDateTime());
         productionOrder.setActualProductionQuantity(dto.getQuantity());
         productionOrder.setActualWorkers(dto.getWorkers());
