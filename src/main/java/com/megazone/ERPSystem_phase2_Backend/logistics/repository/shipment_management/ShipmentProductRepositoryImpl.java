@@ -14,7 +14,7 @@ import static com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_man
 @RequiredArgsConstructor
 public class ShipmentProductRepositoryImpl implements ShipmentProductRepositoryCustom {
 
-    private final JPAQueryFactory equeryFactory;
+    private final JPAQueryFactory queryFactory;
 
     /**
      * 날짜 범위로 출하 목록 조회 및 총합 조회
@@ -22,12 +22,29 @@ public class ShipmentProductRepositoryImpl implements ShipmentProductRepositoryC
      * @param endDate
      * @return
      */
-    @Override
     public List<ShipmentProduct> findShipmentItemsByDateRange(LocalDate startDate, LocalDate endDate) {
-        return equeryFactory
+        return queryFactory
                 .select(shipmentProduct)
                 .from(shipmentProduct)
                 .where(shipmentProduct.shipment.shipmentDate.between(startDate, endDate))
                 .fetch();
+    }
+
+    @Override
+    public List<ShipmentProduct> findShipmentProductsByDateRange(LocalDate startDate, LocalDate endDate) {
+        return queryFactory
+                .select(shipmentProduct)
+                .from(shipmentProduct)
+                .where(shipmentProduct.shipment.shipmentDate.between(startDate, endDate))
+                .fetch();
+    }
+
+    @Override
+    public Long findTotalQuantityByDateRange(LocalDate startDate, LocalDate endDate) {
+        return queryFactory
+                .select(shipmentProduct.quantity.sum())
+                .from(shipmentProduct)
+                .where(shipmentProduct.shipment.shipmentDate.between(startDate, endDate))
+                .fetchOne();
     }
 }
