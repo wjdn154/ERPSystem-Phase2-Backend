@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.service.work_performanc
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionOrder;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.DailyAndMonthReportSearchDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceListDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
@@ -92,6 +93,11 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
         return Optional.of(workPerformanceDetailDTO);
     }
 
+    @Override
+    public List<DailyAndMonthReportSearchDTO> dailyAndMonthlyReport(DailyAndMonthReportSearchDTO dto) {
+        workPerformanceRepository.dailyAndMonthlyReport(dto);
+        return List.of();
+    }
 
 
     // 엔티티를 WorkPerformanceDetailDTO로 변환
