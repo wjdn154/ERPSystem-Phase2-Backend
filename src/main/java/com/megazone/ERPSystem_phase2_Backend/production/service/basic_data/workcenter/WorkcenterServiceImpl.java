@@ -45,6 +45,8 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                 (workcenter.getFactory().getWarehouseType() == WarehouseType.FACTORY ||
                         workcenter.getFactory().getWarehouseType() == WarehouseType.OUTSOURCING_FACTORY);
 
+//        System.out.println("===================================== workcenter===================================== " + workcenter);
+
         return WorkcenterDTO.builder()
                 .id(workcenter.getId())
                 .code(workcenter.getCode())
@@ -52,23 +54,26 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                 .name(workcenter.getName())
                 .description(workcenter.getDescription())
                 .isActive(workcenter.getIsActive())
-
                 // 조건에 따라 factoryCode 설정
                 .factoryCode(isValidWarehouse ? workcenter.getFactory().getCode() : null)
                 .factoryName(isValidWarehouse ? workcenter.getFactory().getName() : null)
-//                .warehouseType(isValidWarehouse ? workcenter.getFactory().getWarehouseType() : null) // 확인용: 나중에 삭제
                 // 생산공정
                 .processId(workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getId() : null)
                 .processCode(workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getCode() : null)
-                // 설비
-//                .equipmentIds(workcenter.getEquipmentList().stream().map(EquipmentData::getId).collect(Collectors.toList()))
+                .processName(workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getName() : null)
+                .modelNames(workcenter.getEquipmentList() != null ? workcenter.getEquipmentList().stream().map(EquipmentData::getModelName).collect(Collectors.toList()) : null)
+                .equipmentNames(workcenter.getEquipmentList() != null ? workcenter.getEquipmentList().stream().map(EquipmentData::getEquipmentName).collect(Collectors.toList()): null)
                 // 작업자 배치
-//                .workerAssignmentIds(workcenter.getWorkerAssignments().stream().map(WorkerAssignment::getId).collect(Collectors.toList()))
+                .workerAssignmentIds(workcenter.getWorkerAssignments().stream().map(WorkerAssignment::getId).collect(Collectors.toList()))
                 .build();
+
     }
 
     // Entity로 변환하는 메서드
     private Workcenter convertToEntity(WorkcenterDTO workcenterDTO) {
+
+//        System.out.println("===================================== workcenter===================================== " + workcenterDTO);
+
 
         return Workcenter.builder()
                 .code(workcenterDTO.getCode())
@@ -85,17 +90,11 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                         processDetailsRepository.findByCode(workcenterDTO.getProcessCode())
                                 .orElseThrow(() -> new RuntimeException("해당 생산공정코드를 찾을 수 없습니다: " + workcenterDTO.getProcessCode())) : null)
 
-//                .(Optional.ofNullable(workcenterDTO.getEquipmentIds())
-//                        .orElseGet(ArrayList::new).stream()
-//                        .map(id -> equipmentDataRepository.findById(id)
-//                                .orElseThrow(() -> new RuntimeException("해당 설비ID를 찾을 수 없습니다: " + id)))
-//                        .collect(Collectors.toList()))
-
-//                .workerAssignments(Optional.ofNullable(workcenterDTO.getWorkerAssignmentIds())
-//                        .orElseGet(ArrayList::new).stream()
-//                        .map(id -> workerAssignmentRepository.findById(id)
-//                                .orElseThrow(() -> new RuntimeException("작업자배정이력ID를 찾을 수 없습니다: " + id)))
-//                        .collect(Collectors.toList()))
+                .workerAssignments(Optional.ofNullable(workcenterDTO.getWorkerAssignmentIds())
+                        .orElseGet(ArrayList::new).stream()
+                        .map(id -> workerAssignmentRepository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("작업자배정이력ID를 찾을 수 없습니다: " + id)))
+                        .collect(Collectors.toList()))
 
                 .build();
     }
@@ -132,7 +131,6 @@ public class WorkcenterServiceImpl implements WorkcenterService {
             existingWorkcenter.setDescription(workcenterDTO.getDescription());
             existingWorkcenter.setIsActive(workcenterDTO.getIsActive());
 
-            // 업데이트된 작업장 저장
             Workcenter updatedWorkcenter = workcenterRepository.save(existingWorkcenter);
 
             return convertToDTO(updatedWorkcenter);
@@ -169,11 +167,6 @@ public class WorkcenterServiceImpl implements WorkcenterService {
             // 오늘의 작업자 리스트 설정 (작업자 명단이 없으면 '배정없음' 설정)
 //            workcenterDTO.setTodayWorkers(todayWorkers);
 
-//            // 설치된 설비 수 가져오기
-//            List<Long> equipmentIds = equipmentDataRepository.findByWorkcenterId(workcenter.getId()).stream()
-//                    .map(EquipmentData::getId)
-//                    .collect(Collectors.toList());
-//            workcenterDTO.setEquipmentIds(equipmentIds); // 설비 ID 설정
 
             // 설비 정보 가져오기 (설비 ID, 이름, 모델명 모두 설정)
             List<EquipmentData> equipmentDataList = equipmentDataRepository.findByWorkcenterId(workcenter.getId());
@@ -192,6 +185,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
             // 생산 공정명 가져오기 (공정이 있으면 이름 설정, 없으면 null)
             Long processId = workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getId() : null;
             String processCode = workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getCode() : null;
+            String processName = workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getName() : null;
 //            workcenterDTO.setProcessCode(processId);
             workcenterDTO.setProcessCode(processCode);
 
@@ -218,7 +212,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                 .map(assignment -> WorkerAssignmentDTO.builder()
                         .workerId(assignment.getWorker().getId())  // 작업자 ID
                         .workerName(assignment.getWorker().getEmployee() != null ?
-                                assignment.getWorker().getEmployee().getLastName() + " " + assignment.getWorker().getEmployee().getFirstName() : "Unknown")  // 작업자 이름
+                                assignment.getWorker().getEmployee().getLastName() + " " + assignment.getWorker().getEmployee().getFirstName() : "미등록 작업자")  // 작업자 이름
                         .employeeNumber(assignment.getWorker().getEmployee() != null ?
                                 assignment.getWorker().getEmployee().getEmployeeNumber() : "해당없음")  // 사원 번호
                         .workcenterCode(assignment.getWorkcenter().getCode())  // 작업장 코드
@@ -243,27 +237,6 @@ public class WorkcenterServiceImpl implements WorkcenterService {
             return workcenterDTO;
         });
     }
-
-
-//    @Override
-//    public Optional<WorkcenterDTO> findById(Long id) {
-//        return workcenterRepository.findById(id).map(workcenter -> {
-//            WorkcenterDTO workcenterDTO = convertToDTO(workcenter);
-//
-//            LocalDate today = LocalDate.now();
-//            List<String> todayWorkers = getTodayWorkers(workcenter.getId(), today);
-//            workcenterDTO.setTodayWorkers(todayWorkers);
-//
-//            return workcenterDTO;
-//        });
-//    }
-
-//    @Override
-//    public List<WorkcenterDTO> findByNameContaining(String name) {
-//        return workcenterRepository.findByNameContaining(name).stream()
-//                .map(this::convertToDTO)
-//                .collect(Collectors.toList());
-//    }
 
     @Override
     public List<WarehouseResponseDTO> findAllFactories() {
