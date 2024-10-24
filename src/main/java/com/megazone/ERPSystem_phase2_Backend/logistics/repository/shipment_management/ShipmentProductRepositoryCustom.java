@@ -6,5 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ShipmentProductRepositoryCustom {
-    List<ShipmentProduct> findShipmentItemsByDateRange(LocalDate startDate, LocalDate endDate);
+    List<ShipmentProduct> findShipmentProductsByDateRange(LocalDate startDate, LocalDate endDate);
+
+    Long findTotalQuantityByDateRange(LocalDate startDate, LocalDate endDate);
 }

@@ -1,9 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.controller.shipment_management;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.dto.ShipmentProductListResponseDTO;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.dto.ShipmentRequestDTO;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.dto.ShipmentResponseDTO;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.dto.ShipmentResponseListDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.logistics.service.shipment_management.ShipmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -83,19 +80,18 @@ public class ShipmentController {
 
     /**
      * 출고 품목 조회
+     *
      * @param startDate 조회 시작일
-     * @param endDate 조회 종료일
+     * @param endDate   조회 종료일
      * @return 출고 품목 리스트
      */
     @PostMapping("/items")
-    public ResponseEntity<List<ShipmentProductListResponseDTO>> getShipmentItemsByDateRange(@RequestParam("startDate") LocalDate startDate, @RequestParam("endDate") LocalDate endDate) {
-        List<ShipmentProductListResponseDTO> shipmentItems = shipmentService.findShipmentItemsByDateRange(startDate, endDate);
+    public ResponseEntity<ShipmentTotalProductsDTO> getShipmentItemsByDateRange(@RequestParam("startDate") LocalDate startDate, @RequestParam("endDate") LocalDate endDate) {
 
-        return (shipmentItems != null && !shipmentItems.isEmpty()) ?
-                ResponseEntity.ok(shipmentItems) :
-                ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        ShipmentTotalProductsDTO response = shipmentService.findShipmentItemsByDateRange(startDate, endDate);
+
+        return ResponseEntity.ok(response);
     }
 
 }
-
 
