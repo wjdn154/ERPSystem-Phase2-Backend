@@ -28,6 +28,7 @@ public class WorkcenterDTO {
     private String factoryCode;
     private String factoryName;
 
+    private Long processId;
     private String processCode;
     private String processName;
 

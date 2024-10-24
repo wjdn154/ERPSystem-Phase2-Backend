@@ -42,9 +42,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
         return workPerformanceRepository.findAllByOrderByIdDesc().stream()
                 .map(workPerformance -> new WorkPerformanceListDTO(
                         workPerformance.getId(),
-                        workPerformance.getName(),
                         workPerformance.getActualQuantity() != null ? workPerformance.getActualQuantity() : BigDecimal.ZERO,
-                        workPerformance.getWorkStatus(),
                         workPerformance.getWorkDailyReport().getWorkDailyReportCode(),
                         workPerformance.getWorkDailyReport().getTitle(),
                         workPerformance.getProductionOrder().getId(),
@@ -107,9 +105,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
 
         WorkPerformanceDetailDTO dto = WorkPerformanceDetailDTO.builder()
                 .id(workPerformance.getId())
-                .name(workPerformance.getName())
                 .actualQuantity(workPerformance.getActualQuantity() != null ? workPerformance.getActualQuantity() : BigDecimal.ZERO)
-                .workStatus(workPerformance.getWorkStatus())
                 .workDailyReportCode(workPerformance.getWorkDailyReport().getWorkDailyReportCode())
                 .workDailyReportName(workPerformance.getWorkDailyReport().getTitle())
                 .productionOrderId(workPerformance.getProductionOrder().getId())
@@ -135,9 +131,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
 
         WorkPerformance workPerformance = WorkPerformance.builder()
                 .id(dto.getId())
-                .name(dto.getName())
                 .actualQuantity(dto.getActualQuantity() != null ? dto.getActualQuantity() : BigDecimal.ZERO)  // null 처리
-                .workStatus(dto.getWorkStatus())
                 .workDailyReport(workDailyReport)
                 .productionOrder(productionOrder)
                 .product(product)
@@ -159,9 +153,7 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 품목 코드가 존재하지 않습니다."));
 
         workPerformance.setId(workPerformance.getId());
-        workPerformance.setName(dto.getName());
         workPerformance.setActualQuantity(dto.getActualQuantity() != null ? dto.getActualQuantity() : BigDecimal.ZERO);
-        workPerformance.setWorkStatus(dto.getWorkStatus());
         workPerformance.setWorkDailyReport(workDailyReport);
         workPerformance.setProductionOrder(productionOrder);
         workPerformance.setProduct(product);

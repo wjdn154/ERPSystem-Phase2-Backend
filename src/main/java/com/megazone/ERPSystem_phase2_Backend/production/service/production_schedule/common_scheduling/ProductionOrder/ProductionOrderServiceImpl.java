@@ -250,9 +250,7 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
         // 작업 실적 생성 로직 추가
         WorkPerformance workPerformance = WorkPerformance.builder()
                 .product(productionOrder.getMps().getProduct())
-                .name(productionOrder.getName())
                 .productionOrder(productionOrder)
-                .workStatus(WorkStatus.COMPLETED)
                 .actualQuantity(productionOrder.getProductionQuantity())
                 .workDate(productionOrder.getStartDateTime().toLocalDate())
                 .build();

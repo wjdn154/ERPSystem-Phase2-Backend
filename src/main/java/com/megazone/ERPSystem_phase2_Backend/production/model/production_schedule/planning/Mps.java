@@ -5,6 +5,7 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.Or
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.Sale;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionOrder;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionRequest;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.enums.PlanStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,8 +41,9 @@ public class Mps {
     @Column(nullable = false)
     private LocalDate endDate; // 생산 완료 예정일 (직접지정)
 
-    @Column(nullable = false)
-    private String status; // 계획 상태 (계획, 확정, 진행 중, 완료)
+//    @Column(nullable = false)
+////    private String status; // 계획 상태 (계획, 확정, 진행 중, 완료)
+//    private PlanStatus planStatus;
 
     @ManyToOne
     @JoinColumn(name = "production_request_id", nullable = true)

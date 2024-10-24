@@ -55,7 +55,6 @@ public class QualityInspectionServiceImpl implements QualityInspectionService{
                             qualityInspection.getInspectionName(),
                             qualityInspection.getQualityInspectionType(),
                             qualityInspection.getWorkPerformance().getId(),
-                            qualityInspection.getWorkPerformance().getName(),
                             qualityInspection.getProduct().getCode(),
                             qualityInspection.getProduct().getName(),
                             totalQuantity,
@@ -196,7 +195,6 @@ public class QualityInspectionServiceImpl implements QualityInspectionService{
                 .inspectionName(qualityInspection.getInspectionName())
                 .qualityInspectionType(qualityInspection.getQualityInspectionType())
                 .workPerformanceId(qualityInspection.getWorkPerformance().getId())
-                .workPerformanceName(qualityInspection.getWorkPerformance().getName())
                 .productCode(qualityInspection.getProduct().getCode())
                 .productName(qualityInspection.getProduct().getName())
                 .inspectedProducts(inspectedProducts)

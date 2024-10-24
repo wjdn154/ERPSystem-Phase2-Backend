@@ -17,9 +17,7 @@ import java.math.BigDecimal;
 public class WorkPerformanceListDTO {
 
     private Long id;   //아이디
-    private String name;    //이름
     private BigDecimal actualQuantity;    //실제 생산량
-    private WorkStatus workStatus;        //작업 상태
 
     private String workDailyReportCode;    //일별 보고서 코드
     private String workDailyReportTitle;    //일별 보고서 제목

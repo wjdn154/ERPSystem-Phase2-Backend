@@ -32,9 +32,6 @@ public class WorkPerformance {
     private Long id; // 고유 ID
 
     @Column(nullable = false)
-    private String name;    // 작업실적명
-
-    @Column(nullable = false)
     private BigDecimal actualQuantity;    // 실제 생산량
 
     /**인건비(작업에 투입된 시간 x 시간당 임금) -> 급여
@@ -47,10 +44,6 @@ public class WorkPerformance {
 
     private Long workers;                //작업 인원
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private WorkStatus workStatus;           // 작업 상태
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "work_daily_report_id")
     private WorkDailyReport workDailyReport;  // 하나의 일별 보고서에 여러 개의 작업 실적
@@ -58,11 +51,6 @@ public class WorkPerformance {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "production_order_id", nullable = false)
     private ProductionOrder productionOrder; // 연관 작업지시
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;               // 연관 품목 (코드, 이름)
-
 }
 
 /**
