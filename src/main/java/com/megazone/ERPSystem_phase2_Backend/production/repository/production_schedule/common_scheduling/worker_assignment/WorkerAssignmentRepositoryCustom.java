@@ -17,11 +17,11 @@ public interface WorkerAssignmentRepositoryCustom {
     List<Tuple> findWorkerCountByWorkcenter();
 
     /**
-     * 작업장 코드로 작업자 배정 검색
+     * 작업장 코드로 작업자 배정 list 검색
      * @param workcenterCode 작업장 코드
      * @return 작업자 배정(Optional로 감싸서 반환)
      */
-    Optional<WorkerAssignment> findByWorkcenterCode(String workcenterCode);
+    List<WorkerAssignment> findAllByWorkcenterCode(String workcenterCode);
 
     /**
      * 특정 작업자, 작업지시, 날짜로 작업자 배정 조회

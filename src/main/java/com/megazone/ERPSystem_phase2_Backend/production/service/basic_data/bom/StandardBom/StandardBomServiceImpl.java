@@ -16,11 +16,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +30,61 @@ public class StandardBomServiceImpl implements StandardBomService {
     private final StandardBomMaterialRepository standardBomMaterialRepository;
     private final ProductRepository productRepository;
     private final MaterialDataRepository materialDataRepository;
+
+
+    // 최상위 BOM만 조회
+    public List<StandardBomDTO> getTopLevelBoms() {
+        List<StandardBom> topLevelBoms = standardBomRepository.findByParentBomIsNull();
+
+        if (topLevelBoms.isEmpty()) {
+            throw new EntityNotFoundException("등록된 최상위 BOM이 없습니다.");
+        }
+
+        return topLevelBoms.stream().map(this::convertToDTO).toList();
+    }
+
+    // 레벨별 조회
+    public List<StandardBomDTO> getBomsByLevel(Long level) {
+        List<StandardBom> boms = standardBomRepository.findByLevel(level);
+        return boms.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    // 품목 코드로 BOM 조회
+    public List<StandardBomDTO> getBomsByProductId(Long productId) {
+        List<StandardBom> boms = standardBomRepository.findByProductId(productId);
+        return boms.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public Map<String, BigDecimal> getTotalMaterials(Long bomId) {
+        StandardBom rootBom = standardBomRepository.findById(bomId)
+                .orElseThrow(() -> new EntityNotFoundException("BOM not found"));
+
+        Map<String, BigDecimal> materialQuantities = new HashMap<>();
+        collectMaterials(rootBom, materialQuantities, new HashSet<>());
+        return materialQuantities;
+    }
+
+    private void collectMaterials(StandardBom bom, Map<String, BigDecimal> materialQuantities, Set<Long> visited) {
+        if (bom == null || visited.contains(bom.getId())) {
+            return;
+        }
+        visited.add(bom.getId());
+
+        for (StandardBomMaterial bomMaterial : bom.getBomMaterials()) {
+            String materialCode = bomMaterial.getMaterial().getMaterialCode();
+            BigDecimal quantity = bomMaterial.getQuantity();
+
+            materialQuantities.merge(materialCode, quantity, BigDecimal::add);
+        }
+
+        for (StandardBom childBom : bom.getChildBoms()) {
+            collectMaterials(childBom, materialQuantities, visited);
+        }
+    }
 
 
     @Override
@@ -296,7 +349,6 @@ public class StandardBomServiceImpl implements StandardBomService {
                 .build();
     }
 
-    // 부모와 자식 관계를 관리하는 메서드
     private StandardBomDTO convertToDTO(StandardBom standardBom, boolean isParent) {
         List<BomMaterialDTO> materialDTOs = Optional.ofNullable(standardBom.getBomMaterials())
                 .orElse(Collections.emptyList())
@@ -342,9 +394,16 @@ public class StandardBomServiceImpl implements StandardBomService {
                 .startDate(standardBom.getStartDate())
                 .expiredDate(standardBom.getExpiredDate())
                 .isActive(standardBom.getIsActive())
-                // parentProduct가 null일 수 있으므로 안전하게 처리
-//                .parentBom(convertToDTO(standardBom.getParentBom(), true))
+                .level(standardBom.getLevel())  // 추가된 level 필드 매핑
                 .parentProductId(Optional.ofNullable(standardBom.getParentProduct()).map(Product::getId).orElse(null))
+                .currentProductId(Optional.ofNullable(standardBom.getChildProduct()).map(Product::getId).orElse(null)) // TODO currentProduct
+                .currentProductCode(Optional.ofNullable(standardBom.getChildProduct()).map(Product::getCode).orElse(null)) // 추가된 currentProductCode 매핑 // TODO currentProduct
+                .currentProductName(Optional.ofNullable(standardBom.getChildProduct()).map(Product::getName).orElse(null)) // 추가된 currentProductName 매핑 // TODO currentProduct
+                .parentProductCode(Optional.ofNullable(standardBom.getParentProduct()).map(Product::getCode).orElse(null)) // 추가된 parentProductCode 매핑
+                .parentProductName(Optional.ofNullable(standardBom.getParentProduct()).map(Product::getName).orElse(null)) // 추가된 parentProductName 매핑
+                .childProductId(Optional.ofNullable(standardBom.getChildProduct()).map(Product::getId).orElse(null)) // 추가된 childProductId 매핑
+                .childProductCode(Optional.ofNullable(standardBom.getChildProduct()).map(Product::getCode).orElse(null)) // 추가된 childProductCode 매핑
+                .childProductName(Optional.ofNullable(standardBom.getChildProduct()).map(Product::getName).orElse(null)) // 추가된 childProductName 매핑
                 .bomMaterials(materialDTOs)
                 .parentBom(parentBomDTO)
                 .childBoms(childBomDTOs)

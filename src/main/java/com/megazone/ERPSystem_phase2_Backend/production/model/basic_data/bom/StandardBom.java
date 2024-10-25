@@ -1,5 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.bom;
 
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
+
 /*
     제품과 부품 간의 관계를 관리하며, 각 부품의 수량, 손실율, 유효기간 등을 포함한
     BOM(Bill of Materials) 정보를 저장하는 테이블.
@@ -10,9 +12,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.bom;
     - BOM 역전개 (Backward Explosion)
       특정 부품이 어느 상위 품목들(제품들)에 포함되는지를 조회하는 방법
  */
-
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
-import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.planning.mrp.Mrp;
+// import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.planning.mrp.Mrp;
 import com.megazone.ERPSystem_phase2_Backend.production.model.outsourcing.OutsourcingType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,7 +28,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-@ToString(exclude = {"parentBom", "parentProduct", "childProduct", "childBoms", "bomMaterials", "mrps"})
+@ToString(exclude = {"parentBom", "parentProduct", "childProduct", "childBoms", "bomMaterials"})
 public class StandardBom {
 
     @Id
@@ -41,6 +41,9 @@ public class StandardBom {
 
     @Column(nullable = false)
     private Double version; // BOM 버전
+
+    @Column(nullable = false)
+    private Long level; // BOM Level
 
     @Column(nullable = false)
     private LocalDateTime createdDate; // BOM 생성일자
@@ -84,8 +87,8 @@ public class StandardBom {
     @Builder.Default
     private List<StandardBomMaterial> bomMaterials = new ArrayList<>(); // 중간 엔티티 리스트
 
-    @OneToMany(mappedBy = "standardBom", fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<Mrp> mrps = new ArrayList<>(); // 연관 MRP
+//    @OneToMany(mappedBy = "standardBom", fetch = FetchType.LAZY)
+//    @Builder.Default
+//    private List<Mrp> mrps = new ArrayList<>(); // 연관 MRP
 
 }
