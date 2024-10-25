@@ -1,9 +1,9 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.shipment_management;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.dto.ShipmentProductListResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.dto.ShipmentRequestDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.dto.ShipmentResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.dto.ShipmentResponseListDTO;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipment_management.dto.ShipmentTotalProductsDTO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,5 +19,6 @@ public interface ShipmentService {
 
     void deleteShipment(Long shipmentId);
 
-    List<ShipmentProductListResponseDTO> findShipmentItemsByDateRange(LocalDate startDate, LocalDate endDate);
+
+    ShipmentTotalProductsDTO findShipmentItemsByDateRange(LocalDate startDate, LocalDate endDate);
 }
