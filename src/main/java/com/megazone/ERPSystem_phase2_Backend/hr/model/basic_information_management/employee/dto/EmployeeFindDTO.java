@@ -17,7 +17,7 @@ public class EmployeeFindDTO {
     private String employeeNumber;
     private String firstName;
     private String lastName;
-    private LocalDate dateOfBirth;
+    private String registrationNumber;
     private String phoneNumber;
     private EmploymentStatus employmentStatus;
     private EmploymentType employmentType;

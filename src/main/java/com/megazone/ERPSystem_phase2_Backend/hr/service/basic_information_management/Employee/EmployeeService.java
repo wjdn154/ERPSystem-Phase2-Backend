@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_manag
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,10 +16,10 @@ public interface EmployeeService {
     Optional<EmployeeOneDTO> findEmployeeById(Long id);
 
     // 사원 수정
-    Optional<EmployeeShowToDTO> updateEmployee(Long id, EmployeeDataDTO dto);
+    Optional<EmployeeShowToDTO> updateEmployee(Long id, EmployeeDataDTO employeeDataDTO, MultipartFile imageFile);
 
     // 사원 등록. 저장
-    EmployeeDTO saveEmployee(EmployeeCreateDTO dto);
+    EmployeeDTO saveEmployee(EmployeeCreateDTO employeeCreateDTO, MultipartFile imageFile);
 
 
     // 사원 삭제
