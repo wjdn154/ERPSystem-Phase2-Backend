@@ -16,6 +16,7 @@ import java.util.List;
  */
 @Entity
 @Data
+@ToString(exclude = "purchaseOrders")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,10 +32,10 @@ public class PurchaseRequest {
     @Builder.Default
     private List<PurchaseRequestDetail> purchaseRequestDetails = new ArrayList<>();
 
-    // 발주서와의 일대다 관계
-    @OneToMany(mappedBy = "purchaseRequest", orphanRemoval = true)
-    @Builder.Default
-    private List<PurchaseOrder> purchaseOrders = new ArrayList<>();
+//    // 발주서와의 일대다 관계
+//    @OneToMany(mappedBy = "purchaseRequest", orphanRemoval = true)
+//    @Builder.Default
+//    private List<PurchaseOrder> purchaseOrders = new ArrayList<>();
 
     // 사원(담당자) - N : 1
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

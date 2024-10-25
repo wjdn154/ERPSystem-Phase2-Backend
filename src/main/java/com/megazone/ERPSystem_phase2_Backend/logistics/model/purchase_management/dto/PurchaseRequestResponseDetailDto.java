@@ -24,10 +24,14 @@ public class PurchaseRequestResponseDetailDto {
     // 납기 일자
     private LocalDate deliveryDate;
 
+    private Long managerId;
+
     private String managerCode;
 
     // 담당자 이름
     private String managerName;
+
+    private Long warehouseId;
 
     private String warehouseCode;
 
@@ -36,6 +40,8 @@ public class PurchaseRequestResponseDetailDto {
 
     // 부가세 적용 여부
     private Boolean vatType;
+
+    private Long currencyId;
 
     // 통화 종류
     private String currency;
@@ -60,6 +66,8 @@ public class PurchaseRequestResponseDetailDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class PurchaseRequestItemDetailDto {
+        private Long detailId;
+
         // 품목명
         private String productName;
 

@@ -2,10 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_managemen
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -15,6 +12,7 @@ import java.math.BigDecimal;
  */
 @Entity
 @Data
+@ToString(exclude = "purchaseOrder")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

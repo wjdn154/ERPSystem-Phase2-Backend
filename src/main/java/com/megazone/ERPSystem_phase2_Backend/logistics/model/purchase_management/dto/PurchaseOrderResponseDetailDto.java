@@ -27,11 +27,19 @@ public class PurchaseOrderResponseDetailDto {
     // 납기 일자
     private LocalDate deliveryDate;
 
+    private Long clientId;
+
+    private String clientName;
+
+    private Long managerId;
+
     // 담당자 코드
     private String managerCode;
 
     // 담당자 이름
     private String managerName;
+
+    private Long warehouseId;
 
     // 입고 창고 코드
     private String warehouseCode;
@@ -41,6 +49,8 @@ public class PurchaseOrderResponseDetailDto {
 
     // 부가세 적용 여부
     private Boolean vatType;
+
+    private Long currencyId;
 
     // 통화 종류
     private String currency;
@@ -66,6 +76,8 @@ public class PurchaseOrderResponseDetailDto {
     @AllArgsConstructor
     public static class PurchaseOrderItemDetailDto {
         private Long detailId;
+
+        private Long productId;
 
         // 품목명
         private String productName;
