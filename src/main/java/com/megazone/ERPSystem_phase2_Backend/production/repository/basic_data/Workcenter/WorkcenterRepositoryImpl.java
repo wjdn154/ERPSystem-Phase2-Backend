@@ -4,8 +4,14 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_managemen
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.QEquipmentData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.QProcessDetails;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,10 +33,11 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
         return queryFactory.selectFrom(workcenter)
                 .leftJoin(workcenter.factory, warehouse).fetchJoin()                  // 공장명 가져오기
                 .leftJoin(workcenter.processDetails, processDetails).fetchJoin()       // 생산 공정명 가져오기
-//                .leftJoin(workcenter.equipmentList, equipmentData).fetchJoin()         // 설비명 가져오기
+//                .leftJoin(workcenter.equipmentData, equipmentData).fetchJoin()         // 설비명 가져오기
 //                .leftJoin(workcenter.workerAssignments, workerAssignment).fetchJoin()  // 작업자 배정 이력 가져오기
                 .fetch();
     }
+
 
     @Override
     public List<Workcenter> findByFactoryNameContaining(String factoryName) {
@@ -49,6 +56,7 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
                 .where(workcenter.factory.code.containsIgnoreCase(factoryCode))
                 .fetch();
     }
+
 
 
 //    public Optional<Workcenter> findOneByFactoryCode(String factoryCode) {

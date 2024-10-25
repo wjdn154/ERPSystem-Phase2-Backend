@@ -2,14 +2,21 @@ package com.megazone.ERPSystem_phase2_Backend.production.service.production_sche
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessRouting;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessDetailsDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.dto.WorkcenterDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionOrder;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionRequest;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.enums.ProgressType;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.planning.Mps;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.planning.dto.MpsDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.planning.dto.searchMpsDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.dto.WorkerDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.production_order.ProductionOrderRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.production_request.ProductionRequestsRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.planning.mps.MpsRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.resource_data.worker.WorkerRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.common_scheduling.ProductionOrder.ProductionOrderService;
 import com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.planning.crp.CrpService;
 import com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.planning.mrp.MrpService;
@@ -20,8 +27,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.RoutingStepDetailDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +44,8 @@ public class MpsServiceImpl implements MpsService {
 //    private final MrpService mrpService;
 //    private final CrpService crpService;
     private final ProductionOrderService productionOrderService;
+    private final WorkcenterRepository workcenterRepository;
+    private final WorkerRepository workerRepository;
 
 
     /**
@@ -174,10 +185,67 @@ public class MpsServiceImpl implements MpsService {
     }
 
     @Override
-    public List<MpsDTO> getAllMps() {
-        List<Mps> mpsList = mpsRepository.findAll();
+    public List<searchMpsDTO> searchMps(LocalDate date) {
+        List<Mps> mpsList = mpsRepository.searchMps(date);
+        mpsList.forEach(System.out::println);
+
         return mpsList.stream()
-                .map(this::convertToDto)
+                .map(mps -> {
+                    List<RoutingStepDetailDTO> routingStepDetailDTOs = new ArrayList<>();
+
+                    if (mps.getProduct() != null && mps.getProduct().getProcessRouting() != null) {
+                        routingStepDetailDTOs = mps.getProduct().getProcessRouting().getRoutingSteps().stream()
+                                .map(step -> {
+                                    ProcessDetailsDTO processDetailsDTO = step.getProcessDetails() != null
+                                            ? ProcessDetailsDTO.builder()
+                                            .id(step.getProcessDetails().getId())
+                                            .name(step.getProcessDetails().getName())
+                                            .workcenterDTOList(workcenterRepository.findByProcessDetailsId(step.getProcessDetails().getId())
+                                                    .stream()
+                                                    .map(workcenter -> WorkcenterDTO.builder()
+                                                            .id(workcenter.getId())
+                                                            .name(workcenter.getName())
+                                                            .code(workcenter.getCode())
+                                                            .workcenterType(workcenter.getWorkcenterType())
+                                                            .isActive(workcenter.getIsActive())
+                                                            .description(workcenter.getDescription())
+                                                            .factoryCode(workcenter.getFactory().getCode())
+                                                            .factoryName(workcenter.getFactory().getName())
+                                                            .build())
+                                                    .collect(Collectors.toList()))
+                                            .build()
+                                            : null;
+
+                                    return RoutingStepDetailDTO.builder()
+                                            .id(step.getId())
+                                            .stepOrder(step.getStepOrder())
+                                            .processDetails(processDetailsDTO)
+                                            .build();
+                                })
+                                .collect(Collectors.toList());
+                    }
+
+                    return searchMpsDTO.builder()
+                            .id(mps.getId())
+                            .name(mps.getName())
+                            .status(mps.getStatus())
+                            .productName(mps.getProduct() != null ? mps.getProduct().getName() : null)
+                            .quantity(mps.getQuantity())
+                            .planDate(mps.getPlanDate())
+                            .startDate(mps.getStartDate())
+                            .endDate(mps.getEndDate())
+                            .routingSteps(routingStepDetailDTOs)
+                            .remarks(mps.getRemarks())
+                            .productionRequestId(mps.getProductionRequest() != null ? mps.getProductionRequest().getId() : null)
+                            .saleId(mps.getSale() != null ? mps.getSale().getId() : null)
+                            .workers(workerRepository.findAll().stream()
+                                    .map(worker -> WorkerDTO.builder()
+                                            .name(worker.getEmployee().getLastName() + worker.getEmployee().getFirstName())
+                                            .position(worker.getEmployee().getPosition().getPositionName())
+                                            .build())
+                                    .collect(Collectors.toList()))
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
 

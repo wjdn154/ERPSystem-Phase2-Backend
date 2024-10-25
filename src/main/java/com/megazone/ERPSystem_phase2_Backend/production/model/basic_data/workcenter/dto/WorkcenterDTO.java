@@ -25,10 +25,17 @@ public class WorkcenterDTO {
     private Boolean isActive;
 
     private WarehouseType warehouseType; // TYPE: FACTORY OR OUTSOURCING_FACTORY
-    private String factoryCode; // 공장 Code만 포함 (Warehouse)
+    private String factoryCode;
     private String factoryName;
-    private String processCode; // 생산공정 Code만 포함 (ProcessDetails)
-    private List<Long> equipmentIds; // 설비 ID 리스트만 포함 (EquipmentData)
+
+    private Long processId;
+    private String processCode;
+    private String processName;
+
+    private List<Long> equipmentIds;
+    private List<String> equipmentNames; // 설비명들
+    private List<String> modelNames; // 모델명들
+
 //    private List<Long> workerAssignmentIds; // 작업자 배치 ID 리스트만 포함 (WorkerAssignment)
 //    private Long todayWorkerCount; // 작업장의 오늘의작업자 인원수
 //    private List<String> todayWorkers;  // 작업장의 오늘의 작업자 이름 리스트 (WorkerAssignment)
