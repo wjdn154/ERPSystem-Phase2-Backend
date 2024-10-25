@@ -36,9 +36,9 @@ public class PositionSalaryStep {
     private List<PositionSalaryStepAllowance> allowances; // 수당 중간테이블 조인
 
     @Column(nullable = false)
-    private YearMonth useStartDate; // 직급에 따른 호봉 적용시작 년.월
+    private LocalDate useStartDate; // 직급에 따른 호봉 적용시작 년.월
 
 
-    private YearMonth useEndDate; // 직급에 따른 호봉 적용마감 년.월 null 이면 아직 적용중인거
+    private LocalDate useEndDate; // 직급에 따른 호봉 적용마감 년.월 null 이면 아직 적용중인거
 
 }
