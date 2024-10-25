@@ -10,17 +10,12 @@ import java.util.List;
 
 public interface ProductionOrderService {
     ProductionOrderDTO getProductionOrderById(Long productionOrderId);
-
     List<ProductionOrderDTO> getAllProductionOrders();
-
     ProductionOrderDTO saveProductionOrder(ProductionOrderDTO productionOrderDTO);
     ProductionOrderDTO updateProductionOrder(Long productionOrderId, ProductionOrderDTO productionOrderDTO);
-
     void deleteProductionOrder(Long productionOrderId);
-
     void assignWorkersToWorkcenter(ProductionOrderDTO productionOrderDTO, ProductionOrder productionOrder);
     WorkPerformanceDTO updateOrderClosure(WorkPerformanceUpdateDTO dto);
-
     void createOrdersFromMps(Mps savedMps);
-
+    boolean isProductionOrderConfirmed(Long id);
 }
