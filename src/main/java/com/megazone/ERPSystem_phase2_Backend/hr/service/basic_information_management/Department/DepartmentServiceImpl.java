@@ -57,7 +57,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                             .map(Position::getPositionName).orElse("찾을 수 없습니다.");
 
                      String titleName = jobTitleRepository.findById(employee.getJobTitle().getId())
-                            .map(JobTitle::getTitleName)
+                            .map(JobTitle::getJobTitleName)
                             .orElse("찾을 수 없습니다.");
 
                             return new EmployeeDepartmentDTO(

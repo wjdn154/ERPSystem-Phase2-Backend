@@ -18,10 +18,10 @@ public class JobTitle {
     private Long id;
 
     @Column(unique = true)
-    private String code; // 직책번호
+    private String jobTitleCode; // 직책번호
     
     @Column(nullable = false)
-    private String titleName; // 직책 이름 ( 예 : 소프트웨어 개발자 )
+    private String jobTitleName; // 직책 이름 ( 예 : 소프트웨어 개발자 )
     
     @Column
     private String description; // 직책 설명

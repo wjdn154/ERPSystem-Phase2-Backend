@@ -148,7 +148,7 @@ public class WorkerServiceImpl implements WorkerService {
         workerDetailShowDTO.setEmployeeLastName(worker.getEmployee().getLastName());
         workerDetailShowDTO.setDepartmentName(worker.getEmployee().getDepartment().getDepartmentName());
         workerDetailShowDTO.setPositionName(worker.getEmployee().getPosition().getPositionName());
-        workerDetailShowDTO.setJobTitleName(worker.getEmployee().getJobTitle().getTitleName());
+        workerDetailShowDTO.setJobTitleName(worker.getEmployee().getJobTitle().getJobTitleName());
         workerDetailShowDTO.setPhoneNumber(worker.getEmployee().getPhoneNumber());
         workerDetailShowDTO.setEmploymentStatus(worker.getEmployee().getEmploymentStatus());
         workerDetailShowDTO.setEmploymentType(worker.getEmployee().getEmploymentType());

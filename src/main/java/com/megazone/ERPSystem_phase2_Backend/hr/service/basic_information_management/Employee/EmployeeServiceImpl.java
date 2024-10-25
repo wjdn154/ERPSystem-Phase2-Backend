@@ -71,7 +71,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                         employee.getDepartment().getDepartmentCode(),
                         employee.getDepartment().getDepartmentName(),
                         employee.getPosition().getPositionName(),
-                        employee.getJobTitle().getTitleName()
+                        employee.getJobTitle().getJobTitleName()
 //                        employee.getBankAccount().getAccountNumber()
                 ))
                 .collect(Collectors.toList());
@@ -112,8 +112,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         dto.setPositionCode(employee.getPosition().getPositionCode());
         dto.setPositionName(employee.getPosition().getPositionName());
         dto.setTitleId(employee.getJobTitle().getId());
-        dto.setTitleCode(employee.getJobTitle().getCode());
-        dto.setTitleName(employee.getJobTitle().getTitleName());
+        dto.setTitleCode(employee.getJobTitle().getJobTitleCode());
+        dto.setTitleName(employee.getJobTitle().getJobTitleName());
         // 이미 만들어진 BankAccountDTO 사용
         if (employee.getBankAccount() != null && employee.getBankAccount().getBank() != null) {
             BankAccountDTO bankAccountDTO = BankAccountDTO.create(employee.getBankAccount());
@@ -205,10 +205,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             // JobTitle 설정
             if (dto.getTitleName() != null) {
-                JobTitle jobTitle = jobTitleRepository.findBytitleName(dto.getTitleName()).orElseGet(() -> {
+                JobTitle jobTitle = jobTitleRepository.findByJobTitleName(dto.getTitleName()).orElseGet(() -> {
                     // 입력된 직책이 없을 경우 새로 생성
                     JobTitle newJobTitle = new JobTitle();
-                    newJobTitle.setTitleName(dto.getTitleName());
+                    newJobTitle.setJobTitleName(dto.getTitleName());
                     return jobTitleRepository.save(newJobTitle);  // 새로 생성한 직책을 저장 후 반환
                 });
                 employee.setJobTitle(jobTitle);
@@ -272,7 +272,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                     updatedEmployee.getDepartment() != null ? updatedEmployee.getDepartment().getDepartmentName() : null,
                     updatedEmployee.getDepartment() != null ? updatedEmployee.getDepartment().getDepartmentCode() : null,
                     updatedEmployee.getPosition() != null ? updatedEmployee.getPosition().getPositionName() : null,
-                    updatedEmployee.getJobTitle() != null ? updatedEmployee.getJobTitle().getTitleName() : null,
+                    updatedEmployee.getJobTitle() != null ? updatedEmployee.getJobTitle().getJobTitleName() : null,
                     updatedEmployee.getBankAccount() != null ? updatedEmployee.getBankAccount().getId() : null,
                     updatedEmployee.getBankAccount() != null ? updatedEmployee.getBankAccount().getBank().getCode() : null,
                     updatedEmployee.getBankAccount() != null ? updatedEmployee.getBankAccount().getBank().getName() : null,  // 은행 이름 추가

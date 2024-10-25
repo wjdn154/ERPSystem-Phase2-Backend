@@ -17,7 +17,7 @@ INSERT INTO employee_position (position_Code, position_name) VALUES
 ('1000', '상무'),
 ('1100', '전무');
 
-INSERT INTO employee_job_title (code,description, title_name) VALUES
+INSERT INTO employee_job_title (job_title_Code,description, job_title_name) VALUES
 ('1001','회사의 전반적인 인사 정책을 총괄하며, 인사 계획을 수립하고 실행','인사부장'),
 ('1002','채용, 급여 관리, 직원 교육, 복리후생 등을 담당합니다.','HR 매니저'),
 ('2001','회사의 재무 전략을 수립하고, 예산, 투자, 자금 조달을 관리','재무부장'),
