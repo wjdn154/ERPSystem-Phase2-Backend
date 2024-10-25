@@ -1,3 +1,5 @@
+# TODO 수정하기
+
 -- StandardBom 테이블 초기 데이터 삽입 (상위/하위 관계 설정)
 INSERT INTO bom_standard_bom (id, code, version, created_date, remarks, loss_rate, outsourcing_type, start_date, expired_date, is_active, parent_bom_id, parent_product_id)
 VALUES

@@ -68,6 +68,10 @@ public class StandardBom {
     private Boolean isActive; // 사용 여부
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "current_product_id", nullable = false)
+    private Product currentProduct; // 현재 BOM이 생산하는 제품
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_product_id", nullable = true)
     private Product parentProduct;    // BOM이 참조하는 상위 Product
 
@@ -81,7 +85,7 @@ public class StandardBom {
 
     @OneToMany(mappedBy = "parentBom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
-    private List<StandardBom> childBoms = new ArrayList<>();
+    private List<StandardBom> childBoms = new ArrayList<>(); // 하위 BOM 목록
 
     @OneToMany(mappedBy = "bom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default

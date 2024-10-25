@@ -71,6 +71,9 @@ public class EquipmentData {
     @OneToMany(mappedBy = "equipment", cascade = CascadeType.ALL)
     private List<MaintenanceHistory> maintenanceHistory = new ArrayList<>();  //설비의 유지보수 관리 이력
 
+    @Column
+    private Long WattPerHour; // 설비의 시간당 전력소비량(Wh)
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "company_id")
     private Company company;                            //회사 테이블 참조 (회사 아이디)

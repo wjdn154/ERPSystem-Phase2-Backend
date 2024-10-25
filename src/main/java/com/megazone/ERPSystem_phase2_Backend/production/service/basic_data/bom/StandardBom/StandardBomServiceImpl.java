@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,6 +60,28 @@ public class StandardBomServiceImpl implements StandardBomService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public StandardBomDTO getStandardBomById(Long id) {
+        StandardBom bom = standardBomRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("요청하신 BOM을 찾을 수 없습니다."));
+
+        List<StandardBomMaterial> materials = standardBomMaterialRepository.findByBomId(bom.getId());
+        bom.setBomMaterials(materials);
+
+        return convertToDTO(bom);
+    }
+
+
+    @Override
+    public List<StandardBomDTO> getAllStandardBoms() {
+        List<StandardBom> standardBoms = standardBomRepository.findAll();
+
+        if (standardBoms.isEmpty()) {
+            throw new EntityNotFoundException("등록된 BOM이 없습니다.");
+        }
+
+        return standardBoms.stream().map(this::convertToDTO).toList();
+    }
+
     public Map<String, BigDecimal> getTotalMaterials(Long bomId) {
         StandardBom rootBom = standardBomRepository.findById(bomId)
                 .orElseThrow(() -> new EntityNotFoundException("BOM not found"));
@@ -77,6 +100,12 @@ public class StandardBomServiceImpl implements StandardBomService {
         for (StandardBomMaterial bomMaterial : bom.getBomMaterials()) {
             String materialCode = bomMaterial.getMaterial().getMaterialCode();
             BigDecimal quantity = bomMaterial.getQuantity();
+
+            // 손실율 적용
+            Double lossRate = bomMaterial.getLossRate();
+            if (lossRate != null && lossRate > 0) {
+                quantity = quantity.multiply(BigDecimal.valueOf(1 + lossRate / 100));
+            }
 
             materialQuantities.merge(materialCode, quantity, BigDecimal::add);
         }
@@ -152,27 +181,6 @@ public class StandardBomServiceImpl implements StandardBomService {
         return convertToDTO(standardBom, false);  // 부모가 아닌 경우
     }
 
-    @Override
-    public StandardBomDTO getStandardBomById(Long id) {
-        StandardBom bom = standardBomRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("요청하신 BOM을 찾을 수 없습니다."));
-
-        List<StandardBomMaterial> materials = standardBomMaterialRepository.findByBomId(bom.getId());
-        bom.setBomMaterials(materials);
-
-        return convertToDTO(bom);
-    }
-
-
-    @Override
-    public List<StandardBomDTO> getAllStandardBoms() {
-        List<StandardBom> standardBoms = standardBomRepository.findAll();
-
-        if (standardBoms.isEmpty()) {
-            throw new EntityNotFoundException("등록된 BOM이 없습니다.");
-        }
-
-        return standardBoms.stream().map(this::convertToDTO).toList();
-    }
 
     @Override
     public StandardBomDTO updateStandardBom(Long id, StandardBomDTO updatedBomDTO) {
@@ -296,24 +304,22 @@ public class StandardBomServiceImpl implements StandardBomService {
     }
 
     private StandardBom convertToEntity(StandardBomDTO standardBomDTO) {
-        
+
+        // 현재 BOM의 현재 품목 설정
+        Product currentProduct = productRepository.findById(standardBomDTO.getCurrentProductId())
+                .orElseThrow(() -> new EntityNotFoundException("현재 품목을 찾을 수 없습니다."));
+
+        // 상위 BOM 설정
         StandardBom parentBom = Optional.ofNullable(standardBomDTO.getParentBom()).map(this::convertToEntity).orElse(null);
 
+        // 하위 BOM 설정
         List<StandardBom> childBoms = Optional.ofNullable(standardBomDTO.getChildBoms()).orElse(Collections.emptyList()).stream().map(this::convertToEntity).toList();
 
         // 자재 목록 설정
         List<StandardBomMaterial> bomMaterials = Optional.ofNullable(standardBomDTO.getBomMaterials())
                 .orElse(Collections.emptyList())
                 .stream()
-                .map(materialDTO -> {
-                    MaterialData materialData = materialDataRepository.findById(materialDTO.getMaterialId())
-                            .orElseThrow(() -> new EntityNotFoundException("자재를 찾을 수 없습니다."));
-                    return StandardBomMaterial.builder()
-                            .material(materialData)
-                            .quantity(materialDTO.getQuantity())
-                            .lossRate(materialDTO.getLossRate())
-                            .build();
-                })
+                .map(this::convertToBomMaterial)
                 .collect(Collectors.toList());
 
         // StandardBom 엔티티 생성
@@ -334,15 +340,11 @@ public class StandardBomServiceImpl implements StandardBomService {
                 .build();
     }
 
-    private StandardBomMaterial convertToEntity(BomMaterialDTO materialDTO) {
-        StandardBom bom = standardBomRepository.findById(materialDTO.getBomId())
-                .orElseThrow(() -> new EntityNotFoundException("BOM을 찾을 수 없습니다."));
-
+    private StandardBomMaterial convertToBomMaterial(BomMaterialDTO materialDTO) {
         MaterialData material = materialDataRepository.findById(materialDTO.getMaterialId())
                 .orElseThrow(() -> new EntityNotFoundException("자재를 찾을 수 없습니다."));
 
         return StandardBomMaterial.builder()
-                .bom(bom)  // BOM 참조
                 .material(material)
                 .quantity(materialDTO.getQuantity())
                 .lossRate(materialDTO.getLossRate())
@@ -408,6 +410,59 @@ public class StandardBomServiceImpl implements StandardBomService {
                 .parentBom(parentBomDTO)
                 .childBoms(childBomDTOs)
                 .build();
+    }
+
+    private <T> T getNullableValue(Supplier<T> supplier) {
+        try {
+            return supplier.get();
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
+
+    public List<StandardBomDTO> forwardExplode(Long bomId) {
+        StandardBom rootBom = standardBomRepository.findById(bomId)
+                .orElseThrow(() -> new EntityNotFoundException("BOM 정전개 데이터를 찾을 수 없습니다."));
+
+        List<StandardBomDTO> result = new ArrayList<>();
+        traverseChildBoms(rootBom, result, new HashSet<>());
+        return result;
+    }
+
+    private void traverseChildBoms(StandardBom bom, List<StandardBomDTO> result, Set<Long> visited) {
+        if (bom == null || visited.contains(bom.getId())) {
+            return;
+        }
+        visited.add(bom.getId());
+
+        result.add(convertToDTO(bom)); // 현재 BOM 추가
+
+        for (StandardBom childBom : bom.getChildBoms()) {
+            traverseChildBoms(childBom, result, visited);
+        }
+    }
+
+    public List<StandardBomDTO> backwardExplode(Long bomId) {
+        StandardBom bom = standardBomRepository.findById(bomId)
+                .orElseThrow(() -> new EntityNotFoundException("BOM 역전개 데이터를 찾을 수 없습니다."));
+
+        List<StandardBomDTO> result = new ArrayList<>();
+        traverseParentBoms(bom, result, new HashSet<>());
+        return result;
+    }
+
+    private void traverseParentBoms(StandardBom bom, List<StandardBomDTO> result, Set<Long> visited) {
+        if (bom == null || visited.contains(bom.getId())) {
+            return;
+        }
+        visited.add(bom.getId());
+
+        result.add(convertToDTO(bom)); // 현재 BOM 추가
+
+        StandardBom parentBom = bom.getParentBom();
+        if (parentBom != null) {
+            traverseParentBoms(parentBom, result, visited);
+        }
     }
 
 
