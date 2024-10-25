@@ -256,123 +256,123 @@ public class MaterialDataServiceImpl implements MaterialDataService{
 
     }
 
-    //해당 자재의 품목 리스트 조회
-    @Override
-    public ListProductMaterialDTO findAllProductMaterialById(Long id) {
+//    //해당 자재의 품목 리스트 조회
+//    @Override
+//    public ListProductMaterialDTO findAllProductMaterialById(Long id) {
+//
+//        //자재 아이디로 자재 조회
+//        MaterialData material = materialDataRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("해당 자재를 조회할 수 없습니다."));
+//
+//        //품목 리스트 생성
+//        List<ProductMaterialDTO> productMaterialList = material.getMaterialProducts().stream()
+//                .map(product -> new ProductMaterialDTO(
+//                        product.getId(),
+//                        product.getProduct().getCode(),
+//                        product.getProduct().getName(),
+//                        product.getProduct().getProductGroup().getName()
+//                )).collect(Collectors.toList());
+//
+//        return new ListProductMaterialDTO(
+//                material.getId(),
+//                material.getMaterialCode(),
+//                material.getMaterialName(),
+//                productMaterialList
+//        );
+//    }
 
-        //자재 아이디로 자재 조회
-        MaterialData material = materialDataRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 자재를 조회할 수 없습니다."));
+//    //해당 자재의 품목 목록 추가
+//    @Override
+//    public Optional<ListProductMaterialDTO> addProductMaterial(Long id, List<ProductMaterialDTO> productMaterialDTOs) {
+//
+//        //자재 아이디 조회
+//        MaterialData materialData = materialDataRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("해당 자재가 존재하지 않습니다."));
+//
+//        //품목 리스트 조회 및 추가 dto 리스트를 엔티티 리스트로 변환
+//        List<Product> products = productMaterialDTOs.stream()
+//                .map(dto -> productRepository.findByCode(dto.getProductCode())
+//                        .orElseThrow(() -> new IllegalArgumentException("해당 품목이 존재하지 않습니다.")))
+//        .collect(Collectors.toList());
+//
+//        //기존 자재의 품목 목록 가져오기
+//        List<Product> existingProducts = materialData.getMaterialProducts().stream()
+//                .map(MaterialProduct::getProduct)
+//                .collect(Collectors.toList());
+//
+//        //중복되지 않는 품목만 추가하기 위해 필터링
+//        List<Product> filterNewProducts = products.stream()
+//                .filter(product -> !existingProducts.contains(product))
+//                .collect(Collectors.toList());
+//
+//        //중복된 것이 없을 때만 새로 추가
+//        if(!filterNewProducts.isEmpty()) {
+//
+//            //기존 자재의 품목 중간 엔티티 리스트에 새로 추가할 품목을 더함.
+//            List<MaterialProduct> materialProductList = filterNewProducts.stream()
+//                    .map(product -> {
+//                        MaterialProduct materialProduct = new MaterialProduct();
+//                        materialProduct.setMaterialData(materialData);
+//                        materialProduct.setProduct(product);
+//                        return materialProduct;
+//                    }).collect(Collectors.toList());
+//
+//            //중간 엔티티 리스트에 추가
+//            materialData.getMaterialProducts().addAll(materialProductList);
+//
+//            //중간 엔티티 저장
+//            materialProductRepository.saveAll(materialProductList);
+//
+//            //자재 저장
+//            materialDataRepository.save(materialData);
+//        }
+//        //전체 품목 리스트를 dto 리스트로 변환
+//        List<ProductMaterialDTO> productMaterialDTOList = materialData.getMaterialProducts().stream()
+//                .map(entity -> new ProductMaterialDTO(
+//                        entity.getId(),
+//                        entity.getProduct().getCode(),
+//                        entity.getProduct().getName(),
+//                        entity.getProduct().getProductGroup().getName()
+//                )).collect(Collectors.toList());
+//
+//        ListProductMaterialDTO listProductMaterialDTO = new ListProductMaterialDTO(
+//                materialData.getId(),
+//                materialData.getMaterialCode(),
+//                materialData.getMaterialName(),
+//                productMaterialDTOList
+//        );
+//
+//        return Optional.of(listProductMaterialDTO);
+//    }
 
-        //품목 리스트 생성
-        List<ProductMaterialDTO> productMaterialList = material.getMaterialProducts().stream()
-                .map(product -> new ProductMaterialDTO(
-                        product.getId(),
-                        product.getProduct().getCode(),
-                        product.getProduct().getName(),
-                        product.getProduct().getProductGroup().getName()
-                )).collect(Collectors.toList());
-
-        return new ListProductMaterialDTO(
-                material.getId(),
-                material.getMaterialCode(),
-                material.getMaterialName(),
-                productMaterialList
-        );
-    }
-
-    //해당 자재의 품목 목록 추가
-    @Override
-    public Optional<ListProductMaterialDTO> addProductMaterial(Long id, List<ProductMaterialDTO> productMaterialDTOs) {
-
-        //자재 아이디 조회
-        MaterialData materialData = materialDataRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 자재가 존재하지 않습니다."));
-
-        //품목 리스트 조회 및 추가 dto 리스트를 엔티티 리스트로 변환
-        List<Product> products = productMaterialDTOs.stream()
-                .map(dto -> productRepository.findByCode(dto.getProductCode())
-                        .orElseThrow(() -> new IllegalArgumentException("해당 품목이 존재하지 않습니다.")))
-        .collect(Collectors.toList());
-
-        //기존 자재의 품목 목록 가져오기
-        List<Product> existingProducts = materialData.getMaterialProducts().stream()
-                .map(MaterialProduct::getProduct)
-                .collect(Collectors.toList());
-
-        //중복되지 않는 품목만 추가하기 위해 필터링
-        List<Product> filterNewProducts = products.stream()
-                .filter(product -> !existingProducts.contains(product))
-                .collect(Collectors.toList());
-
-        //중복된 것이 없을 때만 새로 추가
-        if(!filterNewProducts.isEmpty()) {
-
-            //기존 자재의 품목 중간 엔티티 리스트에 새로 추가할 품목을 더함.
-            List<MaterialProduct> materialProductList = filterNewProducts.stream()
-                    .map(product -> {
-                        MaterialProduct materialProduct = new MaterialProduct();
-                        materialProduct.setMaterialData(materialData);
-                        materialProduct.setProduct(product);
-                        return materialProduct;
-                    }).collect(Collectors.toList());
-
-            //중간 엔티티 리스트에 추가
-            materialData.getMaterialProducts().addAll(materialProductList);
-
-            //중간 엔티티 저장
-            materialProductRepository.saveAll(materialProductList);
-
-            //자재 저장
-            materialDataRepository.save(materialData);
-        }
-        //전체 품목 리스트를 dto 리스트로 변환
-        List<ProductMaterialDTO> productMaterialDTOList = materialData.getMaterialProducts().stream()
-                .map(entity -> new ProductMaterialDTO(
-                        entity.getId(),
-                        entity.getProduct().getCode(),
-                        entity.getProduct().getName(),
-                        entity.getProduct().getProductGroup().getName()
-                )).collect(Collectors.toList());
-
-        ListProductMaterialDTO listProductMaterialDTO = new ListProductMaterialDTO(
-                materialData.getId(),
-                materialData.getMaterialCode(),
-                materialData.getMaterialName(),
-                productMaterialDTOList
-        );
-
-        return Optional.of(listProductMaterialDTO);
-    }
-
-    //해당 자재의 품목 목록 제거
-    @Override
-    public void deleteProductMaterial(Long materialId, String productCode) {
-
-        //자재 아이디 조회
-        MaterialData materialData = materialDataRepository.findById(materialId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 자재가 존재하지 않습니다."));
-
-        //품목 아이디 조회
-        Product product = productRepository.findByCode(productCode)
-                .orElseThrow(() -> new IllegalArgumentException("해당 품목이 존재하지 않습니다."));
-
-        //중간 엔티티에서 해당 자재와 품목의 관계 제거
-        List<MaterialProduct> materialProductList = materialData.getMaterialProducts();
-        MaterialProduct materialProductToRemove = materialProductList.stream()
-                        .filter(mp -> mp.getProduct().getCode().equals(productCode))
-                        .findFirst()
-                        .orElseThrow(() -> new IllegalArgumentException("품목이 자재에 존재하지 않습니다."));
-
-        //중간 엔티티에서 제거
-        materialProductList.remove(materialProductToRemove);
-        
-        //중간엔티티 저장
-        materialProductRepository.saveAll(materialProductList);
-
-        //자재 저장
-        materialDataRepository.save(materialData);
-    }
+//    //해당 자재의 품목 목록 제거
+//    @Override
+//    public void deleteProductMaterial(Long materialId, String productCode) {
+//
+//        //자재 아이디 조회
+//        MaterialData materialData = materialDataRepository.findById(materialId)
+//                .orElseThrow(() -> new IllegalArgumentException("해당 자재가 존재하지 않습니다."));
+//
+//        //품목 아이디 조회
+//        Product product = productRepository.findByCode(productCode)
+//                .orElseThrow(() -> new IllegalArgumentException("해당 품목이 존재하지 않습니다."));
+//
+//        //중간 엔티티에서 해당 자재와 품목의 관계 제거
+//        List<MaterialProduct> materialProductList = materialData.getMaterialProducts();
+//        MaterialProduct materialProductToRemove = materialProductList.stream()
+//                        .filter(mp -> mp.getProduct().getCode().equals(productCode))
+//                        .findFirst()
+//                        .orElseThrow(() -> new IllegalArgumentException("품목이 자재에 존재하지 않습니다."));
+//
+//        //중간 엔티티에서 제거
+//        materialProductList.remove(materialProductToRemove);
+//
+//        //중간엔티티 저장
+//        materialProductRepository.saveAll(materialProductList);
+//
+//        //자재 저장
+//        materialDataRepository.save(materialData);
+//    }
 
     //MaterialDataShowDTO 를 엔티티로 변환
     private MaterialData materialToEntity(MaterialDataShowDTO dto) {
@@ -406,28 +406,28 @@ public class MaterialDataServiceImpl implements MaterialDataService{
                 })
                 .collect(Collectors.toList());
 
-        //명시적으로 중간 엔티티 저장
-        materialHazardousRepository.saveAll(materialHazardousList);
-
-        List<Product> productMaterials  = dto.getProduct().stream()
-                .map(productMaterialDTO -> productRepository.findByCode(productMaterialDTO.getProductCode())
-                        .orElseThrow(() -> new IllegalArgumentException("해당 품목 코드가 존재하지 않습니다." + productMaterialDTO.getProductCode())))
-                .collect(Collectors.toList());
-
-        //품목 중간 엔티티 설정
-        List<MaterialProduct> materialProductList = productMaterials.stream()
-                .map(product -> {
-                    MaterialProduct materialProduct = new MaterialProduct();
-                    materialProduct.setMaterialData(saveMaterialData);
-                    materialProduct.setProduct(product);
-                    return materialProduct;
-                }).collect(Collectors.toList());
-
-        //명시적으로 중간 엔티티 저장
-        materialProductRepository.saveAll(materialProductList);
+//        //명시적으로 중간 엔티티 저장
+//        materialHazardousRepository.saveAll(materialHazardousList);
+//
+//        List<Product> productMaterials  = dto.getProduct().stream()
+//                .map(productMaterialDTO -> productRepository.findByCode(productMaterialDTO.getProductCode())
+//                        .orElseThrow(() -> new IllegalArgumentException("해당 품목 코드가 존재하지 않습니다." + productMaterialDTO.getProductCode())))
+//                .collect(Collectors.toList());
+//
+//        //품목 중간 엔티티 설정
+//        List<MaterialProduct> materialProductList = productMaterials.stream()
+//                .map(product -> {
+//                    MaterialProduct materialProduct = new MaterialProduct();
+//                    materialProduct.setMaterialData(saveMaterialData);
+//                    materialProduct.setProduct(product);
+//                    return materialProduct;
+//                }).collect(Collectors.toList());
+//
+//        //명시적으로 중간 엔티티 저장
+//        materialProductRepository.saveAll(materialProductList);
 
         saveMaterialData.setMaterialHazardous(materialHazardousList);
-        saveMaterialData.setMaterialProducts(materialProductList);
+//        saveMaterialData.setMaterialProducts(materialProductList);
 
         //최종적으로 모든 연관된 엔티티 저장
         materialDataRepository.save(saveMaterialData);
@@ -448,14 +448,14 @@ public class MaterialDataServiceImpl implements MaterialDataService{
         dto.setRepresentativeCode(createMaterial.getSupplier().getCode());
         dto.setRepresentativeName(createMaterial.getSupplier().getPrintClientName());
 
-        //품목 리스트 생성
-        List<ProductMaterialDTO> productMaterialList = createMaterial.getMaterialProducts().stream()
-                .map(product -> new ProductMaterialDTO(
-                        product.getId(),
-                        product.getProduct().getCode(),
-                        product.getProduct().getName(),
-                        product.getProduct().getProductGroup().getName()
-                )).collect(Collectors.toList());
+//        //품목 리스트 생성
+//        List<ProductMaterialDTO> productMaterialList = createMaterial.getMaterialProducts().stream()
+//                .map(product -> new ProductMaterialDTO(
+//                        product.getId(),
+//                        product.getProduct().getCode(),
+//                        product.getProduct().getName(),
+//                        product.getProduct().getProductGroup().getName()
+//                )).collect(Collectors.toList());
 
         //유해물질 리스트 생성
         List<HazardousMaterialDTO> hazardousMaterialList = createMaterial.getMaterialHazardous().stream()
@@ -467,7 +467,7 @@ public class MaterialDataServiceImpl implements MaterialDataService{
                         hazardousMaterial.getHazardousMaterial().getDescription()
                 )).collect(Collectors.toList());
 
-        dto.setProduct(productMaterialList);
+//        dto.setProduct(productMaterialList);
         dto.setHazardousMaterial(hazardousMaterialList);
 
         return dto;

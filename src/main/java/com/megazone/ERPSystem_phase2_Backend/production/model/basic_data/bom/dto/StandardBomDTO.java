@@ -30,12 +30,12 @@ public class StandardBomDTO {
 //    private StandardBomDTO parentBom;
 //    private List<StandardBomDTO> childBoms;
 
-    private Long currentProductId;
-    private String currentProductCode;
-    private String currentProductName;
-    private Long parentProductId;
-    private String parentProductCode;     // 상위 제품 코드 (Parent Product Code)
-    private String parentProductName;     // 상위 제품 이름 (Parent Product)
+    private Long productId;
+    private String productCode;
+    private String productName;
+//    private Long parentProductId;
+//    private String parentProductCode;     // 상위 제품 코드 (Parent Product Code)
+//    private String parentProductName;     // 상위 제품 이름 (Parent Product)
 
 //    private Long childProductId;
 //    private String childProductCode;      // 하위 제품 코드 (Child Product Code)

@@ -57,10 +57,8 @@ public class StandardBomServiceImpl implements StandardBomService {
                         // StandardBomMaterial 빌드
                         return StandardBomMaterial.builder()
                                 .bom(savedBom)  // 특정 BOM 참조
-                                .product(product) // 품목 참조
                                 .material(materialData)  // 자재 참조
                                 .quantity(bomMaterialDTO.getQuantity())
-                                .lossRate(bomMaterialDTO.getLossRate())
                                 .build();
                     })
                     .toList();
@@ -128,8 +126,8 @@ public class StandardBomServiceImpl implements StandardBomService {
 
         validateBomDTO(updatedBomDTO);
 
-        // 상위 품목 처리: 상위 품목 없으면 null, 예외 처리 없이 정상 수정 가능
-        Product parentProduct = productRepository.findById(updatedBomDTO.getParentProductId()).orElse(null);
+//        // 상위 품목 처리: 상위 품목 없으면 null, 예외 처리 없이 정상 수정 가능
+        Product product = productRepository.findById(updatedBomDTO.getProductId()).orElse(null);
 
         StandardBom newBomVersion = existingBom.toBuilder()
                 .code(updatedBomDTO.getBomCode())
@@ -141,7 +139,7 @@ public class StandardBomServiceImpl implements StandardBomService {
                 .startDate(updatedBomDTO.getStartDate())
                 .expiredDate(updatedBomDTO.getExpiredDate())
                 .isActive(updatedBomDTO.getIsActive())
-                .parentProduct(parentProduct)
+                .product(product)
                 .build();
 
 //        // 상위품목 반드시 필요?
@@ -159,7 +157,6 @@ public class StandardBomServiceImpl implements StandardBomService {
                             .bom(newBomVersion)
                             .material(materialData)
                             .quantity(materialDTO.getQuantity())
-                            .lossRate(materialDTO.getLossRate())
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -189,7 +186,7 @@ public class StandardBomServiceImpl implements StandardBomService {
 
         checkedBomIds.add(parentProductId);
 
-        List<StandardBom> childBoms = standardBomRepository.findByParentProductId(parentProductId);
+        List<StandardBom> childBoms = standardBomRepository.findByProductId(parentProductId);
 
         if (childBoms.isEmpty()) {
             throw new EntityNotFoundException("해당 상위 품목에 등록된 하위 BOM이 없습니다.");
@@ -209,7 +206,7 @@ public class StandardBomServiceImpl implements StandardBomService {
             throw new EntityNotFoundException("해당 상위 품목을 찾을 수 없습니다.");
         }
 
-        List<StandardBom> childBoms = standardBomRepository.findByParentProductId(parentProductId);
+        List<StandardBom> childBoms = standardBomRepository.findByProductId(parentProductId);
 
         return childBoms.stream()
                 .map(this::convertToDTO)
@@ -259,7 +256,6 @@ public class StandardBomServiceImpl implements StandardBomService {
                     return StandardBomMaterial.builder()
                             .material(materialData)
                             .quantity(materialDTO.getQuantity())
-                            .lossRate(materialDTO.getLossRate())
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -293,7 +289,6 @@ public class StandardBomServiceImpl implements StandardBomService {
                 .bom(bom)  // BOM 참조
                 .material(material)
                 .quantity(materialDTO.getQuantity())
-                .lossRate(materialDTO.getLossRate())
                 .build();
     }
 
@@ -309,7 +304,6 @@ public class StandardBomServiceImpl implements StandardBomService {
                         .materialId(material.getMaterial().getId())
                         .materialName(material.getMaterial().getMaterialName())
                         .quantity(material.getQuantity())
-                        .lossRate(material.getLossRate())
 //                        .unitOfMeasure(material.getMaterial().getUnitOfMeasure()) // 단위 추가
 //                        .substituteMaterialId(material.getMaterial().getSubstituteMaterialId())
 //                        .substituteMaterialName(material.getMaterial().getSubstituteMaterialName())
@@ -345,7 +339,8 @@ public class StandardBomServiceImpl implements StandardBomService {
                 .isActive(standardBom.getIsActive())
                 // parentProduct가 null일 수 있으므로 안전하게 처리
 //                .parentBom(convertToDTO(standardBom.getParentBom(), true))
-                .parentProductId(Optional.ofNullable(standardBom.getParentProduct()).map(Product::getId).orElse(null))
+                .productId(standardBom.getProduct().getId())
+//                .productId(Optional.ofNullable(standardBom.getProduct()).map(Product::getId).orElse(null))
                 .bomMaterials(materialDTOs)
 //                .parentBom(parentBomDTO)
 //                .childBoms(childBomDTOs)

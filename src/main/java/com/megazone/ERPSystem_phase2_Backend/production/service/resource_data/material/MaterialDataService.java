@@ -32,14 +32,14 @@ public interface MaterialDataService {
     //해당 자재의 유해물질 목록 제거
     void deleteHazardousMaterial(Long materialId, Long hazardousMaterialId);
 
-    //해당 자재의 품목 리스트 조회
-    ListProductMaterialDTO findAllProductMaterialById(Long id);
-
-    //해당 자재의 품목 목록 추가
-    Optional<ListProductMaterialDTO> addProductMaterial(Long id, List<ProductMaterialDTO> productMaterialDTOs);
-
-    //해당 자재의 품목 목록 제거
-    void deleteProductMaterial(Long materialId, String productCode);
+//    //해당 자재의 품목 리스트 조회
+//    ListProductMaterialDTO findAllProductMaterialById(Long id);
+//
+//    //해당 자재의 품목 목록 추가
+//    Optional<ListProductMaterialDTO> addProductMaterial(Long id, List<ProductMaterialDTO> productMaterialDTOs);
+//
+//    //해당 자재의 품목 목록 제거
+//    void deleteProductMaterial(Long materialId, String productCode);
 
 
 }

@@ -8,7 +8,7 @@ import java.util.List;
 public interface StandardBomRepository extends JpaRepository<StandardBom, Long> {
 
     // 특정 제품의 BOM 목록 조회
-    List<StandardBom> findByParentProductId(Long parentProductId);
+//    List<StandardBom> findByParentProductId(Long parentProductId);
 
     // 특정 제품을 자식으로 가지는 BOM 목록 조회 (역전개)
 //    List<StandardBom> findByChildProductId(Long childProductId);

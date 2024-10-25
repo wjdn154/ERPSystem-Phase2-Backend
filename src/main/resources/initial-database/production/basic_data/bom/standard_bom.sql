@@ -32,7 +32,7 @@
 # (14, 'BOM014', 1.0, '2024-12-25', '영화 티켓에 대한 유리 패널 연결', 0.01, 'JOINT_PRODUCTION', '2024-12-15', '2024-12-31', true, 12, 3),
 # (24, 'BOM012', 1.1, '2024-12-30', '영화 티켓에 대한 새로운 연결 버전', 0.03, 'QUALITY_INSPECTION_OUTSOURCING', '2024-12-20', '2024-12-31', true, NULL, 5);
 
-INSERT INTO bom_standard_bom (id, code, version, created_date, remarks, loss_rate, outsourcing_type, start_date, expired_date, is_active, parent_product_id)
+INSERT INTO bom_standard_bom (id, code, version, created_date, remarks, loss_rate, outsourcing_type, start_date, expired_date, is_active, product_id)
 VALUES
 -- 제품 A (즉석밥)는 자재 알루미늄 판, 구리 선, 유리 패널을 자식으로 가짐
 (1, 'BOM001', 1.0, '2024-01-15', '즉석밥에 대한 전체 외주 처리', 0.05, 'FULL_OUTSOURCING', '2024-01-01', '2024-12-31', true, 1),  -- 상위 BOM: 제품 A

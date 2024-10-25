@@ -55,8 +55,8 @@ public class MaterialData {
     @OneToMany(mappedBy = "materialData", fetch = FetchType.LAZY)
     private List<MaterialHazardous> materialHazardous = new ArrayList<>();     //자재와 유해물질 다대다 중간 엔티티
 
-    @OneToMany(mappedBy = "materialData", fetch = FetchType.LAZY)          //자재와 품목 다대다 중간 엔티티
-    private List<MaterialProduct> materialProducts = new ArrayList<>();
+//    @OneToMany(mappedBy = "materialData", fetch = FetchType.LAZY)          //자재와 품목 다대다 중간 엔티티
+//    private List<MaterialProduct> materialProducts = new ArrayList<>();
 
     @OneToMany(mappedBy = "materialData", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MaterialInputStatus> materialInputStatusList;
