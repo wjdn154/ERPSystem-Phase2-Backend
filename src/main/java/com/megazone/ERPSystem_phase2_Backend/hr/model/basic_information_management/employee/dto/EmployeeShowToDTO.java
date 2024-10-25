@@ -16,7 +16,7 @@ public class EmployeeShowToDTO {
     private String employeeNumber;
     private String firstName;
     private String lastName;
-    private LocalDate dateOfBirth;
+    private String registrationNumber;
     private String phoneNumber;
     private EmploymentStatus employmentStatus;
     private EmploymentType employmentType;
@@ -24,7 +24,7 @@ public class EmployeeShowToDTO {
     private String address;
     private LocalDate hireDate;
     private boolean isHouseholdHead;
-    private String profilePicture;
+    private String imagePath;
 
 
     private String departmentName;

@@ -3,9 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.service.work_performanc
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionOrder;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.DailyAndMonthReportSearchDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceDetailDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceListDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.production_order.ProductionOrderRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.work_performance.work_report.WorkPerformanceRepository;
@@ -17,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -94,11 +93,18 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
     }
 
     @Override
-    public List<DailyAndMonthReportSearchDTO> dailyAndMonthlyReport(DailyAndMonthReportSearchDTO dto) {
-        workPerformanceRepository.dailyAndMonthlyReport(dto);
-        return List.of();
+    public List<DailyReportDTO> dailyReport(DailyAndMonthlyReportSearchDTO dto) {
+        List<DailyReportDTO> monthlyReportDTOS = workPerformanceRepository.dailyReport(dto);
+        monthlyReportDTOS.forEach(System.out::println);
+        return monthlyReportDTOS;
     }
 
+    @Override
+    public List<MonthlyReportDTO> monthlyReport(DailyAndMonthlyReportSearchDTO dto) {
+        List<MonthlyReportDTO> monthlyReportDTOS = workPerformanceRepository.monthlyReport(dto);
+        monthlyReportDTOS.forEach(System.out::println);
+        return monthlyReportDTOS;
+    }
 
     // 엔티티를 WorkPerformanceDetailDTO로 변환
     private WorkPerformanceDetailDTO workPerformanceToDTO(WorkPerformance workPerformance) {
