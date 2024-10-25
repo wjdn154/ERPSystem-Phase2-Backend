@@ -20,7 +20,7 @@ public class EmployeeOneDTO {
     private String employeeNumber;
     private String firstName;
     private String lastName;
-    private LocalDate dateOfBirth;
+    private String registrationNumber;
     private String phoneNumber;
     private EmploymentStatus employmentStatus;
     private EmploymentType employmentType;
@@ -30,9 +30,14 @@ public class EmployeeOneDTO {
     private boolean isHouseholdHead;
     private String profilePicture;
 
-    private String departmentName; // 부서 이름
+    private Long departmentId;
     private String departmentCode;
+    private String departmentName; // 부서 이름
+    private Long positionId;
+    private String positionCode;
     private String positionName; // 직위 이름
+    private Long titleId;
+    private String titleCode;
     private String titleName; // 직책 이름
     private BankAccountDTO bankAccountDTO;
 //    private String bankName;

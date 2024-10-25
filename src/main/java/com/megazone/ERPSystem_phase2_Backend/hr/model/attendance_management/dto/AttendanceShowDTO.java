@@ -30,7 +30,7 @@ public class AttendanceShowDTO {
               attendance.getId(),
               attendance.getEmployee().getEmployeeNumber(),
               attendance.getEmployee().getLastName()+ attendance.getEmployee().getFirstName(),
-              attendance.getEmployee().getJobTitle().getTitleName(),
+              attendance.getEmployee().getJobTitle().getJobTitleName(),
               attendance.getAttendanceCode(),
               attendance.getDate(),
               attendance.getCheckinTime(),

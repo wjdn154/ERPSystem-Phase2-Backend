@@ -23,4 +23,8 @@ public class BankAccountDTO {
                 bankAccount.getBank().getCode(),
                 bankAccount.getAccountNumber());
     }
+
+    public static BankAccountDTO create(Long id, String name, String code, String accountNumber) {
+        return new BankAccountDTO(id, name, code, accountNumber);
+    }
 }

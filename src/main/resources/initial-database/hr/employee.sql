@@ -4,15 +4,20 @@ INSERT INTO employee_department (department_code, department_name, location) VAL
 ('0003','생산부','3층'),
 ('0004','물류부','4층');
 
-INSERT INTO employee_position (code,description, position_name) VALUES
-('0001', '회사의 전체 전략과 방향을 설정하고 리더십을 제공함', '사장'),
-('0002', '회사의 운영을 총괄하고 모든 부서의 효율성을 관리함', '부사장'),
-('0003', '특정 부서를 관리하고 부서의 목표 달성을 책임짐', '이사'),
-('0004', '팀의 일상적인 업무를 지휘하고 관리함', '부장'),
-('0005', '부서 내 프로젝트 실행과 팀 성과를 관리함', '팀장'),
-('0006', '소프트웨어 및 IT 시스템을 개발 및 유지하며, 회사의 목표에 맞게 조정함', '소프트웨어 엔지니어');
+INSERT INTO employee_position (position_Code, position_name) VALUES
+('100', '사장'),
+('200', '부사장'),
+('300', '이사'),
+('400', '부장'),
+('500', '차장'),
+('600', '과장'),
+('700', '대리'),
+('800', '주임'),
+('900','사원'),
+('1000', '상무'),
+('1100', '전무');
 
-INSERT INTO employee_job_title (code,description, title_name) VALUES
+INSERT INTO employee_job_title (job_title_Code,description, job_title_name) VALUES
 ('1001','회사의 전반적인 인사 정책을 총괄하며, 인사 계획을 수립하고 실행','인사부장'),
 ('1002','채용, 급여 관리, 직원 교육, 복리후생 등을 담당합니다.','HR 매니저'),
 ('2001','회사의 재무 전략을 수립하고, 예산, 투자, 자금 조달을 관리','재무부장'),
@@ -62,47 +67,44 @@ INSERT INTO employee_bank_account (bank_id,account_number) VALUES
 (35, '555-666-777888'),
 (36, '666-777-888999');
 
-INSERT INTO employee (date_of_birth, hire_date,is_household_head, department_id, job_title_id, position_id, bank_account_id ,address, email, employee_number, first_name, last_name, phone_number, profile_picture, employment_status, employment_type)
+INSERT INTO employee (registration_Number, hire_date,is_household_head, department_id, job_title_id, position_id, bank_account_id ,address, email, employee_number, first_name, last_name, phone_number, profile_picture, employment_status, employment_type)
 VALUES
-('2000-10-16', '2022-01-01' ,TRUE, 3, 2, 3, 1,'거제', 'wkdgywjd77@naver.com', '220101001', '정현', '박', '010-2234-5678', 'img7.jpg', 'RESIGNED', 'FREELANCE'),
-('2000-12-25', '2022-02-01',TRUE, 3, 2, 3, 2,'서울', 'readyoun@omz.com', '220201001', '희연', '임', '010-2234-5678', 'img8.jpg', 'ON_LEAVE', 'PART_TIME'),
-('1990-05-15', '2022-03-01' ,TRUE, 1, 1, 1, 3,'경기', 'gj1563@naver.com', '220301001', '건호', '허', '010-1234-5678', 'img1.jpg', 'ACTIVE', 'FULL_TIME'),
-('1985-11-22', '2022-04-01',FALSE, 2, 2, 2, 4,'부산', 'ckacl2512@naver.com', '220401001', '민성', '김', '010-9876-5432', 'img2.jpg', 'ACTIVE', 'CONTRACT'),
-('1995-03-10', '2022-05-01' ,TRUE, 1, 1, 1, 5,'대구', 'hshdla@naver.com', '220501001', '홍스', '홍', '010-2234-5678', 'img3.jpg', 'ON_LEAVE', 'PART_TIME'),
-('1999-12-12', '2022-06-01' ,TRUE, 4, 1, 2, 6,'울산', 'chlwlgur0407@naver.com', '220601001', '지혁', '최', '010-2234-5678', 'img4.jpg', 'ACTIVE', 'TEMPORARY'),
-('2000-01-01', '2022-07-01' ,TRUE, 4, 3, 1, 7,'제주', 'cksals@naver.com', '220701001', '찬민', '김', '010-2234-5678', 'img5.jpg', 'ACTIVE', 'INTERN'),
-('2000-10-16', '2022-08-01' ,TRUE, 2, 2, 3, 8,'진주', 'labe1827@gmail.com', '220801001', '태종', '하', '010-2234-5678', 'img6.jpg', 'RESIGNED', 'CASUAL'),
-
-('1998-09-09', '2022-09-01', TRUE, 1, 3, 1, 9, '창원', 'scarlett.jo@gmail.com', '220901001', '재영', '김', '010-9012-3456', 'img9.jpg', 'ACTIVE', 'FREELANCE'),
-('1999-10-10', '2022-10-01', TRUE, 2, 1, 2, 10, '포항', 'matt.damon@gmail.com', '221001001', '서연', '장', '010-0123-4567', 'img10.jpg', 'ON_LEAVE', 'CONTRACT'),
-('2000-11-11', '2022-11-01', TRUE, 3, 2, 3, 11, '청주', 'tom.cruise@gmail.com', '221101001', '현서', '박', '010-1234-5678', 'img11.jpg', 'ACTIVE', 'PART_TIME'),
-('2001-12-12', '2022-12-01', TRUE, 4, 3, 1, 12, '전주', 'chris.evans@gmail.com', '221201001', '영민', '강', '010-2345-6789', 'img12.jpg', 'RESIGNED', 'INTERN'),
-
-('1990-01-01', '2023-01-01', TRUE, 1, 1, 1, 13, '서울', 'john.doe2@gmail.com', '230101001', '민호', '최', '010-3456-7890', 'img13.jpg', 'ACTIVE', 'FULL_TIME'),
-('1991-02-01', '2023-02-01', TRUE, 2, 2, 2, 14, '부산', 'jane.doe2@gmail.com', '230201001', '서윤', '박', '010-4567-8901', 'img14.jpg', 'ON_LEAVE', 'PART_TIME'),
-('1992-03-02', '2023-03-01', TRUE, 3, 3, 3, 15, '대전', 'james.bond2@gmail.com', '230301001', '태영', '이', '010-5678-9012', 'img15.jpg', 'ACTIVE', 'CONTRACT'),
-('1993-04-03', '2023-04-01', TRUE, 4, 1, 2, 16, '광주', 'lisa.kim2@gmail.com', '230401001', '지우', '김', '010-6789-0123', 'img16.jpg', 'RESIGNED', 'FREELANCE'),
-('1994-05-04', '2023-05-01', TRUE, 1, 2, 3, 17, '대구', 'charlie.brown2@gmail.com', '230501001', '주원', '박', '010-7890-1234', 'img17.jpg', 'ON_LEAVE', 'TEMPORARY'),
-('1995-06-05', '2023-06-01', TRUE, 2, 3, 1, 18, '인천', 'emma.stone2@gmail.com', '230601001', '도현', '최', '010-8901-2345', 'img18.jpg', 'ACTIVE', 'FULL_TIME'),
-('1996-07-06', '2023-07-01', TRUE, 3, 1, 2, 19, '울산', 'john.smith2@gmail.com', '230701001', '지민', '김', '010-9012-3456', 'img19.jpg', 'RESIGNED', 'INTERN'),
-('1997-08-07', '2023-08-01', TRUE, 4, 2, 3, 20, '수원', 'will.smith2@gmail.com', '230801001', '서현', '이', '010-0123-4567', 'img20.jpg', 'ON_LEAVE', 'CASUAL'),
-('1998-09-08', '2023-09-01', TRUE, 1, 3, 1, 21, '창원', 'scarlett.jo2@gmail.com', '230901001', '영준', '장', '010-1234-5678', 'img21.jpg', 'ACTIVE', 'FREELANCE'),
-('1999-10-09', '2023-10-01', TRUE, 2, 1, 2, 22, '포항', 'matt.damon2@gmail.com', '231001001', '은비', '박', '010-2345-6789', 'img22.jpg', 'ON_LEAVE', 'CONTRACT'),
-('2000-11-10', '2023-11-01', TRUE, 3, 2, 3, 23, '청주', 'tom.cruise2@gmail.com', '231101001', '서준', '한', '010-3456-7890', 'img23.jpg', 'ACTIVE', 'PART_TIME'),
-('2001-12-11', '2023-12-01', TRUE, 4, 3, 1, 24, '전주', 'chris.evans2@gmail.com', '231201001', '진서', '강', '010-4567-8901', 'img24.jpg', 'RESIGNED', 'INTERN'),
-
-('1990-01-10', '2024-01-01', TRUE, 1, 1, 1, 25, '서울', 'john.doe3@gmail.com', '240101001', '태민', '이', '010-5678-9012', 'img25.jpg', 'ACTIVE', 'FULL_TIME'),
-('1991-02-20', '2024-02-01', TRUE, 2, 2, 2, 26, '부산', 'jane.doe3@gmail.com', '240201001', '도윤', '김', '010-6789-0123', 'img26.jpg', 'ON_LEAVE', 'PART_TIME'),
-('1992-03-30', '2024-03-01', TRUE, 3, 3, 3, 27, '대전', 'james.bond3@gmail.com', '240301001', '수빈', '최', '010-7890-1234', 'img27.jpg', 'ACTIVE', 'CONTRACT'),
-('1993-04-15', '2024-04-01', TRUE, 4, 1, 2, 28, '광주', 'lisa.kim3@gmail.com', '240401001', '민지', '박', '010-8901-2345', 'img28.jpg', 'RESIGNED', 'FREELANCE'),
-('1994-05-25', '2024-05-01', TRUE, 1, 2, 3, 29, '대구', 'charlie.brown3@gmail.com', '240501001', '서현', '한', '010-9012-3456', 'img29.jpg', 'ON_LEAVE', 'TEMPORARY'),
-('1995-06-15', '2024-06-01', TRUE, 2, 3, 1, 30, '인천', 'emma.stone3@gmail.com', '240601001', '민우', '이', '010-0123-4567', 'img30.jpg', 'ACTIVE', 'FULL_TIME'),
-('1996-07-25', '2024-07-01', TRUE, 3, 1, 2, 31, '울산', 'john.smith3@gmail.com', '240701001', '지영', '장', '010-1234-5678', 'img31.jpg', 'RESIGNED', 'INTERN'),
-('1997-08-30', '2024-08-01', TRUE, 4, 2, 3, 32, '수원', 'will.smith3@gmail.com', '240801001', '정우', '박', '010-2345-6789', 'img32.jpg', 'ON_LEAVE', 'CASUAL'),
-('1998-09-29', '2024-09-01', TRUE, 1, 3, 1, 33, '창원', 'scarlett.jo3@gmail.com', '240901001', '서연', '강', '010-3456-7890', 'img33.jpg', 'ACTIVE', 'FREELANCE'),
-('1999-10-19', '2024-10-01', TRUE, 2, 1, 2, 34, '포항', 'matt.damon3@gmail.com', '241001001', '도영', '김', '010-4567-8901', 'img34.jpg', 'ON_LEAVE', 'CONTRACT'),
-('2000-11-29', '2024-11-01', TRUE, 3, 2, 3, 35, '청주', 'tom.cruise3@gmail.com', '241101001', '태리', '한', '010-5678-9012', 'img35.jpg', 'ACTIVE', 'PART_TIME'),
-('2001-12-25', '2024-12-01', TRUE, 4, 3, 1, 36, '전주', 'chris.evans3@gmail.com', '241201001', '영훈', '이', '010-6789-0123', 'img36.jpg', 'RESIGNED', 'INTERN');
+('900101-1234567', '2022-01-01' ,TRUE, 3, 2, 3, 1,'거제', 'wkdgywjd77@naver.com', '220101001', '정현', '박', '010-2234-5678', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/00b6a3ac-026f-49a7-bfe3-5e34f0e0786d_준형이 닮음.png', 'RESIGNED', 'FREELANCE'),
+('880215-2345678', '2022-02-01',TRUE, 3, 2, 3, 2,'서울', 'readyoun@omz.com', '220201001', '희연', '임', '010-2234-5678', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/00b6a3ac-026f-49a7-bfe3-5e34f0e0786d_준형이 닮음.png', 'ON_LEAVE', 'PART_TIME'),
+('950505-3456789', '2022-03-01' ,TRUE, 1, 1, 1, 3,'경기', 'gj1563@naver.com', '220301001', '건호', '허', '010-1234-5678', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/29825963-fa60-4387-8250-805e2628f759_허건호.png', 'ACTIVE', 'FULL_TIME'),
+('780630-4567890', '2022-04-01',FALSE, 2, 2, 2, 4,'부산', 'ckacl2512@naver.com', '220401001', '민성', '김', '010-9876-5432', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/00b6a3ac-026f-49a7-bfe3-5e34f0e0786d_준형이 닮음.png', 'ACTIVE', 'CONTRACT'),
+('820312-5678901', '2022-05-01' ,TRUE, 1, 1, 1, 5,'대구', 'hshdla@naver.com', '220501001', '홍스', '홍', '010-2234-5678', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/17077f58-8da7-4011-92cc-1b6b9823419c_홍성화.png', 'ON_LEAVE', 'PART_TIME'),
+('860910-6789012', '2022-06-01' ,TRUE, 4, 1, 2, 6,'울산', 'chlwlgur0407@naver.com', '220601001', '지혁', '최', '010-2234-5678', 'img4.jpg', 'ACTIVE', 'TEMPORARY'),
+('921224-7890123', '2022-07-01' ,TRUE, 4, 3, 1, 7,'제주', 'cksals@naver.com', '220701001', '찬민', '김', '010-2234-5678', 'img5.jpg', 'ACTIVE', 'INTERN'),
+('750808-8901234', '2022-08-01' ,TRUE, 2, 2, 3, 8,'진주', 'labe1827@gmail.com', '220801001', '태종', '하', '010-2234-5678', 'img6.jpg', 'RESIGNED', 'CASUAL'),
+('981105-9012345', '2022-09-01', TRUE, 1, 3, 1, 9, '창원', 'scarlett.jo@gmail.com', '220901001', '재영', '김', '010-9012-3456', 'img9.jpg', 'ACTIVE', 'FREELANCE'),
+('930402-0123456', '2022-10-01', TRUE, 2, 1, 2, 10, '포항', 'matt.damon@gmail.com', '221001001', '서연', '장', '010-0123-4567', 'img10.jpg', 'ON_LEAVE', 'CONTRACT'),
+('970707-1234567', '2022-11-01', TRUE, 3, 2, 3, 11, '청주', 'tom.cruise@gmail.com', '221101001', '현서', '박', '010-1234-5678', 'img11.jpg', 'ACTIVE', 'PART_TIME'),
+('740930-2345678', '2022-12-01', TRUE, 4, 3, 1, 12, '전주', 'chris.evans@gmail.com', '221201001', '영민', '강', '010-2345-6789', 'img12.jpg', 'RESIGNED', 'INTERN'),
+('810418-4567890', '2023-01-01', TRUE, 1, 1, 1, 13, '서울', 'john.doe2@gmail.com', '230101001', '민호', '최', '010-3456-7890', 'img13.jpg', 'ACTIVE', 'FULL_TIME'),
+('850727-5678901', '2023-02-01', TRUE, 2, 2, 2, 14, '부산', 'jane.doe2@gmail.com', '230201001', '서윤', '박', '010-4567-8901', 'img14.jpg', 'ON_LEAVE', 'PART_TIME'),
+('780909-6789012', '2023-03-01', TRUE, 3, 3, 3, 15, '대전', 'james.bond2@gmail.com', '230301001', '태영', '이', '010-5678-9012', 'img15.jpg', 'ACTIVE', 'CONTRACT'),
+('760202-7890123', '2023-04-01', TRUE, 4, 1, 2, 16, '광주', 'lisa.kim2@gmail.com', '230401001', '지우', '김', '010-6789-0123', 'img16.jpg', 'RESIGNED', 'FREELANCE'),
+('941020-8901234', '2023-05-01', TRUE, 1, 2, 3, 17, '대구', 'charlie.brown2@gmail.com', '230501001', '주원', '박', '010-7890-1234', 'img17.jpg', 'ON_LEAVE', 'TEMPORARY'),
+('911106-9012345', '2023-06-01', TRUE, 2, 3, 1, 18, '인천', 'emma.stone2@gmail.com', '230601001', '도현', '최', '010-8901-2345', 'img18.jpg', 'ACTIVE', 'FULL_TIME'),
+('720415-0123456', '2023-07-01', TRUE, 3, 1, 2, 19, '울산', 'john.smith2@gmail.com', '230701001', '지민', '김', '010-9012-3456', 'img19.jpg', 'RESIGNED', 'INTERN'),
+('790123-1234567', '2023-08-01', TRUE, 4, 2, 3, 20, '수원', 'will.smith2@gmail.com', '230801001', '서현', '이', '010-0123-4567', 'img20.jpg', 'ON_LEAVE', 'CASUAL'),
+('861224-2345678', '2023-09-01', TRUE, 1, 3, 1, 21, '창원', 'scarlett.jo2@gmail.com', '230901001', '영준', '장', '010-1234-5678', 'img21.jpg', 'ACTIVE', 'FREELANCE'),
+('990909-3456789', '2023-10-01', TRUE, 2, 1, 2, 22, '포항', 'matt.damon2@gmail.com', '231001001', '은비', '박', '010-2345-6789', 'img22.jpg', 'ON_LEAVE', 'CONTRACT'),
+('830525-4567890', '2023-11-01', TRUE, 3, 2, 3, 23, '청주', 'tom.cruise2@gmail.com', '231101001', '서준', '한', '010-3456-7890', 'img23.jpg', 'ACTIVE', 'PART_TIME'),
+('770612-5678901', '2023-12-01', TRUE, 4, 3, 1, 24, '전주', 'chris.evans2@gmail.com', '231201001', '진서', '강', '010-4567-8901', 'img24.jpg', 'RESIGNED', 'INTERN'),
+('880910-7890123', '2024-01-01', TRUE, 1, 1, 1, 25, '서울', 'john.doe3@gmail.com', '240101001', '태민', '이', '010-5678-9012', 'img25.jpg', 'ACTIVE', 'FULL_TIME'),
+('940414-8901234', '2024-02-01', TRUE, 2, 2, 2, 26, '부산', 'jane.doe3@gmail.com', '240201001', '도윤', '김', '010-6789-0123', 'img26.jpg', 'ON_LEAVE', 'PART_TIME'),
+('800223-9012345', '2024-03-01', TRUE, 3, 3, 3, 27, '대전', 'james.bond3@gmail.com', '240301001', '수빈', '최', '010-7890-1234', 'img27.jpg', 'ACTIVE', 'CONTRACT'),
+('960517-0123456', '2024-04-01', TRUE, 4, 1, 2, 28, '광주', 'lisa.kim3@gmail.com', '240401001', '민지', '박', '010-8901-2345', 'img28.jpg', 'RESIGNED', 'FREELANCE'),
+('950404-1234567', '2024-05-01', TRUE, 1, 2, 3, 29, '대구', 'charlie.brown3@gmail.com', '240501001', '서현', '한', '010-9012-3456', 'img29.jpg', 'ON_LEAVE', 'TEMPORARY'),
+('730817-2345678', '2024-06-01', TRUE, 2, 3, 1, 30, '인천', 'emma.stone3@gmail.com', '240601001', '민우', '이', '010-0123-4567', 'img30.jpg', 'ACTIVE', 'FULL_TIME'),
+('870908-3456789', '2024-07-01', TRUE, 3, 1, 2, 31, '울산', 'john.smith3@gmail.com', '240701001', '지영', '장', '010-1234-5678', 'img31.jpg', 'RESIGNED', 'INTERN'),
+('910606-4567890', '2024-08-01', TRUE, 4, 2, 3, 32, '수원', 'will.smith3@gmail.com', '240801001', '정우', '박', '010-2345-6789', 'img32.jpg', 'ON_LEAVE', 'CASUAL'),
+('930323-5678901', '2024-09-01', TRUE, 1, 3, 1, 33, '창원', 'scarlett.jo3@gmail.com', '240901001', '서연', '강', '010-3456-7890', 'img33.jpg', 'ACTIVE', 'FREELANCE'),
+('790101-6789012', '2024-10-01', TRUE, 2, 1, 2, 34, '포항', 'matt.damon3@gmail.com', '241001001', '도영', '김', '010-4567-8901', 'img34.jpg', 'ON_LEAVE', 'CONTRACT'),
+('890213-3456789', '2024-11-01', TRUE, 3, 2, 3, 35, '청주', 'tom.cruise3@gmail.com', '241101001', '태리', '한', '010-5678-9012', 'img35.jpg', 'ACTIVE', 'PART_TIME'),
+('751030-6789012', '2024-12-01', TRUE, 4, 3, 1, 36, '전주', 'chris.evans3@gmail.com', '241201001', '영훈', '이', '010-6789-0123', 'img36.jpg', 'RESIGNED', 'INTERN');
 
 
 INSERT INTO employee_performance (evaluation_date, employee_id, title, evaluator_id, comments, score) VALUES

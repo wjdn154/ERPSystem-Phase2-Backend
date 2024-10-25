@@ -54,11 +54,10 @@ public class DepartmentServiceImpl implements DepartmentService {
             List<EmployeeDepartmentDTO> employeeDepartmentDTOS = employeeRepository.findByDepartmentId(id).stream()
                     .map(employee -> {
                             String positionName = positionRepository.findById(employee.getPosition().getId())
-                            .map(Position::getPositionName)
-                            .orElse("찾을 수 없습니다.");
+                            .map(Position::getPositionName).orElse("찾을 수 없습니다.");
 
                      String titleName = jobTitleRepository.findById(employee.getJobTitle().getId())
-                            .map(JobTitle::getTitleName)
+                            .map(JobTitle::getJobTitleName)
                             .orElse("찾을 수 없습니다.");
 
                             return new EmployeeDepartmentDTO(
