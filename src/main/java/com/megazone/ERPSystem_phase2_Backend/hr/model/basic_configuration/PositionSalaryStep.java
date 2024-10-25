@@ -21,7 +21,7 @@ import java.util.List;
 @Table(name = "employee_position_salary_step")
 public class PositionSalaryStep {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
