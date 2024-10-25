@@ -28,16 +28,16 @@ public class StandardBomDTO {
     private Double version; // BOM 버전
 
     private List<BomMaterialDTO> bomMaterials; // 자재 목록
-    private StandardBomDTO parentBom;
-    private List<StandardBomDTO> childBoms;
+//    private StandardBomDTO parentBom;
+//    private List<StandardBomDTO> childBoms;
 
     private Long parentProductId;
     private String parentProductCode;     // 상위 제품 코드 (Parent Product Code)
     private String parentProductName;     // 상위 제품 이름 (Parent Product)
 
-    private Long childProductId;
-    private String childProductCode;      // 하위 제품 코드 (Child Product Code)
-    private String childProductName;      // 하위 제품 이름 (Child Product)
+//    private Long childProductId;
+//    private String childProductCode;      // 하위 제품 코드 (Child Product Code)
+//    private String childProductName;      // 하위 제품 이름 (Child Product)
 
     private LocalDate startDate;          // BOM 유효 시작일
     private LocalDate expiredDate;        // BOM 유효 종료일

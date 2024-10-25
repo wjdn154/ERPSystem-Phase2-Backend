@@ -10,8 +10,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DailyAndMonthReportSearchDTO {
+public class DailyAndMonthlyReportSearchDTO {
     private LocalDate startDate;
     private LocalDate endDate;
-    private DailyAndMonthType journalType;
 }
