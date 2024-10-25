@@ -222,11 +222,12 @@ public class StandardBomServiceImpl implements StandardBomService {
 
         StandardBomDTO currentBom = getStandardBomById(id);
 
-        StandardBomDTO parentBom = currentBom.getParentBom();
-        if (parentBom == null) {
-            throw new EntityNotFoundException("상위 BOM이 존재하지 않습니다.");
-        }
-        return parentBom;
+//        StandardBomDTO parentBom = currentBom.getParentBom();
+//        if (parentBom == null) {
+//            throw new EntityNotFoundException("상위 BOM이 존재하지 않습니다.");
+//        }
+//        return parentBom;
+        return null;
     }
 
     // 역전개를 위한 하위 품목으로 상위 BOM 구성 조회 ( 여러 개일 경우 )
@@ -244,9 +245,9 @@ public class StandardBomServiceImpl implements StandardBomService {
 
     private StandardBom convertToEntity(StandardBomDTO standardBomDTO) {
         
-        StandardBom parentBom = Optional.ofNullable(standardBomDTO.getParentBom()).map(this::convertToEntity).orElse(null);
+//        StandardBom parentBom = Optional.ofNullable(standardBomDTO.getParentBom()).map(this::convertToEntity).orElse(null);
 
-        List<StandardBom> childBoms = Optional.ofNullable(standardBomDTO.getChildBoms()).orElse(Collections.emptyList()).stream().map(this::convertToEntity).toList();
+//        List<StandardBom> childBoms = Optional.ofNullable(standardBomDTO.getChildBoms()).orElse(Collections.emptyList()).stream().map(this::convertToEntity).toList();
 
         // 자재 목록 설정
         List<StandardBomMaterial> bomMaterials = Optional.ofNullable(standardBomDTO.getBomMaterials())
