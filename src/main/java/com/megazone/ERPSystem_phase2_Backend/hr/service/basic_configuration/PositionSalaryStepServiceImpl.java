@@ -1,15 +1,13 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_configuration;
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_configuration.dto.PositionSalaryStepAllowanceDetailDTO;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_configuration.dto.PositionSalaryStepDTO;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_configuration.dto.PositionSalaryStepSearchDTO;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_configuration.dto.PositionSalaryStepShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_configuration.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_configuration.PositionSalaryStepRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
 
@@ -20,19 +18,21 @@ public class PositionSalaryStepServiceImpl implements PositionSalaryStepService 
     private final PositionSalaryStepRepository positionSalaryStepRepository;
 
     @Override
-    public List<PositionSalaryStepShowDTO> show(Long positionId) {
+    public PositionSalaryStepShowAllDTO show(Long positionId) {
 
         List<PositionSalaryStepDTO> queryResults = positionSalaryStepRepository.show(positionId);
-        return showCreate(queryResults);
+        PositionSalaryStepShowAllDTO result = showCreate(queryResults);
+        result.setPositionSalaryStepDateDetailDTOList(positionSalaryStepRepository.dateList(positionId));
+        return result;
     }
 
     @Override
-    public List<PositionSalaryStepShowDTO> endDateShow(PositionSalaryStepSearchDTO dto) {
+    public PositionSalaryStepShowAllDTO endDateShow(PositionSalaryStepSearchDTO dto) {
         List<PositionSalaryStepDTO> queryResults = positionSalaryStepRepository.endDateShow(dto);
         return showCreate(queryResults);
     }
 
-    public List<PositionSalaryStepShowDTO> showCreate(List<PositionSalaryStepDTO> queryResults) {
+    public PositionSalaryStepShowAllDTO showCreate(List<PositionSalaryStepDTO> queryResults) {
 
         Map<Long, PositionSalaryStepShowDTO> maps = new HashMap<>();
 
@@ -59,6 +59,6 @@ public class PositionSalaryStepServiceImpl implements PositionSalaryStepService 
         List<PositionSalaryStepShowDTO> result = new ArrayList<>(maps.values());
         Collections.sort(result, Comparator.comparing(PositionSalaryStepShowDTO::getPositionSalaryStepId));
 
-        return result;
+        return PositionSalaryStepShowAllDTO.create(result,null);
     }
 }

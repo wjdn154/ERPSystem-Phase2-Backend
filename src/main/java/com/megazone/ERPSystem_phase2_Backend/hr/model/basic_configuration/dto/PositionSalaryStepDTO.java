@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.YearMonth;
 
 @Data
@@ -18,6 +19,6 @@ public class PositionSalaryStepDTO {
     private Long allowanceId;
     private String allowanceName;
     private BigDecimal amount;
-    private YearMonth startDate;
-    private YearMonth endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 }

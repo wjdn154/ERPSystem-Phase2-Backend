@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.hr.controller.basic_configuration;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_configuration.PositionSalaryStep;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_configuration.dto.PositionSalaryStepDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_configuration.dto.PositionSalaryStepSearchDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_configuration.dto.PositionSalaryStepShowAllDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_configuration.dto.PositionSalaryStepShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_configuration.PositionSalaryStepService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class PositionSalaryStepController {
     public ResponseEntity<Object> show(@RequestBody Map<String, Long> positionId) {
         try{
             Long searchPositionId = positionId.get("positionId");
-            List<PositionSalaryStepShowDTO> result = positionSalaryStepService.show(searchPositionId);
+            PositionSalaryStepShowAllDTO result = positionSalaryStepService.show(searchPositionId);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -37,9 +38,9 @@ public class PositionSalaryStepController {
     }
 
     @PostMapping("basicconfiguration/positionsalarystep/datecategoryshow")
-    public ResponseEntity<Object> show(@RequestBody PositionSalaryStepSearchDTO dto) {
+    public ResponseEntity<Object> dateCategoryShow(@RequestBody PositionSalaryStepSearchDTO dto) {
         try {
-            List<PositionSalaryStepShowDTO> result = positionSalaryStepService.show(dto.getPositionId());
+            PositionSalaryStepShowAllDTO result = positionSalaryStepService.endDateShow(dto);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }
         catch (RuntimeException e) {

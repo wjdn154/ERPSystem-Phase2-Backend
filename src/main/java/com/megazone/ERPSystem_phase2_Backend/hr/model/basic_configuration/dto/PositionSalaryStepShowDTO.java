@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +24,8 @@ public class PositionSalaryStepShowDTO {
     private String salaryStepName;
     private List<PositionSalaryStepAllowanceDetailDTO> allowances;
     private BigDecimal totalAllowance;
-    private YearMonth startDate;
-    private YearMonth endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     public static PositionSalaryStepShowDTO create(PositionSalaryStepDTO dto) {
         return new PositionSalaryStepShowDTO(
