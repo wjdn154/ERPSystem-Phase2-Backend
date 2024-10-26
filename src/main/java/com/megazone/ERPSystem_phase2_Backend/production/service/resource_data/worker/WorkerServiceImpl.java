@@ -106,8 +106,8 @@ public class WorkerServiceImpl implements WorkerService {
                 .map(attendance -> new WorkerAttendanceDTO(
                         attendance.getAttendanceCode(),
                         attendance.getDate().toString(),
-                        attendance.getCheckinTime().toString(),
-                        attendance.getCheckoutTime().toString(),
+                        attendance.getCheckInTime().toString(),
+                        attendance.getCheckOutTime().toString(),
                         attendance.getStatus().toString()
                 ))
                 .sorted((a1, a2) -> a2.getAttendanceDate().compareTo(a1.getAttendanceDate()))    //날짜 기준 내림차순 정렬
