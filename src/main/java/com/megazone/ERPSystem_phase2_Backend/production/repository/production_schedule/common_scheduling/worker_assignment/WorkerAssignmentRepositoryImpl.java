@@ -28,12 +28,11 @@ public class WorkerAssignmentRepositoryImpl implements WorkerAssignmentRepositor
     }
 
     @Override
-    public Optional<WorkerAssignment> findByWorkcenterCode(String workcenterCode) {
-        WorkerAssignment assignment = queryFactory
+    public List<WorkerAssignment> findAllByWorkcenterCode(String workcenterCode) {
+        return queryFactory
                 .selectFrom(workerAssignment)
                 .where(workerAssignment.workcenter.code.eq(workcenterCode))
-                .fetchFirst();
-        return Optional.ofNullable(assignment);
+                .fetch();
     }
 
     @Override

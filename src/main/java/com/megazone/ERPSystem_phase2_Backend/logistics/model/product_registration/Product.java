@@ -105,8 +105,8 @@ public class Product {
     @ToString.Exclude
     private List<PurchaseRequestDetail> purchaseRequestDetails = new ArrayList<>();
 
-    //자재와 품목 다대다 중간 엔티티
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<MaterialProduct> materialProducts = new ArrayList<>();
+//    //자재와 품목 다대다 중간 엔티티
+//    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+//    @Builder.Default
+//    private List<MaterialProduct> materialProducts = new ArrayList<>();
 }
