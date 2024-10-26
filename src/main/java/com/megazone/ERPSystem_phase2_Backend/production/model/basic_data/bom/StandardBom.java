@@ -28,7 +28,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-@ToString(exclude = {"parentBom", "parentProduct", "childProduct", "childBoms", "bomMaterials", "mrps"})
+@ToString(exclude = {"product", "bomMaterials"})
 public class StandardBom {
 
     @Id
@@ -65,27 +65,27 @@ public class StandardBom {
     private Boolean isActive; // 사용 여부
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_product_id", nullable = true)
-    private Product parentProduct;    // BOM이 참조하는 상위 Product
+    @JoinColumn(name = "product_id", nullable = true)
+    private Product product;    // BOM이 참조하는 상위 Product
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "child_product_id", nullable = true)
-    private Product childProduct;     // BOM이 참조하는 하위 Product
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "child_product_id", nullable = true)
+//    private Product childProduct;     // BOM이 참조하는 하위 Product
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_bom_id", nullable = true)
-    private StandardBom parentBom; // 재귀적 관계 설정 : 순환 참조가 발생하지 않도록 유효성 검사를 구현해야 함 (상위 BOM이 하위 BOM의 자식 중 하나라면 순환 참조가 발생한 것 or DFS 활용)
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "parent_bom_id", nullable = true)
+//    private StandardBom parentBom; // 재귀적 관계 설정 : 순환 참조가 발생하지 않도록 유효성 검사를 구현해야 함 (상위 BOM이 하위 BOM의 자식 중 하나라면 순환 참조가 발생한 것 or DFS 활용)
 
-    @OneToMany(mappedBy = "parentBom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<StandardBom> childBoms = new ArrayList<>();
+//    @OneToMany(mappedBy = "parentBom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @Builder.Default
+//    private List<StandardBom> childBoms = new ArrayList<>();
 
     @OneToMany(mappedBy = "bom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     private List<StandardBomMaterial> bomMaterials = new ArrayList<>(); // 중간 엔티티 리스트
 
-    @OneToMany(mappedBy = "standardBom", fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<Mrp> mrps = new ArrayList<>(); // 연관 MRP
+//    @OneToMany(mappedBy = "standardBom", fetch = FetchType.LAZY)
+//    @Builder.Default
+//    private List<Mrp> mrps = new ArrayList<>(); // 연관 MRP
 
 }

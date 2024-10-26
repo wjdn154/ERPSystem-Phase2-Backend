@@ -35,16 +35,10 @@ public class StandardBomMaterial {
     private StandardBom bom; // 특정 BOM 참조
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product; // 품목 참조
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "material_id", nullable = false)
     private MaterialData material; // 자재 참조
 
     @Column(nullable = false)
-    private BigDecimal quantity; // 해당 자재의 필요 수량
+    private Long quantity; // 해당 자재의 필요 수량
 
-    @Column(nullable = false)
-    private Double lossRate; // 손실율 (optional)
 }

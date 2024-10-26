@@ -55,9 +55,8 @@ public class WorkerAssignmentServiceImpl implements WorkerAssignmentService {
     // 특정 작업장 배정된 작업자 명단 조회
     @Override
     public List<WorkerAssignmentDTO> getWorkersByWorkcenterCode(String workcenterCode) {
-        return workerAssignmentRepository.findByWorkcenterCode(workcenterCode).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+        List<WorkerAssignment> assignments = workerAssignmentRepository.findAllByWorkcenterCode(workcenterCode);
+        return assignments.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     // 현재 날짜 기준 작업자 배정명단 조회

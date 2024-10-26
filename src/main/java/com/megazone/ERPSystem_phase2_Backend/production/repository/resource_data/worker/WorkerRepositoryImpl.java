@@ -33,7 +33,7 @@ public class WorkerRepositoryImpl implements WorkerRepositoryCustom{
                         worker.employee.employmentType.stringValue().as("employmentType"),
                         worker.employee.department.departmentName.as("departmentName"),
                         worker.employee.position.positionName.as("positionName"),
-                        worker.employee.jobTitle.titleName.as("jobTitleName")
+                        worker.employee.jobTitle.jobTitleName.as("jobTitleName")
                 ))
                 .from(worker)
                 .where(worker.employee.department.departmentName.contains("생산"))

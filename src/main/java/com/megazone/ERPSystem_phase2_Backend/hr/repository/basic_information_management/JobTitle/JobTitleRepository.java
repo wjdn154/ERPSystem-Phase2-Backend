@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface JobTitleRepository extends JpaRepository<JobTitle, Long>, JobTitleRepositoryCustom {
-    Optional<JobTitle> findById(Long id);
 
-    Optional<JobTitle> findBytitleName(String name);
+    Optional<JobTitle> findByJobTitleName(String name);
 }

@@ -32,7 +32,7 @@ public class SalaryStepController {
     @PostMapping("basic_configuration/entry")
     public ResponseEntity<Object> entry(SalaryStepEntryDTO dto) {
         try{
-            return null;
+            return ResponseEntity.status(HttpStatus.OK).body(salaryStepService.entry(dto));
         }catch (RuntimeException e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

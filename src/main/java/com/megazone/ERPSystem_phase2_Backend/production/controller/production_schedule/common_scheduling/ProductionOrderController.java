@@ -89,7 +89,7 @@ public class ProductionOrderController {
      *
      * @return 모든 작업 지시 정보 리스트
      */
-    @PostMapping
+    @PostMapping("/all")
     public ResponseEntity<List<ProductionOrderDTO>> getAllProductionOrders() {
         List<ProductionOrderDTO> productionOrders = productionOrderService.getAllProductionOrders();
         return ResponseEntity.ok(productionOrders);
@@ -131,5 +131,21 @@ public class ProductionOrderController {
         productionOrderService.deleteProductionOrder(productionOrderId);
         return ResponseEntity.ok("작업 지시가 성공적으로 삭제되었습니다.");
     }
+
+    /**
+     * 작업 지시 확정
+     */
+    @PostMapping("/confirm/{id}")
+    public ResponseEntity<Object> confirmProductionOrder(@PathVariable("id") Long id) {
+        try {
+            System.out.println("id = " + id);
+            boolean isConfirmed = productionOrderService.isProductionOrderConfirmed(id);
+            return isConfirmed ? ResponseEntity.status(HttpStatus.OK).body("작업 지시가 성공적으로 확정되었습니다.") :
+                    ResponseEntity.status(HttpStatus.NO_CONTENT).body("작업 지시 확정에 실패했습니다.");
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("작업 지시 확정에 실패했습니다.");
+        }
+    }
+
 }
 

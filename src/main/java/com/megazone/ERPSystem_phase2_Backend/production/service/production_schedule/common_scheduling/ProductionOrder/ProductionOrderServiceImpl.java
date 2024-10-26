@@ -68,6 +68,15 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
         productionOrderRepository.save(order);
     }
 
+    @Override
+    public boolean isProductionOrderConfirmed(Long id) {
+        ProductionOrder productionOrder = productionOrderRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("작업지시를 찾을 수 없습니다."));
+        productionOrder.setConfirmed(true);
+        productionOrderRepository.save(productionOrder);
+        return false;
+    }
+
     /**
      * 작업 지시 조회 by ID
      */

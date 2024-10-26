@@ -2,9 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.production.controller.work_perform
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.DailyAndMonthJournalSearchDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.DailyAndMonthJournalShowDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.DailyAndMonthReportSearchDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceDetailDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceListDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.production.service.work_performance.work_report.WorkPerformanceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /** 작업지시에 대한 작업 실적
@@ -53,30 +52,36 @@ public class WorkPerformanceController {
     //작업 실적 등록
     @PostMapping("/workPerformance/createWorkPerformance")
     public ResponseEntity<WorkPerformanceDetailDTO> createWorkPerformance(@RequestBody WorkPerformanceDetailDTO dto) {
-
         //서비스에서 작업 실적 상세 정보 등록함.
         Optional<WorkPerformanceDetailDTO> result = workPerformanceService.createWorkPerformance(dto);
-
         return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
     //작업 실적 수정
     @PostMapping("/workPerformance/updateWorkPerformance/{id}")
     public ResponseEntity<WorkPerformanceDetailDTO> updateWorkPerformance(@RequestBody WorkPerformanceDetailDTO dto, @PathVariable Long id) {
-
         //서비스에서 작업 실적 상세 정보 수정함.
         Optional<WorkPerformanceDetailDTO> result = workPerformanceService.updateWorkPerformance(id, dto);
-
         return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
     @PostMapping("/workPerformance/dailyReport")
-    public ResponseEntity<Object> getDailyMonthlyAndWorkPerformanceReport(@RequestBody DailyAndMonthReportSearchDTO dto) {
+    public ResponseEntity<Object> getDailyWorkPerformanceReport(@RequestBody DailyAndMonthlyReportSearchDTO dto) {
         try{
-            List<DailyAndMonthReportSearchDTO> report = workPerformanceService.dailyAndMonthlyReport(dto);
+            List<DailyReportDTO> report = workPerformanceService.dailyReport(dto);
             return ResponseEntity.status(HttpStatus.OK).body(report);
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("일일 보고서 조회 실패, 이유 : " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/workPerformance/monthlyReport")
+    public ResponseEntity<Object> getMonthlyAndWorkPerformanceReport(@RequestBody DailyAndMonthlyReportSearchDTO dto) {
+        try{
+            List<MonthlyReportDTO> report = workPerformanceService.monthlyReport(dto);
+            return ResponseEntity.status(HttpStatus.OK).body(report);
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("월간 보고서 조회 실패, 이유 : " + e.getMessage());
         }
     }
 
