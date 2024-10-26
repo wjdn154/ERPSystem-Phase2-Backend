@@ -67,7 +67,7 @@ public class ProcessDetails {
 //    @Builder.Default
 //    private List<RoutingStep> routingSteps = new ArrayList<>(); // 연관 RoutingStep 목록
 
-    @OneToMany(mappedBy = "processDetails")
-    private List<MaterialInputStatus>  materialInputStatus;
+//    @OneToMany(mappedBy = "processDetails")
+//    private List<MaterialInputStatus>  materialInputStatus;
 
 }

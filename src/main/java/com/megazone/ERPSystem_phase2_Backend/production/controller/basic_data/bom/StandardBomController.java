@@ -71,7 +71,7 @@ public class StandardBomController {
         try {
 
             StandardBomDTO updatedBom = standardBomService.updateStandardBom(id, updatedBomDTO);
-            String parentProductMessage = (updatedBom.getParentProductId() == null)
+            String parentProductMessage = (updatedBom.getProductId() == null)
                     ? "등록된 상위 품목이 없습니다." : "상위 품목이 설정되었습니다.";
 
             response.put("message", parentProductMessage);
