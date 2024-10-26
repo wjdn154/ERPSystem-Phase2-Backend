@@ -1,8 +1,11 @@
 package com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter;
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.WorkerAssignment;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface WorkcenterRepositoryCustom {
 
@@ -64,18 +67,18 @@ public interface WorkcenterRepositoryCustom {
 
 //    List<WorkerAssignment> findWorkerAssignmentsByWorkcenterCodeAndDate(String workcenterCode, LocalDate date);
 
-//    /**
-//     * 특정 작업장의 오늘 작업자 목록 조회 메서드
-//     * @param workcenterId 작업장 ID
-//     * @param today 오늘 날짜
-//     * @return 오늘 날짜에 해당 작업장에 배치된 WorkerAssignment 리스트
-//     */
+    /**
+     * 특정 작업장의 오늘 작업자 목록 조회 메서드
+     * @param workcenterId 작업장 ID
+     * @param today 오늘 날짜
+     * @return 오늘 날짜에 해당 작업장에 배치된 WorkerAssignment 리스트
+     */
 //    List<WorkerAssignment> findTodayWorkerAssignmentsByWorkcenterId(Long workcenterId, LocalDate today);
-//
-//    /**
-//     * 특정 작업장의 작업자 배치 이력 조회 메서드
-//     * @param workcenterId 작업장 ID
-//     * @return 해당 작업장의 모든 작업자 배치 이력 (WorkerAssignment 리스트)
-//     */
-//    List<WorkerAssignment> findWorkerAssignmentsByWorkcenterId(Long workcenterId);
+
+    /**
+     * 특정 작업장의 작업자 배치 이력 조회 메서드
+     * @param workcenterId 작업장 ID
+     * @return 해당 작업장의 모든 작업자 배치 이력 (WorkerAssignment 리스트)
+     */
+    List<WorkerAssignment> findWorkerAssignmentsByWorkcenterId(Long workcenterId);
 }
