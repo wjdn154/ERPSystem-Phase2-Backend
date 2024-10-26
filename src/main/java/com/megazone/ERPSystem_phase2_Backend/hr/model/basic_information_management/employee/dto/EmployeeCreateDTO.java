@@ -44,13 +44,13 @@ public class EmployeeCreateDTO {
                 dto.getAddress(),
                 dto.getHireDate() != null ? LocalDate.parse(dto.getHireDate()) : null, // null 값 체크
                 dto.isHouseholdHead(),
-                dto.getImagePath(),
+                dto.getProfilePicture(),
                 dto.getDepartmentCode(),
                 dto.getPositionName(),
                 dto.getTitleName(),
                 dto.getDepartmentId(),
                 dto.getPositionId(),
-                dto.getJobTitleId(),
+                dto.getTitleId(),
                 BankAccountDTO.create(
                         dto.getDepartmentId(),
                         dto.getFirstName(),

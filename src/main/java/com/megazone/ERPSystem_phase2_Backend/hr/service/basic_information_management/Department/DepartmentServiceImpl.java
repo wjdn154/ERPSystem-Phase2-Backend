@@ -9,6 +9,7 @@ import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_man
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.JobTitle.JobTitleRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Position.PositionRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     public List<DepartmentShowDTO> findAllDepartments() {
         return departmentRepository.findAll().stream()
                 .map(department -> new DepartmentShowDTO(
+                        department.getId(),
                         department.getDepartmentCode(),
                         department.getDepartmentName(),
                         department.getLocation()
@@ -61,6 +63,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                             .orElse("찾을 수 없습니다.");
 
                             return new EmployeeDepartmentDTO(
+                            employee.getId(),
                             employee.getEmployeeNumber(),
                             employee.getFirstName(),
                             employee.getLastName(),
@@ -105,6 +108,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         // 저장된 엔티티의 ID를 포함한 DTO를 반환
         return new DepartmentCreateDTO(
+                savedDepartment.getId(),
                 savedDepartment.getDepartmentCode(),
                 savedDepartment.getDepartmentName(),
                 savedDepartment.getLocation());
@@ -130,5 +134,31 @@ public class DepartmentServiceImpl implements DepartmentService {
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new RuntimeException("부서를 찾을 수 없습니다."));
         departmentRepository.delete(department);
+    }
+
+    @Override
+    public DepartmentDetailDTO updateDepartment(Long id, DepartmentCreateDTO dto) {
+        // ID에 해당하는 부서를 조회
+        Optional<Department> departmentOpt = departmentRepository.findById(id);
+
+        // 부서가 존재하지 않는 경우 예외 발생
+        if (!departmentOpt.isPresent()) {
+            throw new EntityNotFoundException("해당하는 부서를 찾을 수 없습니다.");
+        }
+
+        // 부서 정보 업데이트
+        Department department = departmentOpt.get();
+        department.setDepartmentName(dto.getDepartmentName());  // 필요한 필드에 따라 업데이트
+        department.setDepartmentCode(dto.getDepartmentCode());
+        department.setLocation(dto.getDepartmentLocation());
+
+        // 저장 후 DTO로 변환하여 반환
+        Department updatedDepartment = departmentRepository.save(department);
+        DepartmentDetailDTO departmentDetailDTO = new DepartmentDetailDTO();
+        departmentDetailDTO.setDepartmentCode(updatedDepartment.getDepartmentCode());
+        departmentDetailDTO.setDepartmentName(updatedDepartment.getDepartmentName());
+        departmentDetailDTO.setLocation(updatedDepartment.getLocation());
+
+        return departmentDetailDTO;
     }
 }
