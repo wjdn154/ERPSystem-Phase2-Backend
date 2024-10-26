@@ -68,6 +68,8 @@ public class PurchaseRequestResponseDetailDto {
     public static class PurchaseRequestItemDetailDto {
         private Long detailId;
 
+        private Long productId;
+
         // 품목명
         private String productName;
 

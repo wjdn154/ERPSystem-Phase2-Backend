@@ -26,7 +26,7 @@ public class PurchaseDetail {
 
     // 구매서와의 다대일 관계
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "purcahse_id", nullable = false)
+    @JoinColumn(name = "purchase_id", nullable = false)
     private Purchase purchase;
 
     // 품목과의 다대일 관계

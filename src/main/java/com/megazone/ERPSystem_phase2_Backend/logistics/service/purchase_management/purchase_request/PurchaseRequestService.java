@@ -3,13 +3,14 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.service.purchase_managem
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestCreateDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestResponseDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestResponseDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.SearchDTO;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface PurchaseRequestService {
 
-    List<PurchaseRequestResponseDto> findAllPurchaseRequests();
+    List<PurchaseRequestResponseDto> findAllPurchaseRequests(SearchDTO dto);
 
     Optional<PurchaseRequestResponseDetailDto> findPurchaseRequestDetailById(Long id);
 
