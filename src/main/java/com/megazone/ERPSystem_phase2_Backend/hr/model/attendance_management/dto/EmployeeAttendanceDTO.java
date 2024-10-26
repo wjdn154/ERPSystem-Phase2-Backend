@@ -20,7 +20,7 @@ public class EmployeeAttendanceDTO {
     private String employeeNumber;
     private String attendanceCode;
     private LocalDate date;
-    private LocalDateTime checkTime;
+    private LocalDateTime checkinTime;
     private LocalDateTime checkoutTIme;
     private AttendanceStatus status;
 
