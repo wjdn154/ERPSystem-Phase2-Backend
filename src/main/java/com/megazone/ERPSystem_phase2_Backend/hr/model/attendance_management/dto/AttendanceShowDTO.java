@@ -33,8 +33,8 @@ public class AttendanceShowDTO {
               attendance.getEmployee().getPosition().getPositionName(),
               attendance.getAttendanceCode(),
               attendance.getDate(),
-              attendance.getCheckinTime(),
-              attendance.getCheckoutTime(),
+              attendance.getCheckInTime(),
+              attendance.getCheckOutTime(),
               attendance.getStatus()
           );
     }
