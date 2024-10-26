@@ -223,42 +223,6 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
                 .build();
     }
 
-//    private ProcessRoutingBasicDTO convertToProcessRoutingBasicDTO(ProcessRouting processRouting) {
-//        return ProcessRoutingBasicDTO.builder()
-//                .id(processRouting.getId())
-//                .code(processRouting.getCode())
-//                .name(processRouting.getName())
-//                .build();
-//    }
-//
-//    private ProcessRoutingDTO convertToProcessRoutingDTO(ProcessRouting processRouting) {
-//        return ProcessRoutingDTO.builder()
-//                .id(processRouting.getId())
-//                .code(processRouting.getCode())
-//                .name(processRouting.getName())
-//                .isStandard(processRouting.isStandard())
-//                .isActive(processRouting.isActive())
-//                .routingStepDTOList(
-//                        processRouting.getRoutingSteps() != null ?
-//                                processRouting.getRoutingSteps().stream()
-//                                        .map(this::convertToRoutingStepDTO)
-//                                        .collect(Collectors.toList())
-//                                : Collections.emptyList()
-//                )
-//                .products(
-//                        processRouting.getProducts() != null ?
-//                                processRouting.getProducts().stream()
-//                                        .map(this::convertToProductDetailDto)
-//                                        .collect(Collectors.toList())
-//                                : Collections.emptyList()
-//                )
-//                .build();
-//    }
-
-//    private ProductDetailDto convertToProductDetailDto(Product product) {
-//        return ProductDetailDto.createProductDetailDto(product);
-//    }
-
     private WorkcenterDTO convertToWorkcenterDTO(Workcenter workcenter) {
         return WorkcenterDTO.builder()
                 .id(workcenter.getId())  // Workcenter의 ID

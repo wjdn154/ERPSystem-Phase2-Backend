@@ -106,6 +106,7 @@ public class EquipmentDataServiceImpl implements EquipmentDataService {
                                     equipmentData.getOperationStatus(),
                                     equipmentData.getFactory().getName(),
                                     equipmentData.getWorkcenter().getName(),
+                                    equipmentData.getKWh(),
                                     equipmentData.getCompany().getId()
                             )
                 ).collect(Collectors.toList());

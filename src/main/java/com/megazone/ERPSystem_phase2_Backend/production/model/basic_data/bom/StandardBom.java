@@ -28,7 +28,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-@ToString(exclude = {"parentProduct", "bomMaterials", "mrps"})
+@ToString(exclude = {"product", "bomMaterials"})
 public class StandardBom {
 
     @Id
@@ -65,8 +65,8 @@ public class StandardBom {
     private Boolean isActive; // 사용 여부
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_product_id", nullable = true)
-    private Product parentProduct;    // BOM이 참조하는 상위 Product
+    @JoinColumn(name = "product_id", nullable = true)
+    private Product product;    // BOM이 참조하는 상위 Product
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "child_product_id", nullable = true)
@@ -84,8 +84,8 @@ public class StandardBom {
     @Builder.Default
     private List<StandardBomMaterial> bomMaterials = new ArrayList<>(); // 중간 엔티티 리스트
 
-    @OneToMany(mappedBy = "standardBom", fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<Mrp> mrps = new ArrayList<>(); // 연관 MRP
+//    @OneToMany(mappedBy = "standardBom", fetch = FetchType.LAZY)
+//    @Builder.Default
+//    private List<Mrp> mrps = new ArrayList<>(); // 연관 MRP
 
 }
