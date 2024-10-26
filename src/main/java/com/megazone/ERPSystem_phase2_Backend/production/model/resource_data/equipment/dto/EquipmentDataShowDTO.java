@@ -29,6 +29,8 @@ public class EquipmentDataShowDTO {
     private String factoryCode;
     private String factoryName;               //설비가 설치된 공장 . 창고 테이블에 있는 공장코드 참조
     private String equipmentImg;                //설비 이미지
+    private Long kWh; // 설비의 시간당 전력소비량(kWh)
+
     private Long companyId;
 
     //private LocalDate maintenanceDate;        //마지막 유지보수 날짜

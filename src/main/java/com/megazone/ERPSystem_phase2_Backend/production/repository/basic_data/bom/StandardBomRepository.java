@@ -14,10 +14,10 @@ public interface StandardBomRepository extends JpaRepository<StandardBom, Long> 
 //    List<StandardBom> findByChildProductId(Long childProductId);
 
     // 활성화된 BOM 목록 조회
-    List<StandardBom> findByIsActiveTrue();
-
-    List<StandardBom> findByParentBomIsNull();
-    List<StandardBom> findByLevel(Long level);
+//    List<StandardBom> findByIsActiveTrue();
+//
+//    List<StandardBom> findByParentBomIsNull();
+//    List<StandardBom> findByLevel(Long level);
     List<StandardBom> findByProductId(Long productId);
 
 }

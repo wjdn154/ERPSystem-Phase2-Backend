@@ -72,7 +72,7 @@ public class EquipmentData {
     private List<MaintenanceHistory> maintenanceHistory = new ArrayList<>();  //설비의 유지보수 관리 이력
 
     @Column
-    private Long WattPerHour; // 설비의 시간당 전력소비량(Wh)
+    private Long kWh; // 설비의 시간당 전력소비량(kWh)
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "company_id")

@@ -112,38 +112,38 @@ public class MaterialDataController {
 
     }
 
-//    //해당 자재 품목 리스트 조회
-//    @PostMapping("/material/{materialId}/productMaterials")
-//    public ResponseEntity<ListProductMaterialDTO> productMaterials(@PathVariable("materialId") Long materialId){
-//
-//        //아이디에 해당하는 품목 리스트 조회
-//        ListProductMaterialDTO result = materialService.findAllProductMaterialById(materialId);
-//
-//        return ResponseEntity.ok(result);
-//    }
-//
-//    //해당 자재 품목 추가
-//    @PostMapping("/material/productMaterial/add/{materialId}")
-//    public ResponseEntity<ListProductMaterialDTO> addProductMaterial(
-//            @PathVariable("materialId") Long materialId, @RequestBody List<ProductMaterialDTO> productMaterialDTOs){
-//
-//        //서비스에서 아이디에 해당하는 자재 품목 추가 등록
-//        Optional<ListProductMaterialDTO> result = materialService.addProductMaterial(materialId, productMaterialDTOs);
-//
-//        return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
-//    }
+    //해당 자재 품목 리스트 조회
+    @PostMapping("/material/{materialId}/productMaterials")
+    public ResponseEntity<ListProductMaterialDTO> productMaterials(@PathVariable("materialId") Long materialId){
 
-//    //해당 자재 품목 삭제
-//    @DeleteMapping("/material/{materialId}/productMaterial/{productCode}")
-//    public ResponseEntity<String> deleteProductMaterial(
-//            @PathVariable("materialId") Long materialId, @PathVariable("productCode") String productCode){
-//
-//        //서비스에서 아이디에 해당하는 자재 품목 제거
-//        try {
-//            materialService.deleteProductMaterial(materialId,productCode);
-//            return ResponseEntity.noContent().build();
-//        }catch (RuntimeException e){
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-//        }
-//    }
+        //아이디에 해당하는 품목 리스트 조회
+        ListProductMaterialDTO result = materialService.findAllProductMaterialById(materialId);
+
+        return ResponseEntity.ok(result);
+    }
+
+    //해당 자재 품목 추가
+    @PostMapping("/material/productMaterial/add/{materialId}")
+    public ResponseEntity<ListProductMaterialDTO> addProductMaterial(
+            @PathVariable("materialId") Long materialId, @RequestBody List<ProductMaterialDTO> productMaterialDTOs){
+
+        //서비스에서 아이디에 해당하는 자재 품목 추가 등록
+        Optional<ListProductMaterialDTO> result = materialService.addProductMaterial(materialId, productMaterialDTOs);
+
+        return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+    }
+
+    //해당 자재 품목 삭제
+    @DeleteMapping("/material/{materialId}/productMaterial/{productCode}")
+    public ResponseEntity<String> deleteProductMaterial(
+            @PathVariable("materialId") Long materialId, @PathVariable("productCode") String productCode){
+
+        //서비스에서 아이디에 해당하는 자재 품목 제거
+        try {
+            materialService.deleteProductMaterial(materialId,productCode);
+            return ResponseEntity.noContent().build();
+        }catch (RuntimeException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }
