@@ -34,15 +34,21 @@ public class WorkPerformance {
     @Column(nullable = false) private BigDecimal acceptableQuantity; // 양품 수량
     @Column(nullable = false) private LocalDate workDate; //작업 시간
     @Column(nullable = false) private Long workers; //작업 인원
+    @Column(nullable = false) private BigDecimal wasteGenerated; // 실적별 폐기물 발생량 (단위 : KG)
+    @Column(nullable = false) private BigDecimal energyConsumed; // 실적별 에너지 소비량 (단위 : MJ)
+    @Column(nullable = false) private BigDecimal averageWasteGenerated; // 산업 평균 폐기물 발생량 (단위: KG)
+    @Column(nullable = false) private BigDecimal averageEnergyConsumed; // 산업 평균 에너지 소비량 (단위: MJ)
+    @Column(nullable = false) private BigDecimal wasteGeneratedPercentage; // 산업 평균 대비 폐기물 발생량 비율 (단위: %)
+    @Column(nullable = false) private BigDecimal energyConsumedPercentage; // 산업 평균 대비 에너지 소비량 비율 (단위: %)
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "production_order_id", nullable = false)
     private ProductionOrder productionOrder; // 연관 작업지시
+}
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "product_id", nullable = false)
 //    private Product product; // 연관 품목 (코드, 이름)
-}
 
 /**인건비(작업에 투입된 시간 x 시간당 임금) -> 급여
  * 재료비(사용된 원자재의 양 x 원자재의 단가)

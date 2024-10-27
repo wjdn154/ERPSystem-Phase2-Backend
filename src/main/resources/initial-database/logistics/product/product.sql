@@ -37,105 +37,57 @@ INSERT INTO product (
     code, product_group_id, client_id, process_routing_id, product_type, purchase_price, sales_price, name, standard, unit, image_path, remarks, is_active
 ) VALUES
       ('B0016', 1, 1, 1, 'SEMI_FINISHED_PRODUCT', 1500, 2000, '엔진 오일 필터', '200mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/1d3e4b3e-fd32-4705-87dd-9c965157a3c2_엔진 오일 필터.jpg', '자동차 엔진 오일 필터', TRUE),
-
       ('B0017', 2, 2, 1, 'SEMI_FINISHED_PRODUCT', 5000, 7000, '브레이크 패드', '300mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/65c87361-f7b6-4b73-ba27-98ea65bb3270_브레이크 패드.jpg', '고성능 브레이크 패드', TRUE),
-
       ('B0018', 3, 3, 2, 'SEMI_FINISHED_PRODUCT', 8000, 10000, '연료 필터', '150mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/f24415b5-f8fd-46d5-a9c9-84daefbbdfd6_연료 필터.jpg', '차량 연료 정화용 필터', TRUE),
-
       ('B0019', 4, 4, 3, 'SEMI_FINISHED_PRODUCT', 12000, 15000, '점화 플러그', '100mm', 'SET', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/b6dad635-a8dc-43ec-ae0a-0004aead928c_점화 플러그.jpg', '자동차 점화 플러그 세트', TRUE),
-
       ('B0020', 5, 5, 4, 'SEMI_FINISHED_PRODUCT', 3000, 5000, '에어 필터', '250mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/84d0acfd-39f3-4562-9a55-a34d7c021d13_에어 필터.jpg', '자동차 실내 공기 정화용 에어 필터', TRUE),
-
       ('B0021', 6, 6, 5, 'SEMI_FINISHED_PRODUCT', 60000, 80000, '알터네이터', '1대', 'SET', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/34856837-fffe-4e5c-99da-a4d5351960a2_알터네이터.jpg', '자동차 전기 발전기', TRUE),
-
       ('B0022', 7, 7, 6, 'SEMI_FINISHED_PRODUCT', 20000, 30000, '서스펜션 스프링', '1개', 'SET', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/bca8e690-2b7d-4c12-83fb-fee1cc15ae47_서스펜션 스프링.jpg', '차량 서스펜션용 스프링', TRUE),
-
       ('B0023', 8, 8, 2, 'SEMI_FINISHED_PRODUCT', 45000, 60000, '배기 머플러', 'M사이즈', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/b19a57af-336b-4b0d-9e2e-f62abf05866f_배기 머플러.jpg', '자동차 배기 시스템 부품', TRUE),
-
       ('B0024', 2, 9, 3, 'SEMI_FINISHED_PRODUCT', 90000, 120000, '디스크 로터', '1개', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/7122a26a-d20a-4abd-8d32-f62b7d7b25b2_디스크 로터.jpg', '브레이크 시스템용 디스크 로터', TRUE),
-
       ('B0025', 9, 10, 4, 'SEMI_FINISHED_PRODUCT', 10000, 15000, '와이퍼 블레이드', '1개', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/af338151-f34c-439d-83c5-86853acd7eda_와이퍼 블레이드.jpg', '자동차 유리 와이퍼', TRUE),
-
       ('B0026', 5, 1, 5, 'SEMI_FINISHED_PRODUCT', 1800, 3000, '라디에이터 캡', '1개', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/f3418a7e-cb66-4ee5-bfe3-6e456dbf42b2_라디에이터 캡.jpg', '자동차 냉각 시스템용 캡', TRUE),
-
       ('B0027', 1, 2, 6, 'SEMI_FINISHED_PRODUCT', 4000, 5500, '클러치 디스크', '180mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/77ec60db-6e9d-49ef-b428-b47552c78c24_클러치 디스크.jpg', '자동차 클러치 시스템 부품', TRUE),
-
       ('B0028', 1, 3, 2, 'SEMI_FINISHED_PRODUCT', 7000, 9000, '타이밍 벨트', '1.2m', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/7bd69cc3-8485-4a80-b939-9e3a3bcd907f_타이밍 벨트.jpg', '엔진 타이밍 벨트', TRUE),
-
       ('B0029', 1, 4, 1, 'SEMI_FINISHED_PRODUCT', 12000, 15000, '오일 펌프', '600ml', 'BOTTLE', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/e22dd6a0-bbe0-4bcd-a2f7-37d0c4948567_오일 펌프.jpg', '자동차 엔진 오일 펌프', TRUE),
-
       ('B0030', 2, 5, 3, 'SEMI_FINISHED_PRODUCT', 35000, 45000, '브레이크 캘리퍼', '1세트', 'SET', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/8e060ebf-b07e-401b-9a4e-411bda0e2090_브레이크 캘리퍼.jpg', '브레이크 시스템용 캘리퍼', TRUE),
-
       ('B0031', 2, 1, 1, 'SEMI_FINISHED_PRODUCT', 1600, 2100, '브레이크 디스크', '220mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/0f492cef-1637-4a31-8fdc-3cb2fa9de5d7_브레이크 디스크.jpg', '자동차 브레이크 디스크', TRUE),
-
       ('B0032', 6, 2, 1, 'SEMI_FINISHED_PRODUCT', 5200, 7500, 'ABS 모듈', '300mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/1407fabe-a6c4-4a06-92d9-1e162c019923_ABS 모듈.jpg', '자동차 ABS 시스템 모듈', TRUE),
-
       ('B0033', 5, 3, 2, 'SEMI_FINISHED_PRODUCT', 8200, 10500, '냉각 팬', '350mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/836ae7e1-0779-46be-8433-560a8374c7c3_냉각 팬.jpg', '엔진 냉각 시스템용 팬', TRUE),
-
       ('B0034', 3, 4, 1, 'SEMI_FINISHED_PRODUCT', 13000, 16000, '연료 펌프', '150mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/a1bf0f8d-bbec-4efd-86d2-546d7df43ec8_연료 펌프.jpg', '자동차 연료 시스템용 펌프', TRUE),
-
       ('B0035', 4, 5, 4, 'SEMI_FINISHED_PRODUCT', 3200, 4800, '점화 코일', '120mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/754994c9-1758-4940-94cc-0e61ef896358_점화 코일.jpg', '자동차 점화 시스템용 코일', TRUE),
-
       ('B0036', 6, 6, 5, 'SEMI_FINISHED_PRODUCT', 61000, 81000, '발전기 벨트', '2m', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/aa54a8f2-0b67-4894-99d9-2776beb5a8be_발전기 벨트.jpg', '자동차 발전기 벨트', TRUE),
-
       ('B0037', 7, 7, 6, 'SEMI_FINISHED_PRODUCT', 21000, 32000, '쇼크 업소버', '1개', 'SET', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/5f9a88f5-673e-4067-8814-205f1c5b78c3_쇼크 업소버.jpg', '차량 서스펜션용 쇼크 업소버', TRUE),
-
       ('B0038', 6, 8, 2, 'SEMI_FINISHED_PRODUCT', 46000, 62000, '배터리 케이블', '3m', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/b4fbf095-d7a3-4e40-a85c-83542050a3cc_배터리 케이블.jpg', '자동차 배터리 연결 케이블', TRUE),
-
       ('B0039', 1, 9, 3, 'SEMI_FINISHED_PRODUCT', 91000, 122000, '터보차저', '1개', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/5677df7d-30b4-46fa-b30d-01b5aaf06332_터보차저.jpg', '자동차 엔진용 터보차저', TRUE),
-
       ('B0040', 8, 10, 4, 'SEMI_FINISHED_PRODUCT', 11000, 17000, '배기 가스 센서', '1개', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/d76e8be3-f39b-4da4-8ddf-9d28d5979609_배기 가스 센서.jpg', '자동차 배기가스 제어 센서', TRUE),
-
       ('B0041', 5, 1, 5, 'SEMI_FINISHED_PRODUCT', 2000, 3100, '서모스탯', '90mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/a7b5e02b-9b07-444f-b440-ae98fb117552_서모스탯.jpg', '자동차 냉각 시스템용 서모스탯', TRUE),
-
       ('B0042', 7, 2, 6, 'SEMI_FINISHED_PRODUCT', 4200, 5700, '핸들 조인트', '250mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/be608458-668a-4476-97fb-630f2adc8ce7_핸들 조인트.jpg', '자동차 스티어링 시스템용 조인트', TRUE),
-
       ('B0043', 3, 3, 2, 'SEMI_FINISHED_PRODUCT', 7500, 9500, '연료 레일', '1.5m', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/969f6fe4-22ca-42bf-8636-7441c1f2275e_연료 레일.jpg', '엔진 연료 공급 레일', TRUE),
-
       ('B0044', 3, 4, 1, 'SEMI_FINISHED_PRODUCT', 12500, 15500, '변속기 오일 팬', '400mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/7c6bcf73-a733-4764-84bc-24f61d410c11_변속기 오일 팬.jpg', '자동차 변속기 오일 팬', TRUE),
-
       ('B0045', 7, 5, 3, 'SEMI_FINISHED_PRODUCT', 36000, 47000, '스티어링 휠', '1개', 'SET', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/f7debf3e-4f3a-4f9e-b364-fd047e31de8e_스티어링 휠.jpg', '자동차 스티어링 휠', TRUE),
-
       ('B0046', 5, 6, 4, 'SEMI_FINISHED_PRODUCT', 5000, 7200, '워터 펌프', '200mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/af752ce6-53ee-4489-9569-cf75797a3aae_워터 펌프.jpg', '자동차 냉각 시스템 워터 펌프', TRUE),
-
       ('B0047', 5, 7, 5, 'SEMI_FINISHED_PRODUCT', 2800, 4000, '라디에이터 호스', '1m', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123484_라디에이터호스.png', '자동차 라디에이터 연결 호스', TRUE),
-
       ('B0048', 7, 8, 6, 'SEMI_FINISHED_PRODUCT', 8000, 10500, '브레이크 라인', '2m', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123485_브레이크라인.png', '브레이크 시스템용 라인', TRUE),
-
       ('B0049', 5, 9, 2, 'SEMI_FINISHED_PRODUCT', 18500, 23000, '에어컨 압축기', '1개', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123486_에어컨압축기.png', '자동차 에어컨 시스템 압축기', TRUE),
-
       ('B0050', 7, 10, 3, 'SEMI_FINISHED_PRODUCT', 34000, 46000, '스태빌라이저 링크', '1개', 'SET', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123487_스태빌라이저링크.png', '서스펜션 안정화 장치', TRUE),
-
       ('B0051', 6, 1, 4, 'SEMI_FINISHED_PRODUCT', 1200, 1900, '퓨즈 박스', '1개', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123488_퓨즈박스.png', '자동차 전기 시스템용 퓨즈 박스', TRUE),
-
       ('B0052', 6, 2, 5, 'SEMI_FINISHED_PRODUCT', 5400, 7100, '차량 제어 유닛', '500g', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123489_차량제어유닛.png', '자동차 제어 시스템 유닛', TRUE),
-
       ('B0053', 4, 3, 6, 'SEMI_FINISHED_PRODUCT', 8800, 12000, '점화 분배기', '1개', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123490_점화분배기.png', '자동차 점화 시스템 분배기', TRUE),
-
       ('B0054', 1, 4, 1, 'SEMI_FINISHED_PRODUCT', 13500, 17500, '엔진 마운트', '1개', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123491_엔진마운트.png', '엔진 장착용 마운트', TRUE),
-
       ('B0055', 1, 5, 2, 'SEMI_FINISHED_PRODUCT', 26000, 34000, '클러치 마스터 실린더', '300mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123492_클러치마스터실린더.png', '자동차 클러치 작동용 실린더', TRUE),
-
       ('B0056', 6, 6, 3, 'SEMI_FINISHED_PRODUCT', 9000, 12000, '릴레이 어셈블리', '150mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123493_릴레이어셈블리.png', '자동차 전기 시스템 릴레이', TRUE),
-
       ('B0057', 7, 7, 4, 'SEMI_FINISHED_PRODUCT', 7000, 9500, '서스펜션 암', '450mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123494_서스펜션암.png', '차량 서스펜션 연결 암', TRUE),
-
       ('B0058', 6, 8, 5, 'SEMI_FINISHED_PRODUCT', 1500, 2500, '배터리 홀더', '200mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123495_배터리홀더.png', '자동차 배터리 고정용 홀더', TRUE),
-
       ('B0059', 7, 9, 6, 'SEMI_FINISHED_PRODUCT', 4800, 6200, '공기 흐름 센서', '100mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123496_공기흐름센서.png', '자동차 공기 흐름 감지 센서', TRUE),
-
       ('B0060', 5, 10, 1, 'SEMI_FINISHED_PRODUCT', 11500, 15000, '에어컨 필터', '180mm', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/123497_에어컨필터.png', '자동차 에어컨 공기 필터', TRUE),
-
--- PRODUCTS 유형
-      ('P0061', 1, 1, 1, 'PRODUCTS', 55000, 75000, '카 엔진', '2.0L', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/car_engine.png', '자동차 엔진', TRUE),
+-- PRODUCTS 유형      ('P0061', 1, 1, 1, 'PRODUCTS', 55000, 75000, '카 엔진', '2.0L', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/car_engine.png', '자동차 엔진', TRUE),
       ('P0062', 2, 2, 1, 'PRODUCTS', 35000, 48000, '자동차 변속기', '6단', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/gearbox.png', '자동차 변속 시스템', TRUE),
       ('P0063', 6, 3, 2, 'PRODUCTS', 15000, 20000, '자동차 배터리', '12V', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/car_battery.png', '자동차 전원 공급용 배터리', TRUE),
-
 -- GOODS 유형
       ('G0064', 9, 4, 3, 'GOODS', 3000, 5000, '타이어 광택제', '500ml', 'BOTTLE', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/tire_shine.png', '타이어 보호 및 광택제', TRUE),
       ('G0065', 9, 5, 4, 'GOODS', 10000, 15000, '차량용 청소기', '소형', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/car_vacuum.png', '차량 내부 청소용 소형 청소기', TRUE),
       ('G0066', 9, 6, 5, 'GOODS', 5000, 7500, '차량용 방향제', '레몬향', 'EA', 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/car_freshener.png', '차량 내부용 방향제', TRUE),
-
 -- INTANGIBLE_GOODS 유형
       ('I0067', 11, 7, 6, 'INTANGIBLE_GOODS', 200000, 250000, '차량 소프트웨어 업데이트', 'v3.1', 'N/A', NULL, '차량 내부 시스템 소프트웨어 업데이트 서비스', TRUE),
       ('I0068', 11, 8, 2, 'INTANGIBLE_GOODS', 150000, 180000, '네비게이션 소프트웨어', 'v2.0', 'N/A', NULL, '차량 내비게이션 시스템 소프트웨어', TRUE),
