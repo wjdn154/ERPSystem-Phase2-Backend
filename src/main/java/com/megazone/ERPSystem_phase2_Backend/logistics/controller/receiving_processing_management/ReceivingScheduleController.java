@@ -34,8 +34,6 @@ public class ReceivingScheduleController {
         return ResponseEntity.ok(details);
     }
 
-
-
     @PostMapping("/waiting")
     public ResponseEntity<List<ReceivingScheduleResponseDTO>> getReceivingSchedulesByDateRange(@RequestParam("startDate") LocalDate startDate, @RequestParam("endDate") LocalDate endDate) {
         List<ReceivingScheduleResponseDTO> schedules = receivingScheduleService.getReceivingSchedulesByDateRange(startDate, endDate);
