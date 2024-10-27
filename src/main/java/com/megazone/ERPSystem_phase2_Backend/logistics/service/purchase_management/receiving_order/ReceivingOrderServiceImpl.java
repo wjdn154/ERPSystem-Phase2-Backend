@@ -6,10 +6,8 @@ import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_informat
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.PurchaseOrder;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.ReceivingOrder;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.ReceivingOrderDetail;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseOrderCreateDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.ReceivingOrderCreateDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.ReceivingOrderResponseDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.ReceivingOrderResponseDetailDto.ReceivingOrderItemDetailDto;
@@ -121,11 +119,14 @@ public class ReceivingOrderServiceImpl implements ReceivingOrderService {
     private ReceivingOrderResponseDetailDto toDetailDto(ReceivingOrder receivingOrder) {
         return ReceivingOrderResponseDetailDto.builder()
                 .id(receivingOrder.getId())
+                .clientId(receivingOrder.getClient().getId())
                 .clientName(receivingOrder.getClient().getPrintClientName())
                 .clientCode(receivingOrder.getClient().getCode())
+                .managerId(receivingOrder.getManager().getId())
                 .managerCode(receivingOrder.getManager().getEmployeeNumber())
                 .managerName(receivingOrder.getManager().getLastName() + receivingOrder.getManager().getFirstName())
                 .managerContact(receivingOrder.getManager().getPhoneNumber())
+                .warehouseId(receivingOrder.getReceivingWarehouse().getId())
                 .warehouseCode(receivingOrder.getReceivingWarehouse().getCode())
                 .warehouseName(receivingOrder.getReceivingWarehouse().getName())
                 .date(receivingOrder.getDate())
@@ -145,6 +146,7 @@ public class ReceivingOrderServiceImpl implements ReceivingOrderService {
     private ReceivingOrderItemDetailDto toItemDetailDto(ReceivingOrderDetail detail) {
         Product product = detail.getProduct();
         return ReceivingOrderItemDetailDto.builder()
+                .productId(product.getId())
                 .productCode(product.getCode())
                 .productName(product.getName())
                 .standard(product.getStandard())
@@ -196,6 +198,7 @@ public class ReceivingOrderServiceImpl implements ReceivingOrderService {
 
             ReceivingOrderDetail detail = ReceivingOrderDetail.builder()
                     .product(product)
+                    .unreceivedQuantity(item.getQuantity())
                     .quantity(item.getQuantity())
                     .remarks(item.getRemarks())
                     .build();
