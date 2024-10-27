@@ -23,10 +23,10 @@ public class DailyReportDTO {
     private BigDecimal acceptableAmount;   // 양품 금액
     private BigDecimal defectiveQuantity;  // 불량 수량
     private BigDecimal defectiveAmount;    // 불량 금액
-    private BigDecimal averageWasteGenerated; // 산업 평균 폐기물 발생량
+    private BigDecimal industryAverageWasteGenerated; // 산업 평균 폐기물 발생량
     private BigDecimal wasteGenerated;     // 폐기물 발생량
     private BigDecimal wasteGeneratedPercentage; // 산업 평균 대비 폐기물 발생량 비율
-    private BigDecimal averageEnergyConsumed; // 산업 평균 에너지 소비량
+    private BigDecimal industryAverageEnergyConsumed; // 산업 평균 에너지 소비량
     private BigDecimal energyConsumed;     // 에너지 소비량
     private BigDecimal energyConsumedPercentage; // 산업 평균 대비 에너지 소비량 비율
 }

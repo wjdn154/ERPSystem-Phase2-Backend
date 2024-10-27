@@ -1,9 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.common_scheduling.ProductionOrder;
 
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.EnvironmentalCertificationAssessment;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.EnvironmentalCertificationAssessmentRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.RecentActivityRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.bom.StandardBom;
-import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.bom.StandardBomMaterial;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessDetails;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentDTO;
@@ -12,21 +15,15 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedul
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.ProductionOrderDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.WorkerAssignment;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.planning.Mps;
-import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.production_strategy.PlanOfMakeToOrder;
-import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.production_strategy.PlanOfMakeToStock;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.MaterialData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.Worker;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceDTO;
-import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceListDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.dto.WorkPerformanceUpdateDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.bom.StandardBomMaterialRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.bom.StandardBomRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.process_routing.ProcessDetails.ProcessDetailsRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.planning.mps.MpsRepository;
-import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.production_strategy.mto.PlanOfMakeToOrderRepository;
-import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.production_strategy.mts.PlanOfMakeToStockRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.shift_type.ShiftTypeRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.production_order.ProductionOrderRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.worker_assignment.WorkerAssignmentRepository;
@@ -43,6 +40,7 @@ import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,6 +61,8 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
     private final StandardBomRepository standardBomRepository;
     private final StandardBomMaterialRepository standardBomMaterialRepository;
     private final EquipmentDataRepository equipmentRepository;
+    private final EnvironmentalCertificationAssessmentRepository environmentalCertificationAssessmentRepository;
+    private final RecentActivityRepository recentActivityRepository;
 
 //    private final PlanOfMakeToOrderRepository planOfMakeToOrderRepository;
 //    private final PlanOfMakeToStockRepository planOfMakeToStockRepository;
@@ -271,34 +271,139 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
         productionOrder.setActualWorkers(dto.getWorkers());
         productionOrderRepository.save(productionOrder);
 
+        // 작업 시간 계산
+        Duration workDuration = Duration.between(productionOrder.getStartDateTime(), productionOrder.getEndDateTime());
+        BigDecimal workHours = BigDecimal.valueOf(workDuration.toHours());
+
         // 폐기물 발생량 계산
         BigDecimal averageWasteGenerated = calculateWaste(productionOrder, dto.getQuantity());
         BigDecimal actualWasteGenerated = averageWasteGenerated.multiply(BigDecimal.valueOf(0.95 + Math.random() * 0.1)).setScale(2, RoundingMode.HALF_UP);
-        BigDecimal wasteGeneratedPercentage = actualWasteGenerated.divide(averageWasteGenerated, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal wasteGeneratedPercentage = (averageWasteGenerated.compareTo(BigDecimal.ZERO) != 0) ?
+                actualWasteGenerated.divide(averageWasteGenerated, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP) :
+                BigDecimal.ZERO;
 
         // 에너지 소비량 계산
-        BigDecimal actualEnergyConsumption = calculateActualEnergy(productionOrder);
+        BigDecimal actualEnergyConsumption = calculateActualEnergy(productionOrder, workHours);
         BigDecimal averageEnergyConsumption = calculateAverageEnergy(productionOrder, dto.getQuantity());
         averageEnergyConsumption = actualEnergyConsumption.multiply(BigDecimal.valueOf(0.95 + Math.random() * 0.1)).setScale(2, RoundingMode.HALF_UP);
-        BigDecimal energyConsumedPercentage = actualEnergyConsumption.divide(averageEnergyConsumption, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal energyConsumedPercentage = (averageEnergyConsumption.compareTo(BigDecimal.ZERO) != 0) ?
+                actualEnergyConsumption.divide(averageEnergyConsumption, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP) :
+                BigDecimal.ZERO;
 
         // 작업 실적 생성 및 저장
         WorkPerformance workPerformance = WorkPerformance.builder()
                 .quantity(dto.getQuantity())
                 .defectiveQuantity(dto.getDefectiveQuantity())
                 .acceptableQuantity(dto.getQuantity().subtract(dto.getDefectiveQuantity()))
-                .workDate(dto.getWorkDate())
+                .workHours(workHours)
+                .workDate(dto.getActualEndDateTime().toLocalDate())
                 .workers(dto.getWorkers())
                 .productionOrder(productionOrder)
-                .averageWasteGenerated(averageWasteGenerated)
+                .industryAverageWasteGenerated(averageWasteGenerated)
                 .wasteGenerated(actualWasteGenerated)
                 .wasteGeneratedPercentage(wasteGeneratedPercentage)
-                .averageEnergyConsumed(averageEnergyConsumption)
+                .industryAverageEnergyConsumed(averageEnergyConsumption)
                 .energyConsumed(actualEnergyConsumption)
                 .energyConsumedPercentage(energyConsumedPercentage)
                 .build();
 
         workPerformanceRepository.save(workPerformance);
+
+        Optional<EnvironmentalCertificationAssessment> ECA = environmentalCertificationAssessmentRepository.findByMonth(YearMonth.from(dto.getActualEndDateTime()));
+
+        if (ECA.isEmpty()) {
+            Integer wasteScore = calculateWasteScore(actualWasteGenerated, averageWasteGenerated);
+            Integer energyScore = calculateEnergyScore(actualEnergyConsumption, averageEnergyConsumption);
+            Integer totalScore = (wasteScore + energyScore) / 2;
+
+            EnvironmentalCertificationAssessment newECA = EnvironmentalCertificationAssessment.builder()
+                    .month(YearMonth.from(dto.getActualEndDateTime()))
+                    .totalWasteGenerated(actualWasteGenerated)
+                    .totalEnergyConsumed(actualEnergyConsumption)
+                    .totalIndustryAverageWasteGenerated(averageWasteGenerated)
+                    .totalIndustryAverageEnergyConsumed(averageEnergyConsumption)
+                    .wasteScore(wasteScore)
+                    .energyScore(energyScore)
+                    .totalScore(totalScore)
+                    .createdDate(LocalDateTime.now())
+                    .modifiedDate(LocalDateTime.now())
+                    .build();
+            environmentalCertificationAssessmentRepository.save(newECA);
+        } else {
+            EnvironmentalCertificationAssessment existingECA = ECA.get();
+            BigDecimal totalWasteGenerated = existingECA.getTotalWasteGenerated().add(actualWasteGenerated);
+            BigDecimal totalEnergyConsumed = existingECA.getTotalEnergyConsumed().add(actualEnergyConsumption);
+            BigDecimal totalAverageWasteGenerated = existingECA.getTotalIndustryAverageWasteGenerated().add(averageWasteGenerated);
+            BigDecimal totalAverageEnergyConsumption = existingECA.getTotalIndustryAverageEnergyConsumed().add(averageEnergyConsumption);
+            Integer wasteScore = calculateWasteScore(totalWasteGenerated, totalAverageWasteGenerated);
+            Integer energyScore = calculateEnergyScore(totalEnergyConsumed, totalAverageEnergyConsumption);
+            Integer totalScore = (wasteScore + energyScore) / 2;
+
+            existingECA.setTotalWasteGenerated(totalWasteGenerated);
+            existingECA.setTotalEnergyConsumed(totalEnergyConsumed);
+            existingECA.setTotalIndustryAverageWasteGenerated(totalAverageWasteGenerated);
+            existingECA.setTotalIndustryAverageEnergyConsumed(totalAverageEnergyConsumption);
+            existingECA.setWasteScore(wasteScore);
+            existingECA.setEnergyScore(energyScore);
+            existingECA.setTotalScore(totalScore);
+            existingECA.setModifiedDate(LocalDateTime.now());
+
+            environmentalCertificationAssessmentRepository.save(existingECA);
+        }
+
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityType(ActivityType.PRODUCTION)
+                .activityDescription(productionOrder.getMps().getProduct().getName() + " " + dto.getQuantity().subtract(dto.getDefectiveQuantity()) + " 개 생산 완료, 작업지시 마감 처리 완료")
+                .activityTime(LocalDateTime.now())
+                .build());
+    }
+
+    // 폐기물 발생량 점수 계산 함수
+    public Integer calculateWasteScore(BigDecimal actualWaste, BigDecimal averageWaste) {
+        BigDecimal wasteRatio = (averageWaste.compareTo(BigDecimal.ZERO) != 0) ?
+                actualWaste.divide(averageWaste, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)) :
+                BigDecimal.ZERO; // 폐기물 발생 비율 : (실제 폐기물 발생량 / 산업 평균 폐기물 발생량) * 100
+        int score;
+
+        if (wasteRatio.compareTo(BigDecimal.valueOf(50)) <= 0) {
+            score = 100 - wasteRatio.intValue(); // 50% 이하 : 100점에서 비율만큼 차감
+        } else if (wasteRatio.compareTo(BigDecimal.valueOf(70)) <= 0) {
+            score = 90 - (wasteRatio.intValue() - 50); // 51~70% : 90점에서 비율 차이에 따라 1점씩 차감
+        } else if (wasteRatio.compareTo(BigDecimal.valueOf(90)) <= 0) {
+            score = 80 - (wasteRatio.intValue() - 70); // 71~90% : 80점에서 비율 차이에 따라 1점씩 차감
+        } else if (wasteRatio.compareTo(BigDecimal.valueOf(110)) <= 0) {
+            score = 70 - (wasteRatio.intValue() - 90); // 91~110% : 70점에서 비율 차이에 따라 1점씩 차감
+        } else if (wasteRatio.compareTo(BigDecimal.valueOf(130)) <= 0) {
+            score = 60 - (wasteRatio.intValue() - 110); // 111~130% : 60점에서 비율 차이에 따라 1점씩 차감
+        } else {
+            score = 0; // 130% 초과 : 0점
+        }
+
+        return Math.max(score, 0); // 음수 방지, 최소 0점
+    }
+
+    // 에너지 사용량 점수 계산 함수
+    public Integer calculateEnergyScore(BigDecimal actualEnergy, BigDecimal averageEnergy) {
+        BigDecimal energyRatio = (averageEnergy.compareTo(BigDecimal.ZERO) != 0) ?
+                actualEnergy.divide(averageEnergy, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)) :
+                BigDecimal.ZERO; // 에너지 사용 비율 : (실제 에너지 사용량 / 산업 평균 에너지 사용량) * 100
+        int score;
+
+        if (energyRatio.compareTo(BigDecimal.valueOf(40)) <= 0) {
+            score = 100 - energyRatio.intValue(); // 40% 이하 : 100점에서 비율만큼 차감
+        } else if (energyRatio.compareTo(BigDecimal.valueOf(60)) <= 0) {
+            score = 90 - (energyRatio.intValue() - 40); // 41~60% : 90점에서 비율 차이에 따라 1점씩 차감
+        } else if (energyRatio.compareTo(BigDecimal.valueOf(80)) <= 0) {
+            score = 80 - (energyRatio.intValue() - 60); // 61~80% : 80점에서 비율 차이에 따라 1점씩 차감
+        } else if (energyRatio.compareTo(BigDecimal.valueOf(100)) <= 0) {
+            score = 70 - (energyRatio.intValue() - 80); // 81~100% : 70점에서 비율 차이에 따라 1점씩 차감
+        } else if (energyRatio.compareTo(BigDecimal.valueOf(120)) <= 0) {
+            score = 60 - (energyRatio.intValue() - 100); // 101~120% : 60점에서 비율 차이에 따라 1점씩 차감
+        } else {
+            score = 0; // 120% 초과 : 0점
+        }
+
+        return Math.max(score, 0); // 음수 방지, 최소 0점
     }
 
     // 폐기물 발생량 계산 함수
@@ -319,10 +424,7 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
     }
 
     // 실제 에너지 사용량 계산 함수
-    private BigDecimal calculateActualEnergy(ProductionOrder productionOrder) {
-        // 작업 시간 계산
-        Duration workDuration = Duration.between(productionOrder.getStartDateTime(), productionOrder.getEndDateTime());
-        BigDecimal workHours = BigDecimal.valueOf(workDuration.toHours());
+    private BigDecimal calculateActualEnergy(ProductionOrder productionOrder, BigDecimal workHours) {
 
         // 장비별 에너지 소비량 계산 후 합산
         return equipmentRepository.findByWorkcenterId(productionOrder.getWorkcenter().getId()).stream()
