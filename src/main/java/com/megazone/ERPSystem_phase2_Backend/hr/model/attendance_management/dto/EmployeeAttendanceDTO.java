@@ -20,8 +20,8 @@ public class EmployeeAttendanceDTO {
     private String employeeNumber;
     private String attendanceCode;
     private LocalDate date;
-    private LocalDateTime checkTime;
-    private LocalDateTime checkoutTIme;
+    private LocalDateTime checkInTime;
+    private LocalDateTime checkOutTIme;
     private AttendanceStatus status;
 
     public static EmployeeAttendanceDTO create(Attendance attendance) {
@@ -32,8 +32,8 @@ public class EmployeeAttendanceDTO {
                 attendance.getEmployee().getEmployeeNumber(),
                 attendance.getAttendanceCode(),
                 attendance.getDate(),
-                attendance.getCheckinTime(),
-                attendance.getCheckoutTime(),
+                attendance.getCheckInTime(),
+                attendance.getCheckOutTime(),
                 attendance.getStatus()
         );
     }

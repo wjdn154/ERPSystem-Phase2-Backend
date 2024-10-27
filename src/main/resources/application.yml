@@ -109,6 +109,7 @@ spring:
         - classpath:initial-database/production/resource_data/worker.sql
         - classpath:initial-database/production/resource_data/materialData.sql
         - classpath:initial-database/production/resource_data/hazardousMaterial.sql
+        - classpath:initial-database/production/basic_data/bom/bom_standard_bom_material.sql
 
         - classpath:initial-database/production/production_schedule/common_scheduling/production_request.sql
         - classpath:initial-database/production/production_schedule/plan_of_production/mps.sql
@@ -120,6 +121,7 @@ spring:
         - classpath:initial-database/financial/unresolved_voucher.sql
         - classpath:initial-database/financial/resolved_sale_and_purchase_voucher.sql
         - classpath:initial-database/financial/resolved_voucher.sql
+        - classpath:initial-database/hr/payment/allowance.sql
 
 
 logging:

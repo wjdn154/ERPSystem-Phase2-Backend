@@ -21,4 +21,6 @@ public interface DepartmentService {
     boolean hasEmployees(Long id);
 
     void deleteDepartment(Long id);
+
+    DepartmentDetailDTO updateDepartment(Long id, DepartmentCreateDTO dto);
 }

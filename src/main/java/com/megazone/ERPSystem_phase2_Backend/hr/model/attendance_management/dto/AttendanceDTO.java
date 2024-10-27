@@ -16,7 +16,7 @@ public class AttendanceDTO {
     private Long employeeId;
     private String attendanceCode;
     private LocalDate date;
-    private Time checkTime;
-    private Time checkoutTIme;
+    private Time checkInTime;
+    private Time checkOutTIme;
     private AttendanceStatus status;
 }

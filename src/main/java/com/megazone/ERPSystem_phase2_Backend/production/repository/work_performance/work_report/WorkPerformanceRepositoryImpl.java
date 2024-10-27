@@ -53,12 +53,18 @@ public class WorkPerformanceRepositoryImpl implements WorkPerformanceRepositoryC
                         p.standard.as("productStandard"),
                         p.unit.as("productUnit"),
                         wp.quantity.as("totalQuantity"),
-                        p.salesPrice.as("productSalesPrice"),
+//                        p.salesPrice.as("productSalesPrice"),
                         pd.cost.as("processCost"),
                         wp.acceptableQuantity.as("acceptableQuantity"),
                         pd.cost.divide(wp.quantity).multiply(wp.acceptableQuantity).as("acceptableAmount"),
                         wp.defectiveQuantity.as("defectiveQuantity"),
-                        pd.cost.divide(wp.quantity).multiply(wp.defectiveQuantity).as("defectiveAmount")
+                        pd.cost.divide(wp.quantity).multiply(wp.defectiveQuantity).as("defectiveAmount"),
+                        wp.averageWasteGenerated.as("averageWasteGenerated"),
+                        wp.wasteGenerated.as("wasteGenerated"),
+                        wp.wasteGeneratedPercentage.as("wasteGeneratedPercentage"),
+                        wp.averageEnergyConsumed.as("averageEnergyConsumed"),
+                        wp.energyConsumed.as("energyConsumed"),
+                        wp.energyConsumedPercentage.as("energyConsumedPercentage")
                 ))
                 .from(wp)
                 .join(po).on(wp.productionOrder.id.eq(po.id))

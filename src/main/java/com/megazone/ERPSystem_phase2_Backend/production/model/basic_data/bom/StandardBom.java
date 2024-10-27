@@ -28,7 +28,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-@ToString(exclude = {"product", "bomMaterials"})
+@ToString(exclude = {"product"})
 public class StandardBom {
 
     @Id
@@ -36,37 +36,28 @@ public class StandardBom {
     @Column(nullable = false)
     private Long id; // PK
 
-    @Column(nullable = false)
-    private String code; // BOM 지정코드
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product; // BOM 참조 Product
 
-    @Column(nullable = false)
-    private Double version; // BOM 버전
+//    @OneToMany(mappedBy = "bom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @Builder.Default
+//    private List<StandardBomMaterial> bomMaterials = new ArrayList<>(); // 중간 엔티티 리스트
 
-    @Column(nullable = false)
-    private LocalDateTime createdDate; // BOM 생성일자
+    @Enumerated(EnumType.STRING) private OutsourcingType outsourcingType; // 외주 구분
 
-    @Column(nullable = true)
+    @Column(nullable = false) private String code; // BOM 지정코드
+    @Column(nullable = false) private Double version; // BOM 버전
+    @Column(nullable = false) private LocalDateTime createdDate; // BOM 생성일자
+    @Column(nullable = false) private Double lossRate; // 손실율
+    @Column(nullable = false) private LocalDate startDate; // Bom 유효시작일
+    @Column(nullable = false) private LocalDate expiredDate; // Bom 유효종료일
+    @Column(nullable = false) private Boolean isActive; // 사용 여부
+
     private String remarks; // 비고
 
-    @Column(nullable = false)
-    private Double lossRate; // 손실율
+}
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = true)
-    private OutsourcingType outsourcingType; // 외주 구분
-
-    @Column(nullable = false)
-    private LocalDate startDate; // Bom 유효시작일
-
-    @Column(nullable = false)
-    private LocalDate expiredDate; // Bom 유효종료일
-
-    @Column(nullable = false)
-    private Boolean isActive; // 사용 여부
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = true)
-    private Product product;    // BOM이 참조하는 상위 Product
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "child_product_id", nullable = true)
@@ -80,12 +71,7 @@ public class StandardBom {
 //    @Builder.Default
 //    private List<StandardBom> childBoms = new ArrayList<>();
 
-    @OneToMany(mappedBy = "bom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<StandardBomMaterial> bomMaterials = new ArrayList<>(); // 중간 엔티티 리스트
 
 //    @OneToMany(mappedBy = "standardBom", fetch = FetchType.LAZY)
 //    @Builder.Default
 //    private List<Mrp> mrps = new ArrayList<>(); // 연관 MRP
-
-}
