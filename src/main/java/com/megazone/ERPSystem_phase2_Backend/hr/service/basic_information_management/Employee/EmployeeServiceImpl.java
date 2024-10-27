@@ -301,11 +301,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setHouseholdHead(dto.isHouseholdHead());
         employee.setImagePath(dto.getImagePath());
 
-        // Department 설정
-        if (dto.getDepartmentId() != null) {
-            Department department = departmentRepository.findById(dto.getDepartmentId())
-                    .orElseThrow(() -> new EntityNotFoundException("부서를 찾을 수 없습니다."));
-            employee.setDepartment(department);
+//        // Department 설정
+//        if (dto.getDepartmentId() != null) {
+//            Department department = departmentRepository.findById(dto.getDepartmentId())
+//                    .orElseThrow(() -> new EntityNotFoundException("부서를 찾을 수 없습니다."));
+//            employee.setDepartment(department);
+//        }
+
+        if(dto.getDepartmentId() != null) {
+            Department department = departmentRepository.findDepartmentById(dto.getDepartmentId());
         }
 
         // Position 설정

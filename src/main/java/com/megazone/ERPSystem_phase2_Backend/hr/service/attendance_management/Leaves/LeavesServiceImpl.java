@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.hr.service.attendance_management.L
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Leaves;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.LeavesType;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.dto.LeavesAllShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.dto.LeavesCreateDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.dto.LeavesShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
@@ -11,6 +12,9 @@ import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_man
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +47,7 @@ public class LeavesServiceImpl implements LeavesService{
 
         // 저장된 엔티티를 DTO로 변환
         return new LeavesShowDTO(
+                savedLeave.getId(),
                 savedLeave.getEmployee().getLastName() + " " + savedLeave.getEmployee().getFirstName(),
                 leavesType.getTypeName(),
                 savedLeave.getCode(),
@@ -51,5 +56,13 @@ public class LeavesServiceImpl implements LeavesService{
                 savedLeave.getReason(),
                 savedLeave.getStatus()
         );
+    }
+
+    // 휴가 리스트 조회
+    public List<LeavesAllShowDTO> getLeavesList() {
+        List<Leaves> leavesList = leavesRepository.findAll();
+        return leavesList.stream()
+                .map(LeavesAllShowDTO::fromEntity) // 엔티티를 DTO로 변환
+                .collect(Collectors.toList());
     }
 }

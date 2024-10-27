@@ -18,7 +18,7 @@ public class AttendanceShowDTO {
     private Long attendanceId;
     private String employeeNumber;
     private String employeeName;
-    private String titleName;
+    private String positionName;
     private String attendanceCode;
     private LocalDate date;
     private LocalDateTime checkInTime;
@@ -30,11 +30,11 @@ public class AttendanceShowDTO {
               attendance.getId(),
               attendance.getEmployee().getEmployeeNumber(),
               attendance.getEmployee().getLastName()+ attendance.getEmployee().getFirstName(),
-              attendance.getEmployee().getJobTitle().getJobTitleName(),
+              attendance.getEmployee().getPosition().getPositionName(),
               attendance.getAttendanceCode(),
               attendance.getDate(),
-              attendance.getCheckinTime(),
-              attendance.getCheckoutTime(),
+              attendance.getCheckInTime(),
+              attendance.getCheckOutTime(),
               attendance.getStatus()
           );
     }

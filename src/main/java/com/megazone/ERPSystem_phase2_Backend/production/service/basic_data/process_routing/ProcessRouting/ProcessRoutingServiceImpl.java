@@ -288,6 +288,7 @@ public class ProcessRoutingServiceImpl implements ProcessRoutingService {
         if (processDetails != null || !processDetails.isEmpty()) {
             AtomicReference<Long> index = new AtomicReference<>(1L);
             processDetails.forEach(processDetailsDTO -> {
+                System.out.println("index = " + index);
                 Long processId = getProcessIdByCodeOrName(processDetailsDTO);
                 RoutingStepId id = new RoutingStepId(existingRouting.getId(), processId);
 
@@ -301,6 +302,8 @@ public class ProcessRoutingServiceImpl implements ProcessRoutingService {
                         .stepOrder(index.getAndSet(index.get() + 1))
                         .build();
 
+                System.out.println("routingStep = " + routingStep);
+                routingStepRepository.findAll().forEach(System.out::println);
                 routingStepRepository.save(routingStep);
             });
         }

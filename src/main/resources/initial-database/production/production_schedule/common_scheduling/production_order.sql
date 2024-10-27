@@ -3,9 +3,10 @@ INSERT INTO common_scheduling_production_order
 (id, name, mps_id, remarks, confirmed, closed, start_date_time, end_date_time, production_quantity, process_id, workcenter_id, actual_start_date_time, actual_end_date_time, actual_production_quantity, workers, actual_workers)
 VALUES
 -- 1. 주간 엔진 오일 필터 프레스 작업
-(1, '주간 엔진 오일 필터 프레스 작업', 1, '엔진 오일 필터의 첫 번째 프레스 작업', TRUE, TRUE,
- '2024-10-23 08:00:00', '2024-10-23 16:00:00', 250, 3, 1,
- '2024-10-23 08:15:00', '2024-10-23 15:50:00', 240, 4, 3),
+-- (1, '주간 엔진 오일 필터 프레스 작업', 1, '엔진 오일 필터의 첫 번째 프레스 작업', TRUE, TRUE,
+--  '2024-10-23 08:00:00', '2024-10-23 16:00:00', 250, 3, 1,
+--  '2024-10-23 08:15:00', '2024-10-23 15:50:00', 240, 4, 3),
+(1, '주간 브레이크 패드 도장 작업 - 시험', 1, '시험 도장 - 브레이크 패드', TRUE, FALSE, '2024-10-23 09:00:00', '2024-10-23 13:00:00', 250, 3, 1, NULL, NULL, NULL, 4, NULL),
 
 -- 2. 야간 엔진 오일 필터 조정 작업
 (2, '야간 엔진 오일 필터 조정 작업', 1, '필터 조정 및 세부 점검 작업', TRUE, TRUE,

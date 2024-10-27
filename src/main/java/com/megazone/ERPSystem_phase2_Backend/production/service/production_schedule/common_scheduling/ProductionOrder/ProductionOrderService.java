@@ -15,7 +15,7 @@ public interface ProductionOrderService {
     ProductionOrderDTO updateProductionOrder(Long productionOrderId, ProductionOrderDTO productionOrderDTO);
     void deleteProductionOrder(Long productionOrderId);
     void assignWorkersToWorkcenter(ProductionOrderDTO productionOrderDTO, ProductionOrder productionOrder);
-    WorkPerformanceDTO updateOrderClosure(WorkPerformanceUpdateDTO dto);
+    void updateOrderClosure(WorkPerformanceUpdateDTO dto);
     void createOrdersFromMps(Mps savedMps);
     boolean isProductionOrderConfirmed(Long id);
 }

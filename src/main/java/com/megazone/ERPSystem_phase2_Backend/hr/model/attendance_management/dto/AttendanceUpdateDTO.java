@@ -22,8 +22,8 @@ public class AttendanceUpdateDTO {
         return new AttendanceUpdateDTO(
                 attendance.getEmployee().getId(),
                 attendance.getDate(),
-                attendance.getCheckinTime(),
-                attendance.getCheckoutTime(),
+                attendance.getCheckInTime(),
+                attendance.getCheckOutTime(),
                 attendance.getStatus() != null ? attendance.getStatus().toString() : "AUTO"
         );
     }

@@ -102,7 +102,7 @@ public class StandardBomServiceImpl implements StandardBomService {
         StandardBom bom = standardBomRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("요청하신 BOM을 찾을 수 없습니다."));
 
         List<StandardBomMaterial> materials = standardBomMaterialRepository.findByBomId(bom.getId());
-        bom.setBomMaterials(materials);
+//        bom.setBomMaterials(materials);
 
         return convertToDTO(bom);
     }
@@ -160,7 +160,7 @@ public class StandardBomServiceImpl implements StandardBomService {
                             .build();
                 })
                 .collect(Collectors.toList());
-        newBomVersion.setBomMaterials(bomMaterials);
+//        newBomVersion.setBomMaterials(bomMaterials);
 
         StandardBom savedBom = standardBomRepository.save(newBomVersion);
         return convertToDTO(savedBom);
@@ -272,7 +272,7 @@ public class StandardBomServiceImpl implements StandardBomService {
                 .startDate(standardBomDTO.getStartDate())
                 .expiredDate(standardBomDTO.getExpiredDate())
                 .isActive(standardBomDTO.getIsActive())
-                .bomMaterials(bomMaterials)
+//                .bomMaterials(bomMaterials)
 //                .childBoms(childBoms)
 //                .parentBom(parentBom)
                 .build();
@@ -294,21 +294,21 @@ public class StandardBomServiceImpl implements StandardBomService {
 
     // 부모와 자식 관계를 관리하는 메서드
     private StandardBomDTO convertToDTO(StandardBom standardBom, boolean isParent) {
-        List<BomMaterialDTO> materialDTOs = Optional.ofNullable(standardBom.getBomMaterials())
-                .orElse(Collections.emptyList())
-                .stream()
-                .map(material -> BomMaterialDTO.builder()
-                        .id(material.getId())
-                        .bomId(material.getBom().getId())
-                        .version(material.getBom().getVersion())
-                        .materialId(material.getMaterial().getId())
-                        .materialName(material.getMaterial().getMaterialName())
-                        .quantity(material.getQuantity())
+//        List<BomMaterialDTO> materialDTOs = Optional.ofNullable(standardBom.getBomMaterials())
+//                .orElse(Collections.emptyList())
+//                .stream()
+//                .map(material -> BomMaterialDTO.builder()
+//                        .id(material.getId())
+//                        .bomId(material.getBom().getId())
+//                        .version(material.getBom().getVersion())
+//                        .materialId(material.getMaterial().getId())
+//                        .materialName(material.getMaterial().getMaterialName())
+//                        .quantity(material.getQuantity())
 //                        .unitOfMeasure(material.getMaterial().getUnitOfMeasure()) // 단위 추가
 //                        .substituteMaterialId(material.getMaterial().getSubstituteMaterialId())
 //                        .substituteMaterialName(material.getMaterial().getSubstituteMaterialName())
-                        .build())
-                .toList();
+//                        .build())
+//                .toList();
 
 //        StandardBomDTO parentBomDTO = Optional.ofNullable(standardBom.getParentBom())
 //                .map(bom -> convertToDTO(bom, true)) // 부모 BOM을 처리할 때는 자식 호출을 막음
@@ -341,7 +341,7 @@ public class StandardBomServiceImpl implements StandardBomService {
 //                .parentBom(convertToDTO(standardBom.getParentBom(), true))
                 .productId(standardBom.getProduct().getId())
 //                .productId(Optional.ofNullable(standardBom.getProduct()).map(Product::getId).orElse(null))
-                .bomMaterials(materialDTOs)
+//                .bomMaterials(materialDTOs)
 //                .parentBom(parentBomDTO)
 //                .childBoms(childBomDTOs)
                 .build();

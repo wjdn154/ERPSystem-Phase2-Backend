@@ -72,11 +72,9 @@ public class ProductionOrderController {
      */
     @PostMapping("/closure")
     public ResponseEntity<Object> updateOrderClosure(@RequestBody WorkPerformanceUpdateDTO dto) {
-        System.out.println("dto = " + dto.toString());
-        System.out.println(LocalDateTime.now());
         try{
-            WorkPerformanceDTO workPerformanceDTO = productionOrderService.updateOrderClosure(dto);
-            return ResponseEntity.status(HttpStatus.OK).body(workPerformanceDTO);
+            productionOrderService.updateOrderClosure(dto);
+            return ResponseEntity.status(HttpStatus.OK).body("마감처리 성공");
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("마감처리 실패, 이유 : " + e.getMessage());
         }
@@ -138,7 +136,6 @@ public class ProductionOrderController {
     @PostMapping("/confirm/{id}")
     public ResponseEntity<Object> confirmProductionOrder(@PathVariable("id") Long id) {
         try {
-            System.out.println("id = " + id);
             boolean isConfirmed = productionOrderService.isProductionOrderConfirmed(id);
             return isConfirmed ? ResponseEntity.status(HttpStatus.OK).body("작업 지시가 성공적으로 확정되었습니다.") :
                     ResponseEntity.status(HttpStatus.NO_CONTENT).body("작업 지시 확정에 실패했습니다.");
