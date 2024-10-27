@@ -80,6 +80,9 @@ public class Permission  {
     @Enumerated(EnumType.STRING) private UserPermission assignmentManagementPermission = UserPermission.NO_ACCESS;  // 발령 관리 권한
     @Enumerated(EnumType.STRING) private UserPermission performanceEvaluationPermission = UserPermission.NO_ACCESS;  // 성과 평가 관리 권한
     @Enumerated(EnumType.STRING) private UserPermission retirementManagementPermission = UserPermission.NO_ACCESS;  // 퇴사자 관리 권한
+    @Enumerated(EnumType.STRING) private UserPermission salaryEnvironmentSettingsPermission = UserPermission.NO_ACCESS;  // 급여 관리 권한
+    @Enumerated(EnumType.STRING) private UserPermission salarySystemManagementPermission = UserPermission.NO_ACCESS;  // 급여체계 관리 권한
+
     // 출결관리 관련 권한
     @Enumerated(EnumType.STRING) private UserPermission timeManagementPermission = UserPermission.NO_ACCESS;  // 근태 관리 권한
     @Enumerated(EnumType.STRING) private UserPermission leaveManagementPermission = UserPermission.NO_ACCESS;  // 휴가 관리 권한

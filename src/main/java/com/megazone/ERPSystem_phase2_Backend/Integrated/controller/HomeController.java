@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.integrated_systems.controller;
+package com.megazone.ERPSystem_phase2_Backend.Integrated.controller;
 
 
 import org.springframework.stereotype.Controller;

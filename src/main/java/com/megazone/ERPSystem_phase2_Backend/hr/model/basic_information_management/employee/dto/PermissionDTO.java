@@ -73,6 +73,9 @@ public class PermissionDTO {
     private UserPermission assignmentManagementPermission = UserPermission.NO_ACCESS;  // 발령 관리 권한
     private UserPermission performanceEvaluationPermission = UserPermission.NO_ACCESS;  // 성과 평가 관리 권한
     private UserPermission retirementManagementPermission = UserPermission.NO_ACCESS;  // 퇴사자 관리 권한
+    private UserPermission salaryEnvironmentSettingsPermission = UserPermission.NO_ACCESS;  // 급여환경설정 권한
+    private UserPermission salarySystemManagementPermission = UserPermission.NO_ACCESS;  // 급여체계관리 권한
+
     // 출결관리 관련 권한
     private UserPermission timeManagementPermission = UserPermission.NO_ACCESS;  // 근태 관리 권한
     private UserPermission leaveManagementPermission = UserPermission.NO_ACCESS;  // 휴가 관리 권한
