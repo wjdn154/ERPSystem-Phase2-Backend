@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class SalaryStepRepositoryImpl implements SalaryStepRepositoryCustom{
+public class AllowanceRepositoryImpl implements AllowanceRepositoryCustom {
 }
