@@ -64,10 +64,10 @@ public class ProductionRequest {
     private Department productionDepartment;
 
     @Column(nullable = false)
-    private BigDecimal requestQuantity; // 요청수량
+    private Long requestQuantity; // 요청수량
 
     @Column(nullable = true)
-    private BigDecimal confirmedQuantity; // 확정수량 ( = Capacity에 따른 Return to Forecast 반영 )
+    private Long confirmedQuantity; // 확정수량 ( = Capacity에 따른 Return to Forecast 반영 )
 
     @OneToMany(mappedBy = "productionRequest")
     private List<Mps> MpsList;
