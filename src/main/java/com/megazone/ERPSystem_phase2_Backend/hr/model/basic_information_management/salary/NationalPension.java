@@ -23,7 +23,9 @@ public class NationalPension {
     @Unique
     private Long id;
 
-    private BigDecimal rate; // 극민연금 계샨 요율
+    private BigDecimal companyRate; // 극민연금 기업 적용 요율
+
+    private BigDecimal employeeRate; // 국민연금 가입자 적용 요율
 
     private BigDecimal lowerAmount; // 국민연금 최저하한 금액
 
