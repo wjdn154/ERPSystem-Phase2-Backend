@@ -8,12 +8,17 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statement
 import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.dto.FinancialStatementsLedgerDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.dto.FinancialStatementsLedgerSearchDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.dto.FinancialStatementsLedgerShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.SalesAndPurChaseLedgerSearchDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.SalesAndPurChaseLedgerShowAllDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.SalesAndPurChaseLedgerShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.resolvedVoucher.ResolvedVoucherRepository;
+import com.megazone.ERPSystem_phase2_Backend.financial.service.ledger.SalesAndPurchaseLedgerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
@@ -28,10 +33,12 @@ public class IntegratedServiceImpl implements IntegratedService {
 
     private final RecentActivityRepository recentActivityRepository;
     private final EnvironmentalCertificationAssessmentRepository environmentalCertificationAssessmentRepository;
+    private final SalesAndPurchaseLedgerService salesAndPurchaseLedgerService;
 
     @Override
     public DashboardDataDTO dashboard() {
 
+        // 최근 활동
         List<DashboardDataDTO.ActivityDTO> activities = recentActivityRepository.findAll()
                 .stream()
                 .map(activity -> DashboardDataDTO.ActivityDTO.builder()
@@ -42,6 +49,7 @@ public class IntegratedServiceImpl implements IntegratedService {
                         .build())
                 .toList();
 
+        // 환경 점수
         DashboardDataDTO.EnvironmentalScoreDTO environmentalScore = environmentalCertificationAssessmentRepository.findByMonth(YearMonth.now())
                 .map(environmentalCertificationAssessment -> DashboardDataDTO.EnvironmentalScoreDTO.builder()
                         .totalScore(environmentalCertificationAssessment.getTotalScore())
@@ -49,7 +57,6 @@ public class IntegratedServiceImpl implements IntegratedService {
                         .energyScore(environmentalCertificationAssessment.getEnergyScore())
                         .build())
                 .orElse(null);
-
 
         return DashboardDataDTO.builder()
                 .activities(activities)
