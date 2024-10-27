@@ -40,5 +40,4 @@ public class StandardBomMaterial {
 
     @Column(nullable = false)
     private Long quantity; // 해당 자재의 필요 수량
-
 }

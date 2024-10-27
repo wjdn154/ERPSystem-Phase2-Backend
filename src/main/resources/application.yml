@@ -109,6 +109,7 @@ spring:
         - classpath:initial-database/production/resource_data/worker.sql
         - classpath:initial-database/production/resource_data/materialData.sql
         - classpath:initial-database/production/resource_data/hazardousMaterial.sql
+        - classpath:initial-database/production/basic_data/bom/bom_standard_bom_material.sql
         - classpath:initial-database/production/production_schedule/plan_of_production/mps.sql
         - classpath:initial-database/production/production_schedule/common_scheduling/production_order.sql
         - classpath:initial-database/production/work_report/work_performance.sql

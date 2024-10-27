@@ -94,16 +94,12 @@ public class WorkPerformanceServiceImpl implements WorkPerformanceService{
 
     @Override
     public List<DailyReportDTO> dailyReport(DailyAndMonthlyReportSearchDTO dto) {
-        List<DailyReportDTO> monthlyReportDTOS = workPerformanceRepository.dailyReport(dto);
-        monthlyReportDTOS.forEach(System.out::println);
-        return monthlyReportDTOS;
+        return workPerformanceRepository.dailyReport(dto);
     }
 
     @Override
     public List<MonthlyReportDTO> monthlyReport(DailyAndMonthlyReportSearchDTO dto) {
-        List<MonthlyReportDTO> monthlyReportDTOS = workPerformanceRepository.monthlyReport(dto);
-        monthlyReportDTOS.forEach(System.out::println);
-        return monthlyReportDTOS;
+        return workPerformanceRepository.monthlyReport(dto);
     }
 
     // 엔티티를 WorkPerformanceDetailDTO로 변환
