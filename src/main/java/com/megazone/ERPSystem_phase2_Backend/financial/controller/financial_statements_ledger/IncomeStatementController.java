@@ -24,9 +24,9 @@ public class IncomeStatementController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @PostMapping("/api/financial/ledger/incomeStatement/test")
-    public ResponseEntity<Object> test() {
-        IncomeStatementLedgerDashBoardDTO result = incomeStatementService.DashBoardShow();
-        return ResponseEntity.status(HttpStatus.OK).body(result);
-    }
+//    @PostMapping("/api/financial/ledger/incomeStatement/test")
+//    public ResponseEntity<Object> test() {
+//        IncomeStatementLedgerDashBoardDTO result = incomeStatementService.DashBoardShow();
+//        return ResponseEntity.status(HttpStatus.OK).body(result);
+//    }
 }
