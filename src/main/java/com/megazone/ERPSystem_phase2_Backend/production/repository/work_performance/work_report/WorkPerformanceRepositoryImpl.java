@@ -59,10 +59,10 @@ public class WorkPerformanceRepositoryImpl implements WorkPerformanceRepositoryC
                         pd.cost.divide(wp.quantity).multiply(wp.acceptableQuantity).as("acceptableAmount"),
                         wp.defectiveQuantity.as("defectiveQuantity"),
                         pd.cost.divide(wp.quantity).multiply(wp.defectiveQuantity).as("defectiveAmount"),
-                        wp.averageWasteGenerated.as("averageWasteGenerated"),
+                        wp.industryAverageWasteGenerated.as("industryAverageWasteGenerated"),
                         wp.wasteGenerated.as("wasteGenerated"),
                         wp.wasteGeneratedPercentage.as("wasteGeneratedPercentage"),
-                        wp.averageEnergyConsumed.as("averageEnergyConsumed"),
+                        wp.industryAverageEnergyConsumed.as("industryAverageEnergyConsumed"),
                         wp.energyConsumed.as("energyConsumed"),
                         wp.energyConsumedPercentage.as("energyConsumedPercentage")
                 ))

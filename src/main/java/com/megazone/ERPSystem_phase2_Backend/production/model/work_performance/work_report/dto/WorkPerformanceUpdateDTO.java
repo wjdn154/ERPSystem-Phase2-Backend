@@ -20,7 +20,6 @@ public class WorkPerformanceUpdateDTO {
     private BigDecimal quantity; // 실제 총 생산량
     private BigDecimal defectiveQuantity; // 불량 수량
     private BigDecimal acceptableQuantity; // 양품 수량
-    private LocalDate workDate; // 작업 시간
     private LocalDateTime actualStartDateTime; // 작업 종료 시간
     private LocalDateTime actualEndDateTime; // 작업 종료 시간
 }

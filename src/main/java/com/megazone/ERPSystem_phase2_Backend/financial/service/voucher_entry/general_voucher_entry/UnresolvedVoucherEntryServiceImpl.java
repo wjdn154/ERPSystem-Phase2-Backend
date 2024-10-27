@@ -1,5 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.RecentActivityRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
@@ -39,6 +42,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
     private final EmployeeRepository employeeRepository;
     private final UnresolvedSaleAndPurchaseVoucherRepository unresolvedSaleAndPurchaseVoucherRepository;
     private final ClientRepository clientRepository;
+    private final RecentActivityRepository recentActivityRepository;
 
     // 현금 자동분개 시 필요한 계정과목 코드
     private final String cashAccountCode = "101";
@@ -330,6 +334,12 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
         else {
             throw new RuntimeException("해당하는 전표가 없습니다.");
         }
+
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription("미결전표 " + unresolvedVoucherList.size() + "건 승인")
+                .activityType(ActivityType.FINANCE)
+                .activityTime(LocalDateTime.now())
+                .build());
 
         return unresolvedVoucherList;
     }

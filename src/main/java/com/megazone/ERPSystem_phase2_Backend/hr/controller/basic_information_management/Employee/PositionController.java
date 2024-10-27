@@ -7,6 +7,7 @@ import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_manage
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Position.PositionService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +23,10 @@ public class PositionController {
     private final PositionRepository positionRepository;
 
     @PostMapping("/positions")
-    public List<PositionShowDTO> getAllPositions(){
+    public ResponseEntity<List<PositionShowDTO>> getAllPositions(){
         List<Position> positions = positionRepository.findAll();
-        return positions.stream().map(position -> new PositionShowDTO(position.getId(), position.getPositionCode() ,position.getPositionName())).collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.OK).body(positions.stream().map(position -> new PositionShowDTO(
+                position.getId(), position.getPositionCode() ,position.getPositionName())).collect(Collectors.toList()));
     }
 
     @PostMapping("/position/{id}")
