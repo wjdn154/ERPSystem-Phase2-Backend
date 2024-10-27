@@ -282,9 +282,13 @@ public class ProductionRequestServiceImpl implements ProductionRequestService {
                 .confirmedQuantity(entity.getConfirmedQuantity())
                 .remarks(entity.getRemarks())
                 .clientId(entity.getClient().getId() != null ? entity.getClient().getId() : null)
-                .departmentId(entity.getProductionDepartment().getId() != null ? entity.getProductionDepartment().getId() : null)
+                .departmentId(entity.getProductionDepartment() != null
+                        ? entity.getProductionDepartment().getId()
+                        : null) // Null 체크 추가
                 .productId(entity.getProduct().getId() != null ? entity.getProduct().getId() : null)
-                .salesOrderId(entity.getSalesOrder().getId() != null ? entity.getSalesOrder().getId() : null)
+                .salesOrderId(entity.getSalesOrder() != null
+                        ? entity.getSalesOrder().getId()
+                        : null) // Null 안전 처리
                 .requesterId(entity.getRequester().getId() != null ? entity.getRequester().getId() : null)
                 .build();
     }
