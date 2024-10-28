@@ -169,21 +169,21 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 
     @Override
     public List<WorkcenterDTO> findAll() {
-//        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now();
         List<Workcenter> workcenters = workcenterRepository.findAllWithDetails();
 
         return workcenters.stream().map(workcenter -> {
             WorkcenterDTO workcenterDTO = convertToDTO(workcenter);
 
             // 오늘의 작업자 수 가져오기
-//            int todayWorkerCount = getTodayWorkerCount(workcenter.getCode(), today);
-//            workcenterDTO.setTodayWorkerCount((long) todayWorkerCount); // 오늘 작업자 수 설정
+            int todayWorkerCount = getTodayWorkerCount(workcenter.getCode(), today);
+            workcenterDTO.setTodayWorkerCount((long) todayWorkerCount); // 오늘 작업자 수 설정
 
             // 오늘의 작업자 명단 가져오기
             List<WorkerAssignmentDTO> todayWorkers = findTodayWorkers(workcenter.getCode());
 
             // 오늘의 작업자 리스트 설정 (작업자 명단이 없으면 '배정없음' 설정)
-//            workcenterDTO.setTodayWorkers(todayWorkers);
+            workcenterDTO.setTodayWorkers(todayWorkers);
 
 
             // 설비 정보 가져오기 (설비 ID, 이름, 모델명 모두 설정)
@@ -204,8 +204,9 @@ public class WorkcenterServiceImpl implements WorkcenterService {
             Long processId = workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getId() : null;
             String processCode = workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getCode() : null;
             String processName = workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getName() : null;
-//            workcenterDTO.setProcessCode(processId);
+            workcenterDTO.setProcessId(processId);
             workcenterDTO.setProcessCode(processCode);
+            workcenterDTO.setProcessName(processName);
 
             return workcenterDTO;
         }).collect(Collectors.toList());
@@ -248,9 +249,9 @@ public class WorkcenterServiceImpl implements WorkcenterService {
             WorkcenterDTO workcenterDTO = convertToDTO(workcenter);
 
             LocalDate today = LocalDate.now();
-//            List<WorkerAssignmentDTO> todayWorkers = findTodayWorkers(code);
-//            workcenterDTO.setTodayWorkerCount(todayWorkers != null ? (long) todayWorkers.size() : 0L);
-//            workcenterDTO.setTodayWorkers(todayWorkers);
+            List<WorkerAssignmentDTO> todayWorkers = findTodayWorkers(code);
+            workcenterDTO.setTodayWorkerCount(todayWorkers != null ? (long) todayWorkers.size() : 0L);
+            workcenterDTO.setTodayWorkers(todayWorkers);
 
             return workcenterDTO;
         });
@@ -314,15 +315,15 @@ public class WorkcenterServiceImpl implements WorkcenterService {
         );
     }
 
-//    @Override
-//    public List<WorkerAssignmentDTO> findWorkerAssignmentsByWorkcenterCode(String workcenterCode) {
-//        Workcenter workcenter = workcenterRepository.findByCode(workcenterCode)
-//                .orElseThrow(() -> new EntityNotFoundException("작업장 코드를 찾을 수 없습니다: " + workcenterCode));
-//
-//        return workcenter.getWorkerAssignments().stream()
-//                .map(this::convertWorkerAssignmentToDTO)
-//                .collect(Collectors.toList());
-//    }
+    @Override
+    public List<WorkerAssignmentDTO> findWorkerAssignmentsByWorkcenterCode(String workcenterCode) {
+        Workcenter workcenter = workcenterRepository.findByCode(workcenterCode)
+                .orElseThrow(() -> new EntityNotFoundException("작업장 코드를 찾을 수 없습니다: " + workcenterCode));
+
+        return workcenter.getWorkerAssignments().stream()
+                .map(this::convertWorkerAssignmentToDTO)
+                .collect(Collectors.toList());
+    }
 
     private WorkerAssignmentDTO convertWorkerAssignmentToDTO(WorkerAssignment workerAssignment) {
         return WorkerAssignmentDTO.builder()

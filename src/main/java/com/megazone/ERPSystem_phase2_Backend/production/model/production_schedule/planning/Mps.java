@@ -65,7 +65,7 @@ public class Mps {
 //    private List<ProductionOrder> productionOrders;
 
     @Column(nullable = false)
-    private BigDecimal quantity; // 생산 수량
+    private Long quantity; // 생산 수량
 
     @Column(nullable = true)
     private String remarks; // 추가 설명 또는 비고
