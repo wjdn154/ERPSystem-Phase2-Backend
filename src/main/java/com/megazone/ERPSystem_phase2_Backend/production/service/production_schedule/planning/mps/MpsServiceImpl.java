@@ -157,7 +157,7 @@ public class MpsServiceImpl implements MpsService {
         if (mpsDto.getProductId() == null) {
             throw new IllegalArgumentException("제품 정보가 필요합니다.");
         }
-        if (mpsDto.getQuantity() == null || mpsDto.getQuantity().compareTo(BigDecimal.ZERO) <= 0) {
+        if (mpsDto.getQuantity() == null || mpsDto.getQuantity() <= 0) {
             throw new IllegalArgumentException("생산 수량이 올바르지 않습니다.");
         }
         if (mpsDto.getStartDate() == null || mpsDto.getEndDate() == null) {
@@ -261,7 +261,7 @@ public class MpsServiceImpl implements MpsService {
         if (dto == null) {
             throw new IllegalArgumentException("MPS 정보가 입력되지 않았습니다.");
         }
-        if (dto.getQuantity() == null || dto.getQuantity().compareTo(BigDecimal.ZERO) <= 0) {
+        if (dto.getQuantity() == null || dto.getQuantity() <= 0) {
             throw new IllegalArgumentException("생산 수량이 올바르지 않습니다.");
         }
         if (dto.getStartDate() != null && dto.getEndDate() != null &&

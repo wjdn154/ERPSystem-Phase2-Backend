@@ -11,10 +11,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-/**
- * // TODO 자동생성, 승인반려 등 책임 분리할지 고민
- */
-
 @Service
 @RequiredArgsConstructor
 public class RequestsAutoGenerationService {
@@ -22,7 +18,7 @@ public class RequestsAutoGenerationService {
     private final ProductionRequestsRepository productionRequestsRepository;
 
     // 추후 영업관리 추가 시 변경
-    public ProductionRequest createProductionRequestFromSalesOrder(Long salesOrderId, Long productId, BigDecimal quantity, Long requesterId) {
+    public ProductionRequest createProductionRequestFromSalesOrder(Long salesOrderId, Long productId, Long quantity, Long requesterId) {
         // 연관된 엔티티들은 ID만 이용해 생성 TODO
 //        Orders salesOrder = new Orders();
 //        salesOrder.setId(salesOrderId);  // Sales Order ID 설정
@@ -39,7 +35,7 @@ public class RequestsAutoGenerationService {
                 .isConfirmed(false)  // 자동 생성된 요청은 기본적으로 승인되지 않은 상태로 설정
                 .requestDate(LocalDate.now())  // 현재 날짜로 요청일자 설정
                 .requestQuantity(quantity)  // 요청 수량 설정
-                .confirmedQuantity(BigDecimal.ZERO)  // 확정 수량은 0으로 임시 설정 TODO
+                .confirmedQuantity(0L)  // 확정 수량은 0으로 임시 설정
                 .product(product)  // Product 엔티티 설정
 //                .salesOrder(salesOrder)  // Sales Order 엔티티 설정
                 .requester(requester)  // Requester (Employee) 엔티티 설정

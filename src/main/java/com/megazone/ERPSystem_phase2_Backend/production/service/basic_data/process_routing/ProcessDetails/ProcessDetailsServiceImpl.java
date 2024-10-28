@@ -150,6 +150,8 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
         existingProcessDetails.setCost(processDetailsDTO.getCost());
         existingProcessDetails.setDefectRate(processDetailsDTO.getDefectRate());
         existingProcessDetails.setIsUsed(processDetailsDTO.getIsUsed());
+        existingProcessDetails.setDescription(processDetailsDTO.getDescription());  // 설명 반영
+        existingProcessDetails.setIsOutsourced(processDetailsDTO.getIsOutsourced());  // 외주 여부 반영
 
         try {
             // 3. 변경된 엔티티를 데이터베이스에 저장
