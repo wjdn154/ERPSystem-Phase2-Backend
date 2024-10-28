@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +20,10 @@ import java.util.List;
 public class SalaryStepController {
     private final SalaryStepService salaryStepService;
 
-    @PostMapping("basic_configuration/show")
+    /**
+     * 호봉 과목 리스트 출력
+     */
+    @PostMapping("basicconfiguration/salarystep/show")
     public ResponseEntity<Object> show() {
         try{
             List<SalaryStepShowDTO> result = salaryStepService.show();
@@ -29,8 +33,11 @@ public class SalaryStepController {
         }
     }
 
-    @PostMapping("basic_configuration/entry")
-    public ResponseEntity<Object> entry(SalaryStepEntryDTO dto) {
+    /**
+     * 호봉 과목 리스트 추가
+     */
+    @PostMapping("basicconfiguration/salarystep/entry")
+    public ResponseEntity<Object> entry(@RequestBody SalaryStepEntryDTO dto) {
         try{
             return ResponseEntity.status(HttpStatus.OK).body(salaryStepService.entry(dto));
         }catch (RuntimeException e){

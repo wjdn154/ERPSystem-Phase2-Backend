@@ -146,12 +146,12 @@ public class WorkcenterController {
         return ResponseEntity.ok(equipmentDataDTOs);
     }
 
-//    // 10. 작업자 배정 이력 조회
-//    @PostMapping("/workerAssignments/{workcenterCode}")
-//    public ResponseEntity<List<WorkerAssignmentDTO>> getWorkerAssignmentsByWorkcenterCode(@PathVariable("workcenterCode") String workcenterCode) {
-//
-//       List<WorkerAssignmentDTO> workerAssignmentDTOs = workcenterService.findWorkerAssignmentsByWorkcenterCode(workcenterCode);
-//        return ResponseEntity.ok(workerAssignmentDTOs);
-//    }
+    // 10. 작업자 배정 이력 조회
+    @PostMapping("/workerAssignments/{workcenterCode}")
+    public ResponseEntity<List<WorkerAssignmentDTO>> getWorkerAssignmentsByWorkcenterCode(@PathVariable("workcenterCode") String workcenterCode) {
+
+       List<WorkerAssignmentDTO> workerAssignmentDTOs = workcenterService.findWorkerAssignmentsByWorkcenterCode(workcenterCode);
+        return ResponseEntity.ok(workerAssignmentDTOs);
+    }
 }
 

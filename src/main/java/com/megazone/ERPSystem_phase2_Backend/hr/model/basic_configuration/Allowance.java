@@ -17,14 +17,14 @@ import java.math.BigDecimal;
 @Table
 public class Allowance {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
+    
     @Column(nullable = false,unique = true)
     private String code; // 수당코드
 
     @Column(nullable = false)
-    private BigDecimal amount; // 수당금액
+    private String name; // 수당이름
 
     private String description; // 비고
 }

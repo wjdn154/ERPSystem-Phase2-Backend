@@ -36,9 +36,11 @@ public class ReceivingSchedule {
     @JoinColumn(name = "warehouse_location_id", nullable = false)
     private WarehouseLocation warehouseLocation;
 
+    private String productName;
+
     // 입고 대기 재고 번호
     @Column(nullable = false)
-    private String pendingInventoryNumber;
+    private Long pendingInventoryNumber;
 
     // 입고 대기 수량
     @Column(nullable = false)
@@ -56,4 +58,5 @@ public class ReceivingSchedule {
     @Column(nullable = false)
     @Builder.Default
     private ReceivingStatus status = ReceivingStatus.WAITING;
+
 }

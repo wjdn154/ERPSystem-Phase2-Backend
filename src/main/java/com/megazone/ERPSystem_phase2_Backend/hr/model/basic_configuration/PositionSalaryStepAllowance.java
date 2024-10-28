@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.checkerframework.common.aliasing.qual.Unique;
 
+import java.math.BigDecimal;
+
 /**
  * 직급 호봉 기준의 수당목록
  */
@@ -16,7 +18,7 @@ import org.checkerframework.common.aliasing.qual.Unique;
 @Table(name = "position_salary_step_allowance")
 public class PositionSalaryStepAllowance {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Unique
     private Long id;
 
@@ -27,4 +29,6 @@ public class PositionSalaryStepAllowance {
     @ManyToOne
     @JoinColumn(name = "allowance_id", nullable = false)
     private Allowance allowance; // Allowance 테이블과의 다대일 관계
+
+    private BigDecimal amount; // 수당금액
 }

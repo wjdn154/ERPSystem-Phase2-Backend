@@ -1,11 +1,15 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.receiving_processing_management.ReceivingSchedule;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 입고 지시서 상세 테이블
@@ -31,6 +35,11 @@ public class ReceivingOrderDetail {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    // 입고 일정과의 일대다 관계
+    @OneToMany(mappedBy = "receivingOrderDetail", orphanRemoval = true)
+    @Builder.Default
+    private List<ReceivingSchedule> receivingSchedules = new ArrayList<>();
 
     // 수량
     @Column(nullable = false)

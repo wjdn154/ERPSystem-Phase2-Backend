@@ -15,7 +15,6 @@ public interface MaterialDataRepository extends JpaRepository<MaterialData, Long
 
     boolean existsByMaterialCodeAndIdNot(String materialCode, Long id);
 
-
     List<MaterialData> findAllByOrderByIdDesc();
 
 }

@@ -4,6 +4,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_m
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.PurchaseOrder;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.PurchaseRequest;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.PurchaseRequestDetail;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestCreateDto;
@@ -11,6 +12,7 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestResponseDetailDto.PurchaseRequestItemDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestResponseDetailDto.PurchaseRequestItemDetailDto.ClientDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseRequestResponseDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.SearchDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
@@ -22,10 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,17 +44,23 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
      * @return
      */
     @Override
-    public List<PurchaseRequestResponseDto> findAllPurchaseRequests() {
+    public List<PurchaseRequestResponseDto> findAllPurchaseRequests(SearchDTO dto) {
 
-        // 모든 발주 요청을 가져옴
-        List<PurchaseRequest> purchaseRequests = purchaseRequestRepository.findAll();
+        List<PurchaseRequest> purchaseRequests;
 
-        if (purchaseRequests.isEmpty()) {
-            return new ArrayList<>();
+        // dto가 null이거나 조건이 모두 null일 경우 모든 발주서 조회
+        if (dto == null || (dto.getStartDate() == null && dto.getEndDate() == null && dto.getClientId() == null && dto.getState() == null)) {
+            purchaseRequests = purchaseRequestRepository.findAll(); // 전체 발주서 조회
+        } else {
+            // 조건이 있는 경우 QueryDSL을 사용하여 검색
+            purchaseRequests = purchaseRequestRepository.findBySearch(dto);
         }
 
-        return purchaseRequests.stream()
-                .map(this::toListDto)  // 각 발주 요청을 Response DTO로 변환
+        // 발주서가 없는 경우 빈 리스트 반환
+        return purchaseRequests.isEmpty()
+                ? Collections.emptyList()
+                : purchaseRequests.stream()
+                .map(this::toListDto)
                 .toList();
     }
 
@@ -134,11 +139,14 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
                 .date(purchaseRequest.getDate())
                 .deliveryDate(purchaseRequest.getDeliveryDate())
                 .status(purchaseRequest.getStatus().toString())
+                .managerId(purchaseRequest.getManager().getId())
                 .managerCode(purchaseRequest.getManager().getEmployeeNumber())
                 .managerName(purchaseRequest.getManager().getLastName() + purchaseRequest.getManager().getFirstName())  // 담당자 이름
+                .warehouseId(purchaseRequest.getReceivingWarehouse().getId())
                 .warehouseCode(purchaseRequest.getReceivingWarehouse().getCode())
                 .warehouseName(purchaseRequest.getReceivingWarehouse().getName())  // 입고 창고 이름
                 .vatType(purchaseRequest.getVatType())
+                .currencyId(purchaseRequest.getCurrency().getId())
                 .currency(purchaseRequest.getCurrency().getName())  // 통화 종류
                 .exchangeRate(purchaseRequest.getCurrency().getExchangeRate())
                 .remarks(purchaseRequest.getRemarks())
@@ -157,6 +165,7 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
     private PurchaseRequestItemDetailDto toItemDetailDto(PurchaseRequestDetail detail) {
         Product product = detail.getProduct();
         return PurchaseRequestItemDetailDto.builder()
+                .productId(product.getId())
                 .productName(product.getName())  // 품목명
                 .productCode(product.getCode())  // 품목 코드
                 .quantity(detail.getQuantity())  // 수량
@@ -271,17 +280,17 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
             PurchaseRequest purchaseRequest = purchaseRequestRepository.findById(id)
                     .orElseThrow(() -> new NoSuchElementException("해당 발주 요청 정보를 찾을 수 없습니다."));
 
-            if (updateDto.getManagerId() != null) {
-                Employee manager = employeeRepository.findById(updateDto.getManagerId())
-                        .orElseThrow(() -> new RuntimeException("해당 담당자 정보를 찾을 수 없습니다."));
-                purchaseRequest.setManager(manager);
-            }
-
-            if (updateDto.getWarehouseId() != null) {
-                Warehouse warehouse = warehouseRepository.findById(updateDto.getWarehouseId())
-                        .orElseThrow(() -> new RuntimeException("해당 창고 정보를 찾을 수 없습니다."));
-                purchaseRequest.setReceivingWarehouse(warehouse);
-            }
+//            if (updateDto.getManagerId() != null) {
+//                Employee manager = employeeRepository.findById(updateDto.getManagerId())
+//                        .orElseThrow(() -> new RuntimeException("해당 담당자 정보를 찾을 수 없습니다."));
+//                purchaseRequest.setManager(manager);
+//            }
+//
+//            if (updateDto.getWarehouseId() != null) {
+//                Warehouse warehouse = warehouseRepository.findById(updateDto.getWarehouseId())
+//                        .orElseThrow(() -> new RuntimeException("해당 창고 정보를 찾을 수 없습니다."));
+//                purchaseRequest.setReceivingWarehouse(warehouse);
+//            }
 
             // 발주요청 일자, 납기일자 수정
             purchaseRequest.setDate(updateDto.getDate() != null ? updateDto.getDate() : purchaseRequest.getDate());

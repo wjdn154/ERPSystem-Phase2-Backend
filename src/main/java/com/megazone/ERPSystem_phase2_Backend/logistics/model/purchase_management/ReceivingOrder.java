@@ -27,7 +27,7 @@ public class ReceivingOrder {
     private Long id;
 
     // 입고지시서 상세와의 일대다 관계
-    @OneToMany(mappedBy = "receivingOrder", orphanRemoval = true)
+    @OneToMany(mappedBy = "receivingOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<ReceivingOrderDetail> receivingOrderDetails = new ArrayList<>();
 
@@ -63,4 +63,9 @@ public class ReceivingOrder {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private State status = State.WAITING_FOR_RECEIPT;
+
+    public void addReceivingOrderDetail(ReceivingOrderDetail receivingOrderDetail) {
+        this.receivingOrderDetails.add(receivingOrderDetail);
+        receivingOrderDetail.setReceivingOrder(this);
+    }
 }

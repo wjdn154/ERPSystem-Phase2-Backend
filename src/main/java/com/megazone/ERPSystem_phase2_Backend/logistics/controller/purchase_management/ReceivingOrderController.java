@@ -23,9 +23,10 @@ public class ReceivingOrderController {
      * @return
      */
     @PostMapping("/")
-    public ResponseEntity<?> getReceivingOrders() {
+    public ResponseEntity<?> getReceivingOrders(@RequestBody(required = false) SearchDTO dto) {
+        System.out.println("dto = " + dto);
 
-        List<ReceivingOrderResponseDto> response = receivingOrderService.findAllReceivingOrders();
+        List<ReceivingOrderResponseDto> response = receivingOrderService.findAllReceivingOrders(dto);
 
         if(response.isEmpty()){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("입고지시서가 한 건도 존재하지 않습니다.");
