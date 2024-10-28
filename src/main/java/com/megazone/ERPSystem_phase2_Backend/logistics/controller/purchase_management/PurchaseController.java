@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.controller.purchase_mana
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseCreateDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseResponseDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseResponseDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.SearchDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.service.purchase_management.purchase.PurchaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,8 +25,9 @@ public class PurchaseController {
      * @return
      */
     @PostMapping("/")
-    public ResponseEntity<?> getPurchase() {
-        List<PurchaseResponseDto> response = purchaseService.findAllPurchases();
+    public ResponseEntity<?> getPurchase(@RequestBody(required = false) SearchDTO dto) {
+        System.out.println("dto = " + dto);
+        List<PurchaseResponseDto> response = purchaseService.findAllPurchases(dto);
 
         if(response.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("구매서가 한 건도 존재하지 않습니다.");

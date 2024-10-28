@@ -96,9 +96,12 @@ spring:
         - classpath:initial-database/logistics/purchase_management/purchase_request.sql
         - classpath:initial-database/logistics/purchase_management/purchase_order.sql
         - classpath:initial-database/logistics/purchase_management/receiving_order.sql
-#        - classpath:initial-database/logistics/purchase_management/purchase.sql <<
+
         - classpath:initial-database/logistics/sales_management/shipping_order.sql
         - classpath:initial-database/logistics/sales_management/sale_plan.sql
+        - classpath:initial-database/logistics/sales_management/quotation.sql
+        - classpath:initial-database/logistics/sales_management/orders.sql
+        - classpath:initial-database/logistics/sales_management/sale.sql
 
         - classpath:initial-database/production/basic_data/bom/standard_bom.sql
         - classpath:initial-database/production/basic_data/workcenter.sql
@@ -110,6 +113,8 @@ spring:
         - classpath:initial-database/production/resource_data/materialData.sql
         - classpath:initial-database/production/resource_data/hazardousMaterial.sql
         - classpath:initial-database/production/basic_data/bom/bom_standard_bom_material.sql
+
+        - classpath:initial-database/production/production_schedule/common_scheduling/production_request.sql
         - classpath:initial-database/production/production_schedule/plan_of_production/mps.sql
         - classpath:initial-database/production/production_schedule/common_scheduling/production_order.sql
         - classpath:initial-database/production/work_report/work_performance.sql
@@ -131,6 +136,8 @@ spring:
 #        - classpath:initial-database/hr/payment/national_pension.sql
 #        - classpath:initial-database/hr/payment/long_term_care_insurance_pension.sql
 #        - classpath:initial-database/hr/payment/salary.sql
+        - classpath:initial-database/logistics/purchase_management/purchase.sql
+
 
 logging:
   level:

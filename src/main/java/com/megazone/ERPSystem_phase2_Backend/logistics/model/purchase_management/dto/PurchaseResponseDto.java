@@ -12,9 +12,11 @@ import java.time.LocalDate;
 public class PurchaseResponseDto {
     private Long id;
     private String clientName;
+    private LocalDate date;
     private String productName;
     private String warehouseName;
     private BigDecimal totalPrice;
+    private Integer totalQuantity;
     private String vatName;
     private String status;
     private Boolean accountingReflection;

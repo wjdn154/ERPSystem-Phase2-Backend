@@ -21,7 +21,7 @@ public class MpsDTO {
     private LocalDate endDate; // 생산 완료 예정일
     private String status; // 계획 상태 (계획, 확정, 진행 중, 완료)
     private Long productId; // 생산할 제품 ID
-    private BigDecimal quantity; // 생산 수량
+    private Long quantity; // 생산 수량
     private String remarks; // 추가 설명 또는 비고
     private Long productionRequestId; // 연관된 생산 의뢰 ID
     private Long ordersId; // 관련된 고객 주문 ID

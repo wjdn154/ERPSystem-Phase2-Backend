@@ -1,9 +1,16 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management;
 
+import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.Currency;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 판매서 테이블
@@ -11,6 +18,7 @@ import java.time.LocalDate;
  * 등록된 주문을 바탕으로 실제 판매를 등록
  */
 @Entity
+@Data
 @Getter
 @Builder
 @NoArgsConstructor
@@ -22,53 +30,66 @@ public class Sale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 주문서_id 조인
-//    @OneToMany(mappedBy = "")
-//    @JoinColumn(name = "order_id", nullable = false)
-    private Long orderId;
+    // 판매서 상세
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @ToString.Exclude
+    private List<SaleDetail> saleDetails = new ArrayList<>();
 
-    // 거래처_id - N : 1
+    // 거래처 - N : 1
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
+
+    // 사원(담당자) - N : 1
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "manager_id", nullable = false)
+    private Employee manager;
+
+    // 창고_id - 출하 창고
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "warehouse_id", nullable = false)
+    private Warehouse shippingWarehouse;
+
+    // 통화_id
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "currency_id", nullable = false)
+    private Currency currency;
+
+    // 부가세_id
     @Column(nullable = false)
-    private Long clientId;
+    private Long vatId;
 
-    // 사원_id - N : 1
+    // 분개유형_code
     @Column(nullable = false)
-    private Long employeeId;
+    private String journalEntryCode;
 
-    // 창고_id - N : 1
+    // 세금계산서발행여부
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Long warehouseId;
-
-    // 통화_id - N : 1
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "currency_id", nullable = false)
-    private Long currencyId;
-
-    // 품목_id - 1 : N
-    @Column
-    private Long productId;
-
-    // 수량
-    @Column(nullable = false)
-    private Integer quantity;
-
-    // 공급가액 - 수량 * 단가
-    @Column(nullable = false)
-    private Double supplyPrice;
-
-    // 부가세율 적용 or 미적용
-    @Column(nullable = false)
-    private Boolean vatType;
-
-    // 부가세 - 공급가액의 10%
-    @Column
-    private Double vat;
+    @Builder.Default
+    private ElectronicTaxInvoiceStatus electronicTaxInvoiceStatus = ElectronicTaxInvoiceStatus.UNPUBLISHED;
 
     // 일자
     @Column(nullable = false)
     private LocalDate date;
 
+    @Column
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private SaleState state = SaleState.IN_PROGRESS;
+
     // 비고
     @Column
     private String remarks;
+
+    // 회계 반영 여부
+    @Column
+    @Builder.Default
+    private Boolean accountingReflection = false;
+
+    public void addSaleDetail(SaleDetail saleDetail) {
+        this.saleDetails.add(saleDetail);
+        saleDetail.setSale(this);
+    }
 }
