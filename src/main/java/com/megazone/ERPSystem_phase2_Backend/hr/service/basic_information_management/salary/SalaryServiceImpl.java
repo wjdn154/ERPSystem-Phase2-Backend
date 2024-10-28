@@ -28,8 +28,8 @@ public class SalaryServiceImpl implements SalaryService {
 
         salary.setEmployeeId(
                 employeeRepository.findById(dto.getEmployeeId()).orElseThrow(
-                        () -> new NoSuchElementException("해당하는 사원이 없습니다.")));
-        salary.setSalaryStepId(
+                        () -> new NoSuchElementException("해당하는 사원이 없습니다.")).getId());
+        salary.setSalaryStep(
                 salaryStepRepository.findById(dto.getSalaryStepId()).orElseThrow(
                         () -> new NoSuchElementException("해당하는 호봉 정보가 없습니다.")));
         salary.setSalaryType(dto.getSalaryType());
@@ -53,7 +53,7 @@ public class SalaryServiceImpl implements SalaryService {
         Employee employee = employeeRepository.findById(employeeId).orElseThrow(
                 () -> new NoSuchElementException("해당하는 사원이 없습니다."));
 
-        Salary result = salaryRepository.findByEmployeeId(employee);
+        Salary result = salaryRepository.findByEmployeeId(employeeId);
 
         return SalaryShowDto.create(result);
     }

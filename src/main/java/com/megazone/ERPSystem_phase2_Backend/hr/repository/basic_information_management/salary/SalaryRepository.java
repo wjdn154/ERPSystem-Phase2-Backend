@@ -5,5 +5,5 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_manageme
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SalaryRepository extends JpaRepository<Salary, Long> , SalaryRepositoryCustom{
-    Salary findByEmployeeId(Employee employeeId);
+    Salary findByEmployeeId(Long employeeId);
 }

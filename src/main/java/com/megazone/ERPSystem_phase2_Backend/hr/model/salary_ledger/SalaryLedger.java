@@ -28,10 +28,10 @@ public class SalaryLedger {
     @JoinColumn(name = "salary_ledger_date_id")
     private SalaryLedgerDate salaryLedgerDate;
 
-//    // 값 타입 컬렉션으로 수당 관리
-//    @ElementCollection
-//    @CollectionTable(name = "salary_ledger_allowance", joinColumns = @JoinColumn(name = "salary_ledger_id"))
-//    private List<SalaryLedgerAllowance> allowance = new ArrayList<>();
+    // 값 타입 컬렉션으로 수당 관리
+    @ElementCollection
+    @CollectionTable(name = "salary_ledger_allowance", joinColumns = @JoinColumn(name = "salary_ledger_id"))
+    private List<SalaryLedgerAllowance> allowance = new ArrayList<>();
 
     private boolean finalized = false; // 결산 여부
 
@@ -47,10 +47,7 @@ public class SalaryLedger {
     @Column(nullable = false)
     private BigDecimal employmentInsuranceAmount; // 고용보험 금액
 
+    private LocalDate ledgerDate;
+
 }
 
-//@Embeddable
-//class SalaryLedgerAllowance {
-//    private String name; // 수당이름
-//    private BigDecimal amount; // 수당금액
-//}
