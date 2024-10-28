@@ -57,7 +57,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<EmployeeShowDTO> findAllEmployees() {
         //엔티티 dto로 변환
-        return employeeRepository.findAll().stream()
+        return employeeRepository.findAllByUser().stream()
                 .map(employee -> new EmployeeShowDTO(
                         employee.getId(),
                         employee.getEmployeeNumber(),

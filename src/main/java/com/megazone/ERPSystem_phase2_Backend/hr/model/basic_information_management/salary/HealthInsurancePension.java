@@ -21,19 +21,13 @@ import java.util.List;
 public class HealthInsurancePension {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Unique
     private Long id;
 
-    private BigDecimal companyRate; // 건강보험 기업 적용 요율
-
-    private BigDecimal employeeRate; // 건강보험 가입자 적용 요율
-
+    @Column(precision = 10, scale = 5) private BigDecimal companyRate; // 건강보험 기업 적용 요율
+    @Column(precision = 10, scale = 5) private BigDecimal employeeRate; // 건강보험 가입자 적용 요율
     private BigDecimal lowerAmount; // 건강보험 최저하한 금액
-
     private BigDecimal upperAmount; // 건강보험 최고상한 금액
-
     private LocalDate startDate; // 건강보험기준 적용 시작 날짜
-
     private LocalDate endDate; // 건강보험기준 적용 마감 날짜
 
 }
