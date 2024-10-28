@@ -89,7 +89,6 @@ sourceSets {
 // 어노테이션 프로세서로 생성된 파일의 출력 디렉토리 설정
 tasks.withType<JavaCompile> {
 	options.annotationProcessorGeneratedSourcesDirectory = file("build/generated/source/apt/main") // 어노테이션 프로세서 출력 디렉토리 설정
-	options.compilerArgs.add("-parameters") // 런타임 시 parameter flag 이름 유지 설정
 }
 
 // clean 태스크 설정: QClass 디렉토리 삭제
