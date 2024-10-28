@@ -21,8 +21,7 @@ public class Salary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    Long employeeId;
+    private Long employeeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "salary_step_id")
