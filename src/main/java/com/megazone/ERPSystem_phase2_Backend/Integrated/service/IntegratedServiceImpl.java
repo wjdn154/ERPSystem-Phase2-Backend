@@ -15,7 +15,11 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.SalesAnd
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.resolvedVoucher.ResolvedVoucherRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.financial_statements_ledger.IncomeStatementService;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.ledger.SalesAndPurchaseLedgerService;
+import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.work_performance.work_report.WorkPerformanceRepository;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.dto.IncomeStatementLedgerShowDTO;
@@ -40,33 +44,42 @@ public class IntegratedServiceImpl implements IntegratedService {
     private final EnvironmentalCertificationAssessmentRepository environmentalCertificationAssessmentRepository;
     private final SalesAndPurchaseLedgerService salesAndPurchaseLedgerService;
     private final IncomeStatementService incomeStatementService;
+    private final WorkPerformanceRepository workPerformanceRepository;
 
     @Override
     public DashboardDataDTO dashboard() {
 
-        // 최근 활동
-        List<DashboardDataDTO.ActivityDTO> activities = recentActivityRepository.findAllByOrderByActivityTimeDesc()
-                .stream()
-                .map(activity -> DashboardDataDTO.ActivityDTO.builder()
-                        .id(activity.getId())
-                        .activityDescription(activity.getActivityDescription())
-                        .activityType(activity.getActivityType())
-                        .activityTime(calculateTimeAgo(activity.getActivityTime()))
-                        .build())
-                .toList();
+        
+        List<DashboardDataDTO.ActivityDTO> activities = getActivityDTOS(); // 최근 활동        
+        DashboardDataDTO.EnvironmentalScoreDTO environmentalScore = getEnvironmentalScoreDTO(); // 환경 점수        
+        IncomeStatementLedgerDashBoardDTO incomeStatementLedgerDashBoardDTO = incomeStatementService.DashBoardShow(); // 매출 및 비용 추이 데이터 집계
+        List<DashboardDataDTO.SalesDataDTO> salesDataList = getSalesDataDTOS(incomeStatementLedgerDashBoardDTO); // 매출 및 비용 추이 데이터 가공
+        DashboardDataDTO.DashboardWidgetDTO widgets = getDashboardWidgetDTO(incomeStatementLedgerDashBoardDTO); // 총매출, 총직원수, 재고현황, 생산량
 
-        // 환경 점수
-        DashboardDataDTO.EnvironmentalScoreDTO environmentalScore = environmentalCertificationAssessmentRepository.findByMonth(YearMonth.now())
-                .map(environmentalCertificationAssessment -> DashboardDataDTO.EnvironmentalScoreDTO.builder()
-                        .totalScore(environmentalCertificationAssessment.getTotalScore())
-                        .wasteScore(environmentalCertificationAssessment.getWasteScore())
-                        .energyScore(environmentalCertificationAssessment.getEnergyScore())
-                        .build())
-                .orElse(null);
+        return DashboardDataDTO.builder()
+                .widgets(widgets)
+                .activities(activities)
+                .environmentalScore(environmentalScore)
+                .salesData(salesDataList)
+                .build();
+    }
 
+    private DashboardDataDTO.DashboardWidgetDTO getDashboardWidgetDTO(IncomeStatementLedgerDashBoardDTO incomeStatementLedgerDashBoardDTO) {
 
+        BigDecimal totalWorkPerformance = workPerformanceRepository.findAll().stream().map(WorkPerformance::getAcceptableQuantity).reduce(BigDecimal.ZERO, BigDecimal::add); // 총 생산량
+
+        DashboardDataDTO.DashboardWidgetDTO widgets = DashboardDataDTO.DashboardWidgetDTO.builder()
+                .financeName("총 매출")
+                .financeValue(incomeStatementLedgerDashBoardDTO.getTotalRevenue())
+                .productionName("총 생산량")
+                .productionValue(totalWorkPerformance)
+                .build();
+        return widgets;
+    }
+
+    @NotNull
+    private List<DashboardDataDTO.SalesDataDTO> getSalesDataDTOS(IncomeStatementLedgerDashBoardDTO incomeStatementLedgerDashBoardDTO) {
         AtomicInteger monthIndex = new AtomicInteger(1);
-        IncomeStatementLedgerDashBoardDTO incomeStatementLedgerDashBoardDTO = incomeStatementService.DashBoardShow();
         List<DashboardDataDTO.SalesDataDTO> salesDataList = incomeStatementLedgerDashBoardDTO.getIncomeStatementLedger().stream()
                 .map(incomeStatementLedgerMonthList -> {
                     BigDecimal sales = incomeStatementLedgerMonthList.stream()
@@ -86,19 +99,33 @@ public class IntegratedServiceImpl implements IntegratedService {
                             .build();
                 })
                 .collect(Collectors.toList());
+        return salesDataList;
+    }
 
-        DashboardDataDTO.DashboardWidgetDTO widgets = DashboardDataDTO.DashboardWidgetDTO.builder()
-                .financeName("총 매출")
-                .financeValue(incomeStatementLedgerDashBoardDTO.getTotalRevenue())
-                .build();
+    @Nullable
+    private DashboardDataDTO.EnvironmentalScoreDTO getEnvironmentalScoreDTO() {
+        DashboardDataDTO.EnvironmentalScoreDTO environmentalScore = environmentalCertificationAssessmentRepository.findByMonth(YearMonth.now())
+                .map(environmentalCertificationAssessment -> DashboardDataDTO.EnvironmentalScoreDTO.builder()
+                        .totalScore(environmentalCertificationAssessment.getTotalScore())
+                        .wasteScore(environmentalCertificationAssessment.getWasteScore())
+                        .energyScore(environmentalCertificationAssessment.getEnergyScore())
+                        .build())
+                .orElse(null);
+        return environmentalScore;
+    }
 
-
-        return DashboardDataDTO.builder()
-                .widgets(widgets)
-                .activities(activities)
-                .environmentalScore(environmentalScore)
-                .salesData(salesDataList)
-                .build();
+    @NotNull
+    private List<DashboardDataDTO.ActivityDTO> getActivityDTOS() {
+        List<DashboardDataDTO.ActivityDTO> activities = recentActivityRepository.findAllByOrderByActivityTimeDesc()
+                .stream()
+                .map(activity -> DashboardDataDTO.ActivityDTO.builder()
+                        .id(activity.getId())
+                        .activityDescription(activity.getActivityDescription())
+                        .activityType(activity.getActivityType())
+                        .activityTime(calculateTimeAgo(activity.getActivityTime()))
+                        .build())
+                .toList();
+        return activities;
     }
 
     private String calculateTimeAgo(LocalDateTime activityTime) {
