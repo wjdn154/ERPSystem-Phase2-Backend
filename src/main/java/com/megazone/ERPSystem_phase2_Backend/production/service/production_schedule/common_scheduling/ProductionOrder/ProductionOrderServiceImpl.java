@@ -110,6 +110,14 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
                 .toList();
     }
 
+    @Override
+    public List<ProductionOrderDTO> getUnconfirmedProductionOrders() {
+        List<ProductionOrder> productionOrders = productionOrderRepository.findByConfirmedFalse();
+        return productionOrders.stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
     /**
      * 작업 지시 생성
      */

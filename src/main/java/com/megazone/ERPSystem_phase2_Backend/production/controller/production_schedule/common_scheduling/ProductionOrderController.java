@@ -93,6 +93,20 @@ public class ProductionOrderController {
         return ResponseEntity.ok(productionOrders);
     }
 
+    // 미확정 작업 지시 조회
+    @PostMapping("/unconfirmed")
+    public ResponseEntity<Object> getUnconfirmedProductionOrders() {
+        try{
+            List<ProductionOrderDTO> productionOrders = productionOrderService.getUnconfirmedProductionOrders();
+            return ResponseEntity.ok(productionOrders);
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("미확정 작업 지시 조회 중 오류 발생 : " + e.getMessage());
+        }
+
+    }
+
+
+
     /**
      * 작업 지시 ID로 단일 작업 지시 조회
      *
