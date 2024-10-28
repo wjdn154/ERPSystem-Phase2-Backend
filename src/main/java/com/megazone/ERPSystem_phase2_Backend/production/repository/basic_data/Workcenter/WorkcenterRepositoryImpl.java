@@ -2,6 +2,8 @@ package com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.W
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.QWarehouse;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.QWorkerAssignment;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.WorkerAssignment;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.QEquipmentData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.QProcessDetails;
 import com.querydsl.core.types.Projections;
@@ -14,7 +16,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.QWorkcenter.workcenter;
 
@@ -59,59 +63,59 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
 
 
 
-//    public Optional<Workcenter> findOneByFactoryCode(String factoryCode) {
-//        QWarehouse factory = QWarehouse.warehouse;
-//        Workcenter result = queryFactory
-//                .selectFrom(workcenter)
-//                .join(workcenter.factory, factory).fetchJoin() // JOIN FETCH
-//                .where(workcenter.factory.code.eq(factoryCode))
-//                .fetchOne();
-//        return Optional.ofNullable(result);
-//    }
-//
-//    public List<Workcenter> findByProcessNameContaining(String processName) {
-//        QProcessDetails processDetails = QProcessDetails.processDetails;
-//        return queryFactory
-//                .selectFrom(workcenter)
-//                .where(workcenter.processDetails.name.containsIgnoreCase(processName))
-//                .fetch();
-//    }
-//
-//    public List<Workcenter> findByProcessCodeContaining(String processCode) {
-//        QProcessDetails processDetails = QProcessDetails.processDetails;
-//        return queryFactory
-//                .selectFrom(workcenter)
-//                .where(workcenter.processDetails.code.containsIgnoreCase(processCode))
-//                .fetch();
-//    }
-//
-//    public Optional<Workcenter> findOneByProcessCode(String processCode) {
-//        QProcessDetails processDetails = QProcessDetails.processDetails;
-//        Workcenter result = queryFactory
-//                .selectFrom(workcenter)
-//                .join(workcenter.processDetails, processDetails).fetchJoin() // JOIN FETCH
-//                .where(workcenter.processDetails.code.eq(processCode))
-//                .fetchOne();
-//        return Optional.ofNullable(result);
-//    }
-//
-//    public List<Workcenter> findByEquipmentNameContaining(String equipmentName) {
-//        QEquipmentData equipmentData = QEquipmentData.equipmentData;
-//        return queryFactory
-//                .selectFrom(workcenter)
-//                .join(workcenter.equipmentList, equipmentData).fetchJoin() // JOIN FETCH
-//                .where(equipmentData.equipmentName.containsIgnoreCase(equipmentName))
-//                .fetch();
-//    }
-//
-//    public List<Workcenter> findByEquipmentModelNumberContaining(String equipmentModelNumber) {
-//        QEquipmentData equipmentData = QEquipmentData.equipmentData;
-//        return queryFactory
-//                .selectFrom(workcenter)
-//                .join(workcenter.equipmentList, equipmentData).fetchJoin() // JOIN FETCH
-//                .where(equipmentData.modelName.containsIgnoreCase(equipmentModelNumber))
-//                .fetch();
-//    }
+    public Optional<Workcenter> findOneByFactoryCode(String factoryCode) {
+        QWarehouse factory = QWarehouse.warehouse;
+        Workcenter result = queryFactory
+                .selectFrom(workcenter)
+                .join(workcenter.factory, factory).fetchJoin() // JOIN FETCH
+                .where(workcenter.factory.code.eq(factoryCode))
+                .fetchOne();
+        return Optional.ofNullable(result);
+    }
+
+    public List<Workcenter> findByProcessNameContaining(String processName) {
+        QProcessDetails processDetails = QProcessDetails.processDetails;
+        return queryFactory
+                .selectFrom(workcenter)
+                .where(workcenter.processDetails.name.containsIgnoreCase(processName))
+                .fetch();
+    }
+
+    public List<Workcenter> findByProcessCodeContaining(String processCode) {
+        QProcessDetails processDetails = QProcessDetails.processDetails;
+        return queryFactory
+                .selectFrom(workcenter)
+                .where(workcenter.processDetails.code.containsIgnoreCase(processCode))
+                .fetch();
+    }
+
+    public Optional<Workcenter> findOneByProcessCode(String processCode) {
+        QProcessDetails processDetails = QProcessDetails.processDetails;
+        Workcenter result = queryFactory
+                .selectFrom(workcenter)
+                .join(workcenter.processDetails, processDetails).fetchJoin() // JOIN FETCH
+                .where(workcenter.processDetails.code.eq(processCode))
+                .fetchOne();
+        return Optional.ofNullable(result);
+    }
+
+    public List<Workcenter> findByEquipmentNameContaining(String equipmentName) {
+        QEquipmentData equipmentData = QEquipmentData.equipmentData;
+        return queryFactory
+                .selectFrom(workcenter)
+                .join(workcenter.equipmentList, equipmentData).fetchJoin() // JOIN FETCH
+                .where(equipmentData.equipmentName.containsIgnoreCase(equipmentName))
+                .fetch();
+    }
+
+    public List<Workcenter> findByEquipmentModelNumberContaining(String equipmentModelNumber) {
+        QEquipmentData equipmentData = QEquipmentData.equipmentData;
+        return queryFactory
+                .selectFrom(workcenter)
+                .join(workcenter.equipmentList, equipmentData).fetchJoin() // JOIN FETCH
+                .where(equipmentData.modelName.containsIgnoreCase(equipmentModelNumber))
+                .fetch();
+    }
 
 //    /**
 //     * 오늘의 작업자
@@ -131,22 +135,21 @@ public class WorkcenterRepositoryImpl implements WorkcenterRepositoryCustom {
 //                        .and(workerAssignment.assignmentDate.eq(today)))
 //                .fetch();
 //    }
-//
-//    /**
-//     * 배정일 최신순으로 정렬하여 이력 조회
-//     * @param workcenterId 작업장 ID
-//     * @return
-//     */
-//
-//    @Override
-//    public List<WorkerAssignment> findWorkerAssignmentsByWorkcenterId(Long workcenterId) {
-//        QWorkerAssignment workerAssignment = QWorkerAssignment.workerAssignment;
-//        return queryFactory
-//                .selectFrom(workerAssignment)
-//                .where(workerAssignment.workcenter.id.eq(workcenterId))
-//                .orderBy(workerAssignment.assignmentDate.desc())
-//                .fetch();
-//    }
 
+    /**
+     * 배정일 최신순으로 정렬하여 이력 조회
+     * @param workcenterId 작업장 ID
+     * @return
+     */
+
+    @Override
+    public List<WorkerAssignment> findWorkerAssignmentsByWorkcenterId(Long workcenterId) {
+        QWorkerAssignment workerAssignment = QWorkerAssignment.workerAssignment;
+        return queryFactory
+                .selectFrom(workerAssignment)
+                .where(workerAssignment.workcenter.id.eq(workcenterId))
+                .orderBy(workerAssignment.assignmentDate.desc())
+                .fetch();
+    }
 
 }

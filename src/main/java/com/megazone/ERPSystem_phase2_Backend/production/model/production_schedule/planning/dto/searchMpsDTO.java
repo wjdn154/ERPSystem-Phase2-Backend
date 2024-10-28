@@ -28,7 +28,7 @@ public class searchMpsDTO {
     private Long productId; // 생산할 제품 ID
     private String productName; // 생산할 제품명
 
-    private BigDecimal quantity; // 생산 수량
+    private Long quantity; // 생산 수량
     private String remarks; // 추가 설명 또는 비고
 
     private Long productionRequestId; // 연관된 생산 의뢰 ID

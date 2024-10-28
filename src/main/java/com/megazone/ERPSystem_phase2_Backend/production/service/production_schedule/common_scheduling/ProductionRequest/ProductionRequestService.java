@@ -1,21 +1,23 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.common_scheduling.ProductionRequest;
 
-import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.ProductionRequestDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.ProductionRequestListDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.ProductionRequestDetailDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.enums.ProgressType;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductionRequestService {
-    ProductionRequestDTO saveManualProductionRequest(ProductionRequestDTO productionRequestDTO);
+    ProductionRequestDetailDTO saveManualProductionRequest(ProductionRequestDetailDTO dto);
 
-    ProductionRequestDTO getProductionRequestById(Long id);
+    ProductionRequestDetailDTO getProductionRequestById(Long id);
 
-    List<ProductionRequestDTO> getAllProductionRequests();
+    List<ProductionRequestListDTO> getAllProductionRequests();
 
-    ProductionRequestDTO updateProductionRequest(Long id, ProductionRequestDTO productionRequestDTO);
+    ProductionRequestDetailDTO updateProductionRequest(Long id, ProductionRequestDetailDTO dto);
 
     void deleteProductionRequest(Long id);
 
-    ProductionRequestDTO confirmProductionRequest(Long id, BigDecimal confirmedQuantity);
+    ProductionRequestDetailDTO confirmProductionRequest(Long id, Long confirmedQuantity);
 
+    void updateProgress(Long requestId, ProgressType progressType);
 }
