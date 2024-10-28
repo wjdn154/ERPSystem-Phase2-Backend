@@ -152,7 +152,8 @@ public class PositionSalaryStepRepositoryImpl implements PositionSalaryStepRepos
                 .join(qAllowance).on(qAllowance.id.eq(qPositionSalaryStepAllowance.allowance.id))
                 .join(qSalaryStep).on(qPositionSalaryStep.salarySteps.id.eq(qSalaryStep.id))
                 .where(qPositionSalaryStep.positions.id.eq(positionId)
-                        .and(qSalaryStep.id.eq(SalaryStepId)))
+                        .and(qSalaryStep.id.eq(SalaryStepId))
+                        .and(qPositionSalaryStep.useEndDate.isNull()))
                 .fetch();
     }
 }

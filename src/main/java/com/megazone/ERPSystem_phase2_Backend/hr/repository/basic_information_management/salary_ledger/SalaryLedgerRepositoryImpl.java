@@ -22,8 +22,9 @@ import java.util.Map;
 public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
-    public List<SalaryLedgerDTO> findLedger(SalaryLedgerSearchDTO dto) {
+    public SalaryLedgerDTO findLedger(SalaryLedgerSearchDTO dto) {
         QSalaryLedger qSalaryLedger = QSalaryLedger.salaryLedger;
+
         QSalaryLedgerAllowance qSalaryLedgerAllowance = QSalaryLedgerAllowance.salaryLedgerAllowance;
 
         List<Tuple> results = queryFactory.select(
@@ -48,8 +49,10 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
         // 중복된 SalaryLedger 항목에 대해 수당 리스트를 묶어서 처리
         Map<Long, SalaryLedgerDTO> ledgerMap = new HashMap<>();
 
+        Long ledgerId = 0L;
+
         for (Tuple row : results) {
-            Long ledgerId = row.get(qSalaryLedger.id);
+            ledgerId = row.get(qSalaryLedger.id);
             SalaryLedgerDTO salaryLedgerDTO = ledgerMap.get(ledgerId);
 
             if (salaryLedgerDTO == null) {
@@ -70,6 +73,6 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
             salaryLedgerDTO.getAllowances().add(allowanceDTO);
         }
 
-        return new ArrayList<>(ledgerMap.values()); // 중복 없이 SalaryLedgerDTO 리스트 반환
+        return ledgerMap.get(ledgerId); // 중복 없이 SalaryLedgerDTO 리스트 반환
     }
 }

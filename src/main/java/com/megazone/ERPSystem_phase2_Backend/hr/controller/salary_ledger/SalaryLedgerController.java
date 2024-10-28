@@ -25,7 +25,7 @@ public class SalaryLedgerController {
     @PostMapping("/salaryledger/show")
     public ResponseEntity<Object> show(@RequestBody SalaryLedgerSearchDTO dto) {
         try{
-            List<SalaryLedgerDTO> result = salaryLedgerService.showSalaryLedger(dto);
+            SalaryLedgerDTO result = salaryLedgerService.showSalaryLedger(dto);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }catch(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

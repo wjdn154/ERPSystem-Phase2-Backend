@@ -30,6 +30,7 @@ public class SalaryShowDto {
     private BigDecimal healthInsurancePensionAmount; // 건강보험 금액
     private String healthInsuranceNumber; // 건강보험 번호
     private String longTermCareInsurancePensionCode; // 장기요양보험 코드
+    private String longTermCareInsurancePensionDescription;
     private BigDecimal employmentInsuranceAmount; // 고용보험 금액
     private boolean unionMembershipStatus; // 노조가입여부
 
@@ -42,14 +43,15 @@ public class SalaryShowDto {
                 salary.getSalaryType(),
                 salary.isIncomeTaxType(),
                 salary.isStudentLoanRepaymentStatus(),
-                salary.getStudentLoanRepaymentAmount(),
+                salary.getStudentLoanRepaymentAmount().setScale(0, BigDecimal.ROUND_HALF_UP),
                 salary.getPensionType(),
-                salary.getNationalPensionAmount(),
-                salary.getPrivateSchoolPensionAmount(),
-                salary.getHealthInsurancePensionAmount(),
+                salary.getNationalPensionAmount().setScale(0, BigDecimal.ROUND_HALF_UP),
+                salary.getPrivateSchoolPensionAmount().setScale(0, BigDecimal.ROUND_HALF_UP),
+                salary.getHealthInsurancePensionAmount().setScale(0, BigDecimal.ROUND_HALF_UP),
                 salary.getHealthInsuranceNumber(),
                 salary.getLongTermCareInsurancePensionCode(),
-                salary.getEmploymentInsuranceAmount(),
+                salary.getLongTermCareInsurancePensionCode(),
+                salary.getEmploymentInsuranceAmount().setScale(0, BigDecimal.ROUND_HALF_UP),
                 salary.isUnionMembershipStatus()
         );
     }
