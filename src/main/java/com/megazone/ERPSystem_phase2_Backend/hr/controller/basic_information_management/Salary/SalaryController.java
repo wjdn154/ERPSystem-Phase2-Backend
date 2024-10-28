@@ -36,9 +36,13 @@ public class SalaryController {
         Long employeeId = requestId.get("employeeId");
         try {
             SalaryShowDto result = salaryService.show(employeeId);
+            System.out.println("result = " + result);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }
         catch(Exception e) {
+            System.out.println("e = " + e);
+            e.printStackTrace();
+            System.out.println("e.getMessage() = " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }

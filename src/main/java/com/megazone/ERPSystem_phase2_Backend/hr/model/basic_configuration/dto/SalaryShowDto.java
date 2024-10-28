@@ -34,7 +34,7 @@ public class SalaryShowDto {
     private BigDecimal employmentInsuranceAmount; // 고용보험 금액
     private boolean unionMembershipStatus; // 노조가입여부
 
-    public static SalaryShowDto create(Salary salary) {
+    public static SalaryShowDto create(Salary salary, String longTermCareInsurancePensionDescription) {
         return new SalaryShowDto(
                 salary.getId(),
                 salary.getSalaryStep().getId(),
@@ -50,7 +50,7 @@ public class SalaryShowDto {
                 salary.getHealthInsurancePensionAmount().setScale(0, BigDecimal.ROUND_HALF_UP),
                 salary.getHealthInsuranceNumber(),
                 salary.getLongTermCareInsurancePensionCode(),
-                salary.getLongTermCareInsurancePensionCode(),
+                longTermCareInsurancePensionDescription,
                 salary.getEmploymentInsuranceAmount().setScale(0, BigDecimal.ROUND_HALF_UP),
                 salary.isUnionMembershipStatus()
         );

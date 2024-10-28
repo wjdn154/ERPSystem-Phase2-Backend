@@ -6,6 +6,7 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_manageme
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.salary.Salary;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_configuration.SalaryStepRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.salary.LongTermCareInsurancePensionRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.salary.SalaryRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class SalaryServiceImpl implements SalaryService {
     private final SalaryRepository salaryRepository;
     private final EmployeeRepository employeeRepository;
     private final SalaryStepRepository salaryStepRepository;
+    private final LongTermCareInsurancePensionRepository longTermCareInsurancePensionRepository;
 
     @Override
     public void saveSalary(SalaryEntryDTO dto) {
@@ -54,7 +56,8 @@ public class SalaryServiceImpl implements SalaryService {
                 () -> new NoSuchElementException("해당하는 사원이 없습니다."));
 
         Salary result = salaryRepository.findByEmployeeId(employeeId);
+        String description = longTermCareInsurancePensionRepository.findByCode(result.getLongTermCareInsurancePensionCode()).getDescription();
 
-        return SalaryShowDto.create(result);
+        return SalaryShowDto.create(result, description);
     }
 }
