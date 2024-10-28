@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto;
+package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.dto.shippingOrder;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReceivingOrderResponseDetailDto {
+public class ShippingOrderResponseDetailDto {
 
     private Long id;
     private LocalDate date;
@@ -27,9 +27,11 @@ public class ReceivingOrderResponseDetailDto {
     private String managerContact;
     private String warehouseCode;
     private String warehouseName;
+    private String warehouseAddress;
+    private String postalCode;
     private String remarks;
     private String status;
-    private List<ShippingOrderItemDetailDto> receivingOrderDetails;
+    private List<ShippingOrderItemDetailDto> shippingOrderDetails;
 
     /**
      * 출하지시서 상세 항목에 대한 DTO

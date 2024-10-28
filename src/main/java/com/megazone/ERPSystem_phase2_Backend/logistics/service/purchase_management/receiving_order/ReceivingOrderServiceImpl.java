@@ -9,7 +9,7 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registratio
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.ReceivingOrder;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.ReceivingOrderDetail;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.*;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.ReceivingOrderResponseDetailDto.ReceivingOrderItemDetailDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.ReceivingOrderResponseDetailDto.ShippingOrderItemDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
@@ -136,15 +136,15 @@ public class ReceivingOrderServiceImpl implements ReceivingOrderService {
                 .build();
     }
 
-    private List<ReceivingOrderItemDetailDto> toItemDetailDtoList(List<ReceivingOrderDetail> details) {
+    private List<ShippingOrderItemDetailDto> toItemDetailDtoList(List<ReceivingOrderDetail> details) {
         return details.stream()
                 .map(this::toItemDetailDto)
                 .collect(Collectors.toList());
     }
 
-    private ReceivingOrderItemDetailDto toItemDetailDto(ReceivingOrderDetail detail) {
+    private ShippingOrderItemDetailDto toItemDetailDto(ReceivingOrderDetail detail) {
         Product product = detail.getProduct();
-        return ReceivingOrderItemDetailDto.builder()
+        return ShippingOrderItemDetailDto.builder()
                 .productCode(product.getCode())
                 .productName(product.getName())
                 .standard(product.getStandard())
