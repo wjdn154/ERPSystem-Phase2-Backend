@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DepartmentCreateDTO {
-    private String departmentCode;
-    private String departmentName;
-    private String location;
+public class TransferTypeResponseDTO {
+    private Long id;            // 자동 생성된 ID
+    private String code;        // 발령 유형 코드
+    private String description; // 발령 유형 설명
 }

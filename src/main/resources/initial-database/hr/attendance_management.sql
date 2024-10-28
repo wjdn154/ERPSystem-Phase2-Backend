@@ -14,7 +14,7 @@ INSERT INTO leaves_leavestype (type_name) VALUES
 ('병가'),
 ('정기휴가');
 
-INSERT INTO leaves (code, end_date, reason, start_date, status, employee_id, leavestype_id) VALUES
+INSERT INTO leaves (code, start_date, reason, end_date, status, employee_id, leavestype_id) VALUES
 ('0001','2024-05-05','두통으로 인한 휴가','2024-05-10','APPROVED','1','1'),
 ('0002','2024-06-05','연차 사용','2024-06-10','PENDING','2','2'),
 ('0003','2024-07-05','복통으로 인한 휴가','2024-07-10','APPROVED','3','3'),

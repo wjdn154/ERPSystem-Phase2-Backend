@@ -62,6 +62,10 @@ public class DepartmentController {
     public ResponseEntity<DepartmentDetailDTO> updateDepartment(
             @PathVariable("id") Long id,
             @RequestBody DepartmentCreateDTO dto) {
+        System.out.println("Received DTO: " + dto);
+        System.out.println("Received Department Code: " + dto.getDepartmentCode());
+        System.out.println("Received Department Name: " + dto.getDepartmentName());
+        System.out.println("Received Location: " + dto.getLocation());
 
         try {
             DepartmentDetailDTO updatedDepartment = departmentService.updateDepartment(id, dto);
