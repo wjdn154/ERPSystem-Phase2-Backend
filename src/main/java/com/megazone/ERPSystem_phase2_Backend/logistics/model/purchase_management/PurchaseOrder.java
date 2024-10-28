@@ -16,6 +16,7 @@ import java.util.List;
  */
 @Entity
 @Data
+@ToString(exclude = "purchaseOrderDetails")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,14 +28,14 @@ public class PurchaseOrder {
     private Long id;
 
     // 발주서 상세와의 일대다 관계
-    @OneToMany(mappedBy = "purchaseOrder", orphanRemoval = true)
+    @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<PurchaseOrderDetail> purchaseOrderDetails = new ArrayList<>();
 
     // 발주 요청 - N : 1
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "purchase_request_id", nullable = true)
-    private PurchaseRequest purchaseRequest;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "purchase_request_id", nullable = true)
+//    private PurchaseRequest purchaseRequest;
 
     // 거래처 - N : 1
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -80,7 +81,9 @@ public class PurchaseOrder {
 
     // 발주서 상세 항목 추가 메서드
     public void addPurchaseOrderDetail(PurchaseOrderDetail detail) {
-        purchaseOrderDetails.add(detail);
-        detail.setPurchaseOrder(this); // 양방향 관계 설정
+        if (detail != null) {
+            purchaseOrderDetails.add(detail);
+            detail.setPurchaseOrder(this); // 양방향 관계 설정
+        }
     }
 }

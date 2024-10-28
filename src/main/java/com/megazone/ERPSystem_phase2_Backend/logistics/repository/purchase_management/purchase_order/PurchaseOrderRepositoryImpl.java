@@ -51,10 +51,6 @@ public class PurchaseOrderRepositoryImpl implements PurchaseOrderRepositoryCusto
             // DTO에서 상태를 가져와 Enum으로 변환
             State enumState = State.valueOf(dto.getState().toUpperCase());
 
-            // 상태 출력
-            System.out.println("Enum from DTO: " + enumState);
-            System.out.println("EnumPath from QueryDSL: " + purchaseOrder.status);
-
             // QueryDSL Enum 값 비교
             condition.and(purchaseOrder.status.eq(enumState));
         }

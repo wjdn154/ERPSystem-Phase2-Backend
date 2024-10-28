@@ -4,12 +4,13 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.service.purchase_managem
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.ReceivingOrderCreateDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.ReceivingOrderResponseDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.ReceivingOrderResponseDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.SearchDTO;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ReceivingOrderService {
-    List<ReceivingOrderResponseDto> findAllReceivingOrders();
+    List<ReceivingOrderResponseDto> findAllReceivingOrders(SearchDTO dto);
 
     Optional<ReceivingOrderResponseDetailDto> findReceivingOrderDetailById(Long id);
 

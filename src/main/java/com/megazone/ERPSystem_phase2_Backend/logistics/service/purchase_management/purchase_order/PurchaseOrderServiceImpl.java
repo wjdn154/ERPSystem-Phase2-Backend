@@ -136,11 +136,16 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService{
                 .date(purchaseOrder.getDate())
                 .deliveryDate(purchaseOrder.getDeliveryDate())
                 .status(purchaseOrder.getStatus().toString())
+                .clientId(purchaseOrder.getClient().getId())
+                .clientName(purchaseOrder.getClient().getPrintClientName())
+                .managerId(purchaseOrder.getManager().getId())
                 .managerCode(purchaseOrder.getManager().getEmployeeNumber())
                 .managerName(purchaseOrder.getManager().getLastName() + purchaseOrder.getManager().getFirstName())
+                .warehouseId(purchaseOrder.getReceivingWarehouse().getId())
                 .warehouseCode(purchaseOrder.getReceivingWarehouse().getCode())
                 .warehouseName(purchaseOrder.getReceivingWarehouse().getName())
                 .vatType(purchaseOrder.getVatType())
+                .currencyId(purchaseOrder.getCurrency().getId())
                 .currency(purchaseOrder.getCurrency().getName())
                 .exchangeRate(purchaseOrder.getCurrency().getExchangeRate())
                 .remarks(purchaseOrder.getRemarks())
@@ -160,6 +165,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService{
         Product product = detail.getProduct();
         return PurchaseOrderItemDetailDto.builder()
                 .detailId(detail.getId())
+                .productId(product.getId())
                 .productName(product.getName())
                 .productCode(product.getCode())
                 .quantity(detail.getQuantity())
@@ -219,9 +225,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService{
     }
 
     private PurchaseOrder getPurchaseOrder(PurchaseOrderCreateDto dto, PurchaseOrder newOrder) {
+
         dto.getItems().forEach(item -> {
             Product product = productRepository.findById(item.getProductId())
                     .orElseThrow(() -> new RuntimeException("품목 정보를 찾을 수 없습니다."));
+
 
             // 단가 설정
             // 품목에서 기본 단가 가져오기
@@ -274,8 +282,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService{
     @Override
     public PurchaseOrderResponseDetailDto updatePurchaseOrder(Long id, PurchaseOrderCreateDto updateDto) {
         try {
+
             PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(id)
                     .orElseThrow(() -> new NoSuchElementException("해당 발주 요청 정보를 찾을 수 없습니다."));
+
 
             if(updateDto.getClientId() != null){
                 Client client = clientRepository.findById(updateDto.getClientId())
