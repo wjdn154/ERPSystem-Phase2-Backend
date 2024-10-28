@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface LongTermCareInsurancePensionRepository extends JpaRepository<LongTermCareInsurancePension, Long> , LongTermCareInsurancePensionRepositoryCustom{
 
     Optional<LongTermCareInsurancePension> findFirstByEndDateIsNull();
+
+    LongTermCareInsurancePension findByCode(String code);
 }

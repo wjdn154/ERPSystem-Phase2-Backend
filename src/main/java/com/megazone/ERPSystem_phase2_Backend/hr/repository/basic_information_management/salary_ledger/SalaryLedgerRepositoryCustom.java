@@ -6,5 +6,5 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto.SalaryLe
 import java.util.List;
 
 public interface SalaryLedgerRepositoryCustom {
-    List<SalaryLedgerDTO> findLedger(SalaryLedgerSearchDTO dto);
+    SalaryLedgerDTO findLedger(SalaryLedgerSearchDTO dto);
 }
