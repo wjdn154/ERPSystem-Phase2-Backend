@@ -134,6 +134,7 @@ spring:
         - classpath:initial-database/hr/payment/health_insurance_pension.sql
         - classpath:initial-database/hr/payment/national_pension.sql
         - classpath:initial-database/hr/payment/long_term_care_insurance_pension.sql
+        - classpath:initial-database/hr/payment/salary_ledger_date.sql
         - classpath:initial-database/logistics/purchase_management/purchase.sql
 
         - classpath:initial-database/hr/payment/salary.sql
@@ -143,10 +144,10 @@ logging:
   level:
 #    root: DEBUG
     root: INFO
-    com.megazone: DEBUG
-    org.flywaydb: DEBUG
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql: TRACE
+#    com.megazone: DEBUG
+#    org.flywaydb: DEBUG
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.type.descriptor.sql: TRACE
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %highlight(%-5level) %logger{36} - %msg%n"
 jwt:

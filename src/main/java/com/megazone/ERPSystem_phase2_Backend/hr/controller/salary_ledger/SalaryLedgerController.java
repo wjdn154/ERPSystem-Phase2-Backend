@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.controller.salary_ledger;
 
+import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto.SalaryLedgerDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto.SalaryLedgerSearchDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.salary_ledger.SalaryLedgerRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.salary_ledger.SalaryLedgerService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -23,8 +25,8 @@ public class SalaryLedgerController {
     @PostMapping("/salaryledger/show")
     public ResponseEntity<Object> show(@RequestBody SalaryLedgerSearchDTO dto) {
         try{
-//            Object result = salaryLedgerService.showSalaryLedger(dto);
-            return ResponseEntity.status(HttpStatus.OK).body(null);
+            List<SalaryLedgerDTO> result = salaryLedgerService.showSalaryLedger(dto);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
         }catch(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
