@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.production_order;
 
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,5 +12,7 @@ public interface ProductionOrderRepository extends JpaRepository<ProductionOrder
     Optional<ProductionOrder> findByName(String productionOrderName);
     List<ProductionOrder> findByMpsId(Long mpsId);
 
+
+    List<ProductionOrder> findByWorkcenter(Workcenter workcenter);
 
 }
