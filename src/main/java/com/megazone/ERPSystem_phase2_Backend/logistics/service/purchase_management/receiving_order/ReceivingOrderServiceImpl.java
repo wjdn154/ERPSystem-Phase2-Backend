@@ -9,7 +9,7 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registratio
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.ReceivingOrder;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.ReceivingOrderDetail;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.*;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.ReceivingOrderResponseDetailDto.ShippingOrderItemDetailDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.ReceivingOrderResponseDetailDto.ReceivingOrderItemDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
@@ -136,15 +136,16 @@ public class ReceivingOrderServiceImpl implements ReceivingOrderService {
                 .build();
     }
 
-    private List<ShippingOrderItemDetailDto> toItemDetailDtoList(List<ReceivingOrderDetail> details) {
+    private List<ReceivingOrderItemDetailDto> toItemDetailDtoList(List<ReceivingOrderDetail> details) {
         return details.stream()
                 .map(this::toItemDetailDto)
                 .collect(Collectors.toList());
     }
 
-    private ShippingOrderItemDetailDto toItemDetailDto(ReceivingOrderDetail detail) {
+    private ReceivingOrderItemDetailDto toItemDetailDto(ReceivingOrderDetail detail) {
         Product product = detail.getProduct();
-        return ShippingOrderItemDetailDto.builder()
+        return ReceivingOrderItemDetailDto.builder()
+                .productId(product.getId())
                 .productCode(product.getCode())
                 .productName(product.getName())
                 .standard(product.getStandard())
@@ -199,6 +200,8 @@ public class ReceivingOrderServiceImpl implements ReceivingOrderService {
                     .quantity(item.getQuantity())
                     .remarks(item.getRemarks())
                     .build();
+
+            newOrder.addReceivingOrderDetail(detail);
         });
 
         return newOrder;
@@ -238,6 +241,8 @@ public class ReceivingOrderServiceImpl implements ReceivingOrderService {
             // 입고지시 일자, 납기일자 수정
             receivingOrder.setDate(updateDto.getDate() != null ? updateDto.getDate() : receivingOrder.getDate());
             receivingOrder.setDeliveryDate(updateDto.getDeliveryDate() != null ? updateDto.getDeliveryDate() : receivingOrder.getDeliveryDate());
+
+            receivingOrder.getReceivingOrderDetails().clear();
 
             // 입고지시서 상세 정보 업데이트 - 등록 관련 메서드의 getReceivingOrder 메서드 사용
             ReceivingOrder newOrder = getReceivingOrder(updateDto, receivingOrder);

@@ -16,7 +16,6 @@ import java.util.List;
  */
 @Entity
 @Data
-@ToString(exclude = "purchaseOrders")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,7 +27,7 @@ public class PurchaseRequest {
     private Long id;
 
     // 발주 요청 상세와의 일대다 관계
-    @OneToMany(mappedBy = "purchaseRequest", orphanRemoval = true)
+    @OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<PurchaseRequestDetail> purchaseRequestDetails = new ArrayList<>();
 

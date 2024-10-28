@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * 출하지시서 상세 조회용 DTO
+ * 입고지시서 상세 조회용 DTO
  */
 @Getter
 @Builder
@@ -29,16 +29,17 @@ public class ReceivingOrderResponseDetailDto {
     private String warehouseName;
     private String remarks;
     private String status;
-    private List<ShippingOrderItemDetailDto> receivingOrderDetails;
+    private List<ReceivingOrderItemDetailDto> receivingOrderDetails;
 
     /**
-     * 출하지시서 상세 항목에 대한 DTO
+     * 입고지시서 상세 항목에 대한 DTO
      */
     @Getter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ShippingOrderItemDetailDto {
+    public static class ReceivingOrderItemDetailDto {
+        private Long productId;
         private String productName;
         private String productCode;
         private String standard;
