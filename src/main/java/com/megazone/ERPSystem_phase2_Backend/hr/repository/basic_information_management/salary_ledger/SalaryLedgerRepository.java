@@ -4,5 +4,5 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.SalaryLedger
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SalaryLedgerRepository extends JpaRepository<SalaryLedger, Long> , SalaryLedgerRepositoryCustom{
-    Object showSalaryLedger(Long searchId);
+
 }

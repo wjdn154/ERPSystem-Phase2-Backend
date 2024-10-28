@@ -11,8 +11,8 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "salary_ledger")
-@Table(name = "salary_ledger")
+@Entity(name = "salary_ledger_date")
+@Table(name = "salary_ledger_date")
 public class SalaryLedgerDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
