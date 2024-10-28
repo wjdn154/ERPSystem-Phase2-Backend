@@ -1,16 +1,19 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.financial_statements_ledger;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.CustomNode.*;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.IncomeStatementLedgerPrintType;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.dto.IncomeStatementLedgerDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.dto.IncomeStatementLedgerDashBoardDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.dto.IncomeStatementLedgerShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.dto.IncomeStatementSearchDTO;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.CustomNode.CustomNode;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.resolvedVoucher.ResolvedVoucherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
 
 @Service
@@ -23,7 +26,34 @@ public class IncomeStatementServiceImpl implements IncomeStatementService {
     public List<IncomeStatementLedgerShowDTO> show(IncomeStatementSearchDTO dto) {
         // 1. 쿼리 결과 가져오기
         List<IncomeStatementLedgerDTO> queryResults = resolvedVoucherRepository.incomeStatementShow(dto);
+        return createIncomeStatementLedger(queryResults,IncomeStatementLedgerPrintType.GENERAL);
+    }
 
+    @Override
+    public IncomeStatementLedgerDashBoardDTO DashBoardShow() {
+        BigDecimal totalRevenue = BigDecimal.ZERO;
+        BigDecimal totalExpense = BigDecimal.ZERO;
+
+        List<List<IncomeStatementLedgerShowDTO>> result = new ArrayList<>();
+
+        // 현재 날짜를 기준으로 현재 연도의 1월부터 현재 월까지 반복
+        YearMonth startMonth = YearMonth.of(LocalDate.now().getYear(), 1);  // 1월부터 시작
+        YearMonth currentMonth = YearMonth.from(LocalDate.now());  // 현재 연도와 월 가져오기
+
+
+        for (YearMonth month = startMonth; !month.isAfter(currentMonth); month = month.plusMonths(1)) {
+
+            List<IncomeStatementLedgerDTO> queryResults = resolvedVoucherRepository.incomeStatementShow(
+                    IncomeStatementSearchDTO.create(month));
+            List<IncomeStatementLedgerShowDTO> monthList = createIncomeStatementLedger(queryResults,IncomeStatementLedgerPrintType.DASHBOARD);
+            totalRevenue = totalRevenue.add(monthList.get(0).getTotalAmount());
+            totalExpense = totalExpense.add(monthList.get(1).getTotalAmount());
+            result.add(monthList);
+        }
+        return IncomeStatementLedgerDashBoardDTO.create(result,totalRevenue,totalExpense);
+    }
+
+    public List<IncomeStatementLedgerShowDTO> createIncomeStatementLedger(List<IncomeStatementLedgerDTO> queryResults, IncomeStatementLedgerPrintType type) {
         // 2. 트리 구조 생성
         Map<String, IncomeStatementMediumCategoryNode> root = new LinkedHashMap<>();
 
@@ -89,23 +119,30 @@ public class IncomeStatementServiceImpl implements IncomeStatementService {
             IncomeMediumTotal totals = largeCategoryTotals.computeIfAbsent(mediumNode.getName(), k -> new IncomeMediumTotal());
             totals.addTotal(mediumNode);
 
-            result.add(IncomeStatementLedgerShowDTO.create(mediumNode, "Medium_Category"));
+            if(type.equals(IncomeStatementLedgerPrintType.GENERAL)) {
+                result.add(IncomeStatementLedgerShowDTO.create(mediumNode, "Medium_Category"));
 
-            List<IncomeStateNode> sortedSmallNodes = mediumNode.getChildren();
-            for (IncomeStateNode smallNode : sortedSmallNodes) {
-                if(smallNode instanceof IncomeStatementSmallCategoryNode) {
-                    result.add(IncomeStatementLedgerShowDTO.create(smallNode, "Small_Category"));
+                List<IncomeStateNode> sortedSmallNodes = mediumNode.getChildren();
+                for (IncomeStateNode smallNode : sortedSmallNodes) {
+                    if(smallNode instanceof IncomeStatementSmallCategoryNode) {
+                        result.add(IncomeStatementLedgerShowDTO.create(smallNode, "Small_Category"));
 
-                    List<IncomeStateNode> sortedAccountNodes = smallNode.getChildren();
-                    for (IncomeStateNode accountNode : sortedAccountNodes) {
-                        result.add(IncomeStatementLedgerShowDTO.create(accountNode, "Account_Name"));
+                        List<IncomeStateNode> sortedAccountNodes = smallNode.getChildren();
+                        for (IncomeStateNode accountNode : sortedAccountNodes) {
+                            result.add(IncomeStatementLedgerShowDTO.create(accountNode, "Account_Name"));
+                        }
+                    }else if(smallNode instanceof IncomeStatementAccountNode) {
+                        result.add(IncomeStatementLedgerShowDTO.create(smallNode, "Account_Name"));
                     }
-                }else if(smallNode instanceof IncomeStatementAccountNode) {
-                    result.add(IncomeStatementLedgerShowDTO.create(smallNode, "Account_Name"));
                 }
             }
         }
-        setIncomeStatementPrint(result,largeCategoryTotals);
+        if(type.equals(IncomeStatementLedgerPrintType.GENERAL)) {
+            setIncomeStatementPrint(result,largeCategoryTotals);
+        }
+        else {
+            setIncomeStatementDashBoardPrint(result, largeCategoryTotals);
+        }
         return result;
     }
 
@@ -161,6 +198,27 @@ public class IncomeStatementServiceImpl implements IncomeStatementService {
                 "Large_Category",
                 "당기순손익",
                 netProfit.totalAmount
+        ));
+    }
+
+    private void setIncomeStatementDashBoardPrint(List<IncomeStatementLedgerShowDTO> result, Map<String, IncomeMediumTotal> LargeTotalCategory) {
+        IncomeMediumTotal grossProfit = new IncomeMediumTotal(); // 매출
+        grossProfit.addTotal(LargeTotalCategory.get("매출"));
+        result.add(IncomeStatementLedgerShowDTO.create(
+                "Large_Category",
+                "매출",
+                grossProfit.totalAmount
+        ));
+
+        IncomeMediumTotal operatingProfit = new IncomeMediumTotal(); // 비용
+        operatingProfit.addTotal(LargeTotalCategory.get("매출원가"));
+        operatingProfit.addTotal(LargeTotalCategory.get("판매관리비"));
+        operatingProfit.addTotal(LargeTotalCategory.get("영업외비용"));
+        operatingProfit.addTotal(LargeTotalCategory.get("법인세"));
+        result.add(IncomeStatementLedgerShowDTO.create(
+                "Large_Category",
+                "비용",
+                operatingProfit.totalAmount
         ));
     }
 }

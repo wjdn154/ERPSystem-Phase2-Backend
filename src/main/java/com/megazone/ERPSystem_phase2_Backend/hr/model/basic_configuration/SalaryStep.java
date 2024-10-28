@@ -17,7 +17,7 @@ import java.math.BigDecimal;
  */
 public class SalaryStep {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column

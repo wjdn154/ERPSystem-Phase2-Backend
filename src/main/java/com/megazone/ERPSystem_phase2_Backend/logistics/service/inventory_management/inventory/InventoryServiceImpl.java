@@ -9,12 +9,14 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_managemen
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.inventory_management.inventory.InventoryRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.repository.receiving_processing_management.ReceivingScheduleRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.warehouse_location_management.WarehouseLocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +27,7 @@ public class InventoryServiceImpl implements InventoryService {
     private final WarehouseRepository warehouseRepository;
     private final ProductRepository productRepository;
     private final WarehouseLocationRepository locationRepository;
+    private final ReceivingScheduleRepository receivingScheduleRepository;
 
 
     @Override
@@ -69,5 +72,22 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public List<InventoryResponseDTO> getInventoriesByWarehouseId(Long warehouseId) {
         return inventoryRepository.findInventoriesByWarehouseId(warehouseId);
+    }
+
+    @Override
+    public Long generateNextInventoryNumber() {
+        Long maxInventoryNumber = inventoryRepository.findMaxInventoryNumber();
+        Long maxPendingInventoryNumber = receivingScheduleRepository.findMaxPendingInventoryNumber();
+
+        // 두 값 중 더 큰 값을 반환하고 +1
+        return Math.max(maxInventoryNumber, maxPendingInventoryNumber) + 1;
+    }
+
+    @Override
+    public List<InventoryResponseDTO> getInventoryByLocation(Long locationId) {
+        List<Inventory> inventories = inventoryRepository.findByWarehouseLocationId(locationId);
+        return inventories.stream()
+                .map(InventoryResponseDTO::mapToDTO)
+                .collect(Collectors.toList());
     }
 }

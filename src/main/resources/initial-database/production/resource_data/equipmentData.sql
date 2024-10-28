@@ -1,18 +1,20 @@
 
 
-INSERT INTO equipment_data (cost,install_date,purchase_date,company_id,factory_id,workcenter_id,equipment_img,equipment_name,equipment_num,manufacturer,model_name,equipment_type,operation_status) VALUES
-(5500000,'2022-02-02','2022-02-03',1,1,1,'설비 사진1','자동 조립 라인','PRD-EM-001','삼성','ASLINE-100','ASSEMBLY','BEFORE_OPERATION'),
-(7500000,'2022-02-02','2022-02-04',1,2,2,'설비 사진2','5축 CNC 기계','PRD-EM1-002','LG','5AXIS-CNC','ASSEMBLY','BEFORE_OPERATION'),
-(800000,'2022-02-02','2022-02-04',1,1,7,'설비 사진3','X-Ray 검사기','PRD-EM1-003','YG','XRAY-X','ASSEMBLY','BEFORE_OPERATION'),
-(6000000,'2022-02-02','2022-02-04',1,1,6,'설비 사진4','자동화 조립 로봇','PRD-EM1-004','현대','ROBO-AS1','ASSEMBLY','BEFORE_OPERATION'),
-(900000,'2022-02-02','2022-02-04',1,2,14,'설비 사진5','고속 포장기','PRD-EM1-005','삼성','PK-FAST','ASSEMBLY','BEFORE_OPERATION'),
-(3000000,'2022-02-02','2022-02-04',1,1,15,'설비 사진6','자율 물류 로봇','PRD-EM1-006','삼성','LOGI-AUTO','ASSEMBLY','REPAIRING'),
-(1500000,'2022-03-02','2021-02-04',1,1,1,'설비 사진7','조립설비3','PRD-EM1-007','LG','메가존클라우드','ASSEMBLY','REPAIRING'),
-(1500000,'2022-03-02','2021-02-04',1,1,1,'설비 사진8','포장설비1','PRD-EM1-008','LG','메가존클라우드','ASSEMBLY','REPAIRING'),
-(1500000,'2022-03-02','2021-02-04',1,1,1,'설비 사진9','포장설비2','PRD-EM1-009','현대자동차','메가존클라우드','ASSEMBLY','REPAIRING'),
-(1500000,'2022-03-02','2021-02-04',1,1,1,'설비 사진10','포장설비3','PRD-EM1-010','삼성','메가존클라우드','ASSEMBLY','REPAIRING'),
-(1500000,'2022-03-02','2021-02-04',2,1,1,'설비 사진1','포장설비3','PRD-EM2-001','삼성','메가존클라우드','ASSEMBLY','REPAIRING'),
-(1500000,'2022-04-02','2021-04-04',2,1,1,'설비 사진2','포장설비3','PRD-EM2-002','삼성','메가존클라우드','ASSEMBLY','REPAIRING');
+INSERT INTO equipment_data
+(cost, install_date, purchase_date, company_id, factory_id, workcenter_id, equipment_img, equipment_name, equipment_num, manufacturer, model_name, equipment_type, operation_status, k_wh)
+VALUES
+    (5500000, '2022-02-02', '2022-02-03', 1, 1, 1, '설비 사진1', '자동 조립 라인', 'PRD-EM-001', '삼성', 'ASLINE-100', 'ASSEMBLY', 'BEFORE_OPERATION', 150),
+    (7500000, '2022-02-02', '2022-02-04', 1, 2, 2, '설비 사진2', '5축 CNC 기계', 'PRD-EM1-002', 'LG', '5AXIS-CNC', 'ASSEMBLY', 'BEFORE_OPERATION', 200),
+    (800000, '2022-02-02', '2022-02-04', 1, 1, 7, '설비 사진3', 'X-Ray 검사기', 'PRD-EM1-003', 'YG', 'XRAY-X', 'ASSEMBLY', 'BEFORE_OPERATION', 100),
+    (6000000, '2022-02-02', '2022-02-04', 1, 1, 6, '설비 사진4', '자동화 조립 로봇', 'PRD-EM1-004', '현대', 'ROBO-AS1', 'ASSEMBLY', 'BEFORE_OPERATION', 180),
+    (900000, '2022-02-02', '2022-02-04', 1, 2, 14, '설비 사진5', '고속 포장기', 'PRD-EM1-005', '삼성', 'PK-FAST', 'ASSEMBLY', 'BEFORE_OPERATION', 120),
+    (3000000, '2022-02-02', '2022-02-04', 1, 1, 15, '설비 사진6', '자율 물류 로봇', 'PRD-EM1-006', '삼성', 'LOGI-AUTO', 'ASSEMBLY', 'REPAIRING', 130),
+    (1500000, '2022-03-02', '2021-02-04', 1, 1, 1, '설비 사진7', '조립설비3', 'PRD-EM1-007', 'LG', '메가존클라우드', 'ASSEMBLY', 'REPAIRING', 160),
+    (1500000, '2022-03-02', '2021-02-04', 1, 1, 1, '설비 사진8', '포장설비1', 'PRD-EM1-008', 'LG', '메가존클라우드', 'ASSEMBLY', 'REPAIRING', 110),
+    (1500000, '2022-03-02', '2021-02-04', 1, 1, 1, '설비 사진9', '포장설비2', 'PRD-EM1-009', '현대자동차', '메가존클라우드', 'ASSEMBLY', 'REPAIRING', 140),
+    (1500000, '2022-03-02', '2021-02-04', 1, 1, 1, '설비 사진10', '포장설비3', 'PRD-EM1-010', '삼성', '메가존클라우드', 'ASSEMBLY', 'REPAIRING', 150),
+    (1500000, '2022-03-02', '2021-02-04', 2, 1, 1, '설비 사진1', '포장설비3', 'PRD-EM2-001', '삼성', '메가존클라우드', 'ASSEMBLY', 'REPAIRING', 125),
+    (1500000, '2022-04-02', '2021-04-04', 2, 1, 1, '설비 사진2', '포장설비3', 'PRD-EM2-002', '삼성', '메가존클라우드', 'ASSEMBLY', 'REPAIRING', 135);
 #
 # -- WH002 작업장 설비 (조립, 가공)
 # INSERT INTO equipment_data

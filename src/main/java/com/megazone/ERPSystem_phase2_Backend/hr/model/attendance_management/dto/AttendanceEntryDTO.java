@@ -22,8 +22,8 @@ public class AttendanceEntryDTO {
         return new AttendanceEntryDTO(
                 attendance.getEmployee().getId(),
                 attendance.getDate(),
-                attendance.getCheckinTime(),
-                attendance.getCheckoutTime(),
+                attendance.getCheckInTime(),
+                attendance.getCheckOutTime(),
                 attendance.getStatus() != null ? attendance.getStatus().toString() : "AUTO" // 기본값 처리
         );
     }

@@ -84,4 +84,12 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public Long findMaxInventoryNumber() {
+        Long maxInventoryNumber = queryFactory
+                .select(inventory.inventoryNumber.max())
+                .from(inventory)
+                .fetchOne();
+        return maxInventoryNumber != null ? maxInventoryNumber : 0L; // 기존 값이 없으면 0 반환
+    }
 }

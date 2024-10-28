@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeDepartmentDTO {
+    private Long id;
     private String employeeNumber;
     private String firstName;
     private String lastName;

@@ -14,10 +14,12 @@ public class EmployeeDataDTO {
     private String firstName;
     private String lastName;
     private String phoneNumber;
+    private String hireDate;
     private EmploymentStatus employmentStatus;
     private EmploymentType employmentType;
     private String email;
     private String address;
+    private String registrationNumber;
     private boolean householdHead;
     private String profilePicture;
     private Long departmentId;

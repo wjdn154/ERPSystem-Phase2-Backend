@@ -13,8 +13,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LeavesShowDTO {
+    private Long id;
     private String employeeName;
-    private String TypeName;
+    private String typeName;
     private String code;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -23,7 +24,8 @@ public class LeavesShowDTO {
 
     public static LeavesShowDTO create(Leaves leaves) {
         return new LeavesShowDTO(
-                leaves.getEmployee().getLastName() + leaves.getEmployee().getFirstName(),
+                leaves.getId(),
+               leaves.getEmployee().getLastName() + leaves.getEmployee().getFirstName(),
                 leaves.getLeavesType().getTypeName(),
                 leaves.getCode(),
                 leaves.getStartDate(),
@@ -32,4 +34,5 @@ public class LeavesShowDTO {
                 leaves.getStatus()
         );
     }
+
 }

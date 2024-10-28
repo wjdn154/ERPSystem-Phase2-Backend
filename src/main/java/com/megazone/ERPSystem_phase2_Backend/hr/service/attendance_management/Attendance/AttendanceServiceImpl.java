@@ -87,12 +87,12 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         // Check-in 시간 수정
         if (dto.getCheckInTime() != null) {
-            record.setCheckinTime(dto.getCheckInTime());
+            record.setCheckInTime(dto.getCheckInTime());
         }
 
         // Check-out 시간 수정
         if (dto.getCheckOutTime() != null) {
-            record.setCheckoutTime(dto.getCheckOutTime());
+            record.setCheckOutTime(dto.getCheckOutTime());
         }
         AttendanceEntryDTO entryDto = convertToAttendanceEntryDTO(dto);
 
@@ -123,8 +123,8 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendance.setDate(dto.getDate());  // 날짜 설정
 
         // checkInTime과 checkOutTime이 null이 아닐 때만 Time으로 변환
-        attendance.setCheckinTime(dto.getCheckInTime());  // 출근 시간 설정 (null 처리)
-        attendance.setCheckoutTime(dto.getCheckOutTime());  // 퇴근 시간 설정 (null 처리)
+        attendance.setCheckInTime(dto.getCheckInTime());  // 출근 시간 설정 (null 처리)
+        attendance.setCheckOutTime(dto.getCheckOutTime());  // 퇴근 시간 설정 (null 처리)
         System.out.println(dto.getCheckInTime());
         System.out.println(dto.getCheckOutTime());
 
