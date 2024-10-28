@@ -29,4 +29,5 @@ public class WarehouseLocation {
 
     @Column(name = "active", nullable = false)
     private boolean isActive;
+
 }

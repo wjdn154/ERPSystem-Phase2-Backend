@@ -14,3 +14,4 @@ public class PositionSalaryStepSearchDTO {
     private Long positionId;
     private LocalDate endMonth;
 }
+

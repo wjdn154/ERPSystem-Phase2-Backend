@@ -1,5 +1,8 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.sales_and_purchase_voucher_entry;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.RecentActivityRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubject;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
@@ -50,6 +53,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
     private final ResolvedSaleAndPurchaseVoucherService resolvedSaleAndPurchaseVoucherService;
     private final EmployeeRepository employeeRepository;
     private final ClientRepository clientRepository;
+    private final RecentActivityRepository recentActivityRepository;
 
     @Override
     public UnresolvedSaleAndPurchaseVoucher save(UnresolvedSaleAndPurchaseVoucherEntryDTO dto) {
@@ -397,6 +401,13 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
             else {
                 throw new IllegalArgumentException("권한 또는 해당하는 전표가 없습니다.");
             }
+
+            recentActivityRepository.save(RecentActivity.builder()
+                    .activityDescription("미결 매출매입전표 " + unresolvedVoucherList.size() + "건 승인")
+                    .activityType(ActivityType.FINANCE)
+                    .activityTime(LocalDateTime.now())
+                    .build());
+
         return unresolvedVoucherList;
     }
 

@@ -16,7 +16,7 @@ import java.util.List;
 public class DashboardDataDTO {
 
     private List<SalesDataDTO> salesData;
-    private List<DashboardWidgetDTO> widgets;
+    private DashboardWidgetDTO widgets;
     private EnvironmentalScoreDTO environmentalScore;
     private List<ActivityDTO> activities;
     private List<ProductionStatusDTO> productionStatuses;
@@ -36,10 +36,14 @@ public class DashboardDataDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class DashboardWidgetDTO {
-        private String icon; // 아이콘 이름 또는 경로
-        private String title; // 위젯 타이틀
-        private String value; // 값 (총 매출, 직원 수 등)
-        private String color; // 색상 클래스명
+        private String financeName;
+        private BigDecimal financeValue;
+        private String hrName;
+        private BigDecimal hrValue;
+        private String logisticsName;
+        private BigDecimal logisticsValue;
+        private String productionName;
+        private BigDecimal productionValue;
     }
 
     @Data

@@ -12,4 +12,6 @@ public interface InventoryRepositoryCustom {
     boolean existsByInventoryNumber(Long inventoryNumber);
 
     List<InventoryResponseDTO> findInventoriesByWarehouseId(Long warehouseId);
+
+    Long findMaxInventoryNumber();
 }
