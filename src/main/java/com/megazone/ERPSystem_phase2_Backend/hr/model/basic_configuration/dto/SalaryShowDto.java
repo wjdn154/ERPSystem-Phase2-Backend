@@ -17,7 +17,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class SalaryShowDto {
     private Long id;
-    private SalaryStep SalaryStepId; // 호봉
+    private Long SalaryStepId; // 호봉
+    private String SalaryStepCode; // 호봉코드
+    private String SalaryStepName; // 호봉이름
     private String SalaryCode;
     private String SalaryName;
     private SalaryType salaryType; // 급여형태
@@ -36,7 +38,9 @@ public class SalaryShowDto {
     public static SalaryShowDto create(Salary salary) {
         return new SalaryShowDto(
                 salary.getId(),
-                salary.getSalaryStepId(),
+                salary.getSalaryStep().getId(),
+                salary.getSalaryStep().getCode(),
+                salary.getSalaryStep().getName(),
                 salary.getLongTermCareInsurancePensionCode(),
                 salary.getHealthInsuranceNumber(),
                 salary.getSalaryType(),
