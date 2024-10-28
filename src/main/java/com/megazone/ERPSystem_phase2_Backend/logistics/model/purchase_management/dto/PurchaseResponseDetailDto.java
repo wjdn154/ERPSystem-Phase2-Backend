@@ -20,18 +20,24 @@ import java.util.List;
 public class PurchaseResponseDetailDto {
     private Long id;
     private LocalDate date;
+    private Long clientId;
     private String clientCode;
     private String clientName;
+    private Long managerId;
     private String managerCode;
     private String managerName;
+    private Long warehouseId;
     private String warehouseCode;
     private String warehouseName;
+    private Long vatId;
     private String vatCode;
     private String vatName;
     private String journalEntryCode;
     private String journalEntryName;
     private String electronicTaxInvoiceStatus;
+    private Long currencyId;
     private String currency;
+    private BigDecimal exchangeRate;
     private String remarks;
     private String status;
     private List<PurchaseItemDetailDto> purchaseDetails;
@@ -44,6 +50,7 @@ public class PurchaseResponseDetailDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class PurchaseItemDetailDto {
+        private Long productId;
         private String productName;
         private String productCode;
         private String standard;

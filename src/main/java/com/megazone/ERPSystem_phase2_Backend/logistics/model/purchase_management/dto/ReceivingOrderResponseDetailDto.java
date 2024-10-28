@@ -39,6 +39,7 @@ public class ReceivingOrderResponseDetailDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ReceivingOrderItemDetailDto {
+        private Long productId;
         private String productName;
         private String productCode;
         private String standard;

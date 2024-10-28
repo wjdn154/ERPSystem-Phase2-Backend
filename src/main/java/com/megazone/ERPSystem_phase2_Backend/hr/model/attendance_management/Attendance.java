@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.enums.AttendanceStatus;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import jakarta.persistence.*;
@@ -34,10 +35,10 @@ public class Attendance {
     private LocalDate date; // 날짜
 
     @Column
-    private LocalDateTime checkinTime; // 출근 시간
+    private LocalDateTime checkInTime; // 출근 시간
 
     @Column
-    private LocalDateTime checkoutTime; // 퇴근 시간
+    private LocalDateTime checkOutTime; // 퇴근 시간
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

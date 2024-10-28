@@ -30,7 +30,7 @@ public class BomMaterialDTO {
     private String materialName;      // 자재명
 
     @PositiveOrZero
-    private BigDecimal quantity;      // 자재 필요 수량
+    private Long quantity;      // 자재 필요 수량
     @PositiveOrZero
     private Double lossRate;          // 자재 손실율
 

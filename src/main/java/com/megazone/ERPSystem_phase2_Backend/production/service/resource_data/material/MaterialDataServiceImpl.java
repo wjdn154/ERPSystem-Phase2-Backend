@@ -410,7 +410,7 @@ public class MaterialDataServiceImpl implements MaterialDataService{
 
         //중간 엔티티에서 제거
         materialProductList.remove(materialProductToRemove);
-        
+
         //중간엔티티 저장
         materialProductRepository.saveAll(materialProductList);
 

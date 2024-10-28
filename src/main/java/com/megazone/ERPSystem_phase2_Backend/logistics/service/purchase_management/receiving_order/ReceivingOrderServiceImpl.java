@@ -6,14 +6,10 @@ import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_informat
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.PurchaseOrder;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.ReceivingOrder;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.ReceivingOrderDetail;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.PurchaseOrderCreateDto;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.ReceivingOrderCreateDto;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.ReceivingOrderResponseDetailDto;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.ReceivingOrderResponseDetailDto.ReceivingOrderItemDetailDto;
-import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.dto.ReceivingOrderResponseDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
@@ -24,10 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,15 +42,22 @@ public class ReceivingOrderServiceImpl implements ReceivingOrderService {
      * @return
      */
     @Override
-    public List<ReceivingOrderResponseDto> findAllReceivingOrders() {
+    public List<ReceivingOrderResponseDto> findAllReceivingOrders(SearchDTO dto) {
 
-        List<ReceivingOrder> receivingOrders = receivingOrderRepository.findAll();
+        List<ReceivingOrder> receivingOrders;
 
-        if (receivingOrders.isEmpty()) {
-            return new ArrayList<>();
+        // dto가 null이거나 조건이 모두 null일 경우 모든 발주서 조회
+        if (dto == null || (dto.getStartDate() == null && dto.getEndDate() == null && dto.getClientId() == null && dto.getState() == null)) {
+            receivingOrders = receivingOrderRepository.findAll(); // 전체 발주서 조회
+        } else {
+            // 조건이 있는 경우 QueryDSL을 사용하여 검색
+            receivingOrders = receivingOrderRepository.findBySearch(dto);
         }
 
-        return receivingOrders.stream()
+        // 발주서가 없는 경우 빈 리스트 반환
+        return receivingOrders.isEmpty()
+                ? Collections.emptyList()
+                : receivingOrders.stream()
                 .map(this::toListDto)
                 .toList();
     }
@@ -145,6 +145,7 @@ public class ReceivingOrderServiceImpl implements ReceivingOrderService {
     private ReceivingOrderItemDetailDto toItemDetailDto(ReceivingOrderDetail detail) {
         Product product = detail.getProduct();
         return ReceivingOrderItemDetailDto.builder()
+                .productId(product.getId())
                 .productCode(product.getCode())
                 .productName(product.getName())
                 .standard(product.getStandard())
@@ -199,6 +200,8 @@ public class ReceivingOrderServiceImpl implements ReceivingOrderService {
                     .quantity(item.getQuantity())
                     .remarks(item.getRemarks())
                     .build();
+
+            newOrder.addReceivingOrderDetail(detail);
         });
 
         return newOrder;
@@ -238,6 +241,8 @@ public class ReceivingOrderServiceImpl implements ReceivingOrderService {
             // 입고지시 일자, 납기일자 수정
             receivingOrder.setDate(updateDto.getDate() != null ? updateDto.getDate() : receivingOrder.getDate());
             receivingOrder.setDeliveryDate(updateDto.getDeliveryDate() != null ? updateDto.getDeliveryDate() : receivingOrder.getDeliveryDate());
+
+            receivingOrder.getReceivingOrderDetails().clear();
 
             // 입고지시서 상세 정보 업데이트 - 등록 관련 메서드의 getReceivingOrder 메서드 사용
             ReceivingOrder newOrder = getReceivingOrder(updateDto, receivingOrder);

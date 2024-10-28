@@ -5,6 +5,7 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_manageme
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Department.DepartmentService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,4 +58,20 @@ public class DepartmentController {
         return ResponseEntity.ok("부서가 성공적으로 삭제되었습니다.");
     }
 
+    @PostMapping("/department/update/{id}")
+    public ResponseEntity<DepartmentDetailDTO> updateDepartment(
+            @PathVariable("id") Long id,
+            @RequestBody DepartmentCreateDTO dto) {
+        System.out.println("Received DTO: " + dto);
+        System.out.println("Received Department Code: " + dto.getDepartmentCode());
+        System.out.println("Received Department Name: " + dto.getDepartmentName());
+        System.out.println("Received Location: " + dto.getLocation());
+
+        try {
+            DepartmentDetailDTO updatedDepartment = departmentService.updateDepartment(id, dto);
+            return ResponseEntity.ok(updatedDepartment);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 }

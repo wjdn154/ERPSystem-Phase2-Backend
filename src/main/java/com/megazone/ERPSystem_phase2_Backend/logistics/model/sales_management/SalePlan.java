@@ -3,13 +3,15 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.State;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 판매계획 테이블
@@ -18,6 +20,7 @@ import java.math.BigDecimal;
  */
 @Entity
 @Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,6 +30,11 @@ public class SalePlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // 판매 계획 상세
+    @OneToMany(mappedBy = "salePlan", orphanRemoval = true)
+    @Builder.Default
+    private List<SalePlanDetail> salePlanDetails = new ArrayList<>();
 
     // 거래처
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -38,18 +46,21 @@ public class SalePlan {
     @JoinColumn(name = "manager_id", nullable = false)
     private Employee manager;
 
-    // 품목
+    // 창고
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    @JoinColumn(name = "warehouse_id", nullable = false)
+    private Warehouse warehouse;
 
-    // 수량
-    @Column(nullable = false)
-    private Integer quantity;
-
-    // 예상 매출액
     @Column
-    private BigDecimal expectedSales;
+    private LocalDate date;
+
+    @Column
+    private LocalDate ExpectedSalesDate;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private SaleState state = SaleState.IN_PROGRESS;
 
     // 비고
     @Column

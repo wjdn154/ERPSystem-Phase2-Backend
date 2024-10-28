@@ -47,5 +47,13 @@ public class PerformanceController {
         String message = performanceService.deletePerformance(performanceId);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
+
+    // 성과 평가 리스트 조회
+    @PostMapping("/performance/list")
+    public ResponseEntity<List<PerformanceShowDTO>> getAllPerformances() {
+        List<PerformanceShowDTO> performances = performanceService.getAllPerformances();
+        return new ResponseEntity<>(performances, HttpStatus.OK);
+    }
+
 }
 

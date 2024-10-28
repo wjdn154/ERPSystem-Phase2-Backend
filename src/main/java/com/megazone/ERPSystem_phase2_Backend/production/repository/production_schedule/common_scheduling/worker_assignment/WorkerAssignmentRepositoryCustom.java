@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.worker_assignment;
 
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.WorkerAssignment;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentDTO;
 import com.querydsl.core.Tuple;
 
 import java.time.LocalDate;
@@ -17,11 +18,11 @@ public interface WorkerAssignmentRepositoryCustom {
     List<Tuple> findWorkerCountByWorkcenter();
 
     /**
-     * 작업장 코드로 작업자 배정 검색
+     * 작업장 코드로 작업자 배정 list 검색
      * @param workcenterCode 작업장 코드
      * @return 작업자 배정(Optional로 감싸서 반환)
      */
-    Optional<WorkerAssignment> findByWorkcenterCode(String workcenterCode);
+    List<WorkerAssignment> findAllByWorkcenterCode(String workcenterCode);
 
     /**
      * 특정 작업자, 작업지시, 날짜로 작업자 배정 조회
@@ -56,13 +57,6 @@ public interface WorkerAssignmentRepositoryCustom {
      * @return 작업자 배정 리스트
      */
     List<WorkerAssignment> findWorkerAssignmentsByWorkcenterCodeAndDate(String workcenterCode, LocalDate date);
-
-//    /**
-//     * 작업장 코드로 오늘의 작업자 조회
-//     * @param code 작업장 코드
-//     * @return 오늘의 작업자 리스트
-//     */
-//    List<WorkerAssignmentDTO> findTodayWorkers(String code);
 
 
     List<WorkerAssignment> findByAssignmentDate(LocalDate currentDate);

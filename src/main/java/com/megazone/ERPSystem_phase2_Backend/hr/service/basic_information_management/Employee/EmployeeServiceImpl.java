@@ -57,7 +57,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<EmployeeShowDTO> findAllEmployees() {
         //엔티티 dto로 변환
-        return employeeRepository.findAll().stream()
+        return employeeRepository.findAllByUser().stream()
                 .map(employee -> new EmployeeShowDTO(
                         employee.getId(),
                         employee.getEmployeeNumber(),
@@ -70,6 +70,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                         employee.getImagePath(),
                         employee.getDepartment().getDepartmentCode(),
                         employee.getDepartment().getDepartmentName(),
+                        employee.getPosition().getId(),
                         employee.getPosition().getPositionName(),
                         employee.getJobTitle().getJobTitleName()
 //                        employee.getBankAccount().getAccountNumber()
@@ -301,11 +302,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setHouseholdHead(dto.isHouseholdHead());
         employee.setImagePath(dto.getImagePath());
 
-        // Department 설정
-        if (dto.getDepartmentId() != null) {
-            Department department = departmentRepository.findById(dto.getDepartmentId())
-                    .orElseThrow(() -> new EntityNotFoundException("부서를 찾을 수 없습니다."));
-            employee.setDepartment(department);
+//        // Department 설정
+//        if (dto.getDepartmentId() != null) {
+//            Department department = departmentRepository.findById(dto.getDepartmentId())
+//                    .orElseThrow(() -> new EntityNotFoundException("부서를 찾을 수 없습니다."));
+//            employee.setDepartment(department);
+//        }
+
+        if(dto.getDepartmentId() != null) {
+            Department department = departmentRepository.findDepartmentById(dto.getDepartmentId());
         }
 
         // Position 설정
