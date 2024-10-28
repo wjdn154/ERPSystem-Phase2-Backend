@@ -28,7 +28,7 @@ public class ShippingOrder {
     private Long id;
 
     // 출하지시서 상세와의 일대다 관계
-    @OneToMany(mappedBy = "shippingOrder", orphanRemoval = true)
+    @OneToMany(mappedBy = "shippingOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<ShippingOrderDetail> shippingOrderDetails = new ArrayList<>();
 
@@ -71,5 +71,5 @@ public class ShippingOrder {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private State state = State.WAITING_FOR_SHIPMENT;
+    private SaleState state = SaleState.WAITING_FOR_SHIPMENT;
 }

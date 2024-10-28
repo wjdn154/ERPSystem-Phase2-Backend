@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_manag
 
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Department;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.JobTitle;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Position;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.*;
@@ -101,14 +102,13 @@ public class DepartmentServiceImpl implements DepartmentService {
         Department department = new Department();
         department.setDepartmentCode(dto.getDepartmentCode());
         department.setDepartmentName(dto.getDepartmentName());
-        department.setLocation(dto.getDepartmentLocation());
+        department.setLocation(dto.getLocation());
 
         // 엔티티를 저장
         Department savedDepartment = departmentRepository.save(department);
 
         // 저장된 엔티티의 ID를 포함한 DTO를 반환
         return new DepartmentCreateDTO(
-                savedDepartment.getId(),
                 savedDepartment.getDepartmentCode(),
                 savedDepartment.getDepartmentName(),
                 savedDepartment.getLocation());
@@ -136,29 +136,63 @@ public class DepartmentServiceImpl implements DepartmentService {
         departmentRepository.delete(department);
     }
 
-    @Override
-    public DepartmentDetailDTO updateDepartment(Long id, DepartmentCreateDTO dto) {
-        // ID에 해당하는 부서를 조회
-        Optional<Department> departmentOpt = departmentRepository.findById(id);
+//    @Override
+//    public DepartmentDetailDTO updateDepartment(Long id, DepartmentCreateDTO dto) {
+//        // ID에 해당하는 부서를 조회
+//        Optional<Department> departmentOpt = departmentRepository.findById(id);
+//
+//        // 부서가 존재하지 않는 경우 예외 발생
+//        if (!departmentOpt.isPresent()) {
+//            throw new EntityNotFoundException("해당하는 부서를 찾을 수 없습니다.");
+//        }
+//
+//        // 부서 정보 업데이트
+//        Department department = departmentOpt.get();
+//        department.setDepartmentName(dto.getDepartmentName());  // 필요한 필드에 따라 업데이트
+//        department.setDepartmentCode(dto.getDepartmentCode());
+//        department.setLocation(dto.getDepartmentLocation());
+//
+//        // 저장 후 DTO로 변환하여 반환
+//        Department updatedDepartment = departmentRepository.save(department);
+//        DepartmentDetailDTO departmentDetailDTO = new DepartmentDetailDTO();
+//        departmentDetailDTO.setDepartmentCode(updatedDepartment.getDepartmentCode());
+//        departmentDetailDTO.setDepartmentName(updatedDepartment.getDepartmentName());
+//        departmentDetailDTO.setLocation(updatedDepartment.getLocation());
+//
+//        return departmentDetailDTO;
+//    }
+public DepartmentDetailDTO updateDepartment(Long id, DepartmentCreateDTO dto) {
+    // 부서 정보 업데이트
+    Department department = departmentRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Department not found with id " + id));
 
-        // 부서가 존재하지 않는 경우 예외 발생
-        if (!departmentOpt.isPresent()) {
-            throw new EntityNotFoundException("해당하는 부서를 찾을 수 없습니다.");
-        }
+    department.setDepartmentCode(dto.getDepartmentCode());
+    department.setDepartmentName(dto.getDepartmentName());
+    department.setLocation(dto.getLocation());
+    departmentRepository.save(department);
 
-        // 부서 정보 업데이트
-        Department department = departmentOpt.get();
-        department.setDepartmentName(dto.getDepartmentName());  // 필요한 필드에 따라 업데이트
-        department.setDepartmentCode(dto.getDepartmentCode());
-        department.setLocation(dto.getDepartmentLocation());
+    // 부서에 속한 사원들의 부서 정보 업데이트
+    List<Employee> employeesInDepartment = employeeRepository.findByDepartmentId(id);
+    employeesInDepartment.forEach(employee -> employee.setDepartment(department));
+    employeeRepository.saveAll(employeesInDepartment);  // 한 번에 저장
 
-        // 저장 후 DTO로 변환하여 반환
-        Department updatedDepartment = departmentRepository.save(department);
-        DepartmentDetailDTO departmentDetailDTO = new DepartmentDetailDTO();
-        departmentDetailDTO.setDepartmentCode(updatedDepartment.getDepartmentCode());
-        departmentDetailDTO.setDepartmentName(updatedDepartment.getDepartmentName());
-        departmentDetailDTO.setLocation(updatedDepartment.getLocation());
+    // 부서 정보와 관련 사원 정보 포함하여 DepartmentDetailDTO 생성
+    List<EmployeeDepartmentDTO> employeeDepartmentDTOS = employeesInDepartment.stream()
+            .map(emp -> new EmployeeDepartmentDTO(
+                    emp.getId(),
+                    emp.getEmployeeNumber(),
+                    emp.getFirstName(),
+                    emp.getLastName(),
+                    emp.getPosition().getPositionName(),
+                    emp.getJobTitle().getJobTitleName()
+            ))
+            .collect(Collectors.toList());
 
-        return departmentDetailDTO;
-    }
+    return new DepartmentDetailDTO(
+            department.getDepartmentCode(),
+            department.getDepartmentName(),
+            department.getLocation(),
+            employeeDepartmentDTOS
+    );
+}
 }

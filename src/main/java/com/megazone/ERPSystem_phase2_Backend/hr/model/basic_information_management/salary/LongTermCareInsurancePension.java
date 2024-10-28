@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.checkerframework.common.aliasing.qual.Unique;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 /**
  *  장기요양보험 정보 테이블
@@ -23,10 +24,8 @@ public class LongTermCareInsurancePension {
     private Long id;
 
     private String code; // 장기요양보험 코드
-
-    private BigDecimal rate; // 장기요양보험 코드별 적용 요율
-
-    @ManyToOne
-    @JoinColumn(name = "health_insurance_pension_id")
-    private HealthInsurancePension healthInsurancePension;
+    @Column(precision = 10, scale = 5) private BigDecimal rate; // 장기요양보험 코드별 적용 요율
+    private String description; // 설명
+    private LocalDate startDate;
+    private LocalDate endDate;
 }

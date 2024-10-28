@@ -23,9 +23,8 @@ public class EmploymentInsurancePension {
     @Unique
     private Long id;
 
-    private BigDecimal rate; // 고용보험 계산 요율
-
+    @Column(precision = 10, scale = 3) private BigDecimal companyRate; // 고용보험 기업 적용 요율
+    @Column(precision = 10, scale = 3) private BigDecimal employeeRate; // 고용보험 가입자 적용
     private LocalDate startDate; // 고용보험기준 적용 시작 날짜
-
     private LocalDate endDate; // 고용보험기준 적용 마감 날짜
 }

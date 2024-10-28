@@ -64,17 +64,24 @@ public class PerformanceServiceImpl implements PerformanceService {
 
         // 엔티티를 DTO로 변환
         return performances.stream().map(performance -> new PerformanceShowDTO(
-                performance.getEmployee().getEmployeeNumber(),
-                performance.getEmployee().getFirstName(),
-                performance.getEmployee().getLastName(),
                 performance.getId(),
+                performance.getEmployee().getEmployeeNumber(),
+                performance.getEmployee().getLastName()+performance.getEmployee().getFirstName(),
+                performance.getEvaluator().getId(),
                 performance.getTitle(),
-                performance.getEvaluator().getFirstName(),
-                performance.getEvaluator().getLastName(),
+                performance.getEvaluator().getLastName() + performance.getEvaluator().getFirstName(),
                 performance.getEvaluationDate(),
                 performance.getScore(),
                 performance.getComments()
         )).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PerformanceShowDTO> getAllPerformances() {
+        List<Performance> performances = performanceRepository.findAll();
+        return performances.stream()
+                .map(PerformanceShowDTO::fromEntity) // 엔티티를 DTO로 변환
+                .collect(Collectors.toList());
     }
 
     // 성과 평가 수정
@@ -94,13 +101,12 @@ public class PerformanceServiceImpl implements PerformanceService {
 
         // 엔티티를 DTO로 변환하여 반환
         return new PerformanceShowDTO(
+                updatedPerformance.getId(),
+                updatedPerformance.getEmployee().getLastName()+updatedPerformance.getEmployee().getFirstName(),
                 updatedPerformance.getEmployee().getEmployeeNumber(),
-                updatedPerformance.getEmployee().getFirstName(),
-                updatedPerformance.getEmployee().getLastName(),
                 updatedPerformance.getEvaluator().getId(),
                 updatedPerformance.getTitle(),
-                updatedPerformance.getEvaluator().getFirstName(),
-                updatedPerformance.getEvaluator().getLastName(),
+                updatedPerformance.getEvaluator().getLastName() + updatedPerformance.getEvaluator().getFirstName(),
                 updatedPerformance.getEvaluationDate(),
                 updatedPerformance.getScore(),
                 updatedPerformance.getComments()

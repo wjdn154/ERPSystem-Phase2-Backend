@@ -10,14 +10,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SalaryStepShowDTO {
     private Long id;
+    private String code;
     private String name;
     private String description;
 
     public static SalaryStepShowDTO create(SalaryStep salaryStep) {
         return new SalaryStepShowDTO(
                 salaryStep.getId(),
+                salaryStep.getCode(),
                 salaryStep.getName(),
-                salaryStep.getCode()
+                salaryStep.getDescription()
         );
     }
 }

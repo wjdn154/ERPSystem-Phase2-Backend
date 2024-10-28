@@ -20,14 +20,11 @@ public class ReceivingOrderResponseDetailDto {
     private Long id;
     private LocalDate date;
     private LocalDate deliveryDate;
-    private Long clientId;
     private String clientCode;
     private String clientName;
-    private Long managerId;
     private String managerCode;
     private String managerName;
     private String managerContact;
-    private Long warehouseId;
     private String warehouseCode;
     private String warehouseName;
     private String remarks;

@@ -37,7 +37,7 @@ public class Purchase {
 //    private Long ordersId;
 
     // 구매서 상세와의 일대다 관계
-    @OneToMany(mappedBy = "purchase", orphanRemoval = true)
+    @OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<PurchaseDetail> purchaseDetails = new ArrayList<>();
 
