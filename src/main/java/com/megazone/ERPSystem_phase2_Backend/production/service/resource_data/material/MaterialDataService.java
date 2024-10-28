@@ -15,7 +15,7 @@ public interface MaterialDataService {
     Optional<MaterialDataShowDTO> findMaterialById(Long id);
 
     //자재 상세 수정
-    Optional<ListMaterialDataDTO> updateMaterial(Long id, ListMaterialDataDTO dto);
+    Optional<MaterialDataShowDTO> updateMaterial(Long id, MaterialDataShowDTO dto);
 
     //자재 상세 등록
     Optional<MaterialDataShowDTO> createMaterial(MaterialDataShowDTO dto);

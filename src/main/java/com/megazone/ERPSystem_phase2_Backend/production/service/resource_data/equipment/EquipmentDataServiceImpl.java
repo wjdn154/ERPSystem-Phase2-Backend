@@ -59,10 +59,6 @@ public class EquipmentDataServiceImpl implements EquipmentDataService {
         EquipmentData equipmentData = equipmentDataRepository.findById(id)
                 .orElseThrow(() ->  new RuntimeException(id+"에 해당하는 아이디를 찾을 수 없습니다."));
 
-        //설비 num 중복 확인.
-        if(equipmentDataRepository.existsByEquipmentNum(dto.getEquipmentNum())){
-            throw new IllegalArgumentException(("이미 존재하는 설비번호입니다." + dto.getEquipmentNum()));
-        }
 
         //새로 들어온 dto를 수정할 id에 해당하는 엔티티에 업데이트
         equipmentData.setEquipmentNum(dto.getEquipmentNum());

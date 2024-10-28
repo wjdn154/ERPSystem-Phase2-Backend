@@ -69,7 +69,7 @@ public class MaterialDataServiceImpl implements MaterialDataService{
 
     //자재 리스트 수정
     @Override
-    public Optional<ListMaterialDataDTO> updateMaterial(Long id, ListMaterialDataDTO dto) {
+    public Optional<MaterialDataShowDTO> updateMaterial(Long id, MaterialDataShowDTO dto) {
 
         MaterialData materialData = materialDataRepository.findById(id)
                 .orElseThrow( () -> new IllegalArgumentException("해당 아이디를 조회할 수 없습니다."+id));
@@ -79,7 +79,6 @@ public class MaterialDataServiceImpl implements MaterialDataService{
             throw new IllegalArgumentException("이미 존재하는 코드입니다.");
         }
 
-        //새로 들어온 dto 기존 엔티티에 업데이트.
         materialData.setMaterialCode(dto.getMaterialCode());
         materialData.setMaterialName(dto.getMaterialName());
         materialData.setMaterialType(dto.getMaterialType());
@@ -88,12 +87,57 @@ public class MaterialDataServiceImpl implements MaterialDataService{
 
         Client client =clientRepository.findByCode(dto.getRepresentativeCode())
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 거래처 코드가 없습니다."));
-
         materialData.setSupplier(client);
 
-        MaterialData updateMaterial = materialDataRepository.save(materialData);
+        //자재 엔티티 먼저 저장(id 자동 생성)
+        MaterialData saveMaterialData = materialDataRepository.save(materialData);
 
-        ListMaterialDataDTO listMaterialDataDTO = materialUpdateDTO(updateMaterial);
+        // 기존의 MaterialHazardous 및 MaterialProduct 삭제
+        materialHazardousRepository.deleteAllByMaterialData(saveMaterialData);
+        materialProductRepository.deleteAllByMaterialData(saveMaterialData);
+
+        List<HazardousMaterial> hazardousMaterials = dto.getHazardousMaterial().stream()
+                .map(hazardousMaterialDTO -> hazardousMaterialRepository.findByHazardousMaterialCode(hazardousMaterialDTO.getHazardousMaterialCode())
+                        .orElseThrow(() -> new IllegalArgumentException("해당 유해물질 코드가 존재하지 않습니다." + hazardousMaterialDTO.getHazardousMaterialCode())))
+                .collect(Collectors.toList());
+
+        //유해물질 중간 엔티티 설정.
+        List<MaterialHazardous> materialHazardousList = hazardousMaterials.stream()
+                .map(hazardousMaterial -> {
+                    MaterialHazardous materialHazardous = new MaterialHazardous();
+                    materialHazardous.setMaterialData(saveMaterialData);
+                    materialHazardous.setHazardousMaterial(hazardousMaterial);
+                    return materialHazardous;
+                })
+                .collect(Collectors.toList());
+
+        //명시적으로 중간 엔티티 저장
+        materialHazardousRepository.saveAll(materialHazardousList);
+
+        List<Product> productMaterials  = dto.getProduct().stream()
+                .map(productMaterialDTO -> productRepository.findByCode(productMaterialDTO.getProductCode())
+                        .orElseThrow(() -> new IllegalArgumentException("해당 품목 코드가 존재하지 않습니다." + productMaterialDTO.getProductCode())))
+                .collect(Collectors.toList());
+
+        //품목 중간 엔티티 설정
+        List<MaterialProduct> materialProductList = productMaterials.stream()
+                .map(product -> {
+                    MaterialProduct materialProduct = new MaterialProduct();
+                    materialProduct.setMaterialData(saveMaterialData);
+                    materialProduct.setProduct(product);
+                    return materialProduct;
+                }).collect(Collectors.toList());
+
+        //명시적으로 중간 엔티티 저장
+        materialProductRepository.saveAll(materialProductList);
+
+        saveMaterialData.setMaterialHazardous(materialHazardousList);
+        saveMaterialData.setMaterialProducts(materialProductList);
+
+        //최종적으로 모든 연관된 엔티티 저장
+        MaterialData updateMaterial = materialDataRepository.save(saveMaterialData);
+
+        MaterialDataShowDTO listMaterialDataDTO = materialCreateDTO(updateMaterial);
 
         return Optional.of(listMaterialDataDTO);
     }
