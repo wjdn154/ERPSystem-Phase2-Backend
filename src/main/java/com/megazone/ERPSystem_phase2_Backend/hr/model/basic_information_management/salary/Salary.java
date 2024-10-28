@@ -65,8 +65,5 @@ public class Salary {
     @Column(nullable = false)
     private boolean unionMembershipStatus; // 노조가입여부
 
-//    private boolean duruNuriSocialInsuranceStatus; // 두루누리사회보험 여부
-//
-//    private BigDecimal duruNuriSocialInsuranceRate; // 두루누리적용률 30 40(구) 60(구) 80 90
 
 }

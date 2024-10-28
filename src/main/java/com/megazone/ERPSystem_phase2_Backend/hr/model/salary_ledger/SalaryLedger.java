@@ -46,6 +46,15 @@ public class SalaryLedger {
 
     @Column(nullable = false)
     private BigDecimal employmentInsuranceAmount; // 고용보험 금액
+    
+    @Column(nullable = false)
+    private BigDecimal longTermCareInsurancePensionAmount; // 장기요양보험 금액
+
+    @Column(nullable = false)
+    private BigDecimal incomeTaxPensionAmount; // 소득세 금액
+
+    @Column(nullable = false)
+    private BigDecimal localIncomeTaxPensionAmount; // 지방소득세 금액
 
     private LocalDate ledgerDate;
 

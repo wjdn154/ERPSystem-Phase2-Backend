@@ -20,6 +20,7 @@ import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_manage
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.salary.HealthInsurancePensionService;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.salary.LongTermCareInsurancePensionService;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.salary.NationalPensionService;
+import jakarta.persistence.Column;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,7 @@ public class SalaryLedgerServiceImpl implements SalaryLedgerService {
     private final LongTermCareInsurancePensionService longTermCareInsurancePensionService;
     private final EmploymentInsurancePensionService employmentInsurancePensionService;
     private final LongTermCareInsurancePensionRepository longTermCareInsurancePensionRepository;
-
+    private final IncomeTaxService incomeTaxService;
 
     /**
      * 사원 id 받아서 조회하고 해당월에 급여정보 등록한적없으면 새로생성
@@ -66,28 +67,40 @@ public class SalaryLedgerServiceImpl implements SalaryLedgerService {
             Employee employee = employeeRepository.findById(dto.getEmployeeId()).orElseThrow(
                     () -> new NoSuchElementException("해당하는 사원 정보가 없습니다."));
 
+
             InsurancePensionCalculatorDTO calculatorDTO = new InsurancePensionCalculatorDTO(salary.getSalaryStep().getId()
             ,employee.getPosition().getId());
 
-            BigDecimal HealthInsurancePensionAmount = healthInsurancePensionService.calculator(calculatorDTO);
-            BigDecimal NationalPensionAmount = nationalPensionService.calculator(calculatorDTO);
-            BigDecimal EmploymentInsurancePensionAmount = employmentInsurancePensionService.calculator(calculatorDTO);
+            BigDecimal healthInsurancePensionAmount = healthInsurancePensionService.calculator(calculatorDTO);
+
+            BigDecimal nationalPensionAmount = nationalPensionService.calculator(calculatorDTO);
+
+            BigDecimal employmentInsurancePensionAmount = employmentInsurancePensionService.calculator(calculatorDTO);
 
             LongTermCareInsurancePension longTermCareInsurancePension = longTermCareInsurancePensionRepository.findByCode(salary.getLongTermCareInsurancePensionCode());
 
-            LongTermCareInsuranceCalculatorDTO longTermDto = new LongTermCareInsuranceCalculatorDTO(HealthInsurancePensionAmount,
+            LongTermCareInsuranceCalculatorDTO longTermDto = new LongTermCareInsuranceCalculatorDTO(healthInsurancePensionAmount,
                     longTermCareInsurancePension.getId());
 
             BigDecimal LongTermCareInsurancePensionAmount = longTermCareInsurancePensionService.calculator(longTermDto);
 
 
+            BigDecimal salaryAmount =  positionSalaryStepRepository.getSalaryAmount(employee.getPosition().getId(),salary.getSalaryStep().getId());
+
+
+            BigDecimal incomeTaxPensionAmount = incomeTaxService.incomeTaxCalculator(salaryAmount.multiply(BigDecimal.valueOf(12)));
+
+
             SalaryLedger newLedger = new SalaryLedger();
             newLedger.setSalaryLedgerDate(salaryLedgerDate);
                 newLedger.setEmployee(employee);
-                newLedger.setNationalPensionAmount(NationalPensionAmount);  // 초기값 설정
-                newLedger.setPrivateSchoolPensionAmount(LongTermCareInsurancePensionAmount); // 초기값 설정
-                newLedger.setHealthInsurancePensionAmount(HealthInsurancePensionAmount); // 초기값 설정
-                newLedger.setEmploymentInsuranceAmount(EmploymentInsurancePensionAmount); // 초기값 설정
+                newLedger.setNationalPensionAmount(nationalPensionAmount);
+                newLedger.setPrivateSchoolPensionAmount(BigDecimal.ZERO);
+                newLedger.setHealthInsurancePensionAmount(healthInsurancePensionAmount);
+                newLedger.setEmploymentInsuranceAmount(employmentInsurancePensionAmount);
+                newLedger.setLongTermCareInsurancePensionAmount(LongTermCareInsurancePensionAmount);
+                newLedger.setIncomeTaxPensionAmount(incomeTaxPensionAmount);
+                newLedger.setLocalIncomeTaxPensionAmount(BigDecimal.ZERO);
 
             // 수당 리스트 변환 후 설정
             List<SalaryLedgerAllowanceDTO> allowanceDTOs = positionSalaryStepRepository
@@ -107,9 +120,12 @@ public class SalaryLedgerServiceImpl implements SalaryLedgerService {
                     salaryLedger.getPrivateSchoolPensionAmount(),
                     salaryLedger.getHealthInsurancePensionAmount(),
                     salaryLedger.getEmploymentInsuranceAmount(),
+                    salaryLedger.getLongTermCareInsurancePensionAmount(),
+                    salaryLedger.getIncomeTaxPensionAmount(),
+                    salaryLedger.getLocalIncomeTaxPensionAmount(),
                     allowanceDTOs);
-
         }
         return result;
     }
+
 }
