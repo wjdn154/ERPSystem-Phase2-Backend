@@ -124,8 +124,18 @@ spring:
         - classpath:initial-database/financial/unresolved_voucher.sql
         - classpath:initial-database/financial/resolved_sale_and_purchase_voucher.sql
         - classpath:initial-database/financial/resolved_voucher.sql
-        - classpath:initial-database/hr/payment/allowance.sql
-
+#        -
+#        - classpath:initial-database/hr/payment/employee_allowance.sql
+#        - classpath:initial-database/hr/payment/employee_salary_step.sql
+#        - classpath:initial-database/hr/payment/employee_position_salary_step.sql
+#        - classpath:initial-database/hr/payment/position_salary_step_allowance.sql
+#
+#        - classpath:initial-database/hr/payment/employment_insurance_pension.sql
+#        - classpath:initial-database/hr/payment/health_insurance_pension.sql
+#
+#        - classpath:initial-database/hr/payment/national_pension.sql
+#        - classpath:initial-database/hr/payment/long_term_care_insurance_pension.sql
+#        - classpath:initial-database/hr/payment/salary.sql
         - classpath:initial-database/logistics/purchase_management/purchase.sql
 
 
@@ -136,7 +146,7 @@ logging:
 #    com.megazone: DEBUG
 #    org.flywaydb: DEBUG
 #    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql: TRACE
+#    org.hibernate.type.descriptor.sql: TRACE
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %highlight(%-5level) %logger{36} - %msg%n"
 jwt:
