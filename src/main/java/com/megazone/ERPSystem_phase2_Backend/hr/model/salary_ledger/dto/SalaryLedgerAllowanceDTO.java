@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.YearMonth;
+import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SalaryLedgerSearchDTO {
-    private YearMonth yearMonth;
-    private Long employeeId;
-    private Long salaryLedgerDateId;
+public class SalaryLedgerAllowanceDTO {
+    private Long id;
+    private String name;
+    private BigDecimal amount;
 }

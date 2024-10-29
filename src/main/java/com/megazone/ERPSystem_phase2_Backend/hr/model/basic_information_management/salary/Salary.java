@@ -21,13 +21,11 @@ public class Salary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "employee_id")
-    private Employee employeeId;
+    private Long employeeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "salary_step_id")
-    private SalaryStep SalaryStepId; // 호봉
+    private SalaryStep SalaryStep; // 호봉
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

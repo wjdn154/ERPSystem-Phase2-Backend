@@ -17,9 +17,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class SalaryShowDto {
     private Long id;
-    private SalaryStep SalaryStepId; // 호봉
-    private String SalaryCode;
-    private String SalaryName;
+    private Long SalaryStepId; // 호봉
+    private String SalaryStepCode;
+    private String SalaryStepName;
     private SalaryType salaryType; // 급여형태
     private boolean incomeTaxType; // 국외소득유무
     private boolean studentLoanRepaymentStatus; // 학자금상환여부
@@ -30,26 +30,28 @@ public class SalaryShowDto {
     private BigDecimal healthInsurancePensionAmount; // 건강보험 금액
     private String healthInsuranceNumber; // 건강보험 번호
     private String longTermCareInsurancePensionCode; // 장기요양보험 코드
+    private String longTermCareInsurancePensionDescription;
     private BigDecimal employmentInsuranceAmount; // 고용보험 금액
     private boolean unionMembershipStatus; // 노조가입여부
 
-    public static SalaryShowDto create(Salary salary) {
+    public static SalaryShowDto create(Salary salary, String longTermCareInsurancePensionDescription) {
         return new SalaryShowDto(
                 salary.getId(),
-                salary.getSalaryStepId(),
-                salary.getLongTermCareInsurancePensionCode(),
-                salary.getHealthInsuranceNumber(),
+                salary.getSalaryStep().getId(),
+                salary.getSalaryStep().getCode(),
+                salary.getSalaryStep().getName(),
                 salary.getSalaryType(),
                 salary.isIncomeTaxType(),
                 salary.isStudentLoanRepaymentStatus(),
-                salary.getStudentLoanRepaymentAmount(),
+                salary.getStudentLoanRepaymentAmount().setScale(0, BigDecimal.ROUND_HALF_UP),
                 salary.getPensionType(),
-                salary.getNationalPensionAmount(),
-                salary.getPrivateSchoolPensionAmount(),
-                salary.getHealthInsurancePensionAmount(),
+                salary.getNationalPensionAmount().setScale(0, BigDecimal.ROUND_HALF_UP),
+                salary.getPrivateSchoolPensionAmount().setScale(0, BigDecimal.ROUND_HALF_UP),
+                salary.getHealthInsurancePensionAmount().setScale(0, BigDecimal.ROUND_HALF_UP),
                 salary.getHealthInsuranceNumber(),
                 salary.getLongTermCareInsurancePensionCode(),
-                salary.getEmploymentInsuranceAmount(),
+                longTermCareInsurancePensionDescription,
+                salary.getEmploymentInsuranceAmount().setScale(0, BigDecimal.ROUND_HALF_UP),
                 salary.isUnionMembershipStatus()
         );
     }

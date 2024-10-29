@@ -4,19 +4,23 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_managemen
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.enums.WarehouseType;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.basic_information_management.warehouse.WarehouseRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessDetails;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.Workcenter;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.workcenter.dto.WorkcenterDTO;
+import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.ProductionOrder;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.common_scheduling.WorkerAssignment;
 import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedule.dto.WorkerAssignmentDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.Workcenter.WorkcenterRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.basic_data.process_routing.ProcessDetails.ProcessDetailsRepository;
+import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.production_order.ProductionOrderRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.production_schedule.common_scheduling.worker_assignment.WorkerAssignmentRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.resource_data.equipment.EquipmentDataRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -36,6 +40,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
     private final ProcessDetailsRepository processDetailsRepository;
     private final EquipmentDataRepository equipmentDataRepository;
     private final WorkerAssignmentRepository workerAssignmentRepository;
+    private final ProductionOrderRepository productionOrderRepository;
 
     // DTO로 변환하는 메서드
     private WorkcenterDTO convertToDTO(Workcenter workcenter) {
@@ -45,7 +50,7 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                 (workcenter.getFactory().getWarehouseType() == WarehouseType.FACTORY ||
                         workcenter.getFactory().getWarehouseType() == WarehouseType.OUTSOURCING_FACTORY);
 
-//        System.out.println("===================================== workcenter===================================== " + workcenter);
+        System.out.println("===================================== workcenter convertToDTO ===================================== " + workcenter);
 
         return WorkcenterDTO.builder()
                 .id(workcenter.getId())
@@ -61,23 +66,24 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                 .processId(workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getId() : null)
                 .processCode(workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getCode() : null)
                 .processName(workcenter.getProcessDetails() != null ? workcenter.getProcessDetails().getName() : null)
-                .modelNames(workcenter.getEquipmentList() != null ? workcenter.getEquipmentList().stream().map(EquipmentData::getModelName).collect(Collectors.toList()) : null)
-                .equipmentNames(workcenter.getEquipmentList() != null ? workcenter.getEquipmentList().stream().map(EquipmentData::getEquipmentName).collect(Collectors.toList()): null)
+                // 설비
+                .equipmentIds(workcenter.getEquipmentList() != null ?
+                        workcenter.getEquipmentList().stream().map(EquipmentData::getId).collect(Collectors.toList()) :
+                        Collections.emptyList())  // 빈 리스트를 반환
+                .modelNames(workcenter.getEquipmentList() != null ?
+                        workcenter.getEquipmentList().stream().map(EquipmentData::getModelName).collect(Collectors.toList()) : Collections.emptyList())
+                .equipmentNames(workcenter.getEquipmentList() != null ?
+                        workcenter.getEquipmentList().stream().map(EquipmentData::getEquipmentName).collect(Collectors.toList()) :
+                        Collections.emptyList()) // 빈 리스트를 반환
                 // 작업자 배치
-                .workerAssignmentIds(workcenter.getWorkerAssignments().stream().map(WorkerAssignment::getId).collect(Collectors.toList()))
+                .workerAssignmentIds(workcenter.getWorkerAssignments() != null? workcenter.getWorkerAssignments().stream().map(WorkerAssignment::getId).collect(Collectors.toList()) : Collections.emptyList())
                 .build();
-
     }
 
     // Entity로 변환하는 메서드
     private Workcenter convertToEntity(WorkcenterDTO workcenterDTO) {
 
-//        System.out.println("===================================== workcenter===================================== " + workcenterDTO);
-//        List<EquipmentData> equipmentList = Optional.ofNullable(
-//                        equipmentDataRepository.findByWorkcenterId(workcenterDTO.getId()))
-//                .filter(list -> !list.isEmpty())
-//                .orElseThrow(() -> new EntityNotFoundException(
-//                        "해당 생산설비를 찾을 수 없습니다: " + workcenterDTO.getEquipmentIds()));
+        System.out.println("===================================== workcenter===================================== " + workcenterDTO);
 
         List<EquipmentData> equipmentList = Optional.ofNullable(workcenterDTO.getEquipmentIds())
                 .orElseGet(ArrayList::new)  // Equipment ID가 없는 경우 빈 리스트 반환
@@ -124,16 +130,33 @@ public class WorkcenterServiceImpl implements WorkcenterService {
 
     @Override
     public Optional<WorkcenterDTO> deleteByCode(String code) {
-        Workcenter workcenter = workcenterRepository.findByCode(code)
-                .orElseThrow(() -> new EntityNotFoundException("해당 작업장코드를 찾을 수 없습니다: " + code));
+        try {
+            Workcenter workcenter = workcenterRepository.findByCode(code)
+                    .orElseThrow(() -> new EntityNotFoundException("해당 작업장코드를 찾을 수 없습니다: " + code));
 
-        if (workcenter.getIsActive()) {
-            throw new IllegalArgumentException("사용 중인 작업장은 삭제할 수 없습니다.");
+            if (workcenter.getIsActive())
+                throw new IllegalArgumentException("사용 중인 작업장은 삭제할 수 없습니다.");
+
+            // 연관된 공정과의 관계를 안전하게 해제
+            if (workcenter.getProcessDetails() != null)
+                workcenter.setProcessDetails(null);
+
+            // 연관된 production order와의 관계 해제
+            List<ProductionOrder> orders = productionOrderRepository.findByWorkcenter(workcenter);
+            orders.forEach(order -> order.setWorkcenter(null));  // 관계 해제
+            productionOrderRepository.saveAll(orders);  // 저장하여 관계 해제 반영
+
+            workcenterRepository.delete(workcenter);
+            System.out.println("해당코드 작업장 삭제됨: " + code);
+
+            return Optional.of(convertToDTO(workcenter));
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalStateException("삭제할 수 없습니다. 다른 데이터와 연관되어 있습니다.", e);
+        } catch (Exception e) {
+            throw new RuntimeException("작업장 삭제 중 오류가 발생했습니다.", e);
         }
-
-        workcenterRepository.delete(workcenter);
-        return Optional.of(convertToDTO(workcenter));
     }
+
 
     @Override
     public Optional<WorkcenterDTO> updateByCode(String code, WorkcenterDTO workcenterDTO) {

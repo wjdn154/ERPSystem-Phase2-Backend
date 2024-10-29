@@ -26,6 +26,7 @@ public class EmployeeShowDTO {
     private String imagePath;
     private String departmentCode;
     private String departmentName; // 부서 이름
+    private Long positionId; // 직위 id
     private String positionName; // 직위 이름
     private String titleName; // 직책 이름
 //    private String bankAccountNumber; // 계좌 번호
