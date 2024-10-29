@@ -25,6 +25,7 @@ public class ReceivingOrderResponseDetailDto {
     private String managerCode;
     private String managerName;
     private String managerContact;
+    private Long warehouseId;
     private String warehouseCode;
     private String warehouseName;
     private String remarks;
