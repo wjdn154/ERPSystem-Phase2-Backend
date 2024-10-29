@@ -265,14 +265,22 @@ public class SalaryLedgerServiceImpl implements SalaryLedgerService {
         List<SalaryLedgerAllowanceDTO> allowanceDTOs = positionSalaryStepRepository
                 .getSalaryAllowance(employee.getId(), salary.getSalaryStep().getId());
 
-        List<SalaryLedgerAllowance> originList  = salaryLedger.getAllowance();
+
+        List<AllowanceShowDTO> allDTOs = allowanceService.show();
+
+        List<SalaryLedgerAllowance> allowances = allDTOs.stream()
+                .map(dtoItem -> new SalaryLedgerAllowance(dtoItem.getName(), BigDecimal.ZERO))
+                .collect(Collectors.toList());
+
+        salaryLedger.setAllowance(allowances);
 
         for(int i = 0; i < allowanceDTOs.size(); i++ ){
-            SalaryLedgerAllowance salaryLedgerAllowance = originList.get(i);
-            salaryLedgerAllowance.setAmount(allowanceDTOs.get(i).getAllowanceAmount());
+            allowances.get(i).setAmount(allowanceDTOs.get(i).getAllowanceAmount());
         }
 
-        return salaryLedgerSetting(SalaryLedgerDTO.create(salaryLedger),salaryLedger);
+        SalaryLedgerDTO salaryLedgerDTO = SalaryLedgerDTO.create(salaryLedger);
+
+        return salaryLedgerSetting(salaryLedgerDTO,salaryLedger);
 
 
     }
@@ -295,7 +303,9 @@ public class SalaryLedgerServiceImpl implements SalaryLedgerService {
 
         List<AllowanceShowDTO> allowanceList = allowanceService.show();
 
-        List<SalaryLedgerAllowance> salaryLedgerAllowances = dto.getAllowance();
+//        List<SalaryLedgerAllowance> salaryLedgerAllowances = dto.getAllowances().stream().map(
+//                one -> new SalaryLedgerAllowance(one.getName(),one.getAmount())).collect(Collectors.toList());
+        List<SalaryLedgerAllowanceShowDTO> salaryLedgerAllowances = dto.getAllowances();
 
         /**
          * 총급여 = 기본급 + 과세수당 + 비과세수당

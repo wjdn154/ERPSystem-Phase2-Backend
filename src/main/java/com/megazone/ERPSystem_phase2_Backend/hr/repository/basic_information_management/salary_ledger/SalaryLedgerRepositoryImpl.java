@@ -34,6 +34,9 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
                         qSalaryLedger.longTermCareInsurancePensionAmount,
                         qSalaryLedger.incomeTaxPensionAmount,
                         qSalaryLedger.localIncomeTaxPensionAmount,
+                        qSalaryLedger.totalSalaryAmount,
+                        qSalaryLedger.totalDeductionAmount,
+                        qSalaryLedger.netPayment,
                         qSalaryLedgerAllowance.name,
                         qSalaryLedgerAllowance.amount
                 )
@@ -66,6 +69,9 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
                 salaryLedgerDTO.setLongTermCareInsurancePensionAmount(row.get(qSalaryLedger.longTermCareInsurancePensionAmount));
                 salaryLedgerDTO.setIncomeTaxAmount(row.get(qSalaryLedger.incomeTaxPensionAmount));
                 salaryLedgerDTO.setLocalIncomeTaxPensionAmount(row.get(qSalaryLedger.localIncomeTaxPensionAmount));
+                salaryLedgerDTO.setTotalSalaryAmount(row.get(qSalaryLedger.totalSalaryAmount));
+                salaryLedgerDTO.setTotalDeductionAmount(row.get(qSalaryLedger.totalDeductionAmount));
+                salaryLedgerDTO.setNetPayment(row.get(qSalaryLedger.netPayment));
                 salaryLedgerDTO.setAllowances(new ArrayList<>());
                 ledgerMap.put(ledgerId, salaryLedgerDTO);
             }
