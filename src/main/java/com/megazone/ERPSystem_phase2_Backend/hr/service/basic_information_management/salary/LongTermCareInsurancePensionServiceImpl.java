@@ -31,6 +31,6 @@ public class LongTermCareInsurancePensionServiceImpl implements LongTermCareInsu
         () -> new NoSuchElementException("해당하는 장기요양보험 데이터가 없습니다."));
 
         BigDecimal result = dto.getHealthInsurancePensionAmount().multiply(longTermCareInsurancePension.getRate());
-        return result;
+        return result.setScale(0, BigDecimal.ROUND_HALF_UP);
     }
 }

@@ -35,8 +35,11 @@ public class PerformanceController {
 
     // 성과 평가 수정
     @PostMapping("/performance/put/{performanceId}")
-    public ResponseEntity<PerformanceShowDTO> updatePerformance(@PathVariable Long performanceId, @RequestBody PerformanceOneDTO performanceoneDTO) {
-        PerformanceShowDTO performanceShowDTO = performanceService.updatePerformance(performanceId, performanceoneDTO);
+    public ResponseEntity<PerformanceShowDTO> updatePerformance(@PathVariable Long performanceId, @RequestBody PerformanceOneDTO performanceOneDTO) {
+        if (performanceId == null) {
+            throw new IllegalArgumentException("잘못된 performanceId 값입니다.");
+        }
+        PerformanceShowDTO performanceShowDTO = performanceService.updatePerformance(performanceId, performanceOneDTO);
         return new ResponseEntity<>(performanceShowDTO, HttpStatus.OK);
     }
 

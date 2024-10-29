@@ -1,8 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry;
 
-import com.megazone.ERPSystem_phase2_Backend.Integrated.model.RecentActivity;
-import com.megazone.ERPSystem_phase2_Backend.Integrated.model.enums.ActivityType;
-import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
@@ -11,11 +15,9 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.gener
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.UnresolvedSaleAndPurchaseVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.account_subject.AccountSubjectRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.general_voucher_entry.unresolvedVoucher.UnresolvedVoucherRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.unresolveSaleAndPurchaseVoucher.UnresolvedSaleAndPurchaseVoucherRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Permission;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.UserPermission;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import jakarta.transaction.Transactional;
@@ -43,6 +45,7 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
     private final UnresolvedSaleAndPurchaseVoucherRepository unresolvedSaleAndPurchaseVoucherRepository;
     private final ClientRepository clientRepository;
     private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 
     // 현금 자동분개 시 필요한 계정과목 코드
     private final String cashAccountCode = "101";
@@ -341,12 +344,25 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
                     .activityType(ActivityType.FINANCE)
                     .activityTime(LocalDateTime.now())
                     .build());
+            notificationService.createAndSendNotification(
+                    ModuleType.FINANCE,
+                    PermissionType.ADMIN,
+                    "미결전표 " + unresolvedVoucherList.size() + "건 승인",
+                    NotificationType.APPROVAL_VOUCHER
+            );
+            
         }else if (dto.getApprovalStatus().equals(ApprovalStatus.REJECTED)) {
             recentActivityRepository.save(RecentActivity.builder()
                     .activityDescription("미결전표 " + unresolvedVoucherList.size() + "건 반려")
                     .activityType(ActivityType.FINANCE)
                     .activityTime(LocalDateTime.now())
                     .build());
+            notificationService.createAndSendNotification(
+                    ModuleType.FINANCE,
+                    PermissionType.ADMIN,
+                    "미결전표 " + unresolvedVoucherList.size() + "건 반려",
+                    NotificationType.REJECT_VOUCHER
+            );
         }
 
         return unresolvedVoucherList;

@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface HealthInsurancePensionRepository extends JpaRepository<HealthInsurancePension, Integer>, HealthInsurancePensionRepositoryCustom {
+public interface HealthInsurancePensionRepository extends JpaRepository<HealthInsurancePension, Long>, HealthInsurancePensionRepositoryCustom {
     Optional<HealthInsurancePension> findFirstByEndDateIsNull();
 }

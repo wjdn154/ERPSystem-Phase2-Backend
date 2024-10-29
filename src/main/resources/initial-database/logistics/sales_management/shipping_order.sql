@@ -13,24 +13,25 @@ INSERT INTO shipping_order (client_id, manager_id, warehouse_id, shipping_addres
 
 
 -- ShippingOrderDetail 테이블 초기 데이터 삽입
-INSERT INTO shipping_order_detail (shipping_order_id, product_id, quantity, remarks) VALUES
-(1, 1, 50, '상품 A 대량 출하'),
-(1, 2, 30, '상품 B 추가 출하'),
-(2, 3, 100, '상품 C 대량 출하'),
-(2, 4, 20, '상품 D 긴급 출하'),
-(3, 5, 40, '상품 E 고객 요청 출하'),
-(3, 1, 60, '상품 A 대량 출하'),
-(4, 2, 25, '상품 B 정기 출하'),
-(4, 3, 35, '상품 C 정기 출하'),
-(5, 4, 45, '상품 D 대량 출하'),
-(5, 5, 55, '상품 E 대량 출하'),
-(6, 6, 60, '상품 F 급히 출하'),
-(6, 1, 20, '상품 A 보충 출하'),
-(7, 7, 90, '상품 G 고객 요청 출하'),
-(7, 2, 15, '상품 B 추가 출하'),
-(8, 8, 75, '상품 H 대량 출하'),
-(8, 3, 25, '상품 C 추가 출하'),
-(9, 9, 50, '상품 I 특별 출하'),
-(9, 4, 30, '상품 D 보충 출하'),
-(10, 10, 120, '상품 J 대규모 출하'),
-(10, 5, 70, '상품 E 추가 출하');
+INSERT INTO shipping_order_detail (shipping_order_id, product_id, quantity, remarks, shipping_status)
+VALUES (1, 1, 50, '상품 A 대량 출하', 'ORDER_FOR_SHIPMENT'),
+       (1, 2, 30, '상품 B 추가 출하', 'ORDER_FOR_SHIPMENT'),
+       (2, 3, 100, '상품 C 대량 출하', 'ORDER_FOR_SHIPMENT'),
+       (2, 4, 20, '상품 D 긴급 출하', 'ORDER_FOR_SHIPMENT'),
+       (3, 5, 40, '상품 E 고객 요청 출하', 'ORDER_FOR_SHIPMENT'),
+       (3, 1, 60, '상품 A 대량 출하', 'ORDER_FOR_SHIPMENT'),
+       (4, 2, 25, '상품 B 정기 출하', 'ORDER_FOR_SHIPMENT'),
+       (4, 3, 35, '상품 C 정기 출하', 'ORDER_FOR_SHIPMENT'),
+       (5, 4, 45, '상품 D 대량 출하', 'ORDER_FOR_SHIPMENT'),
+       (5, 5, 55, '상품 E 대량 출하', 'ORDER_FOR_SHIPMENT'),
+       (6, 6, 60, '상품 F 급히 출하', 'ORDER_FOR_SHIPMENT'),
+       (6, 1, 20, '상품 A 보충 출하', 'ORDER_FOR_SHIPMENT'),
+       (7, 7, 90, '상품 G 고객 요청 출하', 'ORDER_FOR_SHIPMENT'),
+       (7, 2, 15, '상품 B 추가 출하', 'ORDER_FOR_SHIPMENT'),
+       (8, 8, 75, '상품 H 대량 출하', 'ORDER_FOR_SHIPMENT'),
+       (8, 3, 25, '상품 C 추가 출하', 'ORDER_FOR_SHIPMENT'),
+       (9, 9, 50, '상품 I 특별 출하', 'ORDER_FOR_SHIPMENT'),
+       (9, 4, 30, '상품 D 보충 출하', 'ORDER_FOR_SHIPMENT'),
+       (10, 10, 120, '상품 J 대규모 출하', 'ORDER_FOR_SHIPMENT'),
+       (10, 5, 70, '상품 E 추가 출하', 'ORDER_FOR_SHIPMENT');
+

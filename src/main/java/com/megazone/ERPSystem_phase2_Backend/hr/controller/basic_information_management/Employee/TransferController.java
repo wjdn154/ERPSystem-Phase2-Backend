@@ -43,7 +43,7 @@ public class TransferController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
     // 발령 기록 수정
-    @PutMapping("/transfer/update/{id}")
+    @PostMapping("/transfer/update/{id}")
     public ResponseEntity<TransferShowDTO> updateTransfer(
             @PathVariable Long id,
             @RequestBody TransferCreateDTO dto) {
