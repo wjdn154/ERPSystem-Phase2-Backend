@@ -24,11 +24,14 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
         return queryFactory.select(Projections.constructor(InventoryResponseDTO.class,
                         inventory.id,
                         inventory.inventoryNumber,
+                        product.id,
                         product.code,
                         product.name,
                         inventory.standard,
+                        inventory.product.unit,
                         inventory.quantity,
                         warehouse.name,
+                        warehouseLocation.id,
                         warehouseLocation.locationName))
                 .from(inventory)
                 .join(inventory.product, product) // Product와 조인

@@ -1,5 +1,5 @@
-package com.megazone.ERPSystem_phase2_Backend.Integrated.model;
-import com.megazone.ERPSystem_phase2_Backend.Integrated.model.enums.ActivityType;
+package com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
