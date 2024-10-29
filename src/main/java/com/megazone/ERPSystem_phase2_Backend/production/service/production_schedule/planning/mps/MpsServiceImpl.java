@@ -108,9 +108,30 @@ public class MpsServiceImpl implements MpsService {
         updateProductionRequestProgress(mps);
     }
 
+    @Override
+    public MpsDTO confirmMps(Long mpsId) {
+        System.out.println("Confirming MPS with ID: " + mpsId);
+
+        Mps mps = mpsRepository.findById(mpsId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 MPS를 찾을 수 없습니다."));
+        System.out.println("MPS found: " + mps);
+
+        mps.setStatus("확정");
+        Mps updatedMps = mpsRepository.save(mps); // 업데이트된 MPS 저장
+
+        System.out.println("MPS status updated to 확정: " + mps);
+
+//        // MPS 상태에 따라 ProductionRequest의 상태 업데이트
+//        updateProductionRequestProgress(mps);
+        MpsDTO mpsDto = convertToDto(updatedMps);
+        return mpsDto;
+    }
+
     /**
      * ProductionOrder 마감 여부에 따른 MPS 상태 업데이트
      */
+    @Override
+
     public void updateMpsStatusBasedOnOrders(Long mpsId) {
         Mps mps = mpsRepository.findById(mpsId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 MPS를 찾을 수 없습니다."));
@@ -133,7 +154,15 @@ public class MpsServiceImpl implements MpsService {
      * MPS 상태에 따라 ProductionRequest의 ProgressType 전환
      */
     private void updateProductionRequestProgress(Mps mps) {
+        System.out.println("Updating ProductionRequest progress for MPS: " + mps);
+
         ProductionRequest request = mps.getProductionRequest();
+        if (request == null) {
+            System.out.println("No ProductionRequest found for MPS ID: " + mps.getId());
+            return; // 또는 예외를 던질 수 있음
+        }
+        System.out.println("Current ProductionRequest: " + request);
+
 
         ProgressType newProgressType = switch (mps.getStatus()) {
             case "계획" -> ProgressType.CREATED;
@@ -145,6 +174,8 @@ public class MpsServiceImpl implements MpsService {
 
         request.setProgressType(newProgressType);
         productionRequestsRepository.save(request);
+        System.out.println("ProductionRequest progress updated: " + request);
+
     }
 
 
@@ -253,7 +284,15 @@ public class MpsServiceImpl implements MpsService {
     public MpsDTO getMpsById(Long id) {
         Mps mps = mpsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("해당 MPS를 찾을 수 없습니다. :" + id));
-        return convertToDto(mps);
+
+        System.out.println("MPS found: " + mps);
+        MpsDTO mpsDto = convertToDto(mps);
+
+        System.out.println("Converted MPS DTO: " + mpsDto);
+
+//        Hibernate.initialize(mps.getProduct()); // Lazy 로딩된 연관 엔티티를 초기화
+//        Hibernate.initialize(mps.getProductionRequest());
+        return mpsDto;
     }
 
     @Override
@@ -332,17 +371,19 @@ public class MpsServiceImpl implements MpsService {
 // ================= convert methods ===============
 
     private MpsDTO convertToDto(Mps mps) {
-        return MpsDTO.builder()
+        System.out.println("Converting MPS to DTO: " + mps);
+
+        MpsDTO mpsDto = MpsDTO.builder()
                 .id(mps.getId())
                 .name(mps.getName())
                 .planDate(mps.getPlanDate())
                 .startDate(mps.getStartDate())
                 .endDate(mps.getEndDate())
                 .status(mps.getStatus())
-                .productId(mps.getProduct().getId())
+                .productId(mps.getProduct() != null ? mps.getProduct().getId() : null)
                 .quantity(mps.getQuantity())
                 .remarks(mps.getRemarks())
-                .productionRequestId(mps.getProductionRequest().getId())
+                .productionRequestId(mps.getProductionRequest() != null ? mps.getProductionRequest().getId() : null)
                 .ordersId(mps.getOrders() != null ? mps.getOrders().getId() : null)
                 .saleId(mps.getSale() != null ? mps.getSale().getId() : null)
                 .productionOrderIds(
@@ -352,6 +393,8 @@ public class MpsServiceImpl implements MpsService {
                 )
                 .build();
 
+        System.out.println("Converted DTO: " + mpsDto);
+        return mpsDto;
     }
 
     private Mps convertToEntity(MpsDTO dto) {

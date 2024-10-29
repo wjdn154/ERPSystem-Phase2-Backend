@@ -11,6 +11,7 @@ import java.util.List;
 public interface ProductionOrderService {
     ProductionOrderDTO getProductionOrderById(Long productionOrderId);
     List<ProductionOrderDTO> getAllProductionOrders();
+    List<ProductionOrderDTO> getUnconfirmedProductionOrders();
     ProductionOrderDTO saveProductionOrder(ProductionOrderDTO productionOrderDTO);
     ProductionOrderDTO updateProductionOrder(Long productionOrderId, ProductionOrderDTO productionOrderDTO);
     void deleteProductionOrder(Long productionOrderId);

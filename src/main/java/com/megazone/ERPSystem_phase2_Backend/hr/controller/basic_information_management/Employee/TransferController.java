@@ -35,8 +35,21 @@ public class TransferController {
     }
 
     // 발령 기록 상세 조회
-    //@PostMapping("/transfer/detail/{id}")
-    //public ResponseEntity<TransferShowDTO> findTransferById(@PathVariable Long id) {
-    //
-    //}
+    @PostMapping("/transfer/detail/{id}")
+    public ResponseEntity<TransferShowDTO> findTransferById(@PathVariable Long id) {
+        Optional<TransferShowDTO> transfer = transferService.findTransferById(id);
+        return transfer
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+    // 발령 기록 수정
+    @PostMapping("/transfer/update/{id}")
+    public ResponseEntity<TransferShowDTO> updateTransfer(
+            @PathVariable Long id,
+            @RequestBody TransferCreateDTO dto) {
+        Optional<TransferShowDTO> updatedTransfer = Optional.ofNullable(transferService.updateTransfer(id, dto));
+        return updatedTransfer
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
 }

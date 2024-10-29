@@ -18,4 +18,6 @@ public interface PerformanceService {
 
 
     List<PerformanceShowDTO> getPerformanceByEmployee(Long employeeId);
+
+    List<PerformanceShowDTO> getAllPerformances();
 }

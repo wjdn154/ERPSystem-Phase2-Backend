@@ -1,10 +1,10 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.common_scheduling.ProductionOrder;
 
-import com.megazone.ERPSystem_phase2_Backend.Integrated.model.EnvironmentalCertificationAssessment;
-import com.megazone.ERPSystem_phase2_Backend.Integrated.model.RecentActivity;
-import com.megazone.ERPSystem_phase2_Backend.Integrated.model.enums.ActivityType;
-import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.EnvironmentalCertificationAssessmentRepository;
-import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.EnvironmentalCertificationAssessment;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.EnvironmentalCertificationAssessmentRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.bom.StandardBom;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessDetails;
@@ -105,6 +105,14 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
     @Override
     public List<ProductionOrderDTO> getAllProductionOrders() {
         List<ProductionOrder> productionOrders = productionOrderRepository.findAll();
+        return productionOrders.stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    @Override
+    public List<ProductionOrderDTO> getUnconfirmedProductionOrders() {
+        List<ProductionOrder> productionOrders = productionOrderRepository.findByConfirmedFalse();
         return productionOrders.stream()
                 .map(this::convertToDTO)
                 .toList();
