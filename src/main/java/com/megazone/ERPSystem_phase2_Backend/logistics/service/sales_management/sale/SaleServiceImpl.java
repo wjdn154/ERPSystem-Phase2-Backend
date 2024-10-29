@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.service.sales_management
 
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.VatAmountWithSupplyAmountDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.sales_and_purchase_voucher_entry.VatTypeService;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
@@ -232,12 +233,15 @@ public class SaleServiceImpl implements SaleService {
 
             VatAmountWithSupplyAmountDTO vatAmountWithSupplyAmountDTO = new VatAmountWithSupplyAmountDTO();
             vatAmountWithSupplyAmountDTO.setSupplyAmount(supplyPrice);
+            vatAmountWithSupplyAmountDTO.setVatTypeId(sale.getVatId());
+
 
             BigDecimal localAmount = null;
             BigDecimal vat = null;
 
-            if ("KRW".equals(sale.getCurrency().getCode())) {
+            if (sale.getCurrency().getId() == 6) {
                 vat = vatTypeService.vatAmountCalculate(vatAmountWithSupplyAmountDTO);
+                System.out.println("vat: " + vat);
             } else if (sale.getCurrency().getExchangeRate() != null) {
                 localAmount = supplyPrice.multiply(sale.getCurrency().getExchangeRate());
             } else {
@@ -286,6 +290,10 @@ public class SaleServiceImpl implements SaleService {
 
             // 부가세 적용 수정
             sale.setVatId(updateDto.getVatId() != null ? updateDto.getVatId() : sale.getVatId());
+            sale.setRemarks(updateDto.getRemarks());
+
+            ElectronicTaxInvoiceStatus status = ElectronicTaxInvoiceStatus.valueOf(updateDto.getElectronicTaxInvoiceStatus());
+            sale.setElectronicTaxInvoiceStatus(status);
 
             sale.setAccountingReflection(updateDto.getAccountingReflection());
             sale.setRemarks(updateDto.getRemarks());

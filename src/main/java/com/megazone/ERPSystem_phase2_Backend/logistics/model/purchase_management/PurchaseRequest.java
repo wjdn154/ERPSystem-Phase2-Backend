@@ -46,10 +46,6 @@ public class PurchaseRequest {
     @JoinColumn(name = "warehouse_id", nullable = false)
     private Warehouse receivingWarehouse;
 
-    // 부가세율 적용 or 미적용
-    @Column(nullable = false)
-    private Boolean vatType;
-
     // 통화_id
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "currency_id", nullable = false)

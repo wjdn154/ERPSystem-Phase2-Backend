@@ -48,11 +48,11 @@ public class ShippingOrder {
     private Warehouse shippingWarehouse;
 
     // 주소 - 배송 보낼 주소(거래처 주소가 될 수도 있음)
-    @Column(nullable = false)
+    @Column
     private String shippingAddress;
 
     // 우편번호 - 거래처에 우편번호가 될 수도 있음(직접 입력도 가능)
-    @Column(nullable = false)
+    @Column
     private String postalCode;
 
     // 출하예정일자
@@ -72,4 +72,9 @@ public class ShippingOrder {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private SaleState state = SaleState.WAITING_FOR_SHIPMENT;
+
+    public void addShippingOrderDetail(ShippingOrderDetail shippingOrderDetail) {
+        this.shippingOrderDetails.add(shippingOrderDetail);
+        shippingOrderDetail.setShippingOrder(this);
+    }
 }
