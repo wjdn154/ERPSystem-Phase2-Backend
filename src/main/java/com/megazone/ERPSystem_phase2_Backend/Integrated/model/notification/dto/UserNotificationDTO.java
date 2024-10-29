@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserNotificationDTO {
-    private Users users;
+    private Long userId;
     private Notification notification;
     private ModuleType module;
     private PermissionType permission;

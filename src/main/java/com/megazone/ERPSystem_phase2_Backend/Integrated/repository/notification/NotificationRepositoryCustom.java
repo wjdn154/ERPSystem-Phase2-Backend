@@ -11,9 +11,12 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statement
 import com.megazone.ERPSystem_phase2_Backend.financial.model.ledger.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherShowDTO;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface NotificationRepositoryCustom {
-    List<UserNotificationDTO> fetchNotification(Long employeeId, ModuleType module, PermissionType permission);
+    List<UserNotificationDTO> fetchNotification(Long userId, ModuleType module, PermissionType permission);
 }

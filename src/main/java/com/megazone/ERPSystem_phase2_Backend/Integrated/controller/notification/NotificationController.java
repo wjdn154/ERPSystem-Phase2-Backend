@@ -8,6 +8,7 @@ import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums
 import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.TenantContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
@@ -40,7 +41,7 @@ public class NotificationController {
             @RequestParam("employeeId") Long employeeId,
             @RequestParam("tenantId") String tenantId,
             @RequestParam("module") ModuleType module,
-            @RequestParam("permission") PermissionType permission){
+            @RequestParam("permission") PermissionType permission) {
 
         SseEmitter emitter = notificationService.subscribe(employeeId, tenantId, module, permission);
 
@@ -64,13 +65,26 @@ public class NotificationController {
     @PostMapping("/create-notification")
     public ResponseEntity<Object> createNotification(
             @RequestParam("employeeId") Long employeeId,
-            @RequestParam("tenantId") String tenantId,
             @RequestParam("module") ModuleType module,
             @RequestParam("permission") PermissionType permission) {
 
-        System.out.println("create-notification : employeeId = " + employeeId);
-
-        List<UserNotificationDTO> notification = notificationService.createAndSearch(employeeId, tenantId, module, permission);
+        List<UserNotificationDTO> notification = notificationService.createAndSearch(employeeId, module, permission);
         return ResponseEntity.ok(notification);
     }
+
+    @PostMapping("/mark-as-read")
+    public ResponseEntity<Object> markAsRead(
+            @RequestParam("employeeId") Long employeeId,
+            @RequestParam("notificationId") Long notificationId) {
+
+        Long markAsRead;
+        try {
+            markAsRead = notificationService.markAsRead(employeeId, notificationId);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(markAsRead);
+    }
+
+
 }

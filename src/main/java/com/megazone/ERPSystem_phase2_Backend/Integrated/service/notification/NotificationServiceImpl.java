@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -94,27 +95,37 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<UserNotificationDTO> createAndSearch(Long employeeId, String tenantId, ModuleType module, PermissionType permission) {
-        notificationRepository.fetchNotification(employeeId, module, permission).forEach(
-                notification -> {
-                    UserNotification userNotification = UserNotification.builder()
-                            .users(notification.getUsers())
-                            .notification(notification.getNotification())
-                            .module(notification.getModule())
-                            .permission(notification.getPermission())
-                            .type(notification.getType())
-                            .content(notification.getContent())
-                            .createAt(notification.getCreateAt())
-                            .readStatus(false)
-                            .build();
-                    userNotificationRepository.save(userNotification);
-                }
-        );
+    @Transactional
+    public List<UserNotificationDTO> createAndSearch(Long employeeId, ModuleType module, PermissionType permission) {
+        // 사용자 조회
+        Long userId = usersRepository.findByEmployeeId(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("ID: " + employeeId + "에 해당하는 사용자를 찾을 수 없습니다.")).getId();
 
-        Long userId = usersRepository.findByEmployeeId(employeeId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")).getId();
-        return userNotificationRepository.findByUserId(userId).stream()
+        // 기존 알림 ID 목록 조회
+        List<Long> existingNotificationIds = userNotificationRepository.findNotificationIdsByUserId(userId);
+
+        // 중복 알림 필터링 및 새 알림 생성
+        List<UserNotification> newNotifications = notificationRepository.fetchNotification(userId, module, permission).stream()
+                .filter(notification -> !existingNotificationIds.contains(notification.getNotification().getId()))
+                .map(notification -> UserNotification.builder()
+                        .userId(userId)
+                        .notification(notification.getNotification())
+                        .module(notification.getModule())
+                        .permission(notification.getPermission())
+                        .type(notification.getType())
+                        .content(notification.getContent())
+                        .createAt(notification.getCreateAt())
+                        .readStatus(false)
+                        .build())
+                .collect(Collectors.toList());
+
+        // 새 알림 저장
+        userNotificationRepository.saveAll(newNotifications);
+
+        // 저장된 알림 반환
+        return userNotificationRepository.findByUserIdOrderByCreateAtDesc(userId).stream()
                 .map(userNotification -> UserNotificationDTO.builder()
-                        .users(userNotification.getUsers())
+                        .userId(userNotification.getUserId())
                         .notification(userNotification.getNotification())
                         .module(userNotification.getModule())
                         .permission(userNotification.getPermission())
@@ -125,6 +136,20 @@ public class NotificationServiceImpl implements NotificationService {
                         .readStatus(userNotification.isReadStatus())
                         .build())
                 .toList();
+    }
+
+    @Override
+    public Long markAsRead(Long employeeId, Long notificationId) {
+
+        Long userId = usersRepository.findByEmployeeId(employeeId).orElseThrow(() -> new IllegalArgumentException("ID: " + employeeId + "에 해당하는 사용자를 찾을 수 없습니다.")).getId();
+        UserNotification userNotification = userNotificationRepository.findByUserIdAndNotificationId(userId, notificationId).orElseThrow(() -> new IllegalArgumentException("ID: " + notificationId + "에 해당하는 알림을 찾을 수 없습니다."));
+
+        userNotification.setReadAt(LocalDateTime.now());
+        userNotification.setReadStatus(true);
+
+        userNotificationRepository.save(userNotification);
+
+        return userNotification.getId();
     }
 
 

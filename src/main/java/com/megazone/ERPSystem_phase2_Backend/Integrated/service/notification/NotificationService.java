@@ -16,5 +16,6 @@ public interface NotificationService {
     void sendNotification(Notification notification, String tenantId); // 전체 사용자에게 알림 전송
     UserSubscriptionDTO getUserSubscriptionInfo(Long employeeId, boolean isAdmin);
     void removeEmitter(Long employeeId);
-    List<UserNotificationDTO> createAndSearch(Long employeeId, String tenantId, ModuleType module, PermissionType permission);
+    List<UserNotificationDTO> createAndSearch(Long employeeId, ModuleType module, PermissionType permission);
+    Long markAsRead(Long employeeId, Long notificationId);
 }

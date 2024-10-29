@@ -35,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,7 @@ public class NotificationRepositoryImpl implements NotificationRepositoryCustom 
 
 
     @Override
-    public List<UserNotificationDTO> fetchNotification(Long employeeId, ModuleType module, PermissionType permission) {
+    public List<UserNotificationDTO> fetchNotification(Long userId, ModuleType module, PermissionType permission) {
         QNotification qNotification = QNotification.notification;
         QUserNotification qUserNotification = QUserNotification.userNotification;
         QUsers qUsers = QUsers.users;
@@ -60,25 +61,23 @@ public class NotificationRepositoryImpl implements NotificationRepositoryCustom 
                     .or(qNotification.module.eq(ModuleType.ALL).and(qNotification.permission.eq(PermissionType.ALL)));
         }
 
-        // LEFT JOIN을 사용하여 해당 employeeId의 UserNotification에 없는 Notification 조회
+        // LEFT JOIN을 사용하여 해당 userId의 UserNotification에 없는 Notification 조회
         return queryFactory
                 .select(Projections.constructor(UserNotificationDTO.class,
-                        qUsers,
-                        qNotification,
-                        qNotification.module,
-                        qNotification.permission,
-                        qNotification.type,
-                        qNotification.content,
-                        qNotification.createAt,
-                        qUserNotification.readAt,
-                        qUserNotification.readStatus
+                        qUsers.id.as("userId"),
+                        qNotification.as("notification"),
+                        qNotification.module.as("module"),
+                        qNotification.permission.as("permission"),
+                        qNotification.type.as("type"),
+                        qNotification.content.as("content"),
+                        qNotification.createAt.as("createAt"),
+                        qUserNotification.readAt.as("readAt"),
+                        qUserNotification.readStatus.as("readStatus")
                 ))
                 .from(qNotification)
-                .leftJoin(qUserNotification)
-                .on(qUserNotification.notification.eq(qNotification)
-                        .and(qUserNotification.users.id.eq(employeeId)))
-                .leftJoin(qUsers).on(qUsers.id.eq(employeeId))
-                .where(builder.and(qUserNotification.id.isNull())) // 아직 읽지 않은 알림만 조회
+                .leftJoin(qUserNotification).on(qUserNotification.notification.eq(qNotification).and(qUserNotification.userId.eq(userId)))
+                .leftJoin(qUsers).on(qUsers.id.eq(userId))
+                .where(builder.and(qUserNotification.id.isNull()))
                 .fetch();
     }
 }
