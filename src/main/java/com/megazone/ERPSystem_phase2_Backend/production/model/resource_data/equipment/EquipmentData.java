@@ -17,8 +17,8 @@ import java.util.List;
 
 //장비
 
-@Entity(name = "equipmentData")
-@Table(name = "equipmentData")
+@Entity(name = "equipment_data")
+@Table(name = "equipment_data")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
