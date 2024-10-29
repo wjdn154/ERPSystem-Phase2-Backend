@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.Integrated.model.enums;
+package com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums;
 
 /**
  * 최근 활동의 유형을 정의하는 Enum
