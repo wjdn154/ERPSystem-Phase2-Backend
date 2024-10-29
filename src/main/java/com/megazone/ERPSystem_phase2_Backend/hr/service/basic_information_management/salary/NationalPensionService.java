@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface NationalPensionService {
     BigDecimal calculator(InsurancePensionCalculatorDTO dto);
-
+    BigDecimal calculator(BigDecimal amount);
     List<NationalPensionShowDTO> showAll();
 }
