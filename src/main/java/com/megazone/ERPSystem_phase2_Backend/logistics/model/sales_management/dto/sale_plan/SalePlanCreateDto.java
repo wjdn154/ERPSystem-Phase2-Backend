@@ -1,6 +1,6 @@
-package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.dto.sale;
+package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.dto.sale_plan;
 
-
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.dto.sale.SaleCreateDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,29 +14,25 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SaleCreateDto {
+public class SalePlanCreateDto {
     private LocalDate date;
+    private LocalDate expectedSalesDate;
     private Long clientId;
     private Long managerId;
     private Long warehouseId;
     private Long currencyId;
     private Long vatId;
-    private String journalEntryCode;
-    private String electronicTaxInvoiceStatus;
-    private Boolean accountingReflection;
     private String remarks;
-    private List<SaleItemDetailDto> items;
+    private List<SalePlanItemDetailDto> items;
 
     @Getter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaleItemDetailDto {
+    public static class SalePlanItemDetailDto {
         private Long productId;
         private Integer quantity;
-        private BigDecimal supplyPrice;
-        private BigDecimal localAmount;  // 원화 금액
-        private BigDecimal vat;
+        private BigDecimal expectedSales;
         private String remarks;
     }
 }

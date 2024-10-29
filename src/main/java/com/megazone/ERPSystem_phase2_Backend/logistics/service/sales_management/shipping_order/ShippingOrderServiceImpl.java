@@ -80,7 +80,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                 .productName(getProductNameWithCount(shippingOrder))
                 .totalQuantity(getTotalQuantity(shippingOrder))
                 .date(shippingOrder.getDate())
-                .deliveryDate(shippingOrder.getShippingDate())
+                .shippingDate(shippingOrder.getShippingDate())
                 .status(shippingOrder.getState().toString())
                 .remarks(shippingOrder.getRemarks())
                 .build();
@@ -138,7 +138,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                 .warehouseAddress(shippingOrder.getShippingAddress())
                 .postalCode(shippingOrder.getPostalCode())
                 .date(shippingOrder.getDate())
-                .deliveryDate(shippingOrder.getShippingDate())
+                .shippingDate(shippingOrder.getShippingDate())
                 .remarks(shippingOrder.getRemarks())
                 .status(shippingOrder.getState().toString())
                 .shippingOrderDetails(toItemDetailDtoList(shippingOrder.getShippingOrderDetails()))
@@ -208,6 +208,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     .quantity(item.getQuantity())
                     .remarks(item.getRemarks())
                     .build();
+            newOrder.addShippingOrderDetail(detail);
         });
 
         return newOrder;
@@ -247,6 +248,10 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
             // 입고지시 일자, 납기일자 수정
             shippingOrder.setDate(updateDto.getDate() != null ? updateDto.getDate() : shippingOrder.getDate());
             shippingOrder.setShippingDate(updateDto.getShippingDate() != null ? updateDto.getShippingDate() : shippingOrder.getShippingDate());
+
+            shippingOrder.setRemarks(updateDto.getRemarks());
+
+            shippingOrder.getShippingOrderDetails().clear();
 
             // 출하지시서 상세 정보 업데이트 - 등록 관련 메서드의 getShippingOrder 메서드 사용
             ShippingOrder newOrder = getShippingOrder(updateDto, shippingOrder);

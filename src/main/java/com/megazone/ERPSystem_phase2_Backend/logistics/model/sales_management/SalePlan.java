@@ -32,7 +32,7 @@ public class SalePlan {
     private Long id;
 
     // 판매 계획 상세
-    @OneToMany(mappedBy = "salePlan", orphanRemoval = true)
+    @OneToMany(mappedBy = "salePlan", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<SalePlanDetail> salePlanDetails = new ArrayList<>();
 
@@ -55,7 +55,7 @@ public class SalePlan {
     private LocalDate date;
 
     @Column
-    private LocalDate ExpectedSalesDate;
+    private LocalDate expectedSalesDate;
 
     @Column
     @Enumerated(EnumType.STRING)
@@ -65,4 +65,9 @@ public class SalePlan {
     // 비고
     @Column
     private String remarks;
+
+    public void addSalePlanDetail(SalePlanDetail salePlanDetail) {
+        this.salePlanDetails.add(salePlanDetail);
+        salePlanDetail.setSalePlan(this);
+    }
 }

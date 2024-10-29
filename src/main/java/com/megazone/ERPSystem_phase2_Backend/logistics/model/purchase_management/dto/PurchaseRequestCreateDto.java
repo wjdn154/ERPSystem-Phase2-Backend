@@ -23,7 +23,6 @@ public class PurchaseRequestCreateDto {
     private BigDecimal exchangeRate;  // 사용자가 환율을 변경한 경우에만 전달
     private LocalDate date;
     private LocalDate deliveryDate;
-    private Boolean vatType;
     private List<PurchaseRequestItemCreateDto> items;
     private String remarks;
 
