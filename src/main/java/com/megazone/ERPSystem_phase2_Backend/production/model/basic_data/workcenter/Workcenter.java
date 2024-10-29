@@ -7,10 +7,7 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.production_schedul
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessDetails;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -59,12 +56,14 @@ public class Workcenter {
     @JoinColumn(name = "warehouse_id", nullable = true)
     private Warehouse factory;  // 공장 엔티티 from 물류 창고관리의 공장
 
+    @ToString.Exclude
     @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "workcenter")
     private List<EquipmentData> equipmentList = new ArrayList<>(); // 설비 목록
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "workcenter")
     @Builder.Default
+    @ToString.Exclude
     private List<WorkerAssignment> workerAssignments = new ArrayList<>(); // 작업자 배치 이력
 
     @ManyToOne(fetch = FetchType.LAZY)

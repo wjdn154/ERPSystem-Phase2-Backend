@@ -70,6 +70,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                         employee.getImagePath(),
                         employee.getDepartment().getDepartmentCode(),
                         employee.getDepartment().getDepartmentName(),
+                        employee.getPosition().getId(),
                         employee.getPosition().getPositionName(),
                         employee.getJobTitle().getJobTitleName()
 //                        employee.getBankAccount().getAccountNumber()

@@ -17,7 +17,7 @@ public class SalaryEntryDTO {
     private SalaryType salaryType;
     private boolean incomeTaxType; // 국외소득유무
     private boolean studentLoanRepaymentStatus; // 학자금상환여부
-    private BigDecimal studentLoanRepaymentAmount; // 합자금 상환통지액
+    private BigDecimal studentLoanRepaymentAmount; // 학자금 상환통지액
     private PensionType pensionType; // 연금유형 : 국민연금 or 사학연금
     private BigDecimal nationalPensionAmount; // 국민연금 금액
     private BigDecimal privateSchoolPensionAmount; // 사학연금 금액

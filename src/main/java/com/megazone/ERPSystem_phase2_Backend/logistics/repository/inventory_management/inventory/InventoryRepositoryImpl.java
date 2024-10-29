@@ -24,11 +24,14 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
         return queryFactory.select(Projections.constructor(InventoryResponseDTO.class,
                         inventory.id,
                         inventory.inventoryNumber,
+                        product.id,
                         product.code,
                         product.name,
                         inventory.standard,
+                        inventory.product.unit,
                         inventory.quantity,
                         warehouse.name,
+                        warehouseLocation.id,
                         warehouseLocation.locationName))
                 .from(inventory)
                 .join(inventory.product, product) // Product와 조인
@@ -51,7 +54,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                 .from(inventory)
                 .join(inventory.product, product)  // Product와 조인
                 .join(inventory.warehouseLocation, warehouseLocation)  // WarehouseLocation과 조인
-                .where(warehouseLocation.id.eq(locationId))  // 특정 위치 ID로 필터링
+                .where(warehouseLocation.id.eq(warehouseLocation.id))  // 특정 위치 ID로 필터링
                 .fetch();  // 결과 리스트 반환
     }
 

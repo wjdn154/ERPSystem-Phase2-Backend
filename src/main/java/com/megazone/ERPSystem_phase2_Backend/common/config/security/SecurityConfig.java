@@ -40,18 +40,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // 보안 설정 정의
-        http.csrf(csrf -> csrf.disable())  // CSRF 보호 비활성화함.
+        http.csrf(csrf -> csrf.disable())  // CSRF 비활성화.
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/hr/auth/**").permitAll()  // 인증 없이 접근 가능한 경로 설정함.
-                        .requestMatchers("/api/financial/company/**").permitAll()  // 인증 없이 접근 가능한 경로 설정함.
-                        .anyRequest().authenticated()  // 나머지 모든 요청은 인증이 필요함.
+                        .requestMatchers("/api/hr/auth/**").permitAll()
+                        .requestMatchers("/api/financial/company/**").permitAll()
+                        .requestMatchers("/api/notifications/subscribe").permitAll()
+                        .anyRequest().authenticated()  // 나머지 모든 요청은 인증이 필요.
                 )
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));  // 세션을 사용하지 않고 JWT로 인증함.
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));  // 세션을 사용하지 않고 JWT 인증.
 
-        // JWT 필터를 UsernamePasswordAuthenticationFilter 앞에 추가함.
+        // JWT 필터를 UsernamePasswordAuthenticationFilter 앞에 추가.
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();  // 설정된 보안 필터 체인 반환함.

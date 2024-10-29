@@ -20,5 +20,8 @@ public interface MpsService {
 
     void updateMpsStatusBasedOnOrders(Long mpsId);
 
+    MpsDTO confirmMps(Long mpsId);
+
+
 //    void createMps(ProductionRequest request);
 }

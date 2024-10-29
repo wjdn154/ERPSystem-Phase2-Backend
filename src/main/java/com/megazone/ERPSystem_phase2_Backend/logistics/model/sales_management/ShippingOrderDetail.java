@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management;
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.shipping_processing_management.enums.ShippingStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,4 +40,9 @@ public class ShippingOrderDetail {
     // 비고
     @Column
     private String remarks;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private ShippingStatus shippingStatus = ShippingStatus.ORDER_FOR_SHIPMENT;
 }
