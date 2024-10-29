@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.Integrated.controller.notification;
 
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.Notification;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.dto.UserNotificationDTO;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.dto.UserSubscriptionDTO;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
@@ -16,6 +17,8 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -50,13 +53,24 @@ public class NotificationController {
         return emitter;
     }
 
-    // 알림 생성 및 전송
-    @PostMapping
-    public ResponseEntity<?> createAndSendNotification(
-            @RequestParam("content") String content,
+    @PostMapping("/unsubscribe")
+    public ResponseEntity<Void> unsubscribe(@RequestBody Map<String, Long> request) {
+        Long employeeId = request.get("employeeId");
+        notificationService.removeEmitter(employeeId);
+        return ResponseEntity.ok().build();
+    }
+
+    // 이력 생성 및 조회
+    @PostMapping("/create-notification")
+    public ResponseEntity<Object> createNotification(
+            @RequestParam("employeeId") Long employeeId,
+            @RequestParam("tenantId") String tenantId,
             @RequestParam("module") ModuleType module,
             @RequestParam("permission") PermissionType permission) {
-        notificationService.createAndSendNotification(content, module, permission);
-        return ResponseEntity.ok().build();
+
+        System.out.println("create-notification : employeeId = " + employeeId);
+
+        List<UserNotificationDTO> notification = notificationService.createAndSearch(employeeId, tenantId, module, permission);
+        return ResponseEntity.ok(notification);
     }
 }
