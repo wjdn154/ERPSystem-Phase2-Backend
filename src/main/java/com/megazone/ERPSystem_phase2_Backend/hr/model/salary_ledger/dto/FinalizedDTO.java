@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.YearMonth;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SalaryLedgerSearchDTO {
-    private Long employeeId;
-    private Long salaryLedgerDateId;
+public class FinalizedDTO {
+    private boolean finalized;
+    private String message;
 }

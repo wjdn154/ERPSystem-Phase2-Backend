@@ -2,12 +2,10 @@ package com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_ma
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.QSalaryLedger;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.QSalaryLedgerAllowance;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.SalaryLedger;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto.SalaryLedgerAllowanceDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto.SalaryLedgerAllowanceShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto.SalaryLedgerDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto.SalaryLedgerSearchDTO;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -33,6 +31,9 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
                         qSalaryLedger.privateSchoolPensionAmount,
                         qSalaryLedger.healthInsurancePensionAmount,
                         qSalaryLedger.employmentInsuranceAmount,
+                        qSalaryLedger.longTermCareInsurancePensionAmount,
+                        qSalaryLedger.incomeTaxPensionAmount,
+                        qSalaryLedger.localIncomeTaxPensionAmount,
                         qSalaryLedgerAllowance.name,
                         qSalaryLedgerAllowance.amount
                 )
@@ -62,17 +63,20 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
                 salaryLedgerDTO.setPrivateSchoolPensionAmount(row.get(qSalaryLedger.privateSchoolPensionAmount));
                 salaryLedgerDTO.setHealthInsurancePensionAmount(row.get(qSalaryLedger.healthInsurancePensionAmount));
                 salaryLedgerDTO.setEmploymentInsuranceAmount(row.get(qSalaryLedger.employmentInsuranceAmount));
+                salaryLedgerDTO.setLongTermCareInsurancePensionAmount(row.get(qSalaryLedger.longTermCareInsurancePensionAmount));
+                salaryLedgerDTO.setIncomeTaxAmount(row.get(qSalaryLedger.incomeTaxPensionAmount));
+                salaryLedgerDTO.setLocalIncomeTaxPensionAmount(row.get(qSalaryLedger.localIncomeTaxPensionAmount));
                 salaryLedgerDTO.setAllowances(new ArrayList<>());
                 ledgerMap.put(ledgerId, salaryLedgerDTO);
             }
 
             // 수당 리스트에 항목 추가
-            SalaryLedgerAllowanceDTO allowanceDTO = new SalaryLedgerAllowanceDTO();
+            SalaryLedgerAllowanceShowDTO allowanceDTO = new SalaryLedgerAllowanceShowDTO();
             allowanceDTO.setName(row.get(qSalaryLedgerAllowance.name));
             allowanceDTO.setAmount(row.get(qSalaryLedgerAllowance.amount));
             salaryLedgerDTO.getAllowances().add(allowanceDTO);
         }
 
-        return ledgerMap.get(ledgerId); // 중복 없이 SalaryLedgerDTO 리스트 반환
+        return ledgerMap.get(ledgerId);
     }
 }

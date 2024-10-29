@@ -11,6 +11,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * 급여계산 및 입력 테이블
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,7 +25,7 @@ public class SalaryLedger {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     private Employee employee;
 
     @ManyToOne
@@ -56,7 +60,12 @@ public class SalaryLedger {
     @Column(nullable = false)
     private BigDecimal localIncomeTaxPensionAmount; // 지방소득세 금액
 
-    private LocalDate ledgerDate;
+    @Column(nullable = false)
+    private BigDecimal totalSalaryAmount; // 지급총액
+    @Column(nullable = false)
+    private BigDecimal totalDeductionAmount; // 공제총액
+    @Column(nullable = false)
+    private BigDecimal netPayment; // 차인지급액
 
 }
 

@@ -23,4 +23,8 @@ public class SalaryLedgerDate {
 
     private String description;
 
+    private LocalDate startDate; // 마감시작기준
+
+    private LocalDate endDate; // 마감일
+
 }
