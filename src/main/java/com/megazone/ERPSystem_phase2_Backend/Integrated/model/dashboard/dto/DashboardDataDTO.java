@@ -1,6 +1,6 @@
-package com.megazone.ERPSystem_phase2_Backend.Integrated.model.dto;
+package com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.dto;
 
-import com.megazone.ERPSystem_phase2_Backend.Integrated.model.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

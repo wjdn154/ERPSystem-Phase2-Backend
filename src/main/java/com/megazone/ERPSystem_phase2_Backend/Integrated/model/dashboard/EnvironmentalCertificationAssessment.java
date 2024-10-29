@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.Integrated.model;
+package com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard;
 
 import com.megazone.ERPSystem_phase2_Backend.common.config.YearMonthConverter;
 import jakarta.persistence.Entity;

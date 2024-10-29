@@ -1,7 +1,6 @@
-package com.megazone.ERPSystem_phase2_Backend.Integrated.controller;
-import  com.megazone.ERPSystem_phase2_Backend.Integrated.model.dto.DashboardDataDTO;
+package com.megazone.ERPSystem_phase2_Backend.Integrated.controller.dashboard;
 
-import com.megazone.ERPSystem_phase2_Backend.Integrated.service.IntegratedService;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.dashboard.IntegratedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
