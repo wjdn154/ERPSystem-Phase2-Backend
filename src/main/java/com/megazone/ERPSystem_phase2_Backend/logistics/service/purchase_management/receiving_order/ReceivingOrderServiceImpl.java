@@ -126,6 +126,7 @@ public class ReceivingOrderServiceImpl implements ReceivingOrderService {
                 .managerCode(receivingOrder.getManager().getEmployeeNumber())
                 .managerName(receivingOrder.getManager().getLastName() + receivingOrder.getManager().getFirstName())
                 .managerContact(receivingOrder.getManager().getPhoneNumber())
+                .warehouseId(receivingOrder.getReceivingWarehouse().getId())
                 .warehouseCode(receivingOrder.getReceivingWarehouse().getCode())
                 .warehouseName(receivingOrder.getReceivingWarehouse().getName())
                 .date(receivingOrder.getDate())

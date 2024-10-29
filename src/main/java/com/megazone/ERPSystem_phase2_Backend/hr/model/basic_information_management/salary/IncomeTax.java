@@ -25,6 +25,7 @@ public class IncomeTax {
 
     private BigDecimal highAmount; // 과세표준 상한
 
+    @Column(precision = 10, scale = 2)
     private BigDecimal rate; // 세율
     
     private BigDecimal taxCredit; // 누진공제액

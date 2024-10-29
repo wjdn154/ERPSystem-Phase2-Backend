@@ -25,7 +25,7 @@ public class NationalPensionController {
     public ResponseEntity<Object> calculator(@RequestBody InsurancePensionCalculatorDTO dto) {
         try {
             BigDecimal resultAmount = nationalPensionService.calculator(dto);
-            return ResponseEntity.status(HttpStatus.OK).body(resultAmount.setScale(0, BigDecimal.ROUND_HALF_UP));
+            return ResponseEntity.status(HttpStatus.OK).body(resultAmount);
         }catch(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
