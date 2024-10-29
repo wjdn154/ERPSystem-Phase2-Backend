@@ -20,10 +20,11 @@ public class TransferShowDTO {
     private String employeeName; // 사원이름 (성 + 이름)
     private Long fromDepartmentId; // 출발 부서 ID
     private Long toDepartmentId; // 도착 부서 ID
-    private String todepartmentCode;
-    private String fromdepartmentCode;
+    private String toDepartmentCode;
+    private String fromDepartmentCode;
     private String fromDepartmentName;
     private String toDepartmentName;
+    private Long transferTypeId;
     private String transferTypeCode;
     private String transferTypeDescription;
     private String reason;
@@ -43,6 +44,7 @@ public class TransferShowDTO {
                 transfer.getToDepartment().getDepartmentCode(),
                 transfer.getFromDepartment().getDepartmentName(),
                 transfer.getToDepartment().getDepartmentName(),
+                transfer.getTransferType().getId(),
                 transfer.getTransferType().getCode(),
                 transfer.getTransferType().getDescription(),
                 transfer.getReason()
