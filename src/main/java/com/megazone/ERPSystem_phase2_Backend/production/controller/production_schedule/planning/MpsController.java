@@ -24,12 +24,20 @@ public class MpsController {
         return new ResponseEntity<>(createdMps, HttpStatus.CREATED);
     }
 
-    // MPS의 모든 작업지시가 완료되면 상태 자동 전환
-    @PostMapping("/{mpsId}/complete")
-    public ResponseEntity<Void> completeMps(@PathVariable Long mpsId) {
-        mpsService.updateMpsStatusBasedOnOrders(mpsId);
-        return ResponseEntity.ok().build();
+//    // MPS의 모든 작업지시가 완료되면 상태 자동 전환
+//    @PostMapping("/{mpsId}/completedByOrders")
+//    public ResponseEntity<Void> completeMps(@PathVariable Long mpsId) {
+//        mpsService.updateMpsStatusBasedOnOrders(mpsId);
+//        return ResponseEntity.ok().build();
+//    }
+
+    @PostMapping("/{mpsId}/confirm")
+    public ResponseEntity<MpsDTO> confirmMps(@PathVariable Long mpsId) {
+
+        mpsService.confirmMps(mpsId);
+        return ResponseEntity.ok(new MpsDTO());
     }
+
 
     @PostMapping("/search")
     public ResponseEntity<Object> searchMps(@RequestBody Map<String, LocalDate> requestData) {
