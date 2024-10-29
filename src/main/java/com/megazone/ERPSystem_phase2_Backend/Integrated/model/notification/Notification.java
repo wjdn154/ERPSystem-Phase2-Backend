@@ -22,10 +22,10 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    private String content; // 알림 내용
-    private LocalDateTime timestamp; // 알림 발생 시간
-    private NotificationType type; // 알림 유형
     @Enumerated(EnumType.STRING) private ModuleType module; // 모듈 유형
     @Enumerated(EnumType.STRING) private PermissionType permission; // 권한 유형
+    @Enumerated(EnumType.STRING) private NotificationType type; // 알림 유형
+
+    private String content; // 알림 내용
+    private LocalDateTime createAt; // 알림 생성 시간
 }
