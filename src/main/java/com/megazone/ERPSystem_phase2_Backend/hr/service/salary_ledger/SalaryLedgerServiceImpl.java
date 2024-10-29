@@ -75,8 +75,8 @@ public class SalaryLedgerServiceImpl implements SalaryLedgerService {
                 newLedger.setHealthInsurancePensionAmount(BigDecimal.ZERO);
                 newLedger.setEmploymentInsuranceAmount(BigDecimal.ZERO);
                 newLedger.setLongTermCareInsurancePensionAmount(BigDecimal.ZERO);
-                newLedger.setIncomeTaxPensionAmount(BigDecimal.ZERO);
-                newLedger.setLocalIncomeTaxPensionAmount(BigDecimal.ZERO);
+                newLedger.setIncomeTaxAmount(BigDecimal.ZERO);
+                newLedger.setLocalIncomeTaxAmount(BigDecimal.ZERO);
                 newLedger.setTotalDeductionAmount(BigDecimal.ZERO);
                 newLedger.setTotalSalaryAmount(BigDecimal.ZERO);
                 newLedger.setNetPayment(BigDecimal.ZERO);
@@ -297,6 +297,7 @@ public class SalaryLedgerServiceImpl implements SalaryLedgerService {
         return salaryLedgerSetting(dto,salaryLedger);
     }
 
+
     private SalaryLedgerDTO salaryLedgerSetting(SalaryLedgerDTO dto,SalaryLedger salaryLedger) {
 
         Salary salary = salaryRepository.findByEmployeeId(salaryLedger.getEmployee().getId());
@@ -386,8 +387,8 @@ public class SalaryLedgerServiceImpl implements SalaryLedgerService {
         salaryLedger.setHealthInsurancePensionAmount(healthInsurancePensionAmount);
         salaryLedger.setEmploymentInsuranceAmount(employmentInsurancePensionAmount);
         salaryLedger.setLongTermCareInsurancePensionAmount(LongTermCareInsurancePensionAmount);
-        salaryLedger.setIncomeTaxPensionAmount(incomeTaxAmount);
-        salaryLedger.setLocalIncomeTaxPensionAmount(localIncomeTaxAmount);
+        salaryLedger.setIncomeTaxAmount(incomeTaxAmount);
+        salaryLedger.setLocalIncomeTaxAmount(localIncomeTaxAmount);
         salaryLedger.setTotalSalaryAmount(totalSalaryAmount);
         salaryLedger.setTotalDeductionAmount(totalDeductions);
         salaryLedger.setNetPayment(netPayment);
@@ -398,6 +399,11 @@ public class SalaryLedgerServiceImpl implements SalaryLedgerService {
         return SalaryLedgerDTO.create(updateSalaryLedger);
     }
 
+    @Override
+    public Object showPaymentStatusManagement(PaymentStatusManagementSearchDTO dto) {
+        Object result = salaryLedgerRepository.showPaymentStatusManagement(dto);
+        return null;
+    }
 
 }
 

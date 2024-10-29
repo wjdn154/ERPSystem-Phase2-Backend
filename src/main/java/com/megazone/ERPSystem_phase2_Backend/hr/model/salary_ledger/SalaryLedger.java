@@ -55,10 +55,10 @@ public class SalaryLedger {
     private BigDecimal longTermCareInsurancePensionAmount; // 장기요양보험 금액
 
     @Column(nullable = false)
-    private BigDecimal incomeTaxPensionAmount; // 소득세 금액
+    private BigDecimal incomeTaxAmount; // 소득세 금액
 
     @Column(nullable = false)
-    private BigDecimal localIncomeTaxPensionAmount; // 지방소득세 금액
+    private BigDecimal localIncomeTaxAmount; // 지방소득세 금액
 
     @Column(nullable = false)
     private BigDecimal totalSalaryAmount; // 지급총액
