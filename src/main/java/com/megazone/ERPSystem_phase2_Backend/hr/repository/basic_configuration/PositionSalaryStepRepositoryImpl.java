@@ -4,12 +4,14 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_configuration.*;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_configuration.dto.PositionSalaryStepDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_configuration.dto.PositionSalaryStepDateDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_configuration.dto.PositionSalaryStepSearchDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto.SalaryLedgerAllowanceDTO;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -108,6 +110,50 @@ public class PositionSalaryStepRepositoryImpl implements PositionSalaryStepRepos
                 .join(qSalaryStep).on(qPositionSalaryStep.salarySteps.id.eq(qSalaryStep.id))
                 .where(qPositionSalaryStep.positions.id.eq(positionId))
                 .groupBy(qPositionSalaryStep.useStartDate,qPositionSalaryStep.useEndDate)
+                .fetch();
+    }
+
+    @Override
+    public BigDecimal getSalaryAmount(Long positionId, Long SalaryStepId) {
+        QPositionSalaryStep qPositionSalaryStep = QPositionSalaryStep.positionSalaryStep;
+        QPositionSalaryStepAllowance qPositionSalaryStepAllowance = QPositionSalaryStepAllowance.positionSalaryStepAllowance;
+        QSalaryStep qSalaryStep = QSalaryStep.salaryStep;
+        QAllowance qAllowance = QAllowance.allowance;
+
+        return queryFactory.select(
+                        qPositionSalaryStepAllowance.amount.sum().castToNum(BigDecimal.class)
+                )
+                .from(qPositionSalaryStep)
+                .join(qPositionSalaryStepAllowance).on(qPositionSalaryStepAllowance.positionSalaryStep.id.eq(
+                        qPositionSalaryStep.id))
+                .join(qAllowance).on(qAllowance.id.eq(qPositionSalaryStepAllowance.allowance.id))
+                .join(qSalaryStep).on(qPositionSalaryStep.salarySteps.id.eq(qSalaryStep.id))
+                .where(qPositionSalaryStep.positions.id.eq(positionId)
+                        .and(qSalaryStep.id.eq(SalaryStepId)))
+                .fetchOne();
+    }
+
+    @Override
+    public List<SalaryLedgerAllowanceDTO> getSalaryAllowance(Long positionId, Long SalaryStepId) {
+        QPositionSalaryStep qPositionSalaryStep = QPositionSalaryStep.positionSalaryStep;
+        QPositionSalaryStepAllowance qPositionSalaryStepAllowance = QPositionSalaryStepAllowance.positionSalaryStepAllowance;
+        QSalaryStep qSalaryStep = QSalaryStep.salaryStep;
+        QAllowance qAllowance = QAllowance.allowance;
+
+        return queryFactory.select(
+                Projections.constructor(SalaryLedgerAllowanceDTO.class,
+                        qPositionSalaryStepAllowance.id,
+                        QAllowance.allowance.name,
+                        qPositionSalaryStepAllowance.amount)
+                )
+                .from(qPositionSalaryStep)
+                .join(qPositionSalaryStepAllowance).on(qPositionSalaryStepAllowance.positionSalaryStep.id.eq(
+                        qPositionSalaryStep.id))
+                .join(qAllowance).on(qAllowance.id.eq(qPositionSalaryStepAllowance.allowance.id))
+                .join(qSalaryStep).on(qPositionSalaryStep.salarySteps.id.eq(qSalaryStep.id))
+                .where(qPositionSalaryStep.positions.id.eq(positionId)
+                        .and(qSalaryStep.id.eq(SalaryStepId))
+                        .and(qPositionSalaryStep.useEndDate.isNull()))
                 .fetch();
     }
 }

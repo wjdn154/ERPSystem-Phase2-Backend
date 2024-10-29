@@ -12,4 +12,7 @@ public interface ProductionOrderRepository extends JpaRepository<ProductionOrder
     List<ProductionOrder> findByMpsId(Long mpsId);
 
 
+    List<ProductionOrder> findByWorkcenter(Workcenter workcenter);
+
+    List<ProductionOrder> findByConfirmedFalse();
 }

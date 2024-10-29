@@ -21,15 +21,14 @@ public class Salary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "employee_id")
-    private Employee employeeId;
+    private Long employeeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "salary_step_id")
-    private SalaryStep SalaryStepId; // 호봉
+    private SalaryStep SalaryStep; // 호봉
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private SalaryType salaryType; // 급여형태
 
     @Column(nullable = false)
@@ -42,12 +41,13 @@ public class Salary {
     private BigDecimal studentLoanRepaymentAmount; // 합자금 상환통지액
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private PensionType pensionType; // 연금유형 : 국민연금 or 사학연금
 
     @Column(nullable = false)
     private BigDecimal nationalPensionAmount; // 국민연금 금액
 
-    @Column(nullable = false)
+
     private BigDecimal privateSchoolPensionAmount; // 사학연금 금액
 
     @Column(nullable = false)

@@ -34,8 +34,9 @@ public class Transfer {
     @Column(nullable = false)
     private LocalDate transferDate; // 발령 날짜
 
-    @Column(nullable = false)
-    private String transferType; // 발령 유형 ( promotion :승진, demotion : 강등, lateral : 전보)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "transfer_type_id", nullable = false)
+    private TransferType transferType; // 발령 유형 ( promotion :승진, demotion : 강등, lateral : 전보)
 
     @Column(nullable = false)
     private String reason; // 발령 사유

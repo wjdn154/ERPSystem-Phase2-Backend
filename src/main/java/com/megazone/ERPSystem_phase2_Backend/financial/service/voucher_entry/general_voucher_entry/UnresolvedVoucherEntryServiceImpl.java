@@ -335,11 +335,19 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
             throw new RuntimeException("해당하는 전표가 없습니다.");
         }
 
-        recentActivityRepository.save(RecentActivity.builder()
-                .activityDescription("미결전표 " + unresolvedVoucherList.size() + "건 승인")
-                .activityType(ActivityType.FINANCE)
-                .activityTime(LocalDateTime.now())
-                .build());
+        if (dto.getApprovalStatus().equals(ApprovalStatus.APPROVED)) {
+            recentActivityRepository.save(RecentActivity.builder()
+                    .activityDescription("미결전표 " + unresolvedVoucherList.size() + "건 승인")
+                    .activityType(ActivityType.FINANCE)
+                    .activityTime(LocalDateTime.now())
+                    .build());
+        }else if (dto.getApprovalStatus().equals(ApprovalStatus.REJECTED)) {
+            recentActivityRepository.save(RecentActivity.builder()
+                    .activityDescription("미결전표 " + unresolvedVoucherList.size() + "건 반려")
+                    .activityType(ActivityType.FINANCE)
+                    .activityTime(LocalDateTime.now())
+                    .build());
+        }
 
         return unresolvedVoucherList;
     }
