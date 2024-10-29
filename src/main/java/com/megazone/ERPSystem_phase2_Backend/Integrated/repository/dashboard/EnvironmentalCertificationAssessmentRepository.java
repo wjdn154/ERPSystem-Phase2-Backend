@@ -1,6 +1,6 @@
-package com.megazone.ERPSystem_phase2_Backend.Integrated.repository;
+package com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard;
 
-import com.megazone.ERPSystem_phase2_Backend.Integrated.model.EnvironmentalCertificationAssessment;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.EnvironmentalCertificationAssessment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.YearMonth;
