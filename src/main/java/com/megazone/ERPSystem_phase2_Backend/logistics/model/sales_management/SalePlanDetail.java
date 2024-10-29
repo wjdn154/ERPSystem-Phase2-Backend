@@ -29,10 +29,14 @@ public class SalePlanDetail {
     private Product product;
 
     // 수량
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Integer quantity;
 
     // 예상 매출액
     @Column
     private BigDecimal expectedSales;
+
+    @Column
+    private String remarks;
+
 }
