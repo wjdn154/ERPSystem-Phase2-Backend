@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TransferTypeResponseDTO {
     private Long id;            // 자동 생성된 ID
-    private String code;        // 발령 유형 코드
-    private String description; // 발령 유형 설명
+    private String transferTypeCode;        // 발령 유형 코드
+    private String transferTypeDescription; // 발령 유형 설명
 }

@@ -22,7 +22,7 @@ public interface EmployeeService {
     Optional<EmployeeShowToDTO> updateEmployee(Long id, EmployeeDataDTO employeeDataDTO, MultipartFile imageFile);
 
     // 사원 등록. 저장
-    EmployeeDTO saveEmployee(EmployeeCreateDTO employeeCreateDTO, MultipartFile imageFile);
+    Optional<EmployeeShowToDTO> saveEmployee(EmployeeCreateDTO employeeCreateDTO, MultipartFile imageFile);
 
 
     // 사원 삭제

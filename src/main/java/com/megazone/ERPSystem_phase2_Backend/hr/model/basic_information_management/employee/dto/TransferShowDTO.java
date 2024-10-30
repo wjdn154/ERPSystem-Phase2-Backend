@@ -1,8 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto;
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Department;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Transfer;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.TransferType;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.TransferType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,10 +23,8 @@ public class TransferShowDTO {
     private String fromDepartmentCode;
     private String fromDepartmentName;
     private String toDepartmentName;
-    private Long transferTypeId;
-    private String transferTypeCode;
-    private String transferTypeDescription;
     private String reason;
+    private TransferType transferType;
 
 
 
@@ -63,10 +60,8 @@ public class TransferShowDTO {
                 transfer.getToDepartment().getDepartmentCode(),
                 transfer.getFromDepartment().getDepartmentName(),
                 transfer.getToDepartment().getDepartmentName(),
-                transfer.getTransferType().getId(),
-                transfer.getTransferType().getCode(),
-                transfer.getTransferType().getDescription(),
-                transfer.getReason()
+                transfer.getReason(),
+                transfer.getTransferType()
         );
     }
 }

@@ -3,13 +3,12 @@ package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_manag
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Department;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Transfer;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.TransferType;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.TransferCreateDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.TransferShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.TransferType;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Department.DepartmentRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Transfer.TransferRepository;
-import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.TransferType.TransferTypeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,6 @@ public class TransferServiceImpl implements TransferService {
     private final TransferRepository transferRepository;
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
-    private final TransferTypeRepository transferTypeRepository;
 
     @Override
     public TransferShowDTO createTransfer(TransferCreateDTO dto) {
@@ -43,9 +41,6 @@ public class TransferServiceImpl implements TransferService {
         Department toDepartment = departmentRepository.findById(dto.getToDepartmentId())
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 도착 부서 ID: " + dto.getToDepartmentId()));
 
-        // 발령 유형 정보 조회
-        TransferType transferType = transferTypeRepository.findById(dto.getTransferTypeId())
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 발령 유형 ID: " + dto.getTransferTypeId()));
 
         // 사원의 부서 정보를 도착 부서로 변경
         employee.setDepartment(toDepartment);
@@ -58,7 +53,6 @@ public class TransferServiceImpl implements TransferService {
         transfer.setEmployee(employee);  // 사원 객체 설정
         transfer.setFromDepartment(fromDepartment);  // 출발 부서 설정
         transfer.setToDepartment(toDepartment);  // 도착 부서 설정
-        transfer.setTransferType(transferType);
         transfer.setReason(dto.getReason());  // 발령 사유 설정
 
         // Transfer 저장
@@ -95,20 +89,12 @@ public class TransferServiceImpl implements TransferService {
         // 도착 부서 정보 조회
         Department toDepartment = departmentRepository.findByDepartmentName(dto.getToDepartmentName());
 
-        // 발령 유형 정보 조회
-        TransferType transferType = transferTypeRepository.findById(dto.getTransferTypeId())
-                .orElseThrow(() -> new IllegalArgumentException("발령 유형 정보 ID가 없습니다. : " + dto.getTransferTypeId()));
-
-        transferType.setCode(dto.getTransferTypeCode());  // dto에서 TransferTypeCode 받아온다고 가정
-        transferType.setDescription(dto.getTransferTypeDescription());  // dto에서 TransferTypeDescription 받아온다고 가정
-        transferTypeRepository.save(transferType); // TransferType 업데이트 저장
 
         // 기존 발령 정보 업데이트
         transfer.setTransferDate(dto.getTransferDate());
         transfer.setEmployee(employee);
         transfer.setFromDepartment(fromDepartment);
         transfer.setToDepartment(toDepartment);
-        transfer.setTransferType(transferType); // 업데이트된 TransferType 설정
         transfer.setReason(dto.getReason());
 
         Transfer updatedTransfer = transferRepository.save(transfer);
