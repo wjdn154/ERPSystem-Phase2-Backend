@@ -198,6 +198,7 @@ public class OrdersServiceImpl implements OrdersService {
     /** 주문서 등록 관련 메서드 **/
     // 주문서 등록 DTO -> Entity 변환 메소드
     private Orders toEntity(OrdersCreateDto dto) {
+
         Orders orders = Orders.builder()
                 .client(clientRepository.findById(dto.getClientId())
                         .orElseThrow(() -> new RuntimeException("거래처 정보를 찾을 수 없습니다.")))
@@ -213,6 +214,9 @@ public class OrdersServiceImpl implements OrdersService {
                 .journalEntryCode(dto.getJournalEntryCode())
                 .remarks(dto.getRemarks())
                 .build();
+
+        ElectronicTaxInvoiceStatus status = ElectronicTaxInvoiceStatus.valueOf(dto.getElectronicTaxInvoiceStatus());
+        orders.setElectronicTaxInvoiceStatus(status);
 
         return getOrders(dto, orders);
     }

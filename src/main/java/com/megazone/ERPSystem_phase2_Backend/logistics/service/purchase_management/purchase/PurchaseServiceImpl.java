@@ -211,9 +211,13 @@ public class PurchaseServiceImpl implements PurchaseService {
                 .currency(currencyRepository.findById(dto.getCurrencyId())
                         .orElseThrow(() -> new RuntimeException("통화 정보를 찾을 수 없습니다.")))
                 .vatId(dto.getVatId())
+                .date(dto.getDate())
                 .journalEntryCode(dto.getJournalEntryCode())
                 .remarks(dto.getRemarks())
                 .build();
+
+        ElectronicTaxInvoiceStatus status = ElectronicTaxInvoiceStatus.valueOf(dto.getElectronicTaxInvoiceStatus());
+        purchase.setElectronicTaxInvoiceStatus(status);
 
         return getPurchase(dto, purchase);
     }
