@@ -55,9 +55,9 @@ public class UnresolvedSaleAndPurchaseVoucherApiController {
 
         List<UnresolvedSaleAndPurchaseVoucher> voucherList = unresolvedSaleAndPurchaseVoucherService.searchAllVoucher(date);
 
-        if(voucherList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+//        if(voucherList.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//        }
         List<UnresolvedSaleAndPurchaseVoucherShowDTO> showDTOS = voucherList.stream().map(
                 UnresolvedSaleAndPurchaseVoucherShowDTO::create).toList();
 
