@@ -31,6 +31,25 @@ public class TransferShowDTO {
 
 
 
+//    public static TransferShowDTO create(Transfer transfer) {
+//        TransferShowDTO dto = new TransferShowDTO();
+//        dto.setId(transfer.getId());
+//        dto.setTransferDate(transfer.getTransferDate());
+//        dto.setEmployeeId(transfer.getEmployee().getId());
+//        dto.setEmployeeNumber(transfer.getEmployee().getEmployeeNumber()); // 사원번호 설정
+//        dto.setEmployeeName(transfer.getEmployee().getLastName() + " " + transfer.getEmployee().getFirstName()); // 사원이름 설정
+//        dto.setFromDepartmentId(transfer.getFromDepartment().getId());
+//        dto.setToDepartmentId(transfer.getToDepartment().getId());
+//        dto.setFromDepartmentCode(transfer.getFromDepartment().getDepartmentCode());
+//        dto.setToDepartmentCode(transfer.getToDepartment().getDepartmentCode());
+//        dto.setFromDepartmentName(transfer.getFromDepartment().getDepartmentName());
+//        dto.setToDepartmentName(transfer.getToDepartment().getDepartmentName());
+//        dto.setTransferTypeId(transfer.getTransferType().getId());
+//        dto.setTransferTypeCode(transfer.getTransferType().getCode());
+//        dto.setTransferTypeDescription(transfer.getTransferType().getDescription());
+//        dto.setReason(transfer.getReason());
+//        return dto;
+//    }
     public static TransferShowDTO create(Transfer transfer) {
         return new TransferShowDTO(
                 transfer.getId(),
