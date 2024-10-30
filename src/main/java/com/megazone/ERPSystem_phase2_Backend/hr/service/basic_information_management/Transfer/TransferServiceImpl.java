@@ -5,6 +5,7 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_manageme
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Transfer;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.TransferCreateDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.TransferShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.TransferUpdateDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.TransferType;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Department.DepartmentRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
@@ -28,18 +29,18 @@ public class TransferServiceImpl implements TransferService {
     private final DepartmentRepository departmentRepository;
 
     @Override
-    public TransferShowDTO createTransfer(TransferCreateDTO dto) {
+    public Optional<TransferShowDTO> createTransfer(TransferCreateDTO dto) {
         // 사원 정보 조회 (employee_id를 통해)
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 사원 ID 입력: " + dto.getEmployeeId()));
 
         // 출발 부서 정보 조회
-        Department fromDepartment = departmentRepository.findById(dto.getFromDepartmentId())
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 출발 부서 ID: " + dto.getFromDepartmentId()));
+        Department fromDepartment = departmentRepository.findByDepartmentCode(dto.getFromDepartmentCode())
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 출발 부서 Code: " + dto.getFromDepartmentCode()));
 
         // 도착 부서 정보 조회
-        Department toDepartment = departmentRepository.findById(dto.getToDepartmentId())
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 도착 부서 ID: " + dto.getToDepartmentId()));
+        Department toDepartment = departmentRepository.findByDepartmentCode(dto.getToDepartmentCode())
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 도착 부서 Code: " + dto.getToDepartmentCode()));
 
 
         // 사원의 부서 정보를 도착 부서로 변경
@@ -54,10 +55,22 @@ public class TransferServiceImpl implements TransferService {
         transfer.setFromDepartment(fromDepartment);  // 출발 부서 설정
         transfer.setToDepartment(toDepartment);  // 도착 부서 설정
         transfer.setReason(dto.getReason());  // 발령 사유 설정
+        transfer.setTransferType(dto.getTransferType());
 
         // Transfer 저장
         Transfer savedTransfer = transferRepository.save(transfer);
-        return TransferShowDTO.create(savedTransfer);
+        TransferShowDTO transferShowDTO = new TransferShowDTO();
+        transferShowDTO.setId(savedTransfer.getId());
+        transferShowDTO.setEmployeeId(savedTransfer.getEmployee().getId());
+        transferShowDTO.setEmployeeNumber(savedTransfer.getEmployee().getEmployeeNumber());
+        transferShowDTO.setEmployeeName(savedTransfer.getEmployee().getLastName()+savedTransfer.getEmployee().getFirstName());
+        transferShowDTO.setFromDepartmentId(fromDepartment.getId());
+        transferShowDTO.setToDepartmentId(toDepartment.getId());
+        transferShowDTO.setReason(dto.getReason());
+        transferShowDTO.setTransferType(dto.getTransferType());
+
+
+        return Optional.of(transferShowDTO);
     }
 
     @Override
@@ -75,7 +88,7 @@ public class TransferServiceImpl implements TransferService {
 
     // 발령 기록 수정
     @Override
-    public TransferShowDTO updateTransfer(Long id, TransferCreateDTO dto) {
+    public TransferShowDTO updateTransfer(Long id, TransferUpdateDTO dto) {
         Transfer transfer = transferRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("발령 ID 를 찾을 수 없습니다. " + id));
 
@@ -96,6 +109,7 @@ public class TransferServiceImpl implements TransferService {
         transfer.setFromDepartment(fromDepartment);
         transfer.setToDepartment(toDepartment);
         transfer.setReason(dto.getReason());
+        transfer.setTransferType(dto.getTransferType());
 
         Transfer updatedTransfer = transferRepository.save(transfer);
         return TransferShowDTO.create(updatedTransfer);

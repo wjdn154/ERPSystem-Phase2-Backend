@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AttendanceRepository extends JpaRepository<Attendance, Long>, AttendanceRepositoryCustom{
-    List<Attendance> findByEmployee_Id(Long employeeId); //특정 직원의 출퇴근 기록을 조회하는 메소드
+    Optional<Attendance> findById(Long id); //특정 직원의 출퇴근 기록을 조회하는 메소드
 
 
     Optional<Attendance> findByEmployeeIdAndDate(Long employeeId, LocalDate date);
