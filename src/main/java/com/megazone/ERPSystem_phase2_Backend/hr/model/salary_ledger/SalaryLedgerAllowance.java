@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger;
 
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_configuration.enums.TaxType;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Data;

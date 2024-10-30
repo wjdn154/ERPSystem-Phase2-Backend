@@ -33,15 +33,11 @@ public class PurchaseOrderDetail {
     private Product product;
 
     // 수량
-    @Column(nullable = false)
+    @Column
     private Integer quantity;
 
-    // 단가(입고단가)
-    @Column(nullable = false)
-    private BigDecimal price;
-
     // 공급가액 (수량 * 단가)
-    @Column(nullable = false)
+    @Column
     private BigDecimal supplyPrice;
 
     // 원화금액 (통화가 외자일때만 사용)

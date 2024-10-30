@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_managemen
 
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.receiving_processing_management.ReceivingSchedule;
+import com.megazone.ERPSystem_phase2_Backend.logistics.model.receiving_processing_management.enums.ReceivingStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,5 +53,10 @@ public class ReceivingOrderDetail {
     // 비고
     @Column
     private String remarks;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private ReceivingStatus status = ReceivingStatus.WAITING_FOR_RECEIPT;
 
 }

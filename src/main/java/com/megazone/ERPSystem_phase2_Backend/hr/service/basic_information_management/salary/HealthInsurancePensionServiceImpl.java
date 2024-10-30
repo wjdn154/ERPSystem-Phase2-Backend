@@ -21,7 +21,6 @@ import java.util.NoSuchElementException;
 public class HealthInsurancePensionServiceImpl implements HealthInsurancePensionService {
     private final HealthInsurancePensionRepository healthInsurancePensionRepository;
     private final PositionSalaryStepRepository positionSalaryStepRepository;
-//    private final LongTermCareInsurancePensionRepository longTermCareInsurancePensionRepository;
 
     @Override
     public BigDecimal calculator(InsurancePensionCalculatorDTO dto) {
@@ -32,9 +31,6 @@ public class HealthInsurancePensionServiceImpl implements HealthInsurancePension
         HealthInsurancePension healthInsurancePension = healthInsurancePensionRepository.findFirstByEndDateIsNull().orElseThrow(
                 () -> new NoSuchElementException("해당하는 건강보험 데이터가 없습니다."));
 
-//        LongTermCareInsurancePension longTermCareInsurancePension = longTermCareInsurancePensionRepository.findFirstByEndDateIsNull().orElseThrow(
-//                () -> new NoSuchElementException("해당하는 장기요양보험 데이터가 없습니다."));
-
         if(salaryAmount.compareTo(healthInsurancePension.getLowerAmount()) < 0) {
             salaryAmount = healthInsurancePension.getLowerAmount();
         }
@@ -44,10 +40,24 @@ public class HealthInsurancePensionServiceImpl implements HealthInsurancePension
 
         salaryAmount = salaryAmount.multiply(healthInsurancePension.getEmployeeRate());
 
-//        salaryAmount = salaryAmount.multiply(longTermCareInsurancePension.getRate());
 
 
-        return salaryAmount;
+        return salaryAmount.setScale(0, BigDecimal.ROUND_HALF_UP);
+    }
+
+    @Override
+    public BigDecimal calculator(BigDecimal amount) {
+        HealthInsurancePension healthInsurancePension = healthInsurancePensionRepository.findFirstByEndDateIsNull().orElseThrow(
+                () -> new NoSuchElementException("해당하는 건강보험 데이터가 없습니다."));
+
+        if(amount.compareTo(healthInsurancePension.getLowerAmount()) < 0) {
+            amount = healthInsurancePension.getLowerAmount();
+        }
+        else if(amount.compareTo(healthInsurancePension.getUpperAmount()) > 0) {
+            amount = healthInsurancePension.getUpperAmount();
+        }
+
+        return amount.multiply(healthInsurancePension.getEmployeeRate()).setScale(0, BigDecimal.ROUND_HALF_UP);
     }
 
     @Override

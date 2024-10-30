@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface HealthInsurancePensionService {
     BigDecimal calculator(InsurancePensionCalculatorDTO dto);
-
+    BigDecimal calculator(BigDecimal amount);
     List<HealthInsurancePensionShowDTO> showAll();
 }

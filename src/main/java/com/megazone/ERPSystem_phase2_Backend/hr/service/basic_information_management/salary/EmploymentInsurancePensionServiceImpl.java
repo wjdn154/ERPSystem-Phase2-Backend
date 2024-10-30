@@ -25,7 +25,13 @@ public class EmploymentInsurancePensionServiceImpl implements EmploymentInsuranc
         BigDecimal salaryAmount =  employmentPositionSalaryStepRepository.getSalaryAmount(dto.getPositionId(),dto.getSalaryStepId());
 
         return salaryAmount.multiply(employmentInsurancePensionRepository.findFirstByEndDateIsNull().orElseThrow(
-                () -> new NoSuchElementException("해당하는 국민연금 데이터가 없습니다.")).getEmployeeRate());
+                () -> new NoSuchElementException("해당하는 국민연금 데이터가 없습니다.")).getEmployeeRate()).setScale(0, BigDecimal.ROUND_HALF_UP);
+    }
+
+    @Override
+    public BigDecimal calculator(BigDecimal amount) {
+        return amount.multiply(employmentInsurancePensionRepository.findFirstByEndDateIsNull().orElseThrow(
+                () -> new NoSuchElementException("해당하는 국민연금 데이터가 없습니다.")).getEmployeeRate()).setScale(0, BigDecimal.ROUND_HALF_UP);
     }
 
     @Override
