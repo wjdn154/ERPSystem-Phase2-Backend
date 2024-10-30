@@ -26,12 +26,8 @@ public class MaintenanceHistoryController {
     //유지보수 이력 리스트 조회   url 변경함
     @PostMapping("/maintenanceHistorys")
     public ResponseEntity<List<ListMaintenanceHistoryDTO>> getAllMaintenanceHistory(){
-
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = user.getCompany().getId();
-
         //서비스에서 모든 유지보수이력 정보를 가져옴
-        List<ListMaintenanceHistoryDTO> result = maintenanceHistoryService.findAllMaintenanceHistory(companyId);
+        List<ListMaintenanceHistoryDTO> result = maintenanceHistoryService.findAllMaintenanceHistory();
 
         return (result != null)?
                 ResponseEntity.status(HttpStatus.OK).body(result):
@@ -54,11 +50,8 @@ public class MaintenanceHistoryController {
     @PostMapping("/maintenanceHistory/createMaintenance")
     public ResponseEntity<MaintenanceHistoryDetailShowDTO> saveMaintenanceHistory(@RequestBody MaintenanceHistoryDetailDTO dto){
 
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = user.getCompany().getId();
-
         //서비스에서 유지보수 이력 상세정보를 등록함.
-        Optional<MaintenanceHistoryDetailShowDTO> result = maintenanceHistoryService.saveMaintenanceHistory(companyId,dto);
+        Optional<MaintenanceHistoryDetailShowDTO> result = maintenanceHistoryService.saveMaintenanceHistory(dto);
 
         //등록 실패시 500 상태 반환
         return result.map(ResponseEntity :: ok)
