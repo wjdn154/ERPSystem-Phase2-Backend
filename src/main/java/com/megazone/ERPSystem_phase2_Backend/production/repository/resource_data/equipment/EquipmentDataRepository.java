@@ -12,7 +12,7 @@ public interface EquipmentDataRepository extends JpaRepository<EquipmentData, Lo
 
     Optional<EquipmentData> findByEquipmentNum(String equipmentNum);
 
-    List<EquipmentData> findAllByCompanyIdOrderByPurchaseDateDesc(Long companyId);
+    List<EquipmentData> findAllByOrderByPurchaseDateDesc();
 
     List<EquipmentData> findByWorkcenterId(Long workcenterId);
 
