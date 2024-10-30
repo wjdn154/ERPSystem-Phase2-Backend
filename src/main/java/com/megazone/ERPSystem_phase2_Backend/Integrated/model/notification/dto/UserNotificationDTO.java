@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.dto;
 
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.Notification;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.UserNotification;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;

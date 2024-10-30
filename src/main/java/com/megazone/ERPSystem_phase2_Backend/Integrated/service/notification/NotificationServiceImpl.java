@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.Notification;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.UserNotification;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.dto.UserNotificationDTO;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.dto.UserNotificationSearchDTO;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.dto.UserSubscriptionDTO;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
@@ -96,7 +97,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    public List<UserNotificationDTO> createAndSearch(Long employeeId, ModuleType module, PermissionType permission) {
+    public List<UserNotificationSearchDTO> createAndSearch(Long employeeId, ModuleType module, PermissionType permission) {
         // 사용자 조회
         Long userId = usersRepository.findByEmployeeId(employeeId)
                 .orElseThrow(() -> new IllegalArgumentException("ID: " + employeeId + "에 해당하는 사용자를 찾을 수 없습니다.")).getId();
@@ -124,12 +125,12 @@ public class NotificationServiceImpl implements NotificationService {
 
         // 저장된 알림 반환
         return userNotificationRepository.findByUserIdOrderByCreateAtDesc(userId).stream()
-                .map(userNotification -> UserNotificationDTO.builder()
+                .map(userNotification -> UserNotificationSearchDTO.builder()
                         .userId(userNotification.getUserId())
                         .notification(userNotification.getNotification())
-                        .module(userNotification.getModule())
-                        .permission(userNotification.getPermission())
-                        .type(userNotification.getType())
+                        .module(userNotification.getModule().getKoreanName())
+                        .permission(userNotification.getPermission().getKoreanName())
+                        .type(userNotification.getType().getKoreanName())
                         .content(userNotification.getContent())
                         .createAt(userNotification.getCreateAt())
                         .readAt(userNotification.getReadAt())
@@ -179,8 +180,11 @@ public class NotificationServiceImpl implements NotificationService {
     public void sendNotification(Notification notification, String tenantId) {
 
         SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext()); // 비동기 처리 시 SecurityContextHolder 초기화
+        System.out.println("emitters = " + emitters);
 
         emitters.forEach((key, subscription) -> {
+            System.out.println("key = " + key);
+            System.out.println("tenantId = " + tenantId);
 
             // 모든 구독자에게 전송할지 여부 확인
             boolean isForAllModules = notification.getModule() == ModuleType.ALL || subscription.getModule() == ModuleType.ALL;

@@ -136,6 +136,8 @@ spring:
         - classpath:initial-database/hr/payment/long_term_care_insurance_pension.sql
         - classpath:initial-database/hr/payment/salary_ledger_date.sql
         - classpath:initial-database/hr/payment/employee_income_tax.sql
+        - classpath:initial-database/hr/payment/salary_ledger.sql
+        - classpath:initial-database/hr/payment/salary_ledger_allowance.sql
         - classpath:initial-database/logistics/purchase_management/purchase.sql
 
         - classpath:initial-database/hr/payment/salary.sql
