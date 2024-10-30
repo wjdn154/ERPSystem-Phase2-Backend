@@ -49,7 +49,7 @@ public class UnresolvedSaleAndPurchaseVoucherShowDTO {
                 voucher.getClient().getCode(),
                 voucher.getClient().getPrintClientName(),
                 voucher.getVoucherManager().getEmployeeNumber(),
-                voucher.getVoucherManager().getFirstName() + voucher.getVoucherManager().getLastName(),
+                voucher.getVoucherManager().getLastName()+ voucher.getVoucherManager().getFirstName(),
                 voucher.getElectronicTaxInvoiceStatus(),
                 voucher.getJournalEntry().getName(),
                 voucher.getVatType().getTransactionType(),

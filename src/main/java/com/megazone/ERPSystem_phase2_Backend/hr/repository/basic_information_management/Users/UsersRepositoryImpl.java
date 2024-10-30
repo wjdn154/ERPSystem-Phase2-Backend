@@ -19,10 +19,6 @@ public class UsersRepositoryImpl implements UsersRepositoryCustom{
         return usersRepository.save(users);
     }
 
-    @Override
-    public List<UsersShowDTO> findAllUsers() {
-        return List.of();
-    }
 
 
 }

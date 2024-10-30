@@ -45,6 +45,13 @@ public class EmployeeController {
         return ResponseEntity.ok(employees);
     }
 
+    // ERP 사용자인 사원 리스트 조회
+    @PostMapping("/employee/user/all")
+    public ResponseEntity<List<EmployeeShowDTO>> getAllEmployeesAndUsers() {
+        List<EmployeeShowDTO> employees = employeeService.findAllUsers();
+        return ResponseEntity.ok(employees);
+    }
+
     // 사원 상세 조회
     @GetMapping("/employee/{id}")
     public ResponseEntity<EmployeeOneDTO> getEmployeeById(@PathVariable("id") Long id) {
