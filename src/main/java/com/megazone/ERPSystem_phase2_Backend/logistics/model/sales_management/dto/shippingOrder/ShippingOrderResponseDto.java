@@ -14,7 +14,7 @@ public class ShippingOrderResponseDto {
     private String warehouseName;
     private String productName;
     private LocalDate date;
-    private LocalDate deliveryDate;
+    private LocalDate shippingDate;
     private Integer totalQuantity;
     private String status;
     private String remarks;

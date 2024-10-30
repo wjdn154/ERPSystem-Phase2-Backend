@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee;
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.EmployeeShowDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -21,6 +22,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, Emplo
     //Optional<EmployeeDepartmentDTO> findByDepartmentId(Long id);
 
     List<Employee> findByDepartmentId(Long departmentId);
+
 
 //    // 모든 Employee 조회 (Soft Deleted 포함)
 //    @Query("SELECT e FROM Employee e WHERE e.isDeleted = false OR e.isDeleted = true")

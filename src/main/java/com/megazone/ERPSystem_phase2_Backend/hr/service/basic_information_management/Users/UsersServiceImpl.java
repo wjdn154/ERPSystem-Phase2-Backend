@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_manag
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
@@ -180,14 +181,15 @@ public class UsersServiceImpl implements UsersService{
         Users savedUser = usersRepository.save(user);
 
         recentActivityRepository.save(RecentActivity.builder()
-                .activityDescription(savedUser.getUserName() + "님의 권한이 변경되었습니다.")
+                .activityDescription(savedUser.getUserNickname() + "님의 권한이 변경되었습니다.")
                 .activityType(ActivityType.HR)
                 .activityTime(LocalDateTime.now())
                 .build());
         notificationService.createAndSendNotification(
-                savedUser.getUserName() + "님의 권한이 변경되었습니다.",
                 ModuleType.ALL,
-                PermissionType.ALL
+                PermissionType.ALL,
+                savedUser.getUserName() + "님의 권한이 변경되었습니다.",
+                NotificationType.CHANGE_PERMISSION
         );
 
 

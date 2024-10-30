@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.service.sales_management
 
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.VatAmountWithSupplyAmountDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.sales_and_purchase_voucher_entry.VatTypeService;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
@@ -66,8 +67,8 @@ public class SaleServiceImpl implements SaleService {
                 .toList();
     }
 
-    /** 견적서 목록 조회 관련 메서드 **/
-    // Entity -> 견적서 목록 조회용 DTO 변환 메소드
+    /** 판매서 목록 조회 관련 메서드 **/
+    // Entity -> 판매서 목록 조회용 DTO 변환 메소드
     private SaleResponseDto toListDto(Sale sale) {
 
         return SaleResponseDto.builder()
@@ -115,7 +116,7 @@ public class SaleServiceImpl implements SaleService {
 
 
     /**
-     * 견적서 상세 정보 조회
+     * 판매서 상세 정보 조회
      * @param id
      * @return
      */
@@ -125,7 +126,7 @@ public class SaleServiceImpl implements SaleService {
                 .map(this::toDetailDto);
     }
 
-    /** 견적서 상세 정보 조회 관련 메서드 **/
+    /** 판매서 상세 정보 조회 관련 메서드 **/
     // Entity -> 상세 조회용 DTO 변환 메소드
     private SaleResponseDetailDto toDetailDto(Sale sale) {
         return SaleResponseDetailDto.builder()
@@ -178,7 +179,7 @@ public class SaleServiceImpl implements SaleService {
     }
 
     /**
-     * 견적서 등록
+     * 판매서 등록
      * @param createDto
      * @return
      */
@@ -189,13 +190,13 @@ public class SaleServiceImpl implements SaleService {
             sale = saleRepository.save(sale);
             return toDetailDto(sale);
         } catch (Exception e) {
-            log.error("견적서 생성 실패: ", e);
+            log.error("판매서 생성 실패: ", e);
             return null;
         }
     }
 
-    /** 견적서 등록 관련 메서드 **/
-    // 견적서 등록 DTO -> Entity 변환 메소드
+    /** 판매서 등록 관련 메서드 **/
+    // 판매서 등록 DTO -> Entity 변환 메소드
     private Sale toEntity(SaleCreateDto dto) {
         Sale sale = Sale.builder()
                 .client(clientRepository.findById(dto.getClientId())
@@ -232,12 +233,15 @@ public class SaleServiceImpl implements SaleService {
 
             VatAmountWithSupplyAmountDTO vatAmountWithSupplyAmountDTO = new VatAmountWithSupplyAmountDTO();
             vatAmountWithSupplyAmountDTO.setSupplyAmount(supplyPrice);
+            vatAmountWithSupplyAmountDTO.setVatTypeId(sale.getVatId());
+
 
             BigDecimal localAmount = null;
             BigDecimal vat = null;
 
-            if ("KRW".equals(sale.getCurrency().getCode())) {
+            if (sale.getCurrency().getId() == 6) {
                 vat = vatTypeService.vatAmountCalculate(vatAmountWithSupplyAmountDTO);
+                System.out.println("vat: " + vat);
             } else if (sale.getCurrency().getExchangeRate() != null) {
                 localAmount = supplyPrice.multiply(sale.getCurrency().getExchangeRate());
             } else {
@@ -261,7 +265,7 @@ public class SaleServiceImpl implements SaleService {
     public SaleResponseDetailDto updateSale(Long id, SaleCreateDto updateDto) {
         try {
             Sale sale = saleRepository.findById(id)
-                    .orElseThrow(() -> new NoSuchElementException("해당 견적서 정보를 찾을 수 없습니다."));
+                    .orElseThrow(() -> new NoSuchElementException("해당 판매서 정보를 찾을 수 없습니다."));
 
             if (updateDto.getManagerId() != null) {
                 Employee manager = employeeRepository.findById(updateDto.getManagerId())
@@ -286,6 +290,10 @@ public class SaleServiceImpl implements SaleService {
 
             // 부가세 적용 수정
             sale.setVatId(updateDto.getVatId() != null ? updateDto.getVatId() : sale.getVatId());
+            sale.setRemarks(updateDto.getRemarks());
+
+            ElectronicTaxInvoiceStatus status = ElectronicTaxInvoiceStatus.valueOf(updateDto.getElectronicTaxInvoiceStatus());
+            sale.setElectronicTaxInvoiceStatus(status);
 
             sale.setAccountingReflection(updateDto.getAccountingReflection());
             sale.setRemarks(updateDto.getRemarks());
@@ -300,8 +308,8 @@ public class SaleServiceImpl implements SaleService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("잘못된 요청입니다.: " + e.getMessage());
         } catch (RuntimeException e) {
-            log.error("견적서 수정 중 오류 발생: ", e);
-            throw new RuntimeException("견적서 수정 중 오류가 발생했습니다.");
+            log.error("판매서 수정 중 오류 발생: ", e);
+            throw new RuntimeException("판매서 수정 중 오류가 발생했습니다.");
         }
     }
 

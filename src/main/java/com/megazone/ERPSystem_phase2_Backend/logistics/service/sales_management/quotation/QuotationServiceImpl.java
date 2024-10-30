@@ -214,9 +214,6 @@ public class QuotationServiceImpl implements QuotationService {
     }
 
     private Quotation getQuotation(QuotationCreateDto dto, Quotation quotation) {
-        if (quotation.getCurrency() == null) {
-            throw new RuntimeException("통화 정보가 설정되지 않았습니다.");
-        }
 
         dto.getItems().forEach(item -> {
             if (item.getProductId() == null) {
@@ -230,12 +227,14 @@ public class QuotationServiceImpl implements QuotationService {
 
             VatAmountWithSupplyAmountDTO vatAmountWithSupplyAmountDTO = new VatAmountWithSupplyAmountDTO();
             vatAmountWithSupplyAmountDTO.setSupplyAmount(supplyPrice);
+            vatAmountWithSupplyAmountDTO.setVatTypeId(quotation.getVatId());
 
             BigDecimal localAmount = null;
             BigDecimal vat = null;
 
-            if ("KRW".equals(quotation.getCurrency().getCode())) {
+            if (quotation.getCurrency().getId() == 6) {
                 vat = vatTypeService.vatAmountCalculate(vatAmountWithSupplyAmountDTO);
+                System.out.println("vat: " + vat);
             } else if (quotation.getCurrency().getExchangeRate() != null) {
                 localAmount = supplyPrice.multiply(quotation.getCurrency().getExchangeRate());
             } else {

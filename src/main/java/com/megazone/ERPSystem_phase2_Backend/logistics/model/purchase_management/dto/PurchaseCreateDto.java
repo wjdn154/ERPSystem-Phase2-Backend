@@ -23,8 +23,9 @@ public class PurchaseCreateDto {
     private Long managerId;
     private Long warehouseId;
     private Long currencyId;
-    private Long vatId;
+    private String vatId;
     private String journalEntryCode;
+    private String electronicTaxInvoiceStatus;
     private String remarks;
     private List<PurchaseItemDetailDto> items;
 
