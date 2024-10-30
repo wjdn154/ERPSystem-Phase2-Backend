@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification;
 
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.Notification;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.dto.UserNotificationDTO;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.dto.UserNotificationSearchDTO;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.dto.UserSubscriptionDTO;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
@@ -16,6 +17,6 @@ public interface NotificationService {
     void sendNotification(Notification notification, String tenantId); // 전체 사용자에게 알림 전송
     UserSubscriptionDTO getUserSubscriptionInfo(Long employeeId, boolean isAdmin);
     void removeEmitter(Long employeeId);
-    List<UserNotificationDTO> createAndSearch(Long employeeId, ModuleType module, PermissionType permission);
+    List<UserNotificationSearchDTO> createAndSearch(Long employeeId, ModuleType module, PermissionType permission);
     Long markAsRead(Long employeeId, Long notificationId);
 }

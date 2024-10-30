@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.Integrated.controller.notification
 
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.Notification;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.dto.UserNotificationDTO;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.dto.UserNotificationSearchDTO;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.dto.UserSubscriptionDTO;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
@@ -68,7 +69,12 @@ public class NotificationController {
             @RequestParam("module") ModuleType module,
             @RequestParam("permission") PermissionType permission) {
 
-        List<UserNotificationDTO> notification = notificationService.createAndSearch(employeeId, module, permission);
+        List<UserNotificationSearchDTO> notification;
+        try {
+            notification = notificationService.createAndSearch(employeeId, module, permission);
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
         return ResponseEntity.ok(notification);
     }
 

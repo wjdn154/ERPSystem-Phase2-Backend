@@ -347,20 +347,20 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
             notificationService.createAndSendNotification(
                     ModuleType.FINANCE,
                     PermissionType.ADMIN,
-                    "미결전표 " + unresolvedVoucherList.size() + "건 승인",
+                    "미결전표가 " + unresolvedVoucherList.size() + "건 승인 되었습니다.",
                     NotificationType.APPROVAL_VOUCHER
             );
             
         }else if (dto.getApprovalStatus().equals(ApprovalStatus.REJECTED)) {
             recentActivityRepository.save(RecentActivity.builder()
-                    .activityDescription("미결전표 " + unresolvedVoucherList.size() + "건 반려")
+                    .activityDescription("미결전표가 " + unresolvedVoucherList.size() + "건 반려 되었습니다.")
                     .activityType(ActivityType.FINANCE)
                     .activityTime(LocalDateTime.now())
                     .build());
             notificationService.createAndSendNotification(
                     ModuleType.FINANCE,
                     PermissionType.ADMIN,
-                    "미결전표 " + unresolvedVoucherList.size() + "건 반려",
+                    "미결전표가 " + unresolvedVoucherList.size() + "건 반려 되었습니다",
                     NotificationType.REJECT_VOUCHER
             );
         }

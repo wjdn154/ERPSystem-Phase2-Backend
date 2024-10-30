@@ -5,10 +5,6 @@ import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.UserN
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,12 +16,12 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserNotificationDTO {
+public class UserNotificationSearchDTO {
     private Long userId;
     private Notification notification;
-    private ModuleType module;
-    private PermissionType permission;
-    private NotificationType type;
+    private String module;
+    private String permission;
+    private String type;
     private String content;
     private LocalDateTime createAt;
     private LocalDateTime readAt;
