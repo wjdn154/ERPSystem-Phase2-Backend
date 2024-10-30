@@ -37,7 +37,8 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public List<InventoryResponseDTO> getInventoriesByLocationId(Long locationId) {
-        return inventoryRepository.findInventoriesByLocationId(locationId);
+        List<InventoryResponseDTO> response = inventoryRepository.findInventoriesByLocationId(locationId);
+        return null;
     }
 
     @Override

@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+/**
+ * 급여 기준정보 테이블
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -46,7 +49,7 @@ public class Salary {
 
     @Column(nullable = false)
     private BigDecimal nationalPensionAmount; // 국민연금 금액
-
+    
 
     private BigDecimal privateSchoolPensionAmount; // 사학연금 금액
 
@@ -64,9 +67,4 @@ public class Salary {
 
     @Column(nullable = false)
     private boolean unionMembershipStatus; // 노조가입여부
-
-//    private boolean duruNuriSocialInsuranceStatus; // 두루누리사회보험 여부
-//
-//    private BigDecimal duruNuriSocialInsuranceRate; // 두루누리적용률 30 40(구) 60(구) 80 90
-
 }

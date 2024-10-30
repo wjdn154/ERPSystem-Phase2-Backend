@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management;
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import jakarta.persistence.*;
@@ -57,9 +58,19 @@ public class PurchaseOrder {
     @JoinColumn(name = "currency_id", nullable = false)
     private Currency currency;
 
-    // 부가세율 적용 or 미적용
+    // 부가세_id
     @Column(nullable = false)
-    private Boolean vatType;
+    private Long vatId;
+
+    // 분개유형_code
+    @Column(nullable = false)
+    private String journalEntryCode;
+
+    // 세금계산서발행여부
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private ElectronicTaxInvoiceStatus electronicTaxInvoiceStatus = ElectronicTaxInvoiceStatus.UNPUBLISHED;
 
     // 납기 일자
     @Column(nullable = false)

@@ -55,7 +55,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     // 사원 리스트 조회
     @Override
-    public List<EmployeeShowDTO> findAllEmployees() {
+    public List<EmployeeShowDTO> findAllUsers() {
         //엔티티 dto로 변환
         return employeeRepository.findAllByUser().stream()
                 .map(employee -> new EmployeeShowDTO(
@@ -73,7 +73,29 @@ public class EmployeeServiceImpl implements EmployeeService {
                         employee.getPosition().getId(),
                         employee.getPosition().getPositionName(),
                         employee.getJobTitle().getJobTitleName()
-//                        employee.getBankAccount().getAccountNumber()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EmployeeShowDTO> findAllEmployees() {
+        //엔티티 dto로 변환
+        return employeeRepository.findAll().stream()
+                .map(employee -> new EmployeeShowDTO(
+                        employee.getId(),
+                        employee.getEmployeeNumber(),
+                        employee.getFirstName(),
+                        employee.getLastName(),
+                        employee.getEmploymentStatus(),
+                        employee.getEmploymentType(),
+                        employee.getEmail(),
+                        employee.getHireDate(),
+                        employee.getImagePath(),
+                        employee.getDepartment().getDepartmentCode(),
+                        employee.getDepartment().getDepartmentName(),
+                        employee.getPosition().getId(),
+                        employee.getPosition().getPositionName(),
+                        employee.getJobTitle().getJobTitleName()
                 ))
                 .collect(Collectors.toList());
     }

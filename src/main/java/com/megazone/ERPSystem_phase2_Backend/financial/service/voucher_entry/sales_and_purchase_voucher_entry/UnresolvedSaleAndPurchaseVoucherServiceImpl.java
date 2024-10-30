@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.sa
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
@@ -413,9 +414,10 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                         .activityTime(LocalDateTime.now())
                         .build());
                 notificationService.createAndSendNotification(
-                        "미결 매출매입전표 " + unresolvedVoucherList.size() + "건 승인",
                         ModuleType.FINANCE,
-                        PermissionType.ADMIN
+                        PermissionType.ADMIN,
+                        "미결 매출매입전표 " + unresolvedVoucherList.size() + "건 승인",
+                        NotificationType.APPROVAL_VOUCHER
                 );
 
             }else if (dto.getApprovalStatus().equals(ApprovalStatus.REJECTED)){
@@ -425,9 +427,10 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                         .activityTime(LocalDateTime.now())
                         .build());
                 notificationService.createAndSendNotification(
-                        "미결 매출매입전표 " + unresolvedVoucherList.size() + "건 반려",
                         ModuleType.FINANCE,
-                        PermissionType.ADMIN
+                        PermissionType.ADMIN,
+                        "미결 매출매입전표 " + unresolvedVoucherList.size() + "건 반려",
+                        NotificationType.REJECT_VOUCHER
                 );
             }
 

@@ -47,6 +47,9 @@ public class TransferController {
     public ResponseEntity<TransferShowDTO> updateTransfer(
             @PathVariable Long id,
             @RequestBody TransferCreateDTO dto) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID 값은 null 일 수 없습니다.");
+        }
         Optional<TransferShowDTO> updatedTransfer = Optional.ofNullable(transferService.updateTransfer(id, dto));
         return updatedTransfer
                 .map(ResponseEntity::ok)

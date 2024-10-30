@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.service.sales_management
 
 
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.VatAmountWithSupplyAmountDTO;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.sales_and_purchase_voucher_entry.VatTypeService;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
@@ -66,8 +67,8 @@ public class OrdersServiceImpl implements OrdersService {
                 .toList();
     }
 
-    /** 견적서 목록 조회 관련 메서드 **/
-    // Entity -> 견적서 목록 조회용 DTO 변환 메소드
+    /** 주문서 목록 조회 관련 메서드 **/
+    // Entity -> 주문서 목록 조회용 DTO 변환 메소드
     private OrdersResponseDto toListDto(Orders orders) {
 
         return OrdersResponseDto.builder()
@@ -115,7 +116,7 @@ public class OrdersServiceImpl implements OrdersService {
 
 
     /**
-     * 견적서 상세 정보 조회
+     * 주문서 상세 정보 조회
      * @param id
      * @return
      */
@@ -125,7 +126,7 @@ public class OrdersServiceImpl implements OrdersService {
                 .map(this::toDetailDto);
     }
 
-    /** 견적서 상세 정보 조회 관련 메서드 **/
+    /** 주문서 상세 정보 조회 관련 메서드 **/
     // Entity -> 상세 조회용 DTO 변환 메소드
     private OrdersResponseDetailDto toDetailDto(Orders orders) {
         return OrdersResponseDetailDto.builder()
@@ -178,7 +179,7 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     /**
-     * 견적서 등록
+     * 주문서 등록
      * @param createDto
      * @return
      */
@@ -189,13 +190,13 @@ public class OrdersServiceImpl implements OrdersService {
             orders = ordersRepository.save(orders);
             return toDetailDto(orders);
         } catch (Exception e) {
-            log.error("견적서 생성 실패: ", e);
+            log.error("주문서 생성 실패: ", e);
             return null;
         }
     }
 
-    /** 견적서 등록 관련 메서드 **/
-    // 견적서 등록 DTO -> Entity 변환 메소드
+    /** 주문서 등록 관련 메서드 **/
+    // 주문서 등록 DTO -> Entity 변환 메소드
     private Orders toEntity(OrdersCreateDto dto) {
         Orders orders = Orders.builder()
                 .client(clientRepository.findById(dto.getClientId())
@@ -233,12 +234,14 @@ public class OrdersServiceImpl implements OrdersService {
 
             VatAmountWithSupplyAmountDTO vatAmountWithSupplyAmountDTO = new VatAmountWithSupplyAmountDTO();
             vatAmountWithSupplyAmountDTO.setSupplyAmount(supplyPrice);
+            vatAmountWithSupplyAmountDTO.setVatTypeId(orders.getVatId());
 
             BigDecimal localAmount = null;
             BigDecimal vat = null;
 
-            if ("KRW".equals(orders.getCurrency().getCode())) {
+            if (orders.getCurrency().getId() == 6) {
                 vat = vatTypeService.vatAmountCalculate(vatAmountWithSupplyAmountDTO);
+                System.out.println("vat: " + vat);
             } else if (orders.getCurrency().getExchangeRate() != null) {
                 localAmount = supplyPrice.multiply(orders.getCurrency().getExchangeRate());
             } else {
@@ -262,7 +265,7 @@ public class OrdersServiceImpl implements OrdersService {
     public OrdersResponseDetailDto updateOrders(Long id, OrdersCreateDto updateDto) {
         try {
             Orders orders = ordersRepository.findById(id)
-                    .orElseThrow(() -> new NoSuchElementException("해당 견적서 정보를 찾을 수 없습니다."));
+                    .orElseThrow(() -> new NoSuchElementException("해당 주문서 정보를 찾을 수 없습니다."));
 
             if (updateDto.getManagerId() != null) {
                 Employee manager = employeeRepository.findById(updateDto.getManagerId())
@@ -289,6 +292,9 @@ public class OrdersServiceImpl implements OrdersService {
             orders.setVatId(updateDto.getVatId() != null ? updateDto.getVatId() : orders.getVatId());
             orders.setRemarks(updateDto.getRemarks() != null ? updateDto.getRemarks() : orders.getRemarks());
 
+            ElectronicTaxInvoiceStatus status = ElectronicTaxInvoiceStatus.valueOf(updateDto.getElectronicTaxInvoiceStatus());
+            orders.setElectronicTaxInvoiceStatus(status);
+
             orders.getOrdersDetails().clear();  // 기존 항목을 제거
 
             // 발주 상세 정보 업데이트 - 등록 관련 메서드의 getOrdersRequest 메서드 사용
@@ -300,8 +306,8 @@ public class OrdersServiceImpl implements OrdersService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("잘못된 요청입니다.: " + e.getMessage());
         } catch (RuntimeException e) {
-            log.error("견적서 수정 중 오류 발생: ", e);
-            throw new RuntimeException("견적서 수정 중 오류가 발생했습니다.");
+            log.error("주문서 수정 중 오류 발생: ", e);
+            throw new RuntimeException("주문서 수정 중 오류가 발생했습니다.");
         }
     }
 
