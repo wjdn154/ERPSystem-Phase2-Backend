@@ -180,8 +180,11 @@ public class NotificationServiceImpl implements NotificationService {
     public void sendNotification(Notification notification, String tenantId) {
 
         SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext()); // 비동기 처리 시 SecurityContextHolder 초기화
+        System.out.println("emitters = " + emitters);
 
         emitters.forEach((key, subscription) -> {
+            System.out.println("key = " + key);
+            System.out.println("tenantId = " + tenantId);
 
             // 모든 구독자에게 전송할지 여부 확인
             boolean isForAllModules = notification.getModule() == ModuleType.ALL || subscription.getModule() == ModuleType.ALL;

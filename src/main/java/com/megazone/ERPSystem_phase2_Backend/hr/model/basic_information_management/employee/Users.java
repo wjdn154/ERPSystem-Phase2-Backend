@@ -36,6 +36,6 @@ public class Users {
     private String password; // 비밀번호
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id", nullable = false)
+    @JoinColumn(name = "company_id")
     private Company company; // 회사 정보
 }

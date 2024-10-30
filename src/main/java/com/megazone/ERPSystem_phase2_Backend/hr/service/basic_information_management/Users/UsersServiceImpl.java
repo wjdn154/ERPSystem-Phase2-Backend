@@ -78,12 +78,11 @@ public class UsersServiceImpl implements UsersService{
         }
 
         // 사용자 정보 가져오기
-        Optional<Users> userOptional = usersRepository.findByUserName(authRequest.getUserName());
-        if (userOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("사용자를 찾을 수 없습니다.");
+        Users user = usersRepository.findByUserName(authRequest.getUserName()).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        if (user.getCompany() == null) {
+            user.setCompany(companyRepository.findById(authRequest.getCompanyId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "회사 정보를 찾을 수 없습니다.")));
+            usersRepository.save(user);
         }
-
-        Users user = userOptional.get();
 
         try {
             // 사용자 인증
