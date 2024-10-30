@@ -32,10 +32,6 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public TransferShowDTO createTransfer(TransferCreateDTO dto) {
         // 사원 정보 조회 (employee_id를 통해)
-        if (dto.getEmployeeId() == null) {
-            throw new IllegalArgumentException("사원 ID는 null일 수 없습니다.");
-        }
-        // 사원 정보 조회 (employee_id를 통해)
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 사원 ID 입력: " + dto.getEmployeeId()));
 
@@ -87,11 +83,11 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public TransferShowDTO updateTransfer(Long id, TransferCreateDTO dto) {
         Transfer transfer = transferRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Transfer not found with id " + id));
+                .orElseThrow(() -> new EntityNotFoundException("발령 ID 를 찾을 수 없습니다. " + id));
 
         // 사원 정보 조회
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid employee ID: " + dto.getEmployeeId()));
+                .orElseThrow(() -> new IllegalArgumentException("사원 ID 를 찾을 수 없습니다: " + dto.getEmployeeId()));
 
         // 출발 부서 정보 조회
         Department fromDepartment = departmentRepository.findByDepartmentName(dto.getFromDepartmentName());
@@ -101,14 +97,18 @@ public class TransferServiceImpl implements TransferService {
 
         // 발령 유형 정보 조회
         TransferType transferType = transferTypeRepository.findById(dto.getTransferTypeId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid transfer type ID: " + dto.getTransferTypeId()));
+                .orElseThrow(() -> new IllegalArgumentException("발령 유형 정보 ID가 없습니다. : " + dto.getTransferTypeId()));
+
+        transferType.setCode(dto.getTransferTypeCode());  // dto에서 TransferTypeCode 받아온다고 가정
+        transferType.setDescription(dto.getTransferTypeDescription());  // dto에서 TransferTypeDescription 받아온다고 가정
+        transferTypeRepository.save(transferType); // TransferType 업데이트 저장
 
         // 기존 발령 정보 업데이트
         transfer.setTransferDate(dto.getTransferDate());
         transfer.setEmployee(employee);
         transfer.setFromDepartment(fromDepartment);
         transfer.setToDepartment(toDepartment);
-        transfer.setTransferType(transferType);
+        transfer.setTransferType(transferType); // 업데이트된 TransferType 설정
         transfer.setReason(dto.getReason());
 
         Transfer updatedTransfer = transferRepository.save(transfer);

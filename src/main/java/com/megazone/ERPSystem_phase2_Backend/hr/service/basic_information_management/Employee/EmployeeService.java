@@ -10,6 +10,9 @@ import java.util.Optional;
 public interface EmployeeService {
 
     // 사원 리스트 조회
+    List<EmployeeShowDTO> findAllUsers();
+
+    // 사원 리스트 조회
     List<EmployeeShowDTO> findAllEmployees();
 
     // 사원 상세 조회
