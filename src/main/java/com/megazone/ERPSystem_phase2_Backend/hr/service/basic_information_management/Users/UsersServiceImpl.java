@@ -181,7 +181,7 @@ public class UsersServiceImpl implements UsersService{
         Users savedUser = usersRepository.save(user);
 
         recentActivityRepository.save(RecentActivity.builder()
-                .activityDescription(savedUser.getUserName() + "님의 권한이 변경되었습니다.")
+                .activityDescription(savedUser.getUserNickname() + "님의 권한이 변경되었습니다.")
                 .activityType(ActivityType.HR)
                 .activityTime(LocalDateTime.now())
                 .build());
