@@ -1039,13 +1039,13 @@ account_ledger_permission
 
 
 
-INSERT INTO users (password, user_name, user_nickname, company_id, employee_id, permission_id) VALUES
-('$2a$10$KIdjiluwxpiwWzMdjIyYHOtaWC8PZtav6W3M.tQyGb2TzAaTO3VkS', 'gj1563@naver.com', '건호', 1, 3, 3),
-('$2a$10$KIdjiluwxpiwWzMdjIyYHOtaWC8PZtav6W3M.tQyGb2TzAaTO3VkS', 'ckacl2512@naver.com', '만수이!!', 1, 4, 4),
-('$2a$10$KIdjiluwxpiwWzMdjIyYHOtaWC8PZtav6W3M.tQyGb2TzAaTO3VkS', 'hshdla@naver.com', '성화', 1, 5, 5),
-('$2a$10$KIdjiluwxpiwWzMdjIyYHOtaWC8PZtav6W3M.tQyGb2TzAaTO3VkS', 'chlwlgur0407@naver.com', '지혁이', 1, 6, 6),
-('$2a$10$KIdjiluwxpiwWzMdjIyYHOtaWC8PZtav6W3M.tQyGb2TzAaTO3VkS', 'cksals@naver.com', '찬민', 1, 7, 7),
-('$2a$10$KIdjiluwxpiwWzMdjIyYHOtaWC8PZtav6W3M.tQyGb2TzAaTO3VkS', 'labe1827@gmail.com', '태종', 1, 8, 8),
-('$2a$10$KIdjiluwxpiwWzMdjIyYHOtaWC8PZtav6W3M.tQyGb2TzAaTO3VkS', 'wkdgywjd77@naver.com', '정콩콩', 1, 1, 1),
-('$2a$10$KIdjiluwxpiwWzMdjIyYHOtaWC8PZtav6W3M.tQyGb2TzAaTO3VkS', 'readyoun@omz.com', '이미연', 1, 2, 2);
+INSERT INTO users (password, user_name, user_nickname, employee_id, permission_id) VALUES
+('$2a$10$KIdjiluwxpiwWzMdjIyYHOtaWC8PZtav6W3M.tQyGb2TzAaTO3VkS', 'gj1563@naver.com', '건호', 3, 3),
+('$2a$10$KIdjiluwxpiwWzMdjIyYHOtaWC8PZtav6W3M.tQyGb2TzAaTO3VkS', 'ckacl2512@naver.com', '만수이!!', 4, 4),
+('$2a$10$KIdjiluwxpiwWzMdjIyYHOtaWC8PZtav6W3M.tQyGb2TzAaTO3VkS', 'hshdla@naver.com', '성화', 5, 5),
+('$2a$10$KIdjiluwxpiwWzMdjIyYHOtaWC8PZtav6W3M.tQyGb2TzAaTO3VkS', 'chlwlgur0407@naver.com', '지혁이', 6, 6),
+('$2a$10$KIdjiluwxpiwWzMdjIyYHOtaWC8PZtav6W3M.tQyGb2TzAaTO3VkS', 'cksals@naver.com', '찬민', 7, 7),
+('$2a$10$KIdjiluwxpiwWzMdjIyYHOtaWC8PZtav6W3M.tQyGb2TzAaTO3VkS', 'labe1827@gmail.com', '태종', 8, 8),
+('$2a$10$KIdjiluwxpiwWzMdjIyYHOtaWC8PZtav6W3M.tQyGb2TzAaTO3VkS', 'wkdgywjd77@naver.com', '정콩콩', 1, 1),
+('$2a$10$KIdjiluwxpiwWzMdjIyYHOtaWC8PZtav6W3M.tQyGb2TzAaTO3VkS', 'readyoun@omz.com', '이미연', 2, 2);
 
