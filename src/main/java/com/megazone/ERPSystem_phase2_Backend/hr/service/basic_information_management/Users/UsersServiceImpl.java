@@ -187,7 +187,7 @@ public class UsersServiceImpl implements UsersService{
         notificationService.createAndSendNotification(
                 ModuleType.ALL,
                 PermissionType.ALL,
-                savedUser.getUserName() + "님의 권한이 변경되었습니다.",
+                savedUser.getUserNickname() + "님의 권한이 변경되었습니다.",
                 NotificationType.CHANGE_PERMISSION
         );
 

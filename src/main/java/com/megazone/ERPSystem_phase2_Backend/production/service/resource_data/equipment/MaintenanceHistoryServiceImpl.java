@@ -1,5 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.equipment;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.EquipmentData;
@@ -13,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,11 +33,13 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService 
     private final MaintenanceHistoryRepository maintenanceHistoryRepository;
     private final EquipmentDataRepository equipmentDataRepository;
     private final CompanyRepository companyRepository;
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
     //유지보수 이력 리스트 조회
     @Override
-    public List<ListMaintenanceHistoryDTO> findAllMaintenanceHistory(Long companyId) {
+    public List<ListMaintenanceHistoryDTO> findAllMaintenanceHistory() {
 
-        return maintenanceHistoryRepository.findAllByCompanyIdOrderByMaintenanceDateDesc(companyId).stream()
+        return maintenanceHistoryRepository.findAllByOrderByMaintenanceDateDesc().stream()
                 .map(maintenanceHistory -> new ListMaintenanceHistoryDTO(
                         maintenanceHistory.getId(),
                         maintenanceHistory.getEquipment().getEquipmentNum(),
@@ -60,13 +70,26 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService 
 
     //유지보수 이력 상세 등록
     @Override
-    public Optional<MaintenanceHistoryDetailShowDTO> saveMaintenanceHistory(Long companyId, MaintenanceHistoryDetailDTO dto) {
+    public Optional<MaintenanceHistoryDetailShowDTO> saveMaintenanceHistory(MaintenanceHistoryDetailDTO dto) {
 
         //dto를 엔티티로 변환
-        MaintenanceHistory maintenanceHistory = maintenanceHistoryToEntity(companyId, dto);
+        MaintenanceHistory maintenanceHistory = maintenanceHistoryToEntity(dto);
 
         //엔티티 저장
         MaintenanceHistory savedMaintenanceHistory = maintenanceHistoryRepository.save(maintenanceHistory);
+
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription("유지보수 1건 생성")
+                .activityType(ActivityType.PRODUCTION)
+                .activityTime(LocalDateTime.now())
+                .build());
+
+
+        notificationService.createAndSendNotification(
+                ModuleType.PRODUCTION,
+                PermissionType.ALL,
+                "유지보수 이력 1건 생성되었습니다.",
+                NotificationType.NEW_MAINTENANCE_HISTORY);
 
         //엔티티를 DTO로 변환하여 반환
         MaintenanceHistoryDetailShowDTO maintenanceHistoryDTO = maintenanceToShowDTO(savedMaintenanceHistory);
@@ -99,6 +122,19 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService 
 
         //업데이트된 엔티티 저장
         MaintenanceHistory updateMaintenanceHistory = maintenanceHistoryRepository.save(maintenanceHistory);
+
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription("유지보수 1건 변경")
+                .activityType(ActivityType.PRODUCTION)
+                .activityTime(LocalDateTime.now())
+                .build());
+
+
+        notificationService.createAndSendNotification(
+                ModuleType.PRODUCTION,
+                PermissionType.ALL,
+                "유지보수 이력 1건 변경되었습니다.",
+                NotificationType.UPDATE_MAINTENANCE_HISTORY);
 
         //저장된 엔티티 dto로 변환
         MaintenanceHistoryDetailShowDTO MaintenanceHistoryUpdateDetailDTO = maintenanceToShowDTO(updateMaintenanceHistory);
@@ -144,7 +180,7 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService 
     }
 
     //maintenanceHistoryDetailDTO를 maintenanceHistory 엔티티로 변환
-    private MaintenanceHistory maintenanceHistoryToEntity(Long companyId, MaintenanceHistoryDetailDTO dto) {
+    private MaintenanceHistory maintenanceHistoryToEntity(MaintenanceHistoryDetailDTO dto) {
         MaintenanceHistory maintenanceHistory = new MaintenanceHistory();
 
         maintenanceHistory.setMaintenanceManager(dto.getMaintenanceManager());
@@ -161,9 +197,6 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService 
                 .orElseThrow(() -> new IllegalArgumentException("해당 설비번호를 조회할 수 없습니다."));
         maintenanceHistory.setEquipment(equipmentData);
 
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new RuntimeException(companyId +"에 해당하는 회사 아이디를 찾을 수 없습니다."));
-        maintenanceHistory.setCompany(company);
 
         return maintenanceHistory;
     }

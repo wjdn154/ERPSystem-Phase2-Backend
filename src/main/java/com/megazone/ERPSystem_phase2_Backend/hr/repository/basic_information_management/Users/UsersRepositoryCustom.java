@@ -5,5 +5,4 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_manageme
 import java.util.List;
 
 public interface UsersRepositoryCustom {
-    List<UsersShowDTO> findAllUsers();
 }

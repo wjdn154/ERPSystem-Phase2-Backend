@@ -51,9 +51,5 @@ public class MaintenanceHistory {
     @JoinColumn(name = "equipment_data_id")
     private EquipmentData equipment;      //유지보수 관리하는 설비정보 테이블 참조.(설비명, 작업장이름, 공장이름)
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "company_id")
-    private Company company;           //회사 테이블 참조
-
 
 }

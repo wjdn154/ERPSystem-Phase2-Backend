@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface MaintenanceHistoryRepository
         extends JpaRepository<MaintenanceHistory, Long>, MaintenanceHistoryRepositoryCustom {
 
-        List<MaintenanceHistory> findAllByCompanyIdOrderByMaintenanceDateDesc(Long companyId);
+        List<MaintenanceHistory> findAllByOrderByMaintenanceDateDesc();
 
 }

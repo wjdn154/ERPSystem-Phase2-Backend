@@ -47,10 +47,10 @@ public class MaterialDataController {
 
     //자재 리스트 수정
     @PutMapping("/material/updateMaterial/{id}")
-    public ResponseEntity<ListMaterialDataDTO> updateMaterial(@PathVariable("id") Long id, @RequestBody ListMaterialDataDTO dto){
+    public ResponseEntity<MaterialDataShowDTO> updateMaterial(@PathVariable("id") Long id, @RequestBody MaterialDataShowDTO dto){
 
         //서비스에서 아이디에 해당하는 자재 상세 정보를 수정함.
-        Optional<ListMaterialDataDTO> result = materialService.updateMaterial(id, dto);
+        Optional<MaterialDataShowDTO> result = materialService.updateMaterial(id, dto);
         return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
