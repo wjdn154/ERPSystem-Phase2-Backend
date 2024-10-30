@@ -78,18 +78,18 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService 
         //엔티티 저장
         MaintenanceHistory savedMaintenanceHistory = maintenanceHistoryRepository.save(maintenanceHistory);
 
-//        recentActivityRepository.save(RecentActivity.builder()
-//                .activityDescription("유지보수 " + unresolvedVoucherList.size() + "건 생성")
-//                .activityType(ActivityType.PRODUCTION)
-//                .activityTime(LocalDateTime.now())
-//                .build());
-//
-//
-//        notificationService.createAndSendNotification(
-//                ModuleType.PRODUCTION,
-//                PermissionType.ADMIN,
-//                "미결전표가 " + unresolvedVoucherList.size() + "건 승인 되었습니다.",
-//                NotificationType.APPROVAL_VOUCHER);
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription("유지보수 1건 생성")
+                .activityType(ActivityType.PRODUCTION)
+                .activityTime(LocalDateTime.now())
+                .build());
+
+
+        notificationService.createAndSendNotification(
+                ModuleType.PRODUCTION,
+                PermissionType.ALL,
+                "유지보수 이력 1건 생성되었습니다.",
+                NotificationType.NEW_MAINTENANCE_HISTORY);
 
         //엔티티를 DTO로 변환하여 반환
         MaintenanceHistoryDetailShowDTO maintenanceHistoryDTO = maintenanceToShowDTO(savedMaintenanceHistory);
@@ -122,6 +122,19 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService 
 
         //업데이트된 엔티티 저장
         MaintenanceHistory updateMaintenanceHistory = maintenanceHistoryRepository.save(maintenanceHistory);
+
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription("유지보수 1건 변경")
+                .activityType(ActivityType.PRODUCTION)
+                .activityTime(LocalDateTime.now())
+                .build());
+
+
+        notificationService.createAndSendNotification(
+                ModuleType.PRODUCTION,
+                PermissionType.ALL,
+                "유지보수 이력 1건 변경되었습니다.",
+                NotificationType.UPDATE_MAINTENANCE_HISTORY);
 
         //저장된 엔티티 dto로 변환
         MaintenanceHistoryDetailShowDTO MaintenanceHistoryUpdateDetailDTO = maintenanceToShowDTO(updateMaintenanceHistory);
