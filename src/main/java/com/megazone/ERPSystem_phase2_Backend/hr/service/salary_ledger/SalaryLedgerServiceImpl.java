@@ -80,6 +80,9 @@ public class SalaryLedgerServiceImpl implements SalaryLedgerService {
                 newLedger.setTotalDeductionAmount(BigDecimal.ZERO);
                 newLedger.setTotalSalaryAmount(BigDecimal.ZERO);
                 newLedger.setNetPayment(BigDecimal.ZERO);
+                newLedger.setTaxableAmount(BigDecimal.ZERO);
+                newLedger.setNonTaxableAmount(BigDecimal.ZERO);
+                newLedger.setTaxableIncome(BigDecimal.ZERO);
 
             List<SalaryLedgerAllowance> allowances = allDTOs.stream()
                     .map(dtoItem -> new SalaryLedgerAllowance(dtoItem.getName(), BigDecimal.ZERO))
@@ -124,128 +127,7 @@ public class SalaryLedgerServiceImpl implements SalaryLedgerService {
         return new FinalizedDTO(updateSalaryLedger.isFinalized(),"급여입력 마감처리가 취소되었습니다.");
     }
 
-//    @Override
-//    public SalaryLedgerDTO salaryLedgerCalculator(Long salaryLedgerId) {
-//
-//        SalaryLedger salaryLedger = salaryLedgerRepository.findById(salaryLedgerId).orElseThrow(
-//                () -> new NoSuchElementException("해당하는 급여입력 정보가없습니다."));
-//
-//        if(salaryLedger.isFinalized()) {
-//            throw new RuntimeException("급여정보가 마감처리 되었습니다.");
-//        }
-//
-//
-//        Salary salary = salaryRepository.findByEmployeeId(salaryLedger.getEmployee().getId());
-//        Employee employee = salaryLedger.getEmployee();
-//
-//
-//        InsurancePensionCalculatorDTO calculatorDTO = new InsurancePensionCalculatorDTO(salary.getSalaryStep().getId(),employee.getPosition().getId());
-//
-//        BigDecimal healthInsurancePensionAmount = healthInsurancePensionService.calculator(calculatorDTO);
-//
-//        BigDecimal nationalPensionAmount = nationalPensionService.calculator(calculatorDTO);
-//
-//        BigDecimal employmentInsurancePensionAmount = employmentInsurancePensionService.calculator(calculatorDTO);
-//
-//        LongTermCareInsurancePension longTermCareInsurancePension = longTermCareInsurancePensionRepository.findByCode(salary.getLongTermCareInsurancePensionCode());
-//
-//        LongTermCareInsuranceCalculatorDTO longTermDto = new LongTermCareInsuranceCalculatorDTO(healthInsurancePensionAmount,
-//                longTermCareInsurancePension.getId());
-//
-//        BigDecimal LongTermCareInsurancePensionAmount = longTermCareInsurancePensionService.calculator(longTermDto);
-//
-//        BigDecimal salaryAmount =  positionSalaryStepRepository.getSalaryAmount(employee.getPosition().getId(),salary.getSalaryStep().getId());
-//
-//        BigDecimal incomeTaxPensionAmount = incomeTaxService.incomeTaxCalculator(salaryAmount.multiply(BigDecimal.valueOf(12)));
-//
-//        BigDecimal localIncomeTaxPensionAmount = incomeTaxPensionAmount.multiply(BigDecimal.valueOf(0.1)).setScale(0, BigDecimal.ROUND_HALF_UP);
-//
-//        // 직급,호봉별 표준 수당 리스트 변환 후 설정
-//        List<SalaryLedgerAllowanceDTO> allowanceDTOs = positionSalaryStepRepository
-//                .getSalaryAllowance(employee.getId(), salary.getSalaryStep().getId());
-//
-//
-//        salaryLedger.setNationalPensionAmount(nationalPensionAmount);
-//        salaryLedger.setPrivateSchoolPensionAmount(BigDecimal.ZERO);
-//        salaryLedger.setHealthInsurancePensionAmount(healthInsurancePensionAmount);
-//        salaryLedger.setEmploymentInsuranceAmount(employmentInsurancePensionAmount);
-//        salaryLedger.setLongTermCareInsurancePensionAmount(LongTermCareInsurancePensionAmount);
-//        salaryLedger.setIncomeTaxPensionAmount(incomeTaxPensionAmount);
-//        salaryLedger.setLocalIncomeTaxPensionAmount(localIncomeTaxPensionAmount);
-//
-//        List<SalaryLedgerAllowance> originList  = salaryLedger.getAllowance();
-//
-//        for(int i = 0; i < allowanceDTOs.size(); i++ ){
-//            SalaryLedgerAllowance salaryLedgerAllowance = originList.get(i);
-//            salaryLedgerAllowance.setAmount(allowanceDTOs.get(i).getAllowanceAmount());
-//        }
-//
-//
-//
-//
-//
-//        //////////////////////////////////////
-//        List<AllowanceShowDTO> allowanceList = allowanceService.show();
-//
-//        List<SalaryLedgerAllowance> salaryLedgerAllowances = salaryLedger.getAllowance();
-//
-//        // 총 급여
-//        BigDecimal totalSalaryAmount = BigDecimal.ZERO;
-//        // 비과세 금액
-//        BigDecimal nonTaxableAmount = BigDecimal.ZERO;
-//        // 과세 금액
-//        BigDecimal taxableAmount = BigDecimal.ZERO;
-//
-//        for(int i = 0; salaryLedgerAllowances.size() > i; i++ ) {
-//            BigDecimal amount = salaryLedgerAllowances.get(i).getAmount();
-//
-//            totalSalaryAmount = totalSalaryAmount.add(amount);
-//            if(allowanceList.get(i).getTaxType().equals(TaxType.TAXABLE)) {
-//                taxableAmount = taxableAmount.add(amount);
-//            }
-//            else {
-//                nonTaxableAmount = allowanceService.taxableCalculator(nonTaxableAmount.add(amount), i + 1L);
-//            }
-//        }
-//
-//        // 공제총액
-//        BigDecimal totalDeductions = BigDecimal.ZERO;
-//
-//        // 과세소득
-//        BigDecimal taxableIncome = totalSalaryAmount.subtract(nonTaxableAmount);
-//
-//        // 소득세
-//        BigDecimal incomeTaxAmount = incomeTaxService.incomeTaxCalculator(taxableIncome);
-//        totalDeductions = totalDeductions.add(incomeTaxAmount);
-//
-//        // 지방소득세
-//        BigDecimal localIncomeTaxAmount = incomeTaxAmount.multiply(BigDecimal.valueOf(0.1)).setScale(0, BigDecimal.ROUND_HALF_UP);
-//        totalDeductions = totalDeductions.add(localIncomeTaxAmount);
-//
-//
-/////////////////////////////////////////////////////////////////
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//        SalaryLedger updateSalaryLedger = salaryLedgerRepository.save(salaryLedger);
-//
-//
-//
-//        return SalaryLedgerDTO.create(updateSalaryLedger);
-//
-//
-//    }
+
 
     @Override
     public SalaryLedgerDTO salaryLedgerCalculator(Long salaryLedgerId) {
@@ -263,7 +145,7 @@ public class SalaryLedgerServiceImpl implements SalaryLedgerService {
 
         // 직급,호봉별 표준 수당 리스트 변환 후 설정
         List<SalaryLedgerAllowanceDTO> allowanceDTOs = positionSalaryStepRepository
-                .getSalaryAllowance(employee.getId(), salary.getSalaryStep().getId());
+                .getSalaryAllowance(employee.getPosition().getId(), salary.getSalaryStep().getId());
 
 
         List<AllowanceShowDTO> allDTOs = allowanceService.show();
@@ -391,7 +273,10 @@ public class SalaryLedgerServiceImpl implements SalaryLedgerService {
         salaryLedger.setLocalIncomeTaxAmount(localIncomeTaxAmount);
         salaryLedger.setTotalSalaryAmount(totalSalaryAmount);
         salaryLedger.setTotalDeductionAmount(totalDeductions);
+        salaryLedger.setTaxableAmount(taxableAmount);
+        salaryLedger.setNonTaxableAmount(nonTaxableAmount);
         salaryLedger.setNetPayment(netPayment);
+        salaryLedger.setTaxableIncome(taxableIncome);
 
 
         SalaryLedger updateSalaryLedger = salaryLedgerRepository.save(salaryLedger);
@@ -404,6 +289,5 @@ public class SalaryLedgerServiceImpl implements SalaryLedgerService {
         Object result = salaryLedgerRepository.showPaymentStatusManagement(dto);
         return null;
     }
-
 }
 

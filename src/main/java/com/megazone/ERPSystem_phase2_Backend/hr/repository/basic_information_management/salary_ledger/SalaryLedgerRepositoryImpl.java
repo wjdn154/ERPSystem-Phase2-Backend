@@ -39,13 +39,15 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
                         qSalaryLedger.totalSalaryAmount,
                         qSalaryLedger.totalDeductionAmount,
                         qSalaryLedger.netPayment,
+                        qSalaryLedger.taxableAmount,
+                        qSalaryLedger.nonTaxableAmount,
                         qSalaryLedgerAllowance.name,
                         qSalaryLedgerAllowance.amount
                 )
                 .from(qSalaryLedger)
-                .leftJoin(qSalaryLedger.allowance, qSalaryLedgerAllowance) // 수당 리스트 조인
-                .where(qSalaryLedger.salaryLedgerDate.id.eq(dto.getSalaryLedgerDateId())
-                        .and(qSalaryLedger.employee.id.eq(dto.getEmployeeId())))
+                .join(qSalaryLedger.allowance,qSalaryLedgerAllowance) // 수당 리스트 조인
+                .where(qSalaryLedger.employee.id.eq(dto.getEmployeeId())
+                        .and(qSalaryLedger.salaryLedgerDate.id.eq(dto.getSalaryLedgerDateId())))
                 .fetch();
 
         if(results.isEmpty()) {
@@ -74,6 +76,8 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
                 salaryLedgerDTO.setTotalSalaryAmount(row.get(qSalaryLedger.totalSalaryAmount));
                 salaryLedgerDTO.setTotalDeductionAmount(row.get(qSalaryLedger.totalDeductionAmount));
                 salaryLedgerDTO.setNetPayment(row.get(qSalaryLedger.netPayment));
+                salaryLedgerDTO.setTaxableAmount(row.get(qSalaryLedger.taxableAmount));
+                salaryLedgerDTO.setNonTaxableAmount(row.get(qSalaryLedger.nonTaxableAmount));
                 salaryLedgerDTO.setAllowances(new ArrayList<>());
                 ledgerMap.put(ledgerId, salaryLedgerDTO);
             }

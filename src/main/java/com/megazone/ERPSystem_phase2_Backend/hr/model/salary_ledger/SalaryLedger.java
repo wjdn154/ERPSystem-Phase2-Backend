@@ -60,8 +60,15 @@ public class SalaryLedger {
     @Column(nullable = false)
     private BigDecimal localIncomeTaxAmount; // 지방소득세 금액
 
+
     @Column(nullable = false)
     private BigDecimal totalSalaryAmount; // 지급총액
+    @Column(nullable = false)
+    private BigDecimal nonTaxableAmount; // 비과세 금액
+    @Column(nullable = false)
+    private BigDecimal taxableAmount; // 과세 금액
+    @Column(nullable = false)
+    private BigDecimal taxableIncome;    // 과세소득
     @Column(nullable = false)
     private BigDecimal totalDeductionAmount; // 공제총액
     @Column(nullable = false)

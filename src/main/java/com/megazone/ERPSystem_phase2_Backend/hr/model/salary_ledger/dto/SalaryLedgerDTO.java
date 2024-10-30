@@ -1,6 +1,7 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto;
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.SalaryLedger;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,9 +22,13 @@ public class SalaryLedgerDTO {
     private BigDecimal longTermCareInsurancePensionAmount; // 장기요양보험 금액
     private BigDecimal incomeTaxAmount; // 소득세 공제액
     private BigDecimal localIncomeTaxPensionAmount; // 지방소득세 금액
+
+
     private BigDecimal totalSalaryAmount; // 지급총액
     private BigDecimal totalDeductionAmount; // 공제총액
     private BigDecimal netPayment; // 차인지급액
+    private BigDecimal nonTaxableAmount; // 비과세 금액
+    private BigDecimal taxableAmount; // 과세 금액
     private boolean finalized; // 마감구분
     private List<SalaryLedgerAllowanceShowDTO> allowances = new ArrayList<>();
 
@@ -40,6 +45,8 @@ public class SalaryLedgerDTO {
                 salaryLedger.getTotalSalaryAmount(),
                 salaryLedger.getTotalDeductionAmount(),
                 salaryLedger.getNetPayment(),
+                salaryLedger.getNonTaxableAmount(),
+                salaryLedger.getTaxableAmount(),
                 salaryLedger.isFinalized(),
                 salaryLedger.getAllowance().stream().map((change) -> {
                     return SalaryLedgerAllowanceShowDTO.create(change.getName(),change.getAmount());
