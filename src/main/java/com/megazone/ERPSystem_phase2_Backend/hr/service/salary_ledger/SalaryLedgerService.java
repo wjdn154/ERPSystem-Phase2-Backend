@@ -1,9 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.service.salary_ledger;
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto.FinalizedDTO;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto.PaymentStatusManagementSearchDTO;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto.SalaryLedgerDTO;
-import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto.SalaryLedgerSearchDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto.*;
 
 import java.util.List;
 
@@ -18,5 +15,5 @@ public interface SalaryLedgerService {
 
     SalaryLedgerDTO updateSalaryLedger(SalaryLedgerDTO dto);
 
-    Object showPaymentStatusManagement(PaymentStatusManagementSearchDTO dto);
+    List<PaymentStatusManagementShowDTO> showPaymentStatusManagement(PaymentStatusManagementSearchDTO dto);
 }
