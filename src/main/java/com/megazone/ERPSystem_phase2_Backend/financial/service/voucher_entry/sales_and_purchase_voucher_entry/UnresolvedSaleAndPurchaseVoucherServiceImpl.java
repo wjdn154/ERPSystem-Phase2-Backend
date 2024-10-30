@@ -1,11 +1,15 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.sales_and_purchase_voucher_entry;
 
-import com.megazone.ERPSystem_phase2_Backend.Integrated.model.RecentActivity;
-import com.megazone.ERPSystem_phase2_Backend.Integrated.model.enums.ActivityType;
-import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
+import com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.TenantContext;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubject;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
-import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.UnresolvedVoucherEntryDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
@@ -18,7 +22,6 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.TransactionType;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
-import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.journalEntry.JournalEntryRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.unresolveSaleAndPurchaseVoucher.UnresolvedSaleAndPurchaseVoucherRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.voucher_entry.sales_and_purchase_voucher_entry.vatType.VatTypeRepository;
@@ -30,6 +33,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.Notification;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.notification.NotificationRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -37,7 +42,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.function.Function;
 
 @Slf4j
@@ -54,6 +58,7 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
     private final EmployeeRepository employeeRepository;
     private final ClientRepository clientRepository;
     private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 
     @Override
     public UnresolvedSaleAndPurchaseVoucher save(UnresolvedSaleAndPurchaseVoucherEntryDTO dto) {
@@ -408,12 +413,25 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                         .activityType(ActivityType.FINANCE)
                         .activityTime(LocalDateTime.now())
                         .build());
+                notificationService.createAndSendNotification(
+                        ModuleType.FINANCE,
+                        PermissionType.ADMIN,
+                        "미결 매출매입전표 " + unresolvedVoucherList.size() + "건 승인",
+                        NotificationType.APPROVAL_VOUCHER
+                );
+
             }else if (dto.getApprovalStatus().equals(ApprovalStatus.REJECTED)){
                 recentActivityRepository.save(RecentActivity.builder()
                         .activityDescription("미결 매출매입전표 " + unresolvedVoucherList.size() + "건 반려")
                         .activityType(ActivityType.FINANCE)
                         .activityTime(LocalDateTime.now())
                         .build());
+                notificationService.createAndSendNotification(
+                        ModuleType.FINANCE,
+                        PermissionType.ADMIN,
+                        "미결 매출매입전표 " + unresolvedVoucherList.size() + "건 반려",
+                        NotificationType.REJECT_VOUCHER
+                );
             }
 
         return unresolvedVoucherList;

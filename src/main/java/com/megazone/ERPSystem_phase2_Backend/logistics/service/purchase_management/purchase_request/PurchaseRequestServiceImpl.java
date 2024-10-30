@@ -145,7 +145,6 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
                 .warehouseId(purchaseRequest.getReceivingWarehouse().getId())
                 .warehouseCode(purchaseRequest.getReceivingWarehouse().getCode())
                 .warehouseName(purchaseRequest.getReceivingWarehouse().getName())  // 입고 창고 이름
-                .vatType(purchaseRequest.getVatType())
                 .currencyId(purchaseRequest.getCurrency().getId())
                 .currency(purchaseRequest.getCurrency().getName())  // 통화 종류
                 .exchangeRate(purchaseRequest.getCurrency().getExchangeRate())
@@ -171,7 +170,6 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
                 .quantity(detail.getQuantity())  // 수량
                 .price(detail.getPrice()) // 단가
                 .supplyPrice(detail.getSupplyPrice())  // 공급가액
-                .vat(detail.getVat())  // 부가세
                 .remarks(detail.getRemarks())  // 비고
                 .client(toClientDto(product.getClient()))  // 거래처 정보 변환
                 .build();
@@ -216,7 +214,6 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
                         .orElseThrow(() -> new RuntimeException("통화 정보를 찾을 수 없습니다.")))
                 .date(dto.getDate())
                 .deliveryDate(dto.getDeliveryDate())
-                .vatType(dto.getVatType())
                 .remarks(dto.getRemarks())
                 .build();
 
@@ -238,11 +235,6 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
             // 공급가액 계산 (수량 * 제품 단가)
             BigDecimal supplyPrice = BigDecimal.valueOf(item.getQuantity()).multiply(appliedPrice);
 
-            // 부가세 계산 (내화인 경우만 10% 적용)
-            BigDecimal vat = null;  // 외화의 경우 부가세 계산 안 함
-            if (newRequest.getCurrency().getCode().equals("KRW") && newRequest.getVatType().equals(true)) {
-                vat = supplyPrice.multiply(BigDecimal.valueOf(0.1));  // 내화인 경우 부가세 적용되어있으면 10%
-            }
 
             // 백엔드에서 기본 환율 가져오기
             BigDecimal exchangeRate = newRequest.getCurrency().getExchangeRate();
@@ -260,7 +252,6 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
                     .price(appliedPrice)
                     .supplyPrice(supplyPrice)  // 공급가액 (외화 또는 내화)
                     .localAmount(localAmount)  // 원화 금액 (환율 적용)
-                    .vat(vat)  // 부가세 (내화일 경우에만 적용)
                     .remarks(item.getRemarks())
                     .build();
 
@@ -280,17 +271,17 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
             PurchaseRequest purchaseRequest = purchaseRequestRepository.findById(id)
                     .orElseThrow(() -> new NoSuchElementException("해당 발주 요청 정보를 찾을 수 없습니다."));
 
-//            if (updateDto.getManagerId() != null) {
-//                Employee manager = employeeRepository.findById(updateDto.getManagerId())
-//                        .orElseThrow(() -> new RuntimeException("해당 담당자 정보를 찾을 수 없습니다."));
-//                purchaseRequest.setManager(manager);
-//            }
-//
-//            if (updateDto.getWarehouseId() != null) {
-//                Warehouse warehouse = warehouseRepository.findById(updateDto.getWarehouseId())
-//                        .orElseThrow(() -> new RuntimeException("해당 창고 정보를 찾을 수 없습니다."));
-//                purchaseRequest.setReceivingWarehouse(warehouse);
-//            }
+            if (updateDto.getManagerId() != null) {
+                Employee manager = employeeRepository.findById(updateDto.getManagerId())
+                        .orElseThrow(() -> new RuntimeException("해당 담당자 정보를 찾을 수 없습니다."));
+                purchaseRequest.setManager(manager);
+            }
+
+            if (updateDto.getWarehouseId() != null) {
+                Warehouse warehouse = warehouseRepository.findById(updateDto.getWarehouseId())
+                        .orElseThrow(() -> new RuntimeException("해당 창고 정보를 찾을 수 없습니다."));
+                purchaseRequest.setReceivingWarehouse(warehouse);
+            }
 
             // 발주요청 일자, 납기일자 수정
             purchaseRequest.setDate(updateDto.getDate() != null ? updateDto.getDate() : purchaseRequest.getDate());
@@ -302,8 +293,7 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
                         .orElseThrow(() -> new RuntimeException("통화 정보를 찾을 수 없습니다.")));
             }
 
-            // 부가세 적용 수정
-            purchaseRequest.setVatType(updateDto.getVatType() != null ? updateDto.getVatType() : purchaseRequest.getVatType());
+            purchaseRequest.setRemarks(updateDto.getRemarks());
 
             purchaseRequest.getPurchaseRequestDetails().clear();  // 기존 항목을 제거
 

@@ -16,6 +16,7 @@ public class PurchaseOrderResponseDto {
     private LocalDate date;
     private LocalDate deliveryDate;
     private Integer totalQuantity;
+    private String vatName;
     private BigDecimal totalPrice;
     private String status;
 }

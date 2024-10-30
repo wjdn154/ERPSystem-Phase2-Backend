@@ -19,7 +19,7 @@ public class ShippingOrderResponseDetailDto {
 
     private Long id;
     private LocalDate date;
-    private LocalDate deliveryDate;
+    private LocalDate shippingDate;
     private String clientCode;
     private String clientName;
     private String managerCode;

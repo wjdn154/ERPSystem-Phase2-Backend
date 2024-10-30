@@ -6,15 +6,11 @@ import com.megazone.ERPSystem_phase2_Backend.logistics.service.inventory_managem
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/logistics/inventory")
 public class InventoryController {
@@ -64,6 +60,11 @@ public class InventoryController {
         return ResponseEntity.ok(inventories);
     }
 
+    /**
+     * 로케이션별 재고 조회
+     * @param locationId
+     * @return
+     */
     @PostMapping("/byLocation/{locationId}")
     public ResponseEntity<List<InventoryResponseDTO>> getInventoryByLocation(@PathVariable Long locationId) {
         List<InventoryResponseDTO> inventoryList = inventoryService.getInventoryByLocation(locationId);

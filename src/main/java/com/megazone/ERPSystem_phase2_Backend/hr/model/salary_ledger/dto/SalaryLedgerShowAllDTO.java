@@ -1,7 +1,5 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto;
 
-import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.SalaryLedger;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class SalaryLedgerShowAllDTO {
     private Long id;
-    private List<SalaryLedgerAllowanceDTO> allowanceDTOS;
+    private List<SalaryLedgerAllowanceShowDTO> allowanceDTOS;
     private boolean finalized;
     private BigDecimal nationalPensionAmount; // 국민연금 금액
     private BigDecimal privateSchoolPensionAmount; // 사학연금 금액

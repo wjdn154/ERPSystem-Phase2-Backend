@@ -63,7 +63,7 @@ public class Purchase {
 
     // 부가세_id
     @Column(nullable = false)
-    private Long vatId;
+    private String vatId;
 
     // 분개유형_code
     @Column(nullable = false)
