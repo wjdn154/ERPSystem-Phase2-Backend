@@ -11,14 +11,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransferCreateDTO {
+    private Long id;
     private LocalDate transferDate; // 발령 날짜
     private Long employeeId; // 사원 ID
     private String employeeNumber; // 사원 번호
     private String employeeName; // 사원이름 (성 + 이름)
     private Long fromDepartmentId; // 출발 부서 ID
     private Long toDepartmentId; // 도착 부서 ID
-    private String todepartmentCode;
-    private String fromdepartmentCode;
+    private String toDepartmentCode;
+    private String fromDepartmentCode;
     private String fromDepartmentName; // 출발 부서 이름
     private String toDepartmentName; // 도착 부서 이름
     private Long transferTypeId;
@@ -29,6 +30,7 @@ public class TransferCreateDTO {
 
     public TransferCreateDTO create(Transfer transfer) {
         return new TransferCreateDTO(
+                transfer.getId(),
                 transfer.getTransferDate(),
                 transfer.getEmployee().getId(),
                 transfer.getEmployee().getEmployeeNumber(),
@@ -43,5 +45,5 @@ public class TransferCreateDTO {
                 transfer.getTransferType().getCode(),
                 transfer.getTransferType().getDescription(),
                 transfer.getReason()
-        );};
+        );}
 }
