@@ -22,7 +22,6 @@ public class LongTermCareInsurancePension {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Unique
     private Long id;
-
     private String code; // 장기요양보험 코드
     @Column(precision = 10, scale = 5) private BigDecimal rate; // 장기요양보험 코드별 적용 요율
     private String description; // 설명

@@ -1,5 +1,13 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.service.salary_ledger;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
+import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.enums.ApprovalStatus;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_configuration.Allowance;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_configuration.dto.AllowanceShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_configuration.dto.InsurancePensionCalculatorDTO;
@@ -27,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -111,8 +120,7 @@ public class SalaryLedgerServiceImpl implements SalaryLedgerService {
         salaryLedger.setFinalized(true);
 
         SalaryLedger updateSalaryLedger = salaryLedgerRepository.save(salaryLedger);
-
-        return new FinalizedDTO(updateSalaryLedger.isFinalized(),"급여입력 마감처리가 완료되었습니다.");
+            return new FinalizedDTO(updateSalaryLedger.isFinalized(),"급여입력 마감처리가 완료되었습니다.");
     }
 
     @Override
