@@ -47,6 +47,13 @@ public class PurchaseOrderResponseDetailDto {
     // 입고 창고 이름
     private String warehouseName;
 
+    private Long vatId;
+    private String vatCode;
+    private String vatName;
+    private String journalEntryCode;
+    private String journalEntryName;
+    private String electronicTaxInvoiceStatus;
+
     // 부가세 적용 여부
     private Boolean vatType;
 

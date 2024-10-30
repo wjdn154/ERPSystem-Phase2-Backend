@@ -10,7 +10,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -46,5 +48,19 @@ public class AllowanceServiceImpl implements AllowanceService {
         salaryStep.setDescription(dto.getDescription());
 
         return salaryStep;
+    }
+
+    @Override
+    public BigDecimal taxableCalculator(BigDecimal amount, Long allowanceId) {
+        Allowance allowance = allowanceRepository.findById(allowanceId).orElseThrow(
+                () -> new NoSuchElementException("해당하는 수당을 찾을 수 없습니다."));
+
+        if(amount.compareTo(allowance.getLimitAmount()) > 0) {
+            // 한도 금액이 초과되었을 경우, 한도 금액만 비과세로 반환
+            return allowance.getLimitAmount();
+        } else {
+            // 한도 내 금액이면 해당 금액을 그대로 비과세로 반환
+            return amount;
+        }
     }
 }

@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface AllowanceRepository extends JpaRepository<Allowance, Integer>, AllowanceRepositoryCustom {
+public interface AllowanceRepository extends JpaRepository<Allowance, Long>, AllowanceRepositoryCustom {
     Optional<Allowance> findTopByOrderByIdDesc();
 }

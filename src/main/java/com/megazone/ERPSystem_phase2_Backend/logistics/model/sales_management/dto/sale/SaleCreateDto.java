@@ -22,6 +22,7 @@ public class SaleCreateDto {
     private Long currencyId;
     private Long vatId;
     private String journalEntryCode;
+    private String electronicTaxInvoiceStatus;
     private Boolean accountingReflection;
     private String remarks;
     private List<SaleItemDetailDto> items;

@@ -9,5 +9,7 @@ import java.util.List;
 public interface EmploymentInsurancePensionService {
     BigDecimal calculator(InsurancePensionCalculatorDTO dto);
 
+    BigDecimal calculator(BigDecimal amount);
+
     List<EmploymentInsurancePensionShowDTO> showAll();
 }

@@ -10,7 +10,6 @@ import java.time.YearMonth;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SalaryLedgerSearchDTO {
-    private YearMonth yearMonth;
     private Long employeeId;
     private Long salaryLedgerDateId;
 }
