@@ -2,6 +2,8 @@ package com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_ma
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.QSalaryLedger;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.QSalaryLedgerAllowance;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.QSalaryLedgerDate;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto.PaymentStatusManagementSearchDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto.SalaryLedgerAllowanceShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto.SalaryLedgerDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto.SalaryLedgerSearchDTO;
@@ -32,18 +34,20 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
                         qSalaryLedger.healthInsurancePensionAmount,
                         qSalaryLedger.employmentInsuranceAmount,
                         qSalaryLedger.longTermCareInsurancePensionAmount,
-                        qSalaryLedger.incomeTaxPensionAmount,
-                        qSalaryLedger.localIncomeTaxPensionAmount,
+                        qSalaryLedger.incomeTaxAmount,
+                        qSalaryLedger.localIncomeTaxAmount,
                         qSalaryLedger.totalSalaryAmount,
                         qSalaryLedger.totalDeductionAmount,
                         qSalaryLedger.netPayment,
+                        qSalaryLedger.taxableAmount,
+                        qSalaryLedger.nonTaxableAmount,
                         qSalaryLedgerAllowance.name,
                         qSalaryLedgerAllowance.amount
                 )
                 .from(qSalaryLedger)
-                .leftJoin(qSalaryLedger.allowance, qSalaryLedgerAllowance) // 수당 리스트 조인
-                .where(qSalaryLedger.salaryLedgerDate.id.eq(dto.getSalaryLedgerDateId())
-                        .and(qSalaryLedger.employee.id.eq(dto.getEmployeeId())))
+                .join(qSalaryLedger.allowance,qSalaryLedgerAllowance) // 수당 리스트 조인
+                .where(qSalaryLedger.employee.id.eq(dto.getEmployeeId())
+                        .and(qSalaryLedger.salaryLedgerDate.id.eq(dto.getSalaryLedgerDateId())))
                 .fetch();
 
         if(results.isEmpty()) {
@@ -67,11 +71,13 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
                 salaryLedgerDTO.setHealthInsurancePensionAmount(row.get(qSalaryLedger.healthInsurancePensionAmount));
                 salaryLedgerDTO.setEmploymentInsuranceAmount(row.get(qSalaryLedger.employmentInsuranceAmount));
                 salaryLedgerDTO.setLongTermCareInsurancePensionAmount(row.get(qSalaryLedger.longTermCareInsurancePensionAmount));
-                salaryLedgerDTO.setIncomeTaxAmount(row.get(qSalaryLedger.incomeTaxPensionAmount));
-                salaryLedgerDTO.setLocalIncomeTaxPensionAmount(row.get(qSalaryLedger.localIncomeTaxPensionAmount));
+                salaryLedgerDTO.setIncomeTaxAmount(row.get(qSalaryLedger.incomeTaxAmount));
+                salaryLedgerDTO.setLocalIncomeTaxPensionAmount(row.get(qSalaryLedger.localIncomeTaxAmount));
                 salaryLedgerDTO.setTotalSalaryAmount(row.get(qSalaryLedger.totalSalaryAmount));
                 salaryLedgerDTO.setTotalDeductionAmount(row.get(qSalaryLedger.totalDeductionAmount));
                 salaryLedgerDTO.setNetPayment(row.get(qSalaryLedger.netPayment));
+                salaryLedgerDTO.setTaxableAmount(row.get(qSalaryLedger.taxableAmount));
+                salaryLedgerDTO.setNonTaxableAmount(row.get(qSalaryLedger.nonTaxableAmount));
                 salaryLedgerDTO.setAllowances(new ArrayList<>());
                 ledgerMap.put(ledgerId, salaryLedgerDTO);
             }
@@ -84,5 +90,24 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
         }
 
         return ledgerMap.get(ledgerId);
+    }
+
+    @Override
+    public Object showPaymentStatusManagement(PaymentStatusManagementSearchDTO dto) {
+        QSalaryLedger qSalaryLedger = QSalaryLedger.salaryLedger;
+        QSalaryLedgerAllowance qSalaryLedgerAllowance = QSalaryLedgerAllowance.salaryLedgerAllowance;
+        QSalaryLedgerDate qSalaryLedgerDate = QSalaryLedgerDate.salaryLedgerDate;
+
+
+
+        return queryFactory.select(
+                        qSalaryLedger.id
+                )
+                .from(qSalaryLedger)
+                .join(qSalaryLedger.allowance,qSalaryLedgerAllowance)
+                .join(qSalaryLedgerDate).on(qSalaryLedger.salaryLedgerDate.id.eq(qSalaryLedgerDate.id))
+                .where(qSalaryLedger.finalized.eq(true)
+                        .and(qSalaryLedger.salaryLedgerDate.id.between(dto.getSalaryStartId(),dto.getSalaryEndId())))
+                .fetch();
     }
 }
