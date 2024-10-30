@@ -1,7 +1,7 @@
 
 
 INSERT INTO equipment_data
-(cost, install_date, purchase_date, company_id, factory_id, workcenter_id, equipment_img, equipment_name, equipment_num, manufacturer, model_name, equipment_type, operation_status, k_wh)
+(cost, install_date, purchase_date, company_id, factory_id, workcenter_id, profile_picture, equipment_name, equipment_num, manufacturer, model_name, equipment_type, operation_status, k_wh)
 VALUES
     (5500000, '2022-02-02', '2022-02-03', 1, 1, 1, '설비 사진1', '자동 조립 라인', 'PRD-EM-001', '삼성', 'ASLINE-100', 'ASSEMBLY', 'BEFORE_OPERATION', 150),
     (7500000, '2022-02-02', '2022-02-04', 1, 2, 2, '설비 사진2', '5축 CNC 기계', 'PRD-EM1-002', 'LG', '5AXIS-CNC', 'ASSEMBLY', 'BEFORE_OPERATION', 200),

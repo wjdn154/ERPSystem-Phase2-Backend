@@ -5,6 +5,7 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equi
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataShowDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataUpdateDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.ListEquipmentDataDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +16,8 @@ public interface EquipmentDataService {
     Optional<EquipmentDataShowDTO> saveEquipment(Long companyId, EquipmentDataDTO dto);
 
     //설비 수정
-    Optional<EquipmentDataUpdateDTO> updateEquipment(Long id, EquipmentDataUpdateDTO dto);
+    Optional<EquipmentDataUpdateDTO> updateEquipment(Long id, EquipmentDataUpdateDTO dto, MultipartFile imageFile);
+
 
     //설비 삭제
     void deleteEquipment(Long id);

@@ -15,7 +15,12 @@ import com.megazone.ERPSystem_phase2_Backend.production.repository.resource_data
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +34,8 @@ public class EquipmentDataServiceImpl implements EquipmentDataService {
     private final WorkcenterRepository workcenterRepository;
     private final WarehouseRepository warehouseRepository;
     private final CompanyRepository companyRepository;
+    private final EquipmentDataImageService equipmentDataImageService;
+    private static final String UPLOAD_DIR = "src/main/resources/static";
 
     //설비 등록.저장
     @Override
@@ -53,7 +60,7 @@ public class EquipmentDataServiceImpl implements EquipmentDataService {
 
     //설비 수정
     @Override
-    public Optional<EquipmentDataUpdateDTO> updateEquipment(Long id, EquipmentDataUpdateDTO dto) {
+    public Optional<EquipmentDataUpdateDTO> updateEquipment(Long id, EquipmentDataUpdateDTO dto, MultipartFile imageFile) {
 
         //id에 해당하는 엔티티 데이터 조회
         EquipmentData equipmentData = equipmentDataRepository.findById(id)
@@ -78,14 +85,49 @@ public class EquipmentDataServiceImpl implements EquipmentDataService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 아이디를 조회할 수 없습니다."));
         equipmentData.setFactory(factory);
 
-        equipmentData.setEquipmentImg(dto.getEquipmentImg());
+        equipmentData.setImagePath(dto.getImagePath());
+
+        // 이미지 파일 업로드 및 경로 가져오기
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String imagePath = equipmentDataImageService.uploadEquipmentDataImage(imageFile);
+            equipmentData.setImagePath(imagePath);
+        }
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            // 기존 이미지 경로 삭제 로직
+            String oldImagePath = equipmentData.getImagePath();
+            if (oldImagePath != null) {
+                deleteOldImage(oldImagePath);  // 기존 이미지 삭제
+            }
+
+            // 새로운 이미지 업로드 및 경로 설정
+            String newImagePath = equipmentDataImageService.uploadEquipmentDataImage(imageFile);
+            equipmentData.setImagePath(newImagePath);
+        }
 
         //업데이트된 엔티티 저장.
         EquipmentData updatedEquipmentEntity =equipmentDataRepository.save(equipmentData);
 
         //저장된 엔티티 dto로 변환.
         EquipmentDataUpdateDTO equipmentDataUpdateDTO = equipmentUpdateToDTO(updatedEquipmentEntity);
+
         return Optional.of(equipmentDataUpdateDTO);
+    }
+
+    private void deleteOldImage(String oldImagePath) {
+        try {
+            // 이미지 경로를 완전한 파일 시스템 경로로 변환
+            File file = new File(UPLOAD_DIR + oldImagePath);
+
+            if (file.exists()) {
+                Files.delete(Paths.get(file.getPath()));  // 파일 삭제
+                System.out.println("기존 이미지 파일이 삭제되었습니다: " + file.getPath());
+            }
+        } catch (IOException e) {
+            // 삭제 실패 시 예외 처리
+            System.err.println("이미지 파일 삭제 실패: " + e.getMessage());
+            throw new RuntimeException("이미지 파일 삭제 실패", e);
+        }
     }
 
     //설비 리스트 조회
@@ -152,7 +194,7 @@ public class EquipmentDataServiceImpl implements EquipmentDataService {
         equipmentDataShowDTO.setWorkcenterName(equipmentDetail.getWorkcenter().getName());
         equipmentDataShowDTO.setFactoryCode(equipmentDetail.getFactory().getCode());
         equipmentDataShowDTO.setFactoryName(equipmentDetail.getFactory().getName());
-        equipmentDataShowDTO.setEquipmentImg(equipmentDetail.getEquipmentImg());
+        equipmentDataShowDTO.setImagePath(equipmentDetail.getImagePath());
 
         return equipmentDataShowDTO;
     }
@@ -172,7 +214,7 @@ public class EquipmentDataServiceImpl implements EquipmentDataService {
         equipmentDataUpdateDTO.setCost(equipmentDetail.getCost());
         equipmentDataUpdateDTO.setWorkcenterCode(equipmentDetail.getWorkcenter().getCode());
         equipmentDataUpdateDTO.setFactoryCode(equipmentDetail.getFactory().getCode());
-        equipmentDataUpdateDTO.setEquipmentImg(equipmentDetail.getEquipmentImg());
+        equipmentDataUpdateDTO.setImagePath(equipmentDetail.getImagePath());
 
         return equipmentDataUpdateDTO;
     }
@@ -205,7 +247,7 @@ public class EquipmentDataServiceImpl implements EquipmentDataService {
                         .orElseThrow(() -> new RuntimeException(companyId +"에 해당하는 회사 아이디를 찾을 수 없습니다."));
         equipmentData.setCompany(company);
 
-        equipmentData.setEquipmentImg(dto.getEquipmentImg());
+        equipmentData.setImagePath(dto.getEquipmentImg());
 
         return equipmentData;
     }

@@ -65,8 +65,8 @@ public class EquipmentData {
     @JoinColumn(name = "factory_id")
     private Warehouse factory;                   //설비가 설치된 공장 . 공장 테이블 참조
 
-    @Column
-    private String equipmentImg;
+    @Column(name = "profile_picture")
+    private String imagePath;
 
     @OneToMany(mappedBy = "equipment", cascade = CascadeType.ALL)
     private List<MaintenanceHistory> maintenanceHistory = new ArrayList<>();  //설비의 유지보수 관리 이력

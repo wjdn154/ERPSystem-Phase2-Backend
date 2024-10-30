@@ -1,6 +1,9 @@
 package com.megazone.ERPSystem_phase2_Backend.production.controller.resource_data;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.EmployeeDataDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Users.UsersRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataDTO;
 import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.equipment.dto.EquipmentDataShowDTO;
@@ -13,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -70,10 +74,14 @@ public class EquipmentDataController {
 
     //설비 정보 수정
     @PutMapping("/equipmentData/updateEquipment/{id}")
-    public ResponseEntity<EquipmentDataUpdateDTO> updateEquipmentDataById(@PathVariable("id") Long id, @RequestBody EquipmentDataUpdateDTO dto){
+    public ResponseEntity<EquipmentDataUpdateDTO> updateEquipmentDataById(@PathVariable("id") Long id, @RequestParam("formattedValues") String formattedValues,
+                                                                          @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) throws JsonProcessingException {
+        // JSON 문자열을 DTO로 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+        EquipmentDataUpdateDTO dto = objectMapper.readValue(formattedValues, EquipmentDataUpdateDTO.class);
 
         //서비스에서 해당 아이디의 설비 상세 정보를 수정함.
-        Optional<EquipmentDataUpdateDTO> result = equipmentDataService.updateEquipment(id,dto);
+        Optional<EquipmentDataUpdateDTO> result = equipmentDataService.updateEquipment(id,dto,imageFile);
 
         return result.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());

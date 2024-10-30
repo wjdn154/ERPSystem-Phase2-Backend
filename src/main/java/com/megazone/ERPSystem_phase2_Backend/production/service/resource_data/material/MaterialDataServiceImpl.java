@@ -114,25 +114,7 @@ public class MaterialDataServiceImpl implements MaterialDataService{
         //명시적으로 중간 엔티티 저장
         materialHazardousRepository.saveAll(materialHazardousList);
 
-        List<Product> productMaterials  = dto.getProduct().stream()
-                .map(productMaterialDTO -> productRepository.findByCode(productMaterialDTO.getProductCode())
-                        .orElseThrow(() -> new IllegalArgumentException("해당 품목 코드가 존재하지 않습니다." + productMaterialDTO.getProductCode())))
-                .collect(Collectors.toList());
-
-        //품목 중간 엔티티 설정
-        List<MaterialProduct> materialProductList = productMaterials.stream()
-                .map(product -> {
-                    MaterialProduct materialProduct = new MaterialProduct();
-                    materialProduct.setMaterialData(saveMaterialData);
-                    materialProduct.setProduct(product);
-                    return materialProduct;
-                }).collect(Collectors.toList());
-
-        //명시적으로 중간 엔티티 저장
-        materialProductRepository.saveAll(materialProductList);
-
         saveMaterialData.setMaterialHazardous(materialHazardousList);
-        saveMaterialData.setMaterialProducts(materialProductList);
 
         //최종적으로 모든 연관된 엔티티 저장
         MaterialData updateMaterial = materialDataRepository.save(saveMaterialData);
