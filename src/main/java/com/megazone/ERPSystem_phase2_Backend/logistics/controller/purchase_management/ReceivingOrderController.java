@@ -24,7 +24,6 @@ public class ReceivingOrderController {
      */
     @PostMapping("/")
     public ResponseEntity<?> getReceivingOrders(@RequestBody(required = false) SearchDTO dto) {
-        System.out.println("dto = " + dto);
 
         List<ReceivingOrderResponseDto> response = receivingOrderService.findAllReceivingOrders(dto);
 

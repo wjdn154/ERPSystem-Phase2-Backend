@@ -1,5 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.basic_information_management.credit_card;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.bank_account.BankAccount;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.credit_card.Company;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.credit_card.CreditCard;
@@ -17,6 +24,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -29,6 +37,8 @@ public class CreditCardServiceImpl implements CreditCardService {
     private final CreditCardCompanyRepository creditCardCompanyRepository;
     private final OwnershipRepository ownershipRepository;
     private final EmployeeRepository employeeRepository;  // EmployeeRepository 추가
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 
 
     /**
@@ -95,6 +105,18 @@ public class CreditCardServiceImpl implements CreditCardService {
         }
 
         savedCreditCard = creditCardRepository.save(savedCreditCard);
+
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription(savedCreditCard.getCompany().getName() + " 카드 추가")
+                .activityType(ActivityType.FINANCE)
+                .activityTime(LocalDateTime.now())
+                .build());
+
+        notificationService.createAndSendNotification(
+                ModuleType.FINANCE,
+                PermissionType.USER,
+                savedCreditCard.getCompany().getName() + " 카드 추가",
+                NotificationType.NEW_CREDITCARD);
 
         return Optional.of(new CreditCardDTO(savedCreditCard));
     }

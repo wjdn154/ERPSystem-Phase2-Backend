@@ -25,9 +25,7 @@ public class AccountLedgerApiController {
 
     @PostMapping("/api/financial/ledger/accountLedger/show")
     public ResponseEntity<Object> accListShow(@RequestBody AccountLedgerSearchDTO dto) {
-        System.out.println("dto = " + dto);
         List<AccountLedgerAccListDTO> accountList = accountLedgerService.getAccountLedgerAccList(dto);
-        accountList.forEach(System.out::println);
         return !accountList.isEmpty() ? ResponseEntity.status(HttpStatus.OK).body(accountList) :
                 ResponseEntity.status(HttpStatus.NO_CONTENT).body("조건에 해당하는 거래가 없습니다.");
     }

@@ -76,7 +76,6 @@ public class ClientController {
      */
     @PostMapping("/save")
     public ResponseEntity<Object> registerClient(@RequestBody ClientDTO clientDTO) {
-        System.out.println("clientDTO = " + clientDTO.toString());
         Long savedClient = clientService.saveClient(clientDTO);
 
         if (savedClient == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

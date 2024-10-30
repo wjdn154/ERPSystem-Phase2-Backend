@@ -241,7 +241,6 @@ public class OrdersServiceImpl implements OrdersService {
 
             if (orders.getCurrency().getId() == 6) {
                 vat = vatTypeService.vatAmountCalculate(vatAmountWithSupplyAmountDTO);
-                System.out.println("vat: " + vat);
             } else if (orders.getCurrency().getExchangeRate() != null) {
                 localAmount = supplyPrice.multiply(orders.getCurrency().getExchangeRate());
             } else {

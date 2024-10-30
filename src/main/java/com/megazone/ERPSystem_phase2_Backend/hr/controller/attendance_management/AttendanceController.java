@@ -25,8 +25,6 @@ public class AttendanceController {
     public ResponseEntity<String> recordAttendance(@RequestBody AttendanceEntryDTO dto){
         try {
             // 근태 기록 저장
-            System.out.println(dto.getCheckInTime());
-            System.out.println(dto.getCheckOutTime());
             String result = attendanceService.saveAttendance(dto);
             return ResponseEntity.status(HttpStatus.OK).body("근태 상태: " + result);
         }catch (Exception e) {

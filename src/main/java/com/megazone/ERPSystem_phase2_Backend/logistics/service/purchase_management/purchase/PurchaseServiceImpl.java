@@ -237,7 +237,6 @@ public class PurchaseServiceImpl implements PurchaseService {
 
             if (purchase.getCurrency().getId() == 6) {
                 vat = vatTypeService.vatAmountCalculate(vatAmountWithSupplyAmountDTO);
-                System.out.println("vat: " + vat);
             } else if (purchase.getCurrency().getExchangeRate() != null) {
                 localAmount = supplyPrice.multiply(purchase.getCurrency().getExchangeRate());
             } else {

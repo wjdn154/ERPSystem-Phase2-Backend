@@ -234,7 +234,6 @@ public class QuotationServiceImpl implements QuotationService {
 
             if (quotation.getCurrency().getId() == 6) {
                 vat = vatTypeService.vatAmountCalculate(vatAmountWithSupplyAmountDTO);
-                System.out.println("vat: " + vat);
             } else if (quotation.getCurrency().getExchangeRate() != null) {
                 localAmount = supplyPrice.multiply(quotation.getCurrency().getExchangeRate());
             } else {

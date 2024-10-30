@@ -43,7 +43,6 @@ public class TenantAspect {
             if (token != null) {
                 String tenantId = jwtUtil.extractTenantId(token);
                 TenantContext.setCurrentTenant(tenantId);
-                System.out.println("tenantId = " + tenantId);
                 // 콘솔에 설정된 테넌트 ID를 출력함
             }
         }

@@ -241,7 +241,6 @@ public class SaleServiceImpl implements SaleService {
 
             if (sale.getCurrency().getId() == 6) {
                 vat = vatTypeService.vatAmountCalculate(vatAmountWithSupplyAmountDTO);
-                System.out.println("vat: " + vat);
             } else if (sale.getCurrency().getExchangeRate() != null) {
                 localAmount = supplyPrice.multiply(sale.getCurrency().getExchangeRate());
             } else {
