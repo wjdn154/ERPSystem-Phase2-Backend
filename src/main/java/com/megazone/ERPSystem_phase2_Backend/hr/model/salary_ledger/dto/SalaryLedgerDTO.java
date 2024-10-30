@@ -22,13 +22,12 @@ public class SalaryLedgerDTO {
     private BigDecimal longTermCareInsurancePensionAmount; // 장기요양보험 금액
     private BigDecimal incomeTaxAmount; // 소득세 공제액
     private BigDecimal localIncomeTaxPensionAmount; // 지방소득세 금액
-
-
     private BigDecimal totalSalaryAmount; // 지급총액
     private BigDecimal totalDeductionAmount; // 공제총액
     private BigDecimal netPayment; // 차인지급액
     private BigDecimal nonTaxableAmount; // 비과세 금액
     private BigDecimal taxableAmount; // 과세 금액
+    private BigDecimal taxableIncome;    // 과세소득
     private boolean finalized; // 마감구분
     private List<SalaryLedgerAllowanceShowDTO> allowances = new ArrayList<>();
 
@@ -47,6 +46,7 @@ public class SalaryLedgerDTO {
                 salaryLedger.getNetPayment(),
                 salaryLedger.getNonTaxableAmount(),
                 salaryLedger.getTaxableAmount(),
+                salaryLedger.getTaxableIncome(),
                 salaryLedger.isFinalized(),
                 salaryLedger.getAllowance().stream().map((change) -> {
                     return SalaryLedgerAllowanceShowDTO.create(change.getName(),change.getAmount());
