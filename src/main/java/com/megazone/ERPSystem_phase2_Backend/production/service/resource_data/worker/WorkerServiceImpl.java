@@ -1,5 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.worker;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.attendance_management.Attendance;
@@ -27,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +50,8 @@ public class WorkerServiceImpl implements WorkerService {
     private final EmployeeRepository employeeRepository;
     private final WorkerAssignmentRepository workerAssignmentRepository;
     private final AttendanceRepository attendanceRepository;
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 
     //작업자 상세 정보 수정(교육 이수 여부만 등록 가능)
     @Override
@@ -60,6 +70,19 @@ public class WorkerServiceImpl implements WorkerService {
         worker.setTrainingStatus(dto.getTrainingStatus());
 
         Worker updateWorker = workerRepository.save(worker);
+
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription("작업자 교육이수여부 1건 변경")
+                .activityType(ActivityType.PRODUCTION)
+                .activityTime(LocalDateTime.now())
+                .build());
+
+
+        notificationService.createAndSendNotification(
+                ModuleType.PRODUCTION,
+                PermissionType.ALL,
+                "작업자 교육이수여부 1건이 변경되었습니다.",
+                NotificationType.UPDATE_WORKER);
 
         WorkerDetailShowDTO workerDetailUpdateDTO = workerToDTO(updateWorker);
 
