@@ -39,14 +39,14 @@ public class EquipmentDataServiceImpl implements EquipmentDataService {
 
     //설비 등록.저장
     @Override
-    public Optional<EquipmentDataShowDTO> saveEquipment(Long companyId, EquipmentDataDTO dto) {
+    public Optional<EquipmentDataShowDTO> saveEquipment(EquipmentDataDTO dto) {
 
         //설비 아이디 중복 확인.
         if(equipmentDataRepository.existsByEquipmentNum(dto.getEquipmentNum())){
             throw new IllegalArgumentException(("이미 존재하는 설비번호입니다." + dto.getEquipmentNum()));
         }
        // dto를 엔티티로 변환함
-        EquipmentData equipmentData = equipmentToEntity(companyId,dto);
+        EquipmentData equipmentData = equipmentToEntity(dto);
 
        // 엔티티 저장
         EquipmentData saveEquipment = equipmentDataRepository.save(equipmentData);
@@ -132,9 +132,9 @@ public class EquipmentDataServiceImpl implements EquipmentDataService {
 
     //설비 리스트 조회
     @Override
-    public List<ListEquipmentDataDTO> findAllEquipmentDataDetails(Long companyId) {
+    public List<ListEquipmentDataDTO> findAllEquipmentDataDetails() {
 
-        return equipmentDataRepository.findAllByCompanyIdOrderByPurchaseDateDesc(companyId).stream()
+        return equipmentDataRepository.findAllByOrderByPurchaseDateDesc().stream()
                 .map(equipmentData -> new ListEquipmentDataDTO(
                                     equipmentData.getId(),
                                     equipmentData.getEquipmentNum(),
@@ -144,8 +144,7 @@ public class EquipmentDataServiceImpl implements EquipmentDataService {
                                     equipmentData.getOperationStatus(),
                                     equipmentData.getFactory().getName(),
                                     equipmentData.getWorkcenter().getName(),
-                                    equipmentData.getKWh(),
-                                    equipmentData.getCompany().getId()
+                                    equipmentData.getKWh()
                             )
                 ).collect(Collectors.toList());
         }
@@ -220,7 +219,7 @@ public class EquipmentDataServiceImpl implements EquipmentDataService {
     }
 
     //equipmentDataDto를 엔티티로 변환하는 메서드
-    private EquipmentData equipmentToEntity(Long companyId, EquipmentDataDTO dto){
+    private EquipmentData equipmentToEntity(EquipmentDataDTO dto){
         EquipmentData equipmentData = new EquipmentData();
         equipmentData.setEquipmentNum(dto.getEquipmentNum());
         equipmentData.setEquipmentName(dto.getEquipmentName());
@@ -242,10 +241,6 @@ public class EquipmentDataServiceImpl implements EquipmentDataService {
         Warehouse warehouse = warehouseRepository.findByCode(dto.getFactoryCode())
                 .orElseThrow(() -> new RuntimeException(dto.getFactoryCode() + "에 해당하는 공장 코드를 찾을 수 없습니다."));
         equipmentData.setFactory(warehouse);
-
-        Company company = companyRepository.findById(companyId)
-                        .orElseThrow(() -> new RuntimeException(companyId +"에 해당하는 회사 아이디를 찾을 수 없습니다."));
-        equipmentData.setCompany(company);
 
         equipmentData.setImagePath(dto.getEquipmentImg());
 

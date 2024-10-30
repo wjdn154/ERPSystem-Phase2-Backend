@@ -34,11 +34,8 @@ public class EquipmentDataController {
     @PostMapping("/equipmentDatas")
     public ResponseEntity<List<ListEquipmentDataDTO>> getAllEquipmentDataDetails(){
 
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = user.getCompany().getId();
-
         //서비스에서 모든 설비정보를 가져옴
-        List<ListEquipmentDataDTO> result = equipmentDataService.findAllEquipmentDataDetails(companyId);
+        List<ListEquipmentDataDTO> result = equipmentDataService.findAllEquipmentDataDetails();
 
         return (result != null) ?
                 ResponseEntity.status(HttpStatus.OK).body(result):
@@ -66,7 +63,7 @@ public class EquipmentDataController {
 
 
         //서비스에 해당 아이디의 설비 상세 정보를 등록함.
-        Optional<EquipmentDataShowDTO> result = equipmentDataService.saveEquipment(companyId,dto);
+        Optional<EquipmentDataShowDTO> result = equipmentDataService.saveEquipment(dto);
 
         return result.map(ResponseEntity::ok)
                 .orElseGet( () -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
@@ -74,11 +71,9 @@ public class EquipmentDataController {
 
     //설비 정보 수정
     @PutMapping("/equipmentData/updateEquipment/{id}")
-    public ResponseEntity<EquipmentDataUpdateDTO> updateEquipmentDataById(@PathVariable("id") Long id, @RequestParam("formattedValues") String formattedValues,
-                                                                          @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) throws JsonProcessingException {
-        // JSON 문자열을 DTO로 변환
-        ObjectMapper objectMapper = new ObjectMapper();
-        EquipmentDataUpdateDTO dto = objectMapper.readValue(formattedValues, EquipmentDataUpdateDTO.class);
+    public ResponseEntity<EquipmentDataUpdateDTO> updateEquipmentDataById(@PathVariable("id") Long id,
+                                                                          @ModelAttribute EquipmentDataUpdateDTO dto,
+                                                                          @RequestParam(value = "imageFile", required = false) MultipartFile imageFile){
 
         //서비스에서 해당 아이디의 설비 상세 정보를 수정함.
         Optional<EquipmentDataUpdateDTO> result = equipmentDataService.updateEquipment(id,dto,imageFile);

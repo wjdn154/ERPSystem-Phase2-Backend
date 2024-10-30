@@ -333,7 +333,6 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                 equipmentData.getWorkcenter() != null ? equipmentData.getWorkcenter().getCode() : null, // 작업장 코드
                 equipmentData.getFactory() != null ? equipmentData.getFactory().getCode() : null,       // 공장 코드
                 equipmentData.getImagePath(),           // 설비 이미지
-                equipmentData.getCompany() != null ? equipmentData.getCompany().getId() : null,
                 equipmentData.getKWh() != null ? equipmentData.getKWh() : null
         );
     }

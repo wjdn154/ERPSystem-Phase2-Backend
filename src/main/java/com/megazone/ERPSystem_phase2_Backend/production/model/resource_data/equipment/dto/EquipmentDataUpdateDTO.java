@@ -6,6 +6,7 @@ import com.megazone.ERPSystem_phase2_Backend.production.model.resource_data.enum
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -29,8 +30,8 @@ public class EquipmentDataUpdateDTO {
     private String factoryCode;               //설비가 설치된 공장 . 창고 테이블에 있는 공장코드 참조
     private String imagePath;                //설비 이미지
     private Long kWh;
-    private Long companyId;
 
+    private MultipartFile imageFile;            // 실제 이미지 파일
 
 }
 

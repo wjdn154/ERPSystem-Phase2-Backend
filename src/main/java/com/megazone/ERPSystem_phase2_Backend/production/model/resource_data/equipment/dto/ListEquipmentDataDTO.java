@@ -21,6 +21,5 @@ public class ListEquipmentDataDTO {
     private String workcenterName;        //작업장 이름
     private Long kWh; // 설비의 시간당 전력소비량(kWh)
 
-    private Long companyId;
 
 }
