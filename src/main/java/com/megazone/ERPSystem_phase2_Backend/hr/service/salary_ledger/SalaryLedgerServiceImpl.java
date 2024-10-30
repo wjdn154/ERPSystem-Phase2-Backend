@@ -285,9 +285,9 @@ public class SalaryLedgerServiceImpl implements SalaryLedgerService {
     }
 
     @Override
-    public Object showPaymentStatusManagement(PaymentStatusManagementSearchDTO dto) {
-        Object result = salaryLedgerRepository.showPaymentStatusManagement(dto);
-        return null;
+    public List<PaymentStatusManagementShowDTO> showPaymentStatusManagement(PaymentStatusManagementSearchDTO dto) {
+        List<PaymentStatusManagementShowDTO> result = salaryLedgerRepository.showPaymentStatusManagement(dto);
+        return result;
     }
 }
 
