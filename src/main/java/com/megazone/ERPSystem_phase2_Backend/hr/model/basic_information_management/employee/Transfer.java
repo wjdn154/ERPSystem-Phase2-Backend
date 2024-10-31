@@ -1,5 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee;
 
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.enums.TransferType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,8 +35,8 @@ public class Transfer {
     @Column(nullable = false)
     private LocalDate transferDate; // 발령 날짜
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "transfer_type_id", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TransferType transferType; // 발령 유형 ( promotion :승진, demotion : 강등, lateral : 전보)
 
     @Column(nullable = false)

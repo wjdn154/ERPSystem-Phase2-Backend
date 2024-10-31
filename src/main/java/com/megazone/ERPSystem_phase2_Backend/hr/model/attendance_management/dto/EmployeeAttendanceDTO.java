@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeAttendanceDTO {
+    private Long id;
     private Long employeeId;
     private String employeeFirstName;
     private String employeeLastName;
@@ -26,6 +27,7 @@ public class EmployeeAttendanceDTO {
 
     public static EmployeeAttendanceDTO create(Attendance attendance) {
         return new EmployeeAttendanceDTO(
+                attendance.getId(),
                 attendance.getEmployee().getId(),
                 attendance.getEmployee().getLastName(),
                 attendance.getEmployee().getFirstName(),

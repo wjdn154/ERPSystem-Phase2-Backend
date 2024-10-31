@@ -9,11 +9,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface AttendanceService {
     //List<Attendance> getAttendanceByEmployeeId(Long employeeId);
 
-    List<EmployeeAttendanceDTO> getAttendanceRecords(Long employeeId);
+    Optional<EmployeeAttendanceDTO> getAttendanceRecords(Long id);
 
     List<AttendanceShowDTO> getAllAttendanceRecords();
 
