@@ -145,11 +145,17 @@ public class AttendanceServiceImpl implements AttendanceService {
         Attendance attendanceRecords = attendanceRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("아이디를 조회할 수 없습니다."));
         EmployeeAttendanceDTO dto = new EmployeeAttendanceDTO();
         dto.setId(attendanceRecords.getId());
-        dto.setDate(attendanceRecords.getDate());
+        dto.setEmployeeId(attendanceRecords.getEmployee().getId());
+        dto.setEmployeeName(attendanceRecords.getEmployee().getLastName()+attendanceRecords.getEmployee().getFirstName());
+        dto.setEmployeeNumber(attendanceRecords.getEmployee().getEmployeeNumber());
         dto.setAttendanceCode(attendanceRecords.getAttendanceCode());
-        dto.setStatus(attendanceRecords.getStatus());
-        dto.setCheckOutTIme(attendanceRecords.getCheckOutTime());
+        dto.setPositionId(attendanceRecords.getId());
+        dto.setPositionName(attendanceRecords.getEmployee().getPosition().getPositionName());
+        dto.setDate(attendanceRecords.getDate());
         dto.setCheckInTime(attendanceRecords.getCheckInTime());
+        dto.setCheckOutTime(attendanceRecords.getCheckOutTime());
+        dto.setStatus(attendanceRecords.getStatus());
+
 
         return Optional.of(dto);
     }

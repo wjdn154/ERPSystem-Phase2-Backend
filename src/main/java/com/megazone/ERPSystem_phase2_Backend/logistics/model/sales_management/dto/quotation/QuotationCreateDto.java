@@ -24,6 +24,7 @@ public class QuotationCreateDto {
     private Long currencyId;
     private Long vatId;
     private String journalEntryCode;
+    private String electronicTaxInvoiceStatus;
     private String remarks;
     private List<QuotationItemDetailDto> items;
 

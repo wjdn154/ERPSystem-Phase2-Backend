@@ -23,6 +23,9 @@ public enum NotificationType {
     JOURNAL_ENTRY_TYPESET("분개유형 수정"),
     DELETE_RESOLVED_SALEANDPURCHASE_VOUCHER("승인 매출매입전표 삭제"),
     NEW_UNRESOLVED_SALEANDPURCHASE_VOUCHER("미결 매출매입전표 추가"),
+
+    NEW_ENTRY("신규 항목"),
+
     NEW_MAINTENANCE_HISTORY("신규 유지보수"),
     UPDATE_MAINTENANCE_HISTORY("유지보수 변경"),
     NEW_EQUIPMENT_DATA("신규 설비"),
