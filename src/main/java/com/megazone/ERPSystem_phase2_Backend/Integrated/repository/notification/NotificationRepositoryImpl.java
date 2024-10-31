@@ -56,12 +56,11 @@ public class NotificationRepositoryImpl implements NotificationRepositoryCustom 
         BooleanBuilder builder = new BooleanBuilder();
         if (module != ModuleType.ALL || permission != PermissionType.ALL) {
             builder.or(qNotification.module.eq(module).and(qNotification.permission.eq(permission)))
-                    .or(qNotification.module.eq(ModuleType.ALL).and(qNotification.permission.eq(permission)))
-                    .or(qNotification.module.eq(module).and(qNotification.permission.eq(PermissionType.ALL)))
-                    .or(qNotification.module.eq(ModuleType.ALL).and(qNotification.permission.eq(PermissionType.ALL)));
+                   .or(qNotification.module.eq(ModuleType.ALL).and(qNotification.permission.eq(permission)))
+                   .or(qNotification.module.eq(module).and(qNotification.permission.eq(PermissionType.ALL)))
+                   .or(qNotification.module.eq(ModuleType.ALL).and(qNotification.permission.eq(PermissionType.ALL)));
         }
 
-        // LEFT JOIN을 사용하여 해당 userId의 UserNotification에 없는 Notification 조회
         return queryFactory
                 .select(Projections.constructor(UserNotificationDTO.class,
                         qUsers.id.as("userId"),
