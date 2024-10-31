@@ -7,9 +7,10 @@ import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface NotificationRepository extends JpaRepository<Notification, Long> {
+public interface NotificationRepository extends JpaRepository<Notification, Long>, NotificationRepositoryCustom {
     List<Notification> findByModuleAndPermission(ModuleType module, PermissionType permission);
 }

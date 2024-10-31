@@ -30,7 +30,6 @@ public class EquipmentDataDTO {
     private String equipmentImg;                //설비 이미지
     private Long kWh; // 설비의 시간당 전력소비량(kWh)
 
-    private Long companyId;
 
 
 

@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_manag
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
@@ -77,12 +78,11 @@ public class UsersServiceImpl implements UsersService{
         }
 
         // 사용자 정보 가져오기
-        Optional<Users> userOptional = usersRepository.findByUserName(authRequest.getUserName());
-        if (userOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("사용자를 찾을 수 없습니다.");
+        Users user = usersRepository.findByUserName(authRequest.getUserName()).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        if (user.getCompany() == null) {
+            user.setCompany(companyRepository.findById(authRequest.getCompanyId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "회사 정보를 찾을 수 없습니다.")));
+            usersRepository.save(user);
         }
-
-        Users user = userOptional.get();
 
         try {
             // 사용자 인증
@@ -180,14 +180,15 @@ public class UsersServiceImpl implements UsersService{
         Users savedUser = usersRepository.save(user);
 
         recentActivityRepository.save(RecentActivity.builder()
-                .activityDescription(savedUser.getUserName() + "님의 권한이 변경되었습니다.")
+                .activityDescription(savedUser.getUserNickname() + "님의 권한이 변경되었습니다.")
                 .activityType(ActivityType.HR)
                 .activityTime(LocalDateTime.now())
                 .build());
         notificationService.createAndSendNotification(
-                savedUser.getUserName() + "님의 권한이 변경되었습니다.",
                 ModuleType.ALL,
-                PermissionType.ALL
+                PermissionType.ALL,
+                savedUser.getUserNickname() + "님의 권한이 변경되었습니다.",
+                NotificationType.CHANGE_PERMISSION
         );
 
 

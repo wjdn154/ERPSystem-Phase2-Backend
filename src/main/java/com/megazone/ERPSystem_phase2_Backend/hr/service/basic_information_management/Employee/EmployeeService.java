@@ -10,6 +10,9 @@ import java.util.Optional;
 public interface EmployeeService {
 
     // 사원 리스트 조회
+    List<EmployeeShowDTO> findAllUsers();
+
+    // 사원 리스트 조회
     List<EmployeeShowDTO> findAllEmployees();
 
     // 사원 상세 조회
@@ -19,7 +22,7 @@ public interface EmployeeService {
     Optional<EmployeeShowToDTO> updateEmployee(Long id, EmployeeDataDTO employeeDataDTO, MultipartFile imageFile);
 
     // 사원 등록. 저장
-    EmployeeDTO saveEmployee(EmployeeCreateDTO employeeCreateDTO, MultipartFile imageFile);
+    Optional<EmployeeShowToDTO> saveEmployee(EmployeeCreateDTO employeeCreateDTO, MultipartFile imageFile);
 
 
     // 사원 삭제

@@ -54,7 +54,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom {
                 .from(inventory)
                 .join(inventory.product, product)  // Product와 조인
                 .join(inventory.warehouseLocation, warehouseLocation)  // WarehouseLocation과 조인
-                .where(warehouseLocation.id.eq(locationId))  // 특정 위치 ID로 필터링
+                .where(warehouseLocation.id.eq(warehouseLocation.id))  // 특정 위치 ID로 필터링
                 .fetch();  // 결과 리스트 반환
     }
 

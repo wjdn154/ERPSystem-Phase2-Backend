@@ -40,22 +40,22 @@ VALUES (1,  null, 'ROOT', 'ROOT'),
 INSERT INTO warehouse (id, warehouse_address_id, process_detail_id, warehouse_code, warehouse_type, name, is_active)
 VALUES (1,  1, null, 'WH001', 'WAREHOUSE', '부품 재고창고', TRUE),  -- 조립 공정 관련
     (2,  2, 2, 'WH002', 'FACTORY', '자동차 생산 공장', TRUE), -- 용접 공정 관련
-    (3,  3, 3, 'WH003', 'FACTORY', '도장 공장', FALSE), -- 도장 공정 관련
+    (3,  3, 3, 'WH003', 'FACTORY', '생산 관리 센터', FALSE), -- 도장 공정 관련
     (4,  4, 4, 'WH004', 'FACTORY', '정밀 가공 공장', TRUE), -- 가공 공정 관련
     (5,  5, null, 'WH005', 'WAREHOUSE', '부품 예비 창고', TRUE),
     (6,  6, 6, 'WH006', 'FACTORY', '품질 검사 공장', TRUE), -- 품질 검사 공정 관련
     (7,  7, null, 'WH007', 'WAREHOUSE', '출하창고', TRUE),  -- 프레스 공정 관련
     (8,  8, null, 'WH008', 'WAREHOUSE', '입고창고', TRUE),
-    (9,  9, 5, 'WH009', 'FACTORY', '열처리 공장', TRUE), -- 열처리 공정 관련
-    (10,  10, 10, 'WH010', 'FACTORY', '주조 공장', TRUE), -- 주조 공정 관련
+    (9,  9, 5, 'WH009', 'FACTORY', '금형 제작 공장', TRUE), -- 열처리 공정 관련
+    (10,  10, 10, 'WH010', 'FACTORY', '금속 가공 본부', TRUE), -- 주조 공정 관련
     (11,  11, null, 'WH011', 'WAREHOUSE', '반품창고', TRUE),
-    (12,  12, 12, 'WH012', 'FACTORY', '절단 공장', TRUE), -- 절단 공정 관련
+    (12,  12, 12, 'WH012', 'FACTORY', '기계 가공 작업장', TRUE), -- 절단 공정 관련
     (13,  13, null, 'WH013', 'WAREHOUSE', '중앙 창고', TRUE),
     (14,  14, null, 'WH014', 'WAREHOUSE', '폐기물 처리 창고', TRUE),
-    (15,  15, 18, 'WH015', 'FACTORY', '압출 성형 공장', TRUE), -- 압출 성형 공정 관련
-    (16,  1, 8, 'WH016', 'FACTORY', '단조 공장', TRUE), -- 단조 공정 관련
+    (15,  15, 18, 'WH015', 'FACTORY', '고속 조립 작업소', TRUE), -- 압출 성형 공정 관련
+    (16,  1, 8, 'WH016', 'FACTORY', '복합 처리 및 조립소장', TRUE), -- 단조 공정 관련
     (17,  1, null, 'WH017', 'WAREHOUSE', '임시 저장 창고', TRUE),
-    (18,  2, 20, 'WH018', 'FACTORY', '경화 공장', TRUE), -- 경화 공정 관련
+    (18,  2, 20, 'WH018', 'FACTORY', '초정밀 생산 공장', TRUE), -- 경화 공정 관련
     (19,  3, 14, 'WH019', 'FACTORY', 'CNC 가공 공장', TRUE), -- CNC 가공 공정 관련
     (20,  4, null, 'WH020', 'WAREHOUSE', '긴급 예비 창고', TRUE);
 

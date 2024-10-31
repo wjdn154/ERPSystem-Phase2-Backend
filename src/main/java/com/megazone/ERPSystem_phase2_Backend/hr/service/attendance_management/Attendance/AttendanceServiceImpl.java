@@ -12,6 +12,7 @@ import com.megazone.ERPSystem_phase2_Backend.hr.repository.attendance_management
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -143,13 +144,17 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     // 특정 사원 근태 기록 조회
     @Override
-    public List<EmployeeAttendanceDTO> getAttendanceRecords(Long employeeId) {
-        List<Attendance> attendanceRecords = attendanceRepository.findByEmployee_Id(employeeId);
+    public Optional<EmployeeAttendanceDTO> getAttendanceRecords(Long id) {
+        Attendance attendanceRecords = attendanceRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("아이디를 조회할 수 없습니다."));
+        EmployeeAttendanceDTO dto = new EmployeeAttendanceDTO();
+        dto.setId(attendanceRecords.getId());
+        dto.setDate(attendanceRecords.getDate());
+        dto.setAttendanceCode(attendanceRecords.getAttendanceCode());
+        dto.setStatus(attendanceRecords.getStatus());
+        dto.setCheckOutTIme(attendanceRecords.getCheckOutTime());
+        dto.setCheckInTime(attendanceRecords.getCheckInTime());
 
-        // Attendance를 EmployeeAttendanceDTO로 변환
-        return attendanceRecords.stream()
-                .map(EmployeeAttendanceDTO::create)
-                .collect(Collectors.toList());
+        return Optional.of(dto);
     }
 
     // 모든 직원 근태 기록 조회

@@ -1,8 +1,11 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.controller.basic_information_management.Employee;
 
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.DepartmentDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.TransferCreateDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.TransferShowDTO;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.TransferUpdateDTO;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Transfer.TransferService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +24,12 @@ public class TransferController {
     // 발령 기록 생성
     @PostMapping("/transfer/create")
     public ResponseEntity<TransferShowDTO> createTransfer(@RequestBody TransferCreateDTO dto) {
-        Optional<TransferShowDTO> savedTransfer = Optional.ofNullable(transferService.createTransfer(dto));
+        Optional<TransferShowDTO> savedTransfer =transferService.createTransfer(dto);
         return savedTransfer
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+
+
     }
 
     // 발령 기록 리스트 조회
@@ -46,10 +51,13 @@ public class TransferController {
     @PostMapping("/transfer/update/{id}")
     public ResponseEntity<TransferShowDTO> updateTransfer(
             @PathVariable Long id,
-            @RequestBody TransferCreateDTO dto) {
-        Optional<TransferShowDTO> updatedTransfer = Optional.ofNullable(transferService.updateTransfer(id, dto));
-        return updatedTransfer
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+            @RequestBody TransferUpdateDTO dto) {
+
+        try {
+            TransferShowDTO transferShowDTO = transferService.updateTransfer(id, dto);
+            return ResponseEntity.ok(transferShowDTO);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 }

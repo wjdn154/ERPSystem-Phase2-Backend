@@ -38,8 +38,6 @@ public class PurchaseRequestResponseDetailDto {
     // 입고 창고 이름
     private String warehouseName;
 
-    // 부가세 적용 여부
-    private Boolean vatType;
 
     private Long currencyId;
 
@@ -84,9 +82,6 @@ public class PurchaseRequestResponseDetailDto {
 
         // 품목 공급가액
         private BigDecimal supplyPrice;
-
-        // 품목 부가세
-        private BigDecimal vat;
 
         // 비고
         private String remarks;

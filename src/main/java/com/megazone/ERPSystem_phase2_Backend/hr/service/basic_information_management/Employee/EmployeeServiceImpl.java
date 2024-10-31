@@ -1,5 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Employee;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Bank;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
@@ -26,6 +33,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +54,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final AttendanceRepository attendanceRepository;
     private final BankRepository bankRepository;
     private final EmployeeImageService employeeImageService;
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 
     // 이미지가 저장된 경로 (src/main/resources/static/uploads/)
     private static final String UPLOAD_DIR = "src/main/resources/static";
@@ -55,7 +65,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     // 사원 리스트 조회
     @Override
-    public List<EmployeeShowDTO> findAllEmployees() {
+    public List<EmployeeShowDTO> findAllUsers() {
         //엔티티 dto로 변환
         return employeeRepository.findAllByUser().stream()
                 .map(employee -> new EmployeeShowDTO(
@@ -73,7 +83,29 @@ public class EmployeeServiceImpl implements EmployeeService {
                         employee.getPosition().getId(),
                         employee.getPosition().getPositionName(),
                         employee.getJobTitle().getJobTitleName()
-//                        employee.getBankAccount().getAccountNumber()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EmployeeShowDTO> findAllEmployees() {
+        //엔티티 dto로 변환
+        return employeeRepository.findAll().stream()
+                .map(employee -> new EmployeeShowDTO(
+                        employee.getId(),
+                        employee.getEmployeeNumber(),
+                        employee.getFirstName(),
+                        employee.getLastName(),
+                        employee.getEmploymentStatus(),
+                        employee.getEmploymentType(),
+                        employee.getEmail(),
+                        employee.getHireDate(),
+                        employee.getImagePath(),
+                        employee.getDepartment().getDepartmentCode(),
+                        employee.getDepartment().getDepartmentName(),
+                        employee.getPosition().getId(),
+                        employee.getPosition().getPositionName(),
+                        employee.getJobTitle().getJobTitleName()
                 ))
                 .collect(Collectors.toList());
     }
@@ -255,6 +287,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             // 3. 엔티티 저장
             Employee updatedEmployee = employeeRepository.save(employee);
 
+
             // 4. DTO로 변환하여 반환
             EmployeeShowToDTO updatedEmployeeDTO = new EmployeeShowToDTO(
                     updatedEmployee.getId(),
@@ -280,11 +313,13 @@ public class EmployeeServiceImpl implements EmployeeService {
                     updatedEmployee.getBankAccount() != null ? updatedEmployee.getBankAccount().getAccountNumber() : null   // 계좌번호 추가
             );
             return Optional.of(updatedEmployeeDTO);
+
+
     }
 
     // 사원 등록. 저장
     @Override
-    public EmployeeDTO saveEmployee(EmployeeCreateDTO dto, MultipartFile imageFile) {
+    public Optional<EmployeeShowToDTO> saveEmployee(EmployeeCreateDTO dto, MultipartFile imageFile) {
 
         String employeeNumber = createEmployeeNumber(dto);
         // Employee 엔티티를 초기화합니다.
@@ -300,7 +335,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setEmail(dto.getEmail());
         employee.setAddress(dto.getAddress());
         employee.setHouseholdHead(dto.isHouseholdHead());
-        employee.setImagePath(dto.getImagePath());
+//        employee.setImagePath(dto.getImagePath());
 
 //        // Department 설정
 //        if (dto.getDepartmentId() != null) {
@@ -311,6 +346,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         if(dto.getDepartmentId() != null) {
             Department department = departmentRepository.findDepartmentById(dto.getDepartmentId());
+            employee.setDepartment(department);
         }
 
         // Position 설정
@@ -358,8 +394,33 @@ public class EmployeeServiceImpl implements EmployeeService {
 // 사원 정보 저장
         Employee savedEmployee = employeeRepository.save(employee);
 
+        // 4. DTO로 변환하여 반환
+        EmployeeShowToDTO savedEmployeeDTO = new EmployeeShowToDTO(
+                savedEmployee.getId(),
+                savedEmployee.getEmployeeNumber(),
+                savedEmployee.getFirstName(),
+                savedEmployee.getLastName(),
+                savedEmployee.getRegistrationNumber(),
+                savedEmployee.getPhoneNumber(),
+                savedEmployee.getEmploymentStatus(),
+                savedEmployee.getEmploymentType(),
+                savedEmployee.getEmail(),
+                savedEmployee.getAddress(),
+                savedEmployee.getHireDate(),
+                savedEmployee.isHouseholdHead(),
+                savedEmployee.getImagePath(),
+                savedEmployee.getDepartment() != null ? savedEmployee.getDepartment().getDepartmentName() : null,
+                savedEmployee.getDepartment() != null ? savedEmployee.getDepartment().getDepartmentCode() : null,
+                savedEmployee.getPosition() != null ? savedEmployee.getPosition().getPositionName() : null,
+                savedEmployee.getJobTitle() != null ? savedEmployee.getJobTitle().getJobTitleName() : null,
+                savedEmployee.getBankAccount() != null ? savedEmployee.getBankAccount().getId() : null,
+                savedEmployee.getBankAccount() != null ? savedEmployee.getBankAccount().getBank().getCode() : null,
+                savedEmployee.getBankAccount() != null ? savedEmployee.getBankAccount().getBank().getName() : null,  // 은행 이름 추가
+                savedEmployee.getBankAccount() != null ? savedEmployee.getBankAccount().getAccountNumber() : null   // 계좌번호 추가
+        );
+
 // 저장된 정보를 DTO로 변환하여 반환
-        return EmployeeDTO.create(savedEmployee);
+        return Optional.of(savedEmployeeDTO);
     }
 
     private void deleteOldImage(String oldImagePath) {

@@ -60,6 +60,11 @@ public class InventoryController {
         return ResponseEntity.ok(inventories);
     }
 
+    /**
+     * 로케이션별 재고 조회
+     * @param locationId
+     * @return
+     */
     @PostMapping("/byLocation/{locationId}")
     public ResponseEntity<List<InventoryResponseDTO>> getInventoryByLocation(@PathVariable Long locationId) {
         List<InventoryResponseDTO> inventoryList = inventoryService.getInventoryByLocation(locationId);

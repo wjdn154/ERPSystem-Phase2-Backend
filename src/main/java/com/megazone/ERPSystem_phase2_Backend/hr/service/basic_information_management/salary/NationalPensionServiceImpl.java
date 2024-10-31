@@ -35,7 +35,23 @@ public class NationalPensionServiceImpl implements NationalPensionService {
             salaryAmount = nationalPension.getUpperAmount();
         }
 
-        return salaryAmount.multiply(nationalPension.getEmployeeRate());
+        return salaryAmount.multiply(nationalPension.getEmployeeRate()).setScale(0, BigDecimal.ROUND_HALF_UP);
+    }
+
+    @Override
+    public BigDecimal calculator(BigDecimal amount) {
+
+        NationalPension nationalPension = nationalPensionRepository.findFirstByEndDateIsNull().orElseThrow(
+                () -> new NoSuchElementException("해당하는 건강보험 데이터가 없습니다."));
+
+        if(amount.compareTo(nationalPension.getLowerAmount()) < 0) {
+            amount = nationalPension.getLowerAmount();
+        }
+        else if(amount.compareTo(nationalPension.getUpperAmount()) > 0) {
+            amount = nationalPension.getUpperAmount();
+        }
+
+        return amount.multiply(nationalPension.getEmployeeRate()).setScale(0, BigDecimal.ROUND_HALF_UP);
     }
 
     @Override

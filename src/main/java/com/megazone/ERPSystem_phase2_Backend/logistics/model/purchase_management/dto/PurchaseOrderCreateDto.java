@@ -17,7 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PurchaseOrderCreateDto {
-    private Long purchaseRequestId;
     private Long clientId;
     private Long managerId;
     private Long warehouseId;
@@ -25,9 +24,11 @@ public class PurchaseOrderCreateDto {
     private BigDecimal exchangeRate; // 사용자가 환율을 변경한 경우에만 전달
     private LocalDate date;
     private LocalDate deliveryDate;
-    private Boolean vatType;
-    private List<PurchaseOrderItemCreateDto> items;
+    private Long vatId;
+    private String journalEntryCode;
+    private String electronicTaxInvoiceStatus;
     private String remarks;
+    private List<PurchaseOrderItemCreateDto> items;
 
     // 발주서 세부 항목 DTO
     @Getter
@@ -37,7 +38,6 @@ public class PurchaseOrderCreateDto {
     public static class PurchaseOrderItemCreateDto {
         private Long productId;
         private Integer quantity;
-        private BigDecimal price; // 사용자가 단가를 변경한 경우에만 전달
         private BigDecimal supplyPrice;
         private BigDecimal localAmount; // 원화 금액
         private BigDecimal vat;
