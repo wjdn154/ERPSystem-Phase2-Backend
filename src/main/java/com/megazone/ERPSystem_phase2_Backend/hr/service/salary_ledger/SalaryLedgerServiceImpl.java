@@ -145,7 +145,7 @@ public class SalaryLedgerServiceImpl implements SalaryLedgerService {
                 () -> new NoSuchElementException("해당하는 급여입력 정보가없습니다."));
 
         if(salaryLedger.isFinalized()) {
-            throw new RuntimeException("급여정보가 마감처리 되었습니다.");
+            throw new RuntimeException("급여정보가 이미 마감처리 되었습니다.");
         }
 
         Salary salary = salaryRepository.findByEmployeeId(salaryLedger.getEmployee().getId());
@@ -182,7 +182,7 @@ public class SalaryLedgerServiceImpl implements SalaryLedgerService {
                 () -> new NoSuchElementException("해당하는 급여입력 정보가 없습니다."));
 
         if(salaryLedger.isFinalized()) {
-            throw new RuntimeException("급여정보가 마감처리 되었습니다.");
+            throw new RuntimeException("급여정보가 이미 마감처리 되었습니다.");
         }
 
         return salaryLedgerSetting(dto,salaryLedger);
