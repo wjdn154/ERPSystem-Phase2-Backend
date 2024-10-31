@@ -217,77 +217,25 @@ public class UsersServiceImpl implements UsersService{
 
 
 
-
-    public Optional<Users> getUserById(Long id) {
-        return usersRepository.findById(id);
-    }
-
-    public Optional<Users> getUserByUsersName(String usersName) {
-        return usersRepository.findByUserName(usersName);
-    }
-
-    public Users updateUser(Long id, Users user) {
-        if (usersRepository.existsById(id)) {
-            user.setId(id);
-            return usersRepository.save(user);
-        }
-        return null;
-    }
-
-    public void deleteUser(Long id) {
-        usersRepository.deleteById(id);
-    }
-
-
-    private UsersPermissionDTO convertTodDTO(Users user) {
-        UsersPermissionDTO dto = new UsersPermissionDTO();
-        dto.setId(user.getId());
-        dto.setUserName(user.getUserNickname());
-        dto.setUsersId(user.getUserName());
-
-        if (user.getEmployee() != null) {
-            dto.setEmployeeId(user.getEmployee().getId());
-            dto.setEmployeeNumber(user.getEmployee().getEmployeeNumber());
-            dto.setEmployeeName(user.getEmployee().getFirstName());
-            dto.setEmployeeName(user.getEmployee().getLastName());
-        }
-
-        dto.setPermissionId(user.getPermission() != null ? user.getPermission().getId() : null);
-        return dto;
-    }
-    // 권한을 설정하거나 업데이트하는 메서드
-//    public UsersShowDTO assignPermissionToUser(Long userId, Long permissionId) {
-//        Optional<Users> userOpt = usersRepository.findById(userId);
-//        Optional<Permission> permissionOpt = permissionRepository.findById(permissionId);
-//
-//        if (userOpt.isPresent() && permissionOpt.isPresent()) {
-//            Users user = userOpt.get();
-//            Permission permission = permissionOpt.get();
-//            user.setPermission(permission);
-//            return usersRepository.save(user);
-//        }
-//        return null;
-//    }
     public List<UsersShowDTO> findAllUsers() {
-        return usersRepository.findAll().stream()
-                .map(this::convertToDTO)
+        // 모든 Users 엔티티를 조회하고, 각각을 UsersShowDTO로 변환
+        return usersRepository.findAll()
+                .stream()
+                .map(UsersShowDTO::toDTO)
                 .collect(Collectors.toList());
     }
+
+
 
     private UsersShowDTO convertToDTO(Users users) {
         UsersShowDTO dto = new UsersShowDTO();
         dto.setId(users.getId());
-        dto.setUsersId(users.getUserName());
-        dto.setUserName(users.getUserNickname());
+        dto.setUserName(users.getUserName());
+        dto.setUserNickname(users.getUserNickname());
         dto.setEmployeeNumber(users.getEmployee().getEmployeeNumber());
-        dto.setFirstName(users.getEmployee().getFirstName());
-        dto.setLastName(users.getEmployee().getLastName());
+        dto.setEmployeeName(users.getEmployee().getLastName() + users.getEmployee().getFirstName());
         dto.setPassword(users.getPassword());
         dto.setPermissionId(dto.getPermissionId());
-
-
-        //dto.setEmployeeId(users.getEmployee() != null ? users.getEmployee().getId() : null);
-
 
         return dto;
     }
@@ -295,14 +243,16 @@ public class UsersServiceImpl implements UsersService{
     @Override
     public UsersShowDTO findUserById(Long id) {
         Users user = usersRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         return convertToDTO(user);
     }
 
     @Override
     public UsersShowDTO updateUser(Long id, UsersShowDTO usersDTO) {
         Users user = usersRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        user.setUserNickname(usersDTO.getUserNickname());
+        user.setPassword(usersDTO.getPassword());
         user.setUserName(usersDTO.getUserName());
         Users updatedUser = usersRepository.save(user);
         return convertToDTO(updatedUser);
@@ -312,30 +262,9 @@ public class UsersServiceImpl implements UsersService{
     @Override
     public void deleteUsers(Long id) {
         Users user = usersRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         usersRepository.delete(user);
     }
-
-
-
-
-//    @Override
-//    public UsersResponseDTO assignRoleToUser(Long userId, Long roleId) {
-//        // 사용자와 역할을 조회
-//        Users user = usersRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-//
-//        UsersResponseDTO responseDTO = new UsersResponseDTO();
-//        responseDTO.setId(user.getId());
-//        responseDTO.setUsername(user.getUserName());
-//        // 사용자의 역할 목록에
-//        // 새로운 역할 추가
-//
-//
-//        // 사용자 정보를 업데이트
-//        usersRepository.save(user);
-//
-//        return responseDTO;
-//    }
 
 
 
