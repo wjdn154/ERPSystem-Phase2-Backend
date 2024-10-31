@@ -1,6 +1,13 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.sales_management.quotation;
 
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.VatAmountWithSupplyAmountDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.sales_and_purchase_voucher_entry.VatTypeService;
@@ -24,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -43,6 +51,8 @@ public class QuotationServiceImpl implements QuotationService {
     private final CurrencyRepository currencyRepository;
     private final ProductRepository productRepository;
     private final VatTypeService vatTypeService;
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 
 
 
@@ -185,6 +195,19 @@ public class QuotationServiceImpl implements QuotationService {
         try {
             Quotation quotation = toEntity(createDto);
             quotation = quotationRepository.save(quotation);
+
+            recentActivityRepository.save(RecentActivity.builder()
+                    .activityDescription("신규 견적서 등록 : " + quotation.getDate() + " -" + quotation.getId())
+                    .activityType(ActivityType.LOGISTICS)
+                    .activityTime(LocalDateTime.now())
+                    .build());
+            notificationService.createAndSendNotification(
+                    ModuleType.LOGISTICS,
+                    PermissionType.USER,
+                    "신규 견적서 (" + quotation.getDate() + " -" + quotation.getId() + ")가 등록되었습니다.",
+                    NotificationType.NEW_ENTRY
+            );
+
             return toDetailDto(quotation);
         } catch (Exception e) {
             log.error("견적서 생성 실패: ", e);

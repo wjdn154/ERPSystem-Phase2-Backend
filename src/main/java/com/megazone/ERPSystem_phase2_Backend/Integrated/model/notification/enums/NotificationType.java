@@ -4,7 +4,9 @@ public enum NotificationType {
     NEW_VOUCHER("신규 전표"),
     APPROVAL_VOUCHER("전표 승인"),
     REJECT_VOUCHER("전표 반려"),
-    CHANGE_PERMISSION("권한 변경");
+    CHANGE_PERMISSION("권한 변경"),
+
+    NEW_ENTRY("신규 항목");
 
     private final String koreanName;
 
