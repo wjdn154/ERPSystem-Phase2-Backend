@@ -29,7 +29,14 @@ public enum NotificationType {
     UPDATE_EQUIPMENT_DATA("설비 변경"),
     NEW_MATERIAL("신규 자재"),
     UPDATE_MATERIAL("자재 변경"),
-    UPDATE_WORKER("작업자 교육이수여부 변경");
+    UPDATE_WORKER("작업자 교육이수여부 변경"),
+
+
+    UPDATE_EMPLOYEE("사원 정보 변경"),
+    CREATE_EMPLOYEE("사원 등록"),
+    CREATE_TRANSFER("발령기록 등록"),
+    UPDATE_TRANSFER("발령기록 수정"),
+    CREATE_DEPARTMENT("부서 등록");
     private final String koreanName;
 
     NotificationType(String koreanName) {

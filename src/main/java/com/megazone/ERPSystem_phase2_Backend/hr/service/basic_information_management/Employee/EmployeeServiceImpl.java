@@ -287,6 +287,19 @@ public class EmployeeServiceImpl implements EmployeeService {
             // 3. 엔티티 저장
             Employee updatedEmployee = employeeRepository.save(employee);
 
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription("[" + updatedEmployee.getEmployeeNumber() + "]" + updatedEmployee.getLastName() + updatedEmployee.getFirstName()+"사원 정보 수정")
+                .activityType(ActivityType.HR)
+                .activityTime(LocalDateTime.now())
+                .build());
+
+        notificationService.createAndSendNotification(
+                ModuleType.HR,
+                PermissionType.ADMIN,
+                "[" + updatedEmployee.getEmployeeNumber() + "]" + updatedEmployee.getLastName() + updatedEmployee.getFirstName()+"사원 정보 수정",
+                NotificationType.UPDATE_EMPLOYEE);
+
+
 
             // 4. DTO로 변환하여 반환
             EmployeeShowToDTO updatedEmployeeDTO = new EmployeeShowToDTO(
@@ -393,6 +406,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 // 사원 정보 저장
         Employee savedEmployee = employeeRepository.save(employee);
+
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription("[" + savedEmployee.getEmployeeNumber() + "]" + savedEmployee.getLastName() + savedEmployee.getFirstName()+"사원 정보 등록")
+                .activityType(ActivityType.HR)
+                .activityTime(LocalDateTime.now())
+                .build());
+
+        notificationService.createAndSendNotification(
+                ModuleType.HR,
+                PermissionType.ADMIN,
+                "[" + savedEmployee.getEmployeeNumber() + "]" + savedEmployee.getLastName() + savedEmployee.getFirstName()+"사원 정보 등록",
+                NotificationType.UPDATE_EMPLOYEE);
 
         // 4. DTO로 변환하여 반환
         EmployeeShowToDTO savedEmployeeDTO = new EmployeeShowToDTO(
