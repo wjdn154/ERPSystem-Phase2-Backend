@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,17 +35,18 @@ public class AttendanceController {
     }
 
     // 특정 사원의 출퇴근 기록 조회
-    @PostMapping("/records/{employeeId}")
-    public ResponseEntity<List<EmployeeAttendanceDTO>> getAttendanceRecords(@PathVariable Long employeeId){
-        List<EmployeeAttendanceDTO> attendanceRecords = attendanceService.getAttendanceRecords(employeeId);
-        return ResponseEntity.ok(attendanceRecords);
+    @PostMapping("/records/{id}")
+    public ResponseEntity<EmployeeAttendanceDTO> getAttendanceRecords(@PathVariable Long id){
+        Optional<EmployeeAttendanceDTO> attendanceRecords = attendanceService.getAttendanceRecords(id);
+        return attendanceRecords.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     // 모든 사원의 출퇴근 기록 조회
     @PostMapping("/records/all")
     public ResponseEntity<List<AttendanceShowDTO>> getAllAttendanceRecords(){
-        List<AttendanceShowDTO> attendanceshowRecords = attendanceService.getAllAttendanceRecords();
-        return ResponseEntity.ok(attendanceshowRecords);
+        List<AttendanceShowDTO> attendanceShowRecords = attendanceService.getAllAttendanceRecords();
+        return ResponseEntity.ok(attendanceShowRecords);
     }
 
     // 근태 삭제

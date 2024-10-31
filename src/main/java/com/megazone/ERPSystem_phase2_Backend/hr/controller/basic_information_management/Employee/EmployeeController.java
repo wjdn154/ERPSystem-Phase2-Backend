@@ -2,6 +2,7 @@ package com.megazone.ERPSystem_phase2_Backend.hr.controller.basic_information_ma
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.googlejavaformat.Op;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Employee.EmployeeService;
 import com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.EmployeeImage.EmployeeImageService;
@@ -65,7 +66,7 @@ public class EmployeeController {
 
     // 사원 등록
     @PostMapping("/employee/createEmployee")
-    public ResponseEntity<String> saveEmployeeByEmployeeNumber(
+    public ResponseEntity<EmployeeShowToDTO> saveEmployeeByEmployeeNumber(
             @RequestParam("formattedValues") String formattedValues,
             @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) throws JsonProcessingException {
 
@@ -76,12 +77,11 @@ public class EmployeeController {
         EmployeeCreateParseDTO employeeCreateParseDTO = objectMapper.readValue(formattedValues, EmployeeCreateParseDTO.class);
         EmployeeCreateDTO employeeCreateDTO = EmployeeCreateDTO.create(employeeCreateParseDTO);
         // EmployeeDTO를 사용하여 사원을 저장
-        EmployeeDTO employeeDTO = employeeService.saveEmployee(employeeCreateDTO, imageFile);
+        Optional<EmployeeShowToDTO> employeeDTO = employeeService.saveEmployee(employeeCreateDTO, imageFile);
 
         // 저장된 사원이 존재하는 경우 OK 응답을 반환
-        return employeeDTO != null
-                ? ResponseEntity.status(HttpStatus.OK).body("사원 등록을 완료했습니다.")
-                : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("사원 등록에 실패했습니다.");
+        return employeeDTO.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
 

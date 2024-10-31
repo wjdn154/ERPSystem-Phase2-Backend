@@ -1,5 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.equipment;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.company.CompanyRepository;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
@@ -21,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,6 +44,8 @@ public class EquipmentDataServiceImpl implements EquipmentDataService {
     private final CompanyRepository companyRepository;
     private final EquipmentDataImageService equipmentDataImageService;
     private static final String UPLOAD_DIR = "src/main/resources/static";
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 
     //설비 등록.저장
     @Override
@@ -50,6 +60,19 @@ public class EquipmentDataServiceImpl implements EquipmentDataService {
 
        // 엔티티 저장
         EquipmentData saveEquipment = equipmentDataRepository.save(equipmentData);
+
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription("신규 설비 1건 생성")
+                .activityType(ActivityType.PRODUCTION)
+                .activityTime(LocalDateTime.now())
+                .build());
+
+
+        notificationService.createAndSendNotification(
+                ModuleType.PRODUCTION,
+                PermissionType.ALL,
+                "신규 설비 1건 생성되었습니다.",
+                NotificationType.NEW_EQUIPMENT_DATA);
 
        // 엔티티를 dto로 변환하여 반환
         EquipmentDataShowDTO equipmentDataDTO = equipmentShowToDTO(saveEquipment);
@@ -107,6 +130,19 @@ public class EquipmentDataServiceImpl implements EquipmentDataService {
 
         //업데이트된 엔티티 저장.
         EquipmentData updatedEquipmentEntity =equipmentDataRepository.save(equipmentData);
+
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription("설비 1건 정보 변경")
+                .activityType(ActivityType.PRODUCTION)
+                .activityTime(LocalDateTime.now())
+                .build());
+
+
+        notificationService.createAndSendNotification(
+                ModuleType.PRODUCTION,
+                PermissionType.ALL,
+                "설비 1건 정보가 변경되었습니다.",
+                NotificationType.UPDATE_EQUIPMENT_DATA);
 
         //저장된 엔티티 dto로 변환.
         EquipmentDataUpdateDTO equipmentDataUpdateDTO = equipmentUpdateToDTO(updatedEquipmentEntity);

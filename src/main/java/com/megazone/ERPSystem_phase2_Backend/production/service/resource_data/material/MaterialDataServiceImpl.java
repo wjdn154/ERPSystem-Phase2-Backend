@@ -1,5 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.resource_data.material;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.Company;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
@@ -20,6 +27,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,11 +39,13 @@ public class MaterialDataServiceImpl implements MaterialDataService{
 
     private final MaterialDataRepository materialDataRepository;
     private final ClientRepository clientRepository;
-    private final CompanyRepository companyRepository;
     private final HazardousMaterialRepository hazardousMaterialRepository;
     private final ProductRepository productRepository;
     private final MaterialProductRepository materialProductRepository;
     private final MaterialHazardousRepository materialHazardousRepository;
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
+
     //자재 리스트 조회
     @Override
     public List<ListMaterialDataDTO> findAllMaterial() {
@@ -119,6 +129,19 @@ public class MaterialDataServiceImpl implements MaterialDataService{
         //최종적으로 모든 연관된 엔티티 저장
         MaterialData updateMaterial = materialDataRepository.save(saveMaterialData);
 
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription("자재 정보 1건 변경")
+                .activityType(ActivityType.PRODUCTION)
+                .activityTime(LocalDateTime.now())
+                .build());
+
+
+        notificationService.createAndSendNotification(
+                ModuleType.PRODUCTION,
+                PermissionType.ALL,
+                "자재 정보 1건이 변경되었습니다.",
+                NotificationType.UPDATE_MATERIAL);
+
         MaterialDataShowDTO listMaterialDataDTO = materialCreateDTO(updateMaterial);
 
         return Optional.of(listMaterialDataDTO);
@@ -137,6 +160,19 @@ public class MaterialDataServiceImpl implements MaterialDataService{
 
         //엔티티 저장
         MaterialData createMaterial = materialDataRepository.save(materialData);
+
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription("신규 자재 1건 생성")
+                .activityType(ActivityType.PRODUCTION)
+                .activityTime(LocalDateTime.now())
+                .build());
+
+
+        notificationService.createAndSendNotification(
+                ModuleType.PRODUCTION,
+                PermissionType.ALL,
+                "신규 자재 1건이 생성되었습니다.",
+                NotificationType.NEW_MATERIAL);
 
         //엔티티를 dto로 변환
         MaterialDataShowDTO materialDataShowDTO = materialCreateDTO(createMaterial);
