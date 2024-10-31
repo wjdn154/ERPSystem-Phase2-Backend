@@ -1,14 +1,14 @@
-INSERT INTO common_scheduling_production_order
-(name, mps_id, remarks, confirmed, closed, start_date_time, end_date_time, production_quantity, process_id, workcenter_id, actual_start_date_time, actual_end_date_time, actual_production_quantity, workers, actual_workers)
-VALUES
-    ('주간 프론트 범퍼 조립 작업지시', 1, NULL, TRUE, FALSE, '2024-01-01 09:00:00', '2024-01-01 18:00:00', 7000, 16, 31, NULL, NULL, NULL, 4, NULL),
-    ('야간 프론트 범퍼 조립 작업지시', 1, NULL, TRUE, FALSE, '2024-01-01 18:00:00', '2024-01-02 09:00:00', 6000, 16, 31, NULL, NULL, NULL, 3, NULL),
-
-    ('주간 휠 부품 프레스 작업지시', 2, NULL, TRUE, FALSE, '2024-01-01 09:00:00', '2024-01-01 18:00:00', 8000, 7, 14, NULL, NULL, NULL, 5, NULL),
-    ('야간 휠 부품 프레스 작업지시', 2, NULL, TRUE, FALSE, '2024-01-01 18:00:00', '2024-01-02 09:00:00', 7000, 7, 14, NULL, NULL, NULL, 4, NULL),
-
-    ('주간 연료 필터 작업지시', 3, NULL, TRUE, FALSE, '2024-01-01 09:00:00', '2024-01-01 18:00:00', 9000, 14, 28, NULL, NULL, NULL, 7, NULL),
-    ('야간 연료 필터 작업지시', 3, NULL, TRUE, FALSE, '2024-01-01 18:00:00', '2024-01-02 09:00:00', 8000, 14, 28, NULL, NULL, NULL, 6, NULL);
+# INSERT INTO common_scheduling_production_order
+# (name, mps_id, remarks, confirmed, closed, start_date_time, end_date_time, production_quantity, process_id, workcenter_id, actual_start_date_time, actual_end_date_time, actual_production_quantity, workers, actual_workers)
+# VALUES
+#     ('주간 프론트 범퍼 조립 작업지시', 1, NULL, TRUE, FALSE, '2024-01-01 09:00:00', '2024-01-01 18:00:00', 7000, 16, 31, NULL, NULL, NULL, 4, NULL),
+#     ('야간 프론트 범퍼 조립 작업지시', 1, NULL, TRUE, FALSE, '2024-01-01 18:00:00', '2024-01-02 09:00:00', 6000, 16, 31, NULL, NULL, NULL, 3, NULL),
+#
+#     ('주간 휠 부품 프레스 작업지시', 2, NULL, TRUE, FALSE, '2024-01-01 09:00:00', '2024-01-01 18:00:00', 8000, 7, 14, NULL, NULL, NULL, 5, NULL),
+#     ('야간 휠 부품 프레스 작업지시', 2, NULL, TRUE, FALSE, '2024-01-01 18:00:00', '2024-01-02 09:00:00', 7000, 7, 14, NULL, NULL, NULL, 4, NULL),
+#
+#     ('주간 연료 필터 작업지시', 3, NULL, TRUE, FALSE, '2024-01-01 09:00:00', '2024-01-01 18:00:00', 9000, 14, 28, NULL, NULL, NULL, 7, NULL),
+#     ('야간 연료 필터 작업지시', 3, NULL, TRUE, FALSE, '2024-01-01 18:00:00', '2024-01-02 09:00:00', 8000, 14, 28, NULL, NULL, NULL, 6, NULL);
 
 # -- mps_id = 1 작업지시 10건
 # INSERT INTO common_scheduling_production_order
