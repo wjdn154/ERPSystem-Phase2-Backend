@@ -150,7 +150,7 @@ logging:
 #    com.megazone: DEBUG
 #    org.flywaydb: DEBUG
 #    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql: TRACE
+#    org.hibernate.type.descriptor.sql: TRACE
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %highlight(%-5level) %logger{36} - %msg%n"
 jwt:

@@ -5,7 +5,6 @@ public enum NotificationType {
     APPROVAL_VOUCHER("전표 승인"),
     REJECT_VOUCHER("전표 반려"),
     CHANGE_PERMISSION("권한 변경"),
-<<<<<<< HEAD
     NEW_CASHMEMO("현금적요 추가"),
     NEW_TRANSFERMEMO("대체적요 추가"),
     NEW_ACCOUNTSUBJECT("계정과목 추가"),
@@ -23,10 +22,7 @@ public enum NotificationType {
     DELETE_UNRESOLVEDVOUCHER("미결일반전표 삭제"),
     JOURNAL_ENTRY_TYPESET("분개유형 수정"),
     DELETE_RESOLVED_SALEANDPURCHASE_VOUCHER("승인 매출매입전표 삭제"),
-    NEW_UNRESOLVED_SALEANDPURCHASE_VOUCHER("미결 매출매입전표 추가");
-=======
->>>>>>> 4ca2e0300aa027ca7bcc0d621716c04308c9683d
-
+    NEW_UNRESOLVED_SALEANDPURCHASE_VOUCHER("미결 매출매입전표 추가"),
     NEW_MAINTENANCE_HISTORY("신규 유지보수"),
     UPDATE_MAINTENANCE_HISTORY("유지보수 변경"),
     NEW_EQUIPMENT_DATA("신규 설비"),
