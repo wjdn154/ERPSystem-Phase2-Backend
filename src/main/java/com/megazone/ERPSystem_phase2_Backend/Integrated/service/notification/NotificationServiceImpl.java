@@ -154,7 +154,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
 
-    // 알림 생성 및 전송 통합
+    // 알림 생성 및 전송
     @Override
     @Transactional
     public Notification createAndSendNotification(ModuleType module, PermissionType permission, String content, NotificationType type) {
