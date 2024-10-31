@@ -11,7 +11,8 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TransferCreateDTO {
+public class TransferUpdateDTO {
+    private Long id;
     private LocalDate transferDate; // 발령 날짜
     private Long employeeId; // 사원 ID
     private String employeeNumber; // 사원 번호
@@ -27,8 +28,9 @@ public class TransferCreateDTO {
     private TransferType transferType;
 
 
-    public TransferCreateDTO create(Transfer transfer) {
-        return new TransferCreateDTO(
+    public TransferUpdateDTO update(Transfer transfer) {
+        return new TransferUpdateDTO(
+                transfer.getId(),
                 transfer.getTransferDate(),
                 transfer.getEmployee().getId(),
                 transfer.getEmployee().getEmployeeNumber(),

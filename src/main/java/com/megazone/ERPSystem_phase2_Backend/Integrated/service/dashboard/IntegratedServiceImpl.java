@@ -6,8 +6,10 @@ import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.Rec
 import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statements.dto.IncomeStatementLedgerDashBoardDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.financial_statements_ledger.IncomeStatementService;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.ledger.SalesAndPurchaseLedgerService;
+import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.work_performance.work_report.WorkPerformanceRepository;
+import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,6 +35,7 @@ public class IntegratedServiceImpl implements IntegratedService {
     private final SalesAndPurchaseLedgerService salesAndPurchaseLedgerService;
     private final IncomeStatementService incomeStatementService;
     private final WorkPerformanceRepository workPerformanceRepository;
+    private final EmployeeRepository employeeRepory;
 
     @Override
     public DashboardDataDTO dashboard() {
@@ -61,6 +64,8 @@ public class IntegratedServiceImpl implements IntegratedService {
                 .financeValue(incomeStatementLedgerDashBoardDTO.getTotalRevenue())
                 .productionName("총 생산량")
                 .productionValue(totalWorkPerformance)
+                .hrName("총 직원수")
+                .hrValue(Long.valueOf((employeeRepory.findAll().size())))
                 .build();
         return widgets;
     }

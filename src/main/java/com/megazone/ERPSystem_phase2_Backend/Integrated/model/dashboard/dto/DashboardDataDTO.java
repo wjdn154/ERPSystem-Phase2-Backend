@@ -39,7 +39,7 @@ public class DashboardDataDTO {
         private String financeName;
         private BigDecimal financeValue;
         private String hrName;
-        private BigDecimal hrValue;
+        private Long hrValue;
         private String logisticsName;
         private BigDecimal logisticsValue;
         private String productionName;

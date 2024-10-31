@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -15,7 +14,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AttendanceShowDTO {
-    private Long attendanceId;
+    private Long id;
+    private Long employeeId;
     private String employeeNumber;
     private String employeeName;
     private String positionName;
@@ -28,6 +28,7 @@ public class AttendanceShowDTO {
     public static AttendanceShowDTO create(Attendance attendance) {
           return new AttendanceShowDTO(
               attendance.getId(),
+              attendance.getEmployee().getId(),
               attendance.getEmployee().getEmployeeNumber(),
               attendance.getEmployee().getLastName()+ attendance.getEmployee().getFirstName(),
               attendance.getEmployee().getPosition().getPositionName(),

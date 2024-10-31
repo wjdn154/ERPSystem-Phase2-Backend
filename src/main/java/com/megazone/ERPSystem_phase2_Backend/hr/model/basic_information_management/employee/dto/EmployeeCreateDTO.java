@@ -44,7 +44,7 @@ public class EmployeeCreateDTO {
                 dto.getAddress(),
                 dto.getHireDate() != null ? LocalDate.parse(dto.getHireDate()) : null, // null 값 체크
                 dto.isHouseholdHead(),
-                dto.getProfilePicture(),
+                null,
                 dto.getDepartmentCode(),
                 dto.getPositionName(),
                 dto.getTitleName(),
