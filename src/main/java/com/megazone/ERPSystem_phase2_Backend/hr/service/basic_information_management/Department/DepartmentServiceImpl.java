@@ -1,6 +1,13 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.service.basic_information_management.Department;
 
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Department;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.JobTitle;
@@ -15,6 +22,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,6 +35,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     private final EmployeeRepository employeeRepository;
     private final PositionRepository positionRepository;
     private final JobTitleRepository jobTitleRepository;
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 
     // 부서 리스트 조회
     @Override
@@ -106,6 +116,18 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         // 엔티티를 저장
         Department savedDepartment = departmentRepository.save(department);
+
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription("["+ savedDepartment.getDepartmentCode() + "]" + savedDepartment.getDepartmentName()+" 부서 등록")
+                .activityType(ActivityType.HR)
+                .activityTime(LocalDateTime.now())
+                .build());
+
+        notificationService.createAndSendNotification(
+                ModuleType.HR,
+                PermissionType.ADMIN,
+                "["+ savedDepartment.getDepartmentCode() + "]" + savedDepartment.getDepartmentName()+" 부서 등록",
+                NotificationType.CREATE_DEPARTMENT);
 
         // 저장된 엔티티의 ID를 포함한 DTO를 반환
         return new DepartmentCreateDTO(

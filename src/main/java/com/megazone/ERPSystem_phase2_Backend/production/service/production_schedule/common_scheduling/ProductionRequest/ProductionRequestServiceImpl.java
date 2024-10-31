@@ -88,6 +88,9 @@ public class ProductionRequestServiceImpl implements ProductionRequestService {
         if (!employeeRepository.existsById(dto.getRequesterId())) {
             throw new EntityNotFoundException("해당 요청자를 찾을 수 없습니다.");
         }
+        if (!departmentRepository.existsById(dto.getDepartmentId())) {
+            throw new EntityNotFoundException("해당 부서를 찾을 수 없습니다.");
+        }
     }
 
     @Override
@@ -142,11 +145,19 @@ public class ProductionRequestServiceImpl implements ProductionRequestService {
             request.setProduct(product);
         }
 
-        if (dto.getRequesterId() != null) {
-            Employee requester = employeeRepository.findById(dto.getRequesterId())
-                    .orElseThrow(() -> new EntityNotFoundException("요청자를 찾을 수 없습니다."));
-            request.setRequester(requester);
+        if (dto.getDepartmentId() != null) {
+            Department department = departmentRepository.findById(dto.getDepartmentId())
+                    .orElseThrow(() -> new EntityNotFoundException("부서를 찾을 수 없습니다."));
+            request.setProductionDepartment(department);
+            System.out.println("부서가 설정되었습니다: " + department.getDepartmentName());
+
+            System.out.println("부서 이름: " + dto.getDepartmentName());
+            System.out.println("부서 코드: " + dto.getDepartmentCode());
+
+        } else {
+            System.out.println("부서 ID가 전달되지 않았습니다.");
         }
+
     }
 
     @Override
