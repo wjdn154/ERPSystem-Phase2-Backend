@@ -36,6 +36,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -294,8 +295,55 @@ public class SalaryLedgerServiceImpl implements SalaryLedgerService {
 
     @Override
     public List<PaymentStatusManagementShowDTO> showPaymentStatusManagement(PaymentStatusManagementSearchDTO dto) {
-        List<PaymentStatusManagementShowDTO> result = salaryLedgerRepository.showPaymentStatusManagement(dto);
-        return result;
+        List<PaymentStatusManagementShowDTO> results = new ArrayList<>(salaryLedgerRepository.showPaymentStatusManagement(dto));
+        PaymentStatusManagementShowDTO totalPaymentStatus = new PaymentStatusManagementShowDTO();
+
+        totalPaymentStatus.setId(null);
+        totalPaymentStatus.setDescriptionName("합계");
+        totalPaymentStatus.setNationalPensionAmount(BigDecimal.ZERO);
+        totalPaymentStatus.setPrivateSchoolPensionAmount(BigDecimal.ZERO);
+        totalPaymentStatus.setHealthInsurancePensionAmount(BigDecimal.ZERO);
+        totalPaymentStatus.setEmploymentInsuranceAmount(BigDecimal.ZERO);
+        totalPaymentStatus.setLongTermCareInsurancePensionAmount(BigDecimal.ZERO);
+        totalPaymentStatus.setIncomeTaxAmount(BigDecimal.ZERO);
+        totalPaymentStatus.setLocalIncomeTaxPensionAmount(BigDecimal.ZERO);
+        totalPaymentStatus.setTotalSalaryAmount(BigDecimal.ZERO);
+        totalPaymentStatus.setTaxableIncome(BigDecimal.ZERO);
+        totalPaymentStatus.setTotalDeductionAmount(BigDecimal.ZERO);
+        totalPaymentStatus.setNetPayment(BigDecimal.ZERO);
+        totalPaymentStatus.setCount(0);
+
+        for(int i = 0; i < results.size(); i++) {
+            totalPaymentStatus.setNationalPensionAmount(totalPaymentStatus.getNationalPensionAmount().add(results.get(i).getNationalPensionAmount()));
+            totalPaymentStatus.setPrivateSchoolPensionAmount(totalPaymentStatus.getPrivateSchoolPensionAmount().add(results.get(i).getPrivateSchoolPensionAmount()));
+            totalPaymentStatus.setHealthInsurancePensionAmount(totalPaymentStatus.getHealthInsurancePensionAmount().add(results.get(i).getHealthInsurancePensionAmount()));
+            totalPaymentStatus.setEmploymentInsuranceAmount(totalPaymentStatus.getEmploymentInsuranceAmount().add(results.get(i).getEmploymentInsuranceAmount()));
+            totalPaymentStatus.setLongTermCareInsurancePensionAmount(totalPaymentStatus.getLongTermCareInsurancePensionAmount().add(results.get(i).getLongTermCareInsurancePensionAmount()));
+            totalPaymentStatus.setIncomeTaxAmount(totalPaymentStatus.getIncomeTaxAmount().add(results.get(i).getIncomeTaxAmount()));
+            totalPaymentStatus.setLocalIncomeTaxPensionAmount(totalPaymentStatus.getLocalIncomeTaxPensionAmount().add(results.get(i).getLocalIncomeTaxPensionAmount()));
+            totalPaymentStatus.setTotalSalaryAmount(totalPaymentStatus.getTotalSalaryAmount().add(results.get(i).getTotalSalaryAmount()));
+            totalPaymentStatus.setTaxableIncome(totalPaymentStatus.getTaxableIncome().add(results.get(i).getTaxableIncome()));
+            totalPaymentStatus.setTotalDeductionAmount(totalPaymentStatus.getTotalDeductionAmount().add(results.get(i).getTotalDeductionAmount()));
+            totalPaymentStatus.setNetPayment(totalPaymentStatus.getNetPayment().add(results.get(i).getNetPayment()));
+            totalPaymentStatus.setCount(totalPaymentStatus.getCount() + results.get(i).getCount());
+
+            List<SalaryLedgerAllowanceShowDTO> allowances = results.get(i).getAllowances();
+            for(int j = 0; j < allowances.size(); j++) {
+                if(i == 0) {
+                    totalPaymentStatus.getAllowances().add(allowances.get(j));
+                }
+                else {
+                    BigDecimal totalPaymentAmount = totalPaymentStatus.getAllowances().get(j).getAmount();
+                    BigDecimal allowanceAmount = results.get(j).getAllowances().get(j).getAmount();
+                    totalPaymentStatus.getAllowances().get(j).setAmount(totalPaymentAmount.add(allowanceAmount));
+                }
+
+            }
+        }
+        results.add(totalPaymentStatus);
+
+
+        return results;
     }
 }
 

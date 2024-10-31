@@ -26,7 +26,6 @@ public class PaymentStatusManagementShowDTO {
     private BigDecimal totalDeductionAmount; // 공제총액
     private BigDecimal netPayment; // 차인지급액
     private int count; // 인원수
-
     private List<SalaryLedgerAllowanceShowDTO> allowances = new ArrayList<>();
 
 }
