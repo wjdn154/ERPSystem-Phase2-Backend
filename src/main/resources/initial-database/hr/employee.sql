@@ -124,18 +124,11 @@ INSERT INTO employee_performance (evaluation_date, employee_id, title, evaluator
 ('2022-08-01', 14, '2022년 성과평가', 10, '일관된 성과를 유지하고 있습니다.', 'B+'),
 ('2023-07-03', 15, '2023년 성과평가', 11, '문서화 및 기록 관리가 필요합니다.', 'D');
 
-INSERT INTO employee_transfer_type (code, description) VALUES
-('PROMOTION', '승진'),
-('DEMOTION', '강등'),
-('LATERAL', '전보'),
-('TEMPORARY_ASSIGNMENT', '임시 배치'),
-('RELOCATION', '이전'),
-('RETURN', '복귀');
 
-INSERT INTO employee_transfer (employee_id, from_department_id, to_department_id, transfer_date, transfer_type_id, reason) VALUES
-(1, 1, 2, '2021-09-01', 1, '팀 리더로 승진하여 새로운 부서로 이동'),
-(2, 2, 3, '2022-03-15', 2, '업무 성과 저조로 강등 조치'),
-(3, 3, 4, '2023-01-05', 3, '해외 프로젝트로 인한 전보'),
-(4, 4, 1, '2023-07-10', 4, '단기 출장으로 임시 배치'),
-(5, 2, 3, '2024-02-20', 5, '부서 이전으로 인한 이동'),
-(6, 3, 2, '2024-05-25', 6, '출산 휴가 복귀 후 원부서로 복귀');
+INSERT INTO employee_transfer (employee_id, from_department_id, to_department_id, transfer_date, transfer_type, reason) VALUES
+(1, 1, 2, '2021-09-01', 'PROMOTION', '팀 리더로 승진하여 새로운 부서로 이동'),
+(2, 2, 3, '2022-03-15', 'DEMOTION', '업무 성과 저조로 강등 조치'),
+(3, 3, 4, '2023-01-05', 'LATERAL', '해외 프로젝트로 인한 전보'),
+(4, 4, 1, '2023-07-10', 'TEMPORARY_ASSIGNMENT', '단기 출장으로 임시 배치'),
+(5, 2, 3, '2024-02-20', 'RELOCATION', '부서 이전으로 인한 이동'),
+(6, 3, 2, '2024-05-25', 'RETURN', '출산 휴가 복귀 후 원부서로 복귀');
