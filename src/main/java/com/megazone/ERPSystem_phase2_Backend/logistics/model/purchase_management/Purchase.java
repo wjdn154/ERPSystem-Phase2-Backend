@@ -86,7 +86,8 @@ public class Purchase {
     // 진행 상태
     @Column
     @Enumerated(EnumType.STRING)
-    private State status;
+    @Builder.Default
+    private State status = State.INVOICED;
 
     // 회계 반영 여부
     @Column

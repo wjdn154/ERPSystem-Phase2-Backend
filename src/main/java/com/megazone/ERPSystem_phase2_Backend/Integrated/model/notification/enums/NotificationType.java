@@ -6,6 +6,8 @@ public enum NotificationType {
     REJECT_VOUCHER("전표 반려"),
     CHANGE_PERMISSION("권한 변경"),
 
+    NEW_ENTRY("신규 항목"),
+
     NEW_MAINTENANCE_HISTORY("신규 유지보수"),
     UPDATE_MAINTENANCE_HISTORY("유지보수 변경"),
     NEW_EQUIPMENT_DATA("신규 설비"),
