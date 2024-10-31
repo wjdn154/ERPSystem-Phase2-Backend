@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductionOrderRepository extends JpaRepository<ProductionOrder, Long>, ProductionOrderRepositoryCustom {
-    Optional<ProductionOrder> findByName(String productionOrderName);
+
     List<ProductionOrder> findByMpsId(Long mpsId);
 
 
