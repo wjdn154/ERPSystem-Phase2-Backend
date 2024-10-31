@@ -17,6 +17,8 @@ public enum NotificationType {
     NEW_MATERIAL("신규 자재"),
     UPDATE_MATERIAL("자재 변경"),
     UPDATE_WORKER("작업자 교육이수여부 변경");
+
+
     private final String koreanName;
 
     NotificationType(String koreanName) {
