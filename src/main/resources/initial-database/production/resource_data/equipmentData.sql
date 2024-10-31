@@ -14,49 +14,35 @@ VALUES
     (1500000, '2022-03-02', '2021-02-04', 1, 1, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/a62db646-0752-4e82-9db7-3e165613fd77_숙성탱크.png', '숙성탱크', 'PRD-EM1-009', '현대자동차', 'TANK-AGING', 'ASSEMBLY', 'REPAIRING', 140),
     (1500000, '2022-03-02', '2021-02-04', 1, 1, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/2c61c3fe-5809-4a06-ab4e-e79f5e4130bb_5축 MCT2.png', '포장 설비', 'PRD-EM1-010', '삼성', 'PACK-MACHINE', 'ASSEMBLY', 'REPAIRING', 150),
     (1500000, '2022-03-02', '2021-02-04', 1, 1, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/7501d330-672e-4709-bbdd-e5b37d3eb846_열분해설비.jpg', '열분해 기계', 'PRD-EM2-001', '삼성', 'THERM-DEC', 'ASSEMBLY', 'REPAIRING', 125),
-    (1500000, '2022-04-02', '2021-04-04', 1, 1, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/52c4dd09-e95c-49cf-a456-4bbe326b6781_물 제트.png', '물 제트 기계', 'PRD-EM2-002', '삼성', 'WATER-JET', 'ASSEMBLY', 'REPAIRING', 135);
-#
+    (1500000, '2022-04-02', '2021-04-04', 1, 1, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/52c4dd09-e95c-49cf-a456-4bbe326b6781_물 제트.png', '물 제트 기계', 'PRD-EM2-002', '삼성', 'WATER-JET', 'ASSEMBLY', 'REPAIRING', 135),
+    (30000000, '2019-03-01', '2019-02-15', 2, 1, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/a342e53f-e238-4583-8ae1-849a5b8f618f_차체조립로봇_1.jpg', '차체 조립 로봇', 'PRD-EM3-001', 'ABB Robotics', 'IRB 6700', 'ASSEMBLY', 'OPERATING', 15),
+    (35000000, '2021-06-01', '2021-05-20', 4, 3, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/535a81dd-590b-4b2b-8a95-48001a01256e_도장시스템_1.jpg', '도장 시스템', 'PRD-EM3-002', 'Dürr', 'EcoBell3', 'ASSEMBLY', 'OPERATING', 10),
+    (40000000, '2020-09-01', '2020-08-15', 5, 4, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/2a31c35c-c069-4359-a6b8-e9a67b91174a_크랙및구조불량검사장비_1.jpg', '정밀 가공기', 'PRD-EM3-003', 'Mazak', 'Integrex i-400', 'MACHINING', 'OPERATING', 25),
+    (50000000, '2018-04-01', '2018-03-10', 9, 5, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/4d50e06d-a508-49f7-bf87-f1c7444b2c64_진공열처리.png', '열처리로', 'PRD-EM3-Q004', 'Seco Warwick', 'Vector 30', 'MACHINING', 'OPERATING', 30),
+    (15000000, '2021-04-15', '2021-04-01', 6, 6, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/27846342-fe87-43b6-ad5f-3d0abe21f8da_크랙및구조불량검사장비_1.jpg', '크랙 및 구조 불량 검사 장비', 'PRD-EM4-001', 'Mitutoyo', 'QV Apex', 'INSPECTION', 'OPERATING', 5),
+    (60000000, '2019-07-01', '2019-06-20', 12, 7, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/9b6d28af-1494-4d45-b42f-b315e5aa88cf_프레스.png', '프레스 기계', 'PRD-EM4-002', 'AIDA', 'NC1-1100', 'ASSEMBLY', 'OPERATING', 50),
+    (50000000, '2020-12-01', '2020-11-15', 16, 8, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/ca8be0a4-522a-4703-84f0-2a5bf54fdfe8_단조프레스.jpg', '단조 프레스', 'PRD-EM4-003', 'SMS Group', 'MP 2500', 'MACHINING', 'OPERATING', 40),
+    (45000000, '2019-09-25', '2019-09-10', 15, 9, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/a3930836-19db-4a82-84f4-71bdef16b713_압출성형기.jpg', '압출 성형기', 'PRD-EM5-001', 'KraussMaffei', 'ZE 65', 'MACHINING', 'OPERATING', 45),
+    (65000000, '2018-12-20', '2018-12-01', 19, 10, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/75350b64-8ecf-4d7b-8122-a7a99919b795_CNC머시닝센터 (2).jpg', 'CNC 머시닝 센터', 'PRD-EM5-002', 'DMG Mori', 'DMU 50', 'MACHINING', 'OPERATING', 55);
+
+
 # INSERT INTO equipment_data (equipment_num, equipment_name, equipment_type, manufacturer, model_name, purchase_date, install_date, operation_status, cost, workcenter_id, factory_id, profile_picture, k_wh)
 # VALUES
-# -- 1. 조립 공정: 차체 조립 로봇
-# ('EQ001', '차체 조립 로봇', 'ASSEMBLY', 'ABB Robotics', 'IRB 6700', '2019-02-15', '2019-03-01', 'OPERATING', 30000000, 1, 2, 'http://wooyang-tech.co.kr/wooimg/21_01.gif', 15),
-#
-# -- 2. 용접 공정: 용접 로봇
-# ('EQ002', '용접 로봇', 'ASSEMBLY', 'KUKA', 'KR 1000 titan', '2020-01-10', '2020-01-25', 'OPERATING', 25000000, 2, 3, 'http://wooyang-tech.co.kr/wooimg/21_02.gif', 20),
-#
-# -- 3. 도장 공정: 도장 시스템
-# ('EQ003', '도장 시스템', 'ASSEMBLY', 'Dürr', 'EcoBell3', '2021-05-20', '2021-06-01', 'OPERATING', 35000000, 3, 4, 'http://wooyang-tech.co.kr/wooimg/21_03.gif', 10),
-#
-# -- 4. 정밀 가공 공정: 정밀 가공기
-# ('EQ004', '정밀 가공기', 'MACHINING', 'Mazak', 'Integrex i-400', '2020-08-15', '2020-09-01', 'OPERATING', 40000000, 4, 5, 'http://wooyang-tech.co.kr/wooimg/21_04.gif', 25),
-#
-# -- 5. 열처리 공정: 열처리로
-# ('EQ005', '열처리로', 'MACHINING', 'Seco Warwick', 'Vector 30', '2018-03-10', '2018-04-01', 'OPERATING', 50000000, 5, 9, 'http://wooyang-tech.co.kr/wooimg/21_05.gif', 30),
-#
-# -- 6. 품질 검사 공정: 품질 검사 장비
-# ('EQ006', '품질 검사 장비', 'INSPECTION', 'Mitutoyo', 'QV Apex', '2021-04-01', '2021-04-15', 'OPERATING', 15000000, 6, 6, 'http://wooyang-tech.co.kr/wooimg/21_06.gif', 5),
-#
-# -- 7. 프레스 공정: 프레스 기계
-# ('EQ007', '프레스 기계', 'ASSEMBLY', 'AIDA', 'NC1-1100', '2019-06-20', '2019-07-01', 'OPERATING', 60000000, 7, 12, 'http://wooyang-tech.co.kr/wooimg/21_07.gif', 50),
-#
-# -- 8. 단조 공정: 단조 프레스
-# ('EQ008', '단조 프레스', 'MACHINING', 'SMS Group', 'MP 2500', '2020-11-15', '2020-12-01', 'OPERATING', 50000000, 8, 16, 'http://wooyang-tech.co.kr/wooimg/21_08.gif', 40),
-#
-# -- 9. 압출 성형 공정: 압출 성형기
-# ('EQ009', '압출 성형기', 'MACHINING', 'KraussMaffei', 'ZE 65', '2019-09-10', '2019-09-25', 'OPERATING', 45000000, 9, 15, 'http://wooyang-tech.co.kr/wooimg/21_09.gif', 45),
-#
-# -- 10. CNC 가공 공정: CNC 머시닝 센터
-# ('EQ010', 'CNC 머시닝 센터', 'MACHINING', 'DMG Mori', 'DMU 50', '2018-12-01', '2018-12-20', 'OPERATING', 65000000, 10, 19, 'http://wooyang-tech.co.kr/wooimg/21_10.gif', 55),
-#
-# -- 11. 전기 테스트 시스템: 전기 테스트 시스템
+# ('EQ001', '차체 조립 로봇', 'ASSEMBLY', 'ABB Robotics', 'IRB 6700', '2019-02-15', '2019-03-01', 'OPERATING', 30000000, 1, 2, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/a342e53f-e238-4583-8ae1-849a5b8f618f_차체조립로봇_1.jpg', 15),
+# ('EQ003', '도장 시스템', 'ASSEMBLY', 'Dürr', 'EcoBell3', '2021-05-20', '2021-06-01', 'OPERATING', 35000000, 3, 4, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/535a81dd-590b-4b2b-8a95-48001a01256e_도장시스템_1.jpg', 10),
+# ('EQ004', '정밀 가공기', 'MACHINING', 'Mazak', 'Integrex i-400', '2020-08-15', '2020-09-01', 'OPERATING', 40000000, 4, 5, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/2a31c35c-c069-4359-a6b8-e9a67b91174a_크랙및구조불량검사장비_1.jpg', 25),
+# ('EQ005', '열처리로', 'MACHINING', 'Seco Warwick', 'Vector 30', '2018-03-10', '2018-04-01', 'OPERATING', 50000000, 5, 9, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/4d50e06d-a508-49f7-bf87-f1c7444b2c64_진공열처리.png', 30),
+# ('EQ006', '크랙 및 구조 불량 검사 장비', 'INSPECTION', 'Mitutoyo', 'QV Apex', '2021-04-01', '2021-04-15', 'OPERATING', 15000000, 6, 6, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/27846342-fe87-43b6-ad5f-3d0abe21f8da_크랙및구조불량검사장비_1.jpg', 5),
+# ('EQ007', '프레스 기계', 'ASSEMBLY', 'AIDA', 'NC1-1100', '2019-06-20', '2019-07-01', 'OPERATING', 60000000, 7, 12, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/9b6d28af-1494-4d45-b42f-b315e5aa88cf_프레스.png', 50),
+# ('EQ008', '단조 프레스', 'MACHINING', 'SMS Group', 'MP 2500', '2020-11-15', '2020-12-01', 'OPERATING', 50000000, 8, 16, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/ca8be0a4-522a-4703-84f0-2a5bf54fdfe8_단조프레스.jpg', 40),
+# ('EQ009', '압출 성형기', 'MACHINING', 'KraussMaffei', 'ZE 65', '2019-09-10', '2019-09-25', 'OPERATING', 45000000, 9, 15, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/a3930836-19db-4a82-84f4-71bdef16b713_압출성형기.jpg', 45),
+# ('EQ010', 'CNC 머시닝 센터', 'MACHINING', 'DMG Mori', 'DMU 50', '2018-12-01', '2018-12-20', 'OPERATING', 65000000, 10, 19, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/75350b64-8ecf-4d7b-8122-a7a99919b795_CNC머시닝센터 (2).jpg', 55);
+
+
 # ('EQ011', '전기 테스트 시스템', 'INSPECTION', 'Keysight', 'TestPro 9000', '2021-02-15', '2021-03-01', 'OPERATING', 20000000, 11, 6, 'http://wooyang-tech.co.kr/wooimg/21_11.gif', 12),
-#
-# -- 12. 배터리 조립기: 배터리 조립기
 # ('EQ012', '배터리 조립기', 'ASSEMBLY', 'Panasonic', 'BA-300', '2020-09-20', '2020-10-05', 'OPERATING', 30000000, 12, 2, 'http://wooyang-tech.co.kr/wooimg/21_12.gif', 18),
-#
-# -- 13. 자동 나사 조립기: 자동 나사 조립기
-# ('EQ013', '자동 나사 조립기', 'ASSEMBLY', 'Bosch', 'ScrewMaster 200', '2019-11-10', '2019-11-25', 'OPERATING', 10000000, 13, 2, 'http://wooyang-tech.co.kr/wooimg/21_13.gif', 5),
-#
+# ('EQ013', '자동 나사 조립기', 'ASSEMBLY', 'Bosch', 'ScrewMaster 200', '2019-11-10', '2019-11-25', 'OPERATING', 10000000, 13, 2, 'http://wooyang-tech.co.kr/wooimg/21_13.gif', 5);
+
 # -- 14. 고온 소성로: 고온 소성로
 # ('EQ014', '고온 소성로', 'MACHINING', 'Lindberg', 'HTF55667C', '2020-03-20', '2020-04-01', 'OPERATING', 60000000, 14, 9, 'http://wooyang-tech.co.kr/wooimg/21_14.gif', 60),
 #
