@@ -99,7 +99,6 @@ spring:
 
         - classpath:initial-database/logistics/sales_management/shipping_order.sql
         - classpath:initial-database/logistics/sales_management/sale_plan.sql
-        - classpath:initial-database/logistics/sales_management/sale_plan_detail.sql
         - classpath:initial-database/logistics/sales_management/quotation.sql
         - classpath:initial-database/logistics/sales_management/orders.sql
         - classpath:initial-database/logistics/sales_management/sale.sql
