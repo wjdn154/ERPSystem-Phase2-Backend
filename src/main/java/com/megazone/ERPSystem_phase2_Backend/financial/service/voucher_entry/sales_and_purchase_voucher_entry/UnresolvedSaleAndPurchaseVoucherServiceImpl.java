@@ -99,9 +99,21 @@ public class UnresolvedSaleAndPurchaseVoucherServiceImpl implements UnresolvedSa
                 .voucherRegistrationTime(LocalDateTime.now())
                 .approvalStatus(ApprovalStatus.PENDING)
                 .build();
+
         unresolvedSaleAndPurchaseVoucher.setUnresolvedVouchers(AutoCreateVoucher(unresolvedSaleAndPurchaseVoucher));
         unresolvedSaleAndPurchaseVoucher.setVoucherNumber(unresolvedSaleAndPurchaseVoucher.getUnresolvedVouchers().get(0).
                 getVoucherNumber());
+
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription("미결 매출매입전표 추가")
+                .activityType(ActivityType.FINANCE)
+                .activityTime(LocalDateTime.now())
+                .build());
+        notificationService.createAndSendNotification(
+                ModuleType.FINANCE,
+                PermissionType.USER,
+                "미결 매출매입전표 추가",
+                NotificationType.NEW_UNRESOLVED_SALEANDPURCHASE_VOUCHER);
         return unresolvedSaleAndPurchaseVoucher;
     }
 

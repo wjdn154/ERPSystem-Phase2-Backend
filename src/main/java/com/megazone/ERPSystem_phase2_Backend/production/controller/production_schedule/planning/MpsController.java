@@ -42,7 +42,6 @@ public class MpsController {
     @PostMapping("/search")
     public ResponseEntity<Object> searchMps(@RequestBody Map<String, LocalDate> requestData) {
         LocalDate date = requestData.get("searchDate");
-        System.out.println("date = " + date);
         List<searchMpsDTO> mpsList = mpsService.searchMps(date);
         return new ResponseEntity<>(mpsList, HttpStatus.OK);
     }

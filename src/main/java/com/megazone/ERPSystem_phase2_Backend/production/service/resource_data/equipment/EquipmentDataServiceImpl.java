@@ -157,11 +157,9 @@ public class EquipmentDataServiceImpl implements EquipmentDataService {
 
             if (file.exists()) {
                 Files.delete(Paths.get(file.getPath()));  // 파일 삭제
-                System.out.println("기존 이미지 파일이 삭제되었습니다: " + file.getPath());
             }
         } catch (IOException e) {
             // 삭제 실패 시 예외 처리
-            System.err.println("이미지 파일 삭제 실패: " + e.getMessage());
             throw new RuntimeException("이미지 파일 삭제 실패", e);
         }
     }

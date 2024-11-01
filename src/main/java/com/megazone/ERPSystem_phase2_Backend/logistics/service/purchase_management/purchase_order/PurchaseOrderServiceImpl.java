@@ -276,7 +276,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService{
 
             if (newOrder.getCurrency().getId() == 6) {
                 vat = vatTypeService.vatAmountCalculate(vatAmountWithSupplyAmountDTO);
-                System.out.println("vat: " + vat);
             } else if (newOrder.getCurrency().getExchangeRate() != null) {
                 localAmount = supplyPrice.multiply(newOrder.getCurrency().getExchangeRate());
             } else {

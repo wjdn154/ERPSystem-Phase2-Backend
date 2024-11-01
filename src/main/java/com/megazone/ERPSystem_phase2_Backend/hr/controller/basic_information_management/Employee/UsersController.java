@@ -173,7 +173,7 @@ public class UsersController {
      * @return 조회된 사용자 정보를 반환함.
      */
     @PostMapping("/users/{id}")
-    public ResponseEntity<UsersShowDTO> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UsersShowDTO> getUserById(@PathVariable("id") Long id) {
         UsersShowDTO user = usersService.findUserById(id);
         return ResponseEntity.ok(user);
     }

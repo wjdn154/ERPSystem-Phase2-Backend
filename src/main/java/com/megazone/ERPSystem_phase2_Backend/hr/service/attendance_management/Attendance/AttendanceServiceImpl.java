@@ -37,7 +37,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         LocalDateTime checkOutTime = entryDTO.getCheckOutTime();
         LocalDateTime checkInTime = entryDTO.getCheckInTime();
-        System.out.println("dto.getCheckInTimeStr() = " + entryDTO.getCheckInTime());
         LocalDate date = LocalDate.now();
         // 사용자가 직접 선택한 상태가 있다면 우선 적용
         if (entryDTO.getStatus() != null && !entryDTO.getStatus().equals("AUTO")) {
@@ -126,8 +125,6 @@ public class AttendanceServiceImpl implements AttendanceService {
         // checkInTime과 checkOutTime이 null이 아닐 때만 Time으로 변환
         attendance.setCheckInTime(dto.getCheckInTime());  // 출근 시간 설정 (null 처리)
         attendance.setCheckOutTime(dto.getCheckOutTime());  // 퇴근 시간 설정 (null 처리)
-        System.out.println(dto.getCheckInTime());
-        System.out.println(dto.getCheckOutTime());
 
         attendance.setStatus(AttendanceStatus.valueOf(attendanceStatus));  // 근태 상태 설정
 

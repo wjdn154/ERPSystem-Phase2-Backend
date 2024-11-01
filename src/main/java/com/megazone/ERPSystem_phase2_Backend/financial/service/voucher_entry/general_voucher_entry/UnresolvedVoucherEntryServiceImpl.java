@@ -133,6 +133,17 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e.getMessage());
         }
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription("미결 일반전표 " +  savedVoucherList.size() + "건 추가")
+                .activityType(ActivityType.FINANCE)
+                .activityTime(LocalDateTime.now())
+                .build());
+        notificationService.createAndSendNotification(
+                ModuleType.FINANCE,
+                PermissionType.USER,
+                "미결 일반전표 " +  savedVoucherList.size() + "건 추가",
+                NotificationType.NEW_UNRESOLVEDVOUCHER);
+
         return savedVoucherList; // 생성된 미결전표 반환
     }
 
@@ -279,6 +290,17 @@ public class UnresolvedVoucherEntryServiceImpl implements UnresolvedVoucherEntry
                 if(deleteVouchers.isEmpty()) {
                     throw new NoSuchElementException("검색조건에 해당하는 미결전표가 없습니다.");
                 }
+
+                recentActivityRepository.save(RecentActivity.builder()
+                        .activityDescription("미결 일반전표 " +  deleteVouchers.size() + "건 삭제")
+                        .activityType(ActivityType.FINANCE)
+                        .activityTime(LocalDateTime.now())
+                        .build());
+                notificationService.createAndSendNotification(
+                        ModuleType.FINANCE,
+                        PermissionType.USER,
+                        "미결 일반전표 " +  deleteVouchers.size() + "건 삭제",
+                        NotificationType.DELETE_UNRESOLVEDVOUCHER);
             }
         }
         catch (Exception e) {

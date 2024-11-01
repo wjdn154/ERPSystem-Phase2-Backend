@@ -7,6 +7,7 @@ import com.megazone.ERPSystem_phase2_Backend.financial.model.financial_statement
 import com.megazone.ERPSystem_phase2_Backend.financial.service.financial_statements_ledger.IncomeStatementService;
 import com.megazone.ERPSystem_phase2_Backend.financial.service.ledger.SalesAndPurchaseLedgerService;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
+import com.megazone.ERPSystem_phase2_Backend.logistics.service.inventory_management.inventory.InventoryService;
 import com.megazone.ERPSystem_phase2_Backend.production.model.work_performance.work_report.WorkPerformance;
 import com.megazone.ERPSystem_phase2_Backend.production.repository.work_performance.work_report.WorkPerformanceRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
@@ -36,6 +37,7 @@ public class IntegratedServiceImpl implements IntegratedService {
     private final IncomeStatementService incomeStatementService;
     private final WorkPerformanceRepository workPerformanceRepository;
     private final EmployeeRepository employeeRepory;
+    private final InventoryService inventoryService;
 
     @Override
     public DashboardDataDTO dashboard() {
@@ -65,6 +67,8 @@ public class IntegratedServiceImpl implements IntegratedService {
                 .productionName("총 생산량")
                 .productionValue(totalWorkPerformance)
                 .hrName("총 직원수")
+                .logisticsName("총 재고 현황")
+                .logisticsValue(inventoryService.allInventoryCount())
                 .hrValue(Long.valueOf((employeeRepory.findAll().size())))
                 .build();
         return widgets;

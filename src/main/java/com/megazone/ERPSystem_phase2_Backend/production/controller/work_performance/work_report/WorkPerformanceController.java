@@ -40,7 +40,7 @@ public class WorkPerformanceController {
 
     //작업 실적 상세 조회
     @PostMapping("/workPerformance/{id}")
-    private ResponseEntity<WorkPerformanceDetailDTO> getWorkPerformanceDetail(@PathVariable Long id) {
+    private ResponseEntity<WorkPerformanceDetailDTO> getWorkPerformanceDetail(@PathVariable("id") Long id) {
 
         //서비스에서 작업 실적 상세 정보 가져옴.
         Optional<WorkPerformanceDetailDTO> result = workPerformanceService.findWorkPerformanceById(id);

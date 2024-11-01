@@ -27,7 +27,6 @@ public class QuotationController {
      */
     @PostMapping("/")
     public ResponseEntity<?> getQuotation(@RequestBody(required = false) SearchDTO dto) {
-        System.out.println("dto = " + dto);
         List<QuotationResponseDto> response = quotationService.findAllQuotations(dto);
 
         if(response.isEmpty()) {
