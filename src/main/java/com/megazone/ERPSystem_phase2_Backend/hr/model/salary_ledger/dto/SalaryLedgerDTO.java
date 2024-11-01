@@ -1,7 +1,6 @@
 package com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto;
 
 import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.SalaryLedger;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

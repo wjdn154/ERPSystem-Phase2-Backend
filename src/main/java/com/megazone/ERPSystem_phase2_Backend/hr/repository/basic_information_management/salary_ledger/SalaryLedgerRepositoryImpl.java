@@ -7,7 +7,6 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.QSalaryLedge
 import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.QSalaryLedgerDate;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto.*;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -42,6 +41,7 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
                         qSalaryLedger.taxableAmount,
                         qSalaryLedger.nonTaxableAmount,
                         qSalaryLedger.taxableIncome,
+                        qSalaryLedger.finalized,
                         qSalaryLedgerAllowance.name,
                         qSalaryLedgerAllowance.amount
                 )
@@ -80,6 +80,7 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
                 salaryLedgerDTO.setTaxableAmount(row.get(qSalaryLedger.taxableAmount));
                 salaryLedgerDTO.setNonTaxableAmount(row.get(qSalaryLedger.nonTaxableAmount));
                 salaryLedgerDTO.setTaxableIncome(row.get(qSalaryLedger.taxableIncome));
+                salaryLedgerDTO.setFinalized(row.get(qSalaryLedger.finalized));
                 salaryLedgerDTO.setAllowances(new ArrayList<>());
                 ledgerMap.put(ledgerId, salaryLedgerDTO);
             }
