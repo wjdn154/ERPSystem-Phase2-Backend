@@ -26,8 +26,7 @@ public class ShippingOrderController {
      * @return
      */
     @PostMapping("/")
-    public ResponseEntity<?> getShippingOrders(@RequestBody(required = false) SearchDTO dto) {
-        System.out.println("dto = " + dto);
+    public ResponseEntity<?> getShippingOrders(@RequestBody(required = false) SearchDTO dto) {;
 
         List<ShippingOrderResponseDto> response = shippingOrderService.findAllShippingOrders(dto);
 

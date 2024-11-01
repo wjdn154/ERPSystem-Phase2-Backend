@@ -1,6 +1,13 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.sales_management.orders;
 
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.VatAmountWithSupplyAmountDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
@@ -25,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -44,6 +52,9 @@ public class OrdersServiceImpl implements OrdersService {
     private final CurrencyRepository currencyRepository;
     private final ProductRepository productRepository;
     private final VatTypeService vatTypeService;
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
+
 
 
 
@@ -188,6 +199,18 @@ public class OrdersServiceImpl implements OrdersService {
         try {
             Orders orders = toEntity(createDto);
             orders = ordersRepository.save(orders);
+
+            recentActivityRepository.save(RecentActivity.builder()
+                    .activityDescription("신규 주문서 등록 : " + orders.getDate() + " -" + orders.getId())
+                    .activityType(ActivityType.LOGISTICS)
+                    .activityTime(LocalDateTime.now())
+                    .build());
+            notificationService.createAndSendNotification(
+                    ModuleType.LOGISTICS,
+                    PermissionType.USER,
+                    "신규 주문서 (" + orders.getDate() + " -" + orders.getId() + ") 가 등록되었습니다.",
+                    NotificationType.NEW_ENTRY
+            );
             return toDetailDto(orders);
         } catch (Exception e) {
             log.error("주문서 생성 실패: ", e);
@@ -198,6 +221,7 @@ public class OrdersServiceImpl implements OrdersService {
     /** 주문서 등록 관련 메서드 **/
     // 주문서 등록 DTO -> Entity 변환 메소드
     private Orders toEntity(OrdersCreateDto dto) {
+
         Orders orders = Orders.builder()
                 .client(clientRepository.findById(dto.getClientId())
                         .orElseThrow(() -> new RuntimeException("거래처 정보를 찾을 수 없습니다.")))
@@ -213,6 +237,9 @@ public class OrdersServiceImpl implements OrdersService {
                 .journalEntryCode(dto.getJournalEntryCode())
                 .remarks(dto.getRemarks())
                 .build();
+
+        ElectronicTaxInvoiceStatus status = ElectronicTaxInvoiceStatus.valueOf(dto.getElectronicTaxInvoiceStatus());
+        orders.setElectronicTaxInvoiceStatus(status);
 
         return getOrders(dto, orders);
     }
@@ -241,7 +268,6 @@ public class OrdersServiceImpl implements OrdersService {
 
             if (orders.getCurrency().getId() == 6) {
                 vat = vatTypeService.vatAmountCalculate(vatAmountWithSupplyAmountDTO);
-                System.out.println("vat: " + vat);
             } else if (orders.getCurrency().getExchangeRate() != null) {
                 localAmount = supplyPrice.multiply(orders.getCurrency().getExchangeRate());
             } else {

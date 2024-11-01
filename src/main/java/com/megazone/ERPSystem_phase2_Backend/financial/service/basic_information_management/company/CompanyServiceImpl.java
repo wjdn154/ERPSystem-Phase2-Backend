@@ -1,5 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.basic_information_management.company;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.company.dto.*;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.common.Contact;
@@ -9,6 +16,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,6 +34,8 @@ public class CompanyServiceImpl implements CompanyService {
     private final ContactRepository contactRepository;
     private final MainBusinessRepository mainBusinessRepository;
     private final TaxOfficeRepository taxOfficeRepository;
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 
     @Override
     public List<CompanyDTO> findAllCompany() {
@@ -65,6 +75,17 @@ public class CompanyServiceImpl implements CompanyService {
 
         // 엔티티를 저장함
         Company savedCompany = companyRepository.save(company);
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription(company.getName() + " 회사 추가")
+                .activityType(ActivityType.FINANCE)
+                .activityTime(LocalDateTime.now())
+                .build());
+
+        notificationService.createAndSendNotification(
+                ModuleType.ALL,
+                PermissionType.ADMIN,
+                company.getName() + " 회사 추가",
+                NotificationType.NEW_COMPANY);
 
         // 저장된 엔티티를 DTO로 변환하여 반환함
         return Optional.of(mapToDTO(savedCompany));
@@ -107,6 +128,18 @@ public class CompanyServiceImpl implements CompanyService {
 
             // 회사 정보를 업데이트하고 저장함
             Company savedCompany = companyRepository.save(existingCompany);
+
+            recentActivityRepository.save(RecentActivity.builder()
+                    .activityDescription(savedCompany.getName() + " 회사 수정")
+                    .activityType(ActivityType.FINANCE)
+                    .activityTime(LocalDateTime.now())
+                    .build());
+
+            notificationService.createAndSendNotification(
+                    ModuleType.ALL,
+                    PermissionType.ADMIN,
+                    savedCompany.getName() + " 회사 수정",
+                    NotificationType.UPDATE_COMPANY);
 
             // 수정된 엔티티를 DTO로 변환하여 반환함
             return mapToDTO(savedCompany);

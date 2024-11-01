@@ -26,7 +26,6 @@ public class OrdersController {
      */
     @PostMapping("/")
     public ResponseEntity<?> getOrders(@RequestBody(required = false) SearchDTO dto) {
-        System.out.println("dto = " + dto);
         List<OrdersResponseDto> response = ordersService.findAllOrders(dto);
 
         if(response.isEmpty()) {

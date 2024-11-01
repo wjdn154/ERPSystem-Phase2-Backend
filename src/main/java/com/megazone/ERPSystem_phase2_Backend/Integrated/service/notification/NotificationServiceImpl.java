@@ -154,7 +154,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
 
-    // 알림 생성 및 전송
+    // 알림 생성 및 전송 통합
     @Override
     @Transactional
     public Notification createAndSendNotification(ModuleType module, PermissionType permission, String content, NotificationType type) {
@@ -183,6 +183,8 @@ public class NotificationServiceImpl implements NotificationService {
         System.out.println("emitters = " + emitters);
 
         emitters.forEach((key, subscription) -> {
+            System.out.println("key = " + key);
+            System.out.println("tenantId = " + tenantId);
 
             // 모든 구독자에게 전송할지 여부 확인
             boolean isForAllModules = notification.getModule() == ModuleType.ALL || subscription.getModule() == ModuleType.ALL;

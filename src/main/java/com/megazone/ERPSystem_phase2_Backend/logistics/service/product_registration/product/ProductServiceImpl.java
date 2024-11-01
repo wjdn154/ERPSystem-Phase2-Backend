@@ -99,8 +99,6 @@ public class ProductServiceImpl implements ProductService{
         if (imageFile != null) {
             imagePath = productImageService.uploadProductImage(imageFile);
             // 파일 저장 로직 추가
-        } else {
-            System.out.println("파일이 존재하지 않습니다.");
         }
 
         // 엔티티로 변환 후 저장
@@ -176,11 +174,9 @@ public class ProductServiceImpl implements ProductService{
 
             if (file.exists()) {
                 Files.delete(Paths.get(file.getPath()));  // 파일 삭제
-                System.out.println("기존 이미지 파일이 삭제되었습니다: " + file.getPath());
             }
         } catch (IOException e) {
             // 삭제 실패 시 예외 처리
-            System.err.println("이미지 파일 삭제 실패: " + e.getMessage());
             throw new RuntimeException("이미지 파일 삭제 실패", e);
         }
     }

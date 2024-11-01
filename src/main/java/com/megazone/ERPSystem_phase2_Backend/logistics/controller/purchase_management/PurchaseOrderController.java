@@ -37,7 +37,6 @@ public class PurchaseOrderController {
      */
     @PostMapping("/")
     public ResponseEntity<?> getPurchaseOrders(@RequestBody(required = false) SearchDTO dto) {
-        System.out.println("dto = " + dto);
         List<PurchaseOrderResponseDto> response = purchaseOrderService.findAllPurchaseOrders(dto);
 
         if(response.isEmpty()){

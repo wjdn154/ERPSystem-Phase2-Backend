@@ -1,5 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.receiving_schedule_management;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory.Inventory;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.purchase_management.ReceivingOrderDetail;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.receiving_processing_management.ReceivingSchedule;
@@ -17,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +37,8 @@ public class ReceivingScheduleServiceImpl implements ReceivingScheduleService {
     private final WarehouseLocationRepository warehouseLocationRepository;
     private final ReceivingScheduleRepository receivingScheduleRepository;
     private final InventoryRepository inventoryRepository;
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 
 
     @Override
@@ -101,6 +111,20 @@ public class ReceivingScheduleServiceImpl implements ReceivingScheduleService {
                     .build();
 
             receivingScheduleRepository.save(receivingSchedule);
+
+            // 알림 생성
+            recentActivityRepository.save(RecentActivity.builder()
+                    .activityDescription("새로운 입고 예정 스케줄이 등록되었습니다.")
+                    .activityType(ActivityType.LOGISTICS)
+                    .activityTime(LocalDateTime.now())
+                    .build());
+
+            notificationService.createAndSendNotification(
+                    ModuleType.LOGISTICS,
+                    PermissionType.ADMIN,
+                    "새로운 입고 스케줄이 등록되었습니다.",
+                    NotificationType.RECEIVING_COMPLETE
+            );
         }
     }
 

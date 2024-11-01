@@ -1,5 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.purchase_management.purchase_request;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Employee;
 import com.megazone.ERPSystem_phase2_Backend.hr.repository.basic_information_management.Employee.EmployeeRepository;
@@ -24,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,6 +46,8 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
     private final WarehouseRepository warehouseRepository;
     private final CurrencyRepository currencyRepository;
     private final ProductRepository productRepository;
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 
     /**
      * 발주요청 목록 조회
@@ -194,6 +204,20 @@ public class PurchaseRequestServiceImpl implements PurchaseRequestService {
         try {
             PurchaseRequest purchaseRequest = toEntity(createDto);
             purchaseRequest = purchaseRequestRepository.save(purchaseRequest);
+
+
+            recentActivityRepository.save(RecentActivity.builder()
+                    .activityDescription("신규 발주요청 등록 : " + purchaseRequest.getDate() + " -" + purchaseRequest.getId())
+                    .activityType(ActivityType.LOGISTICS)
+                    .activityTime(LocalDateTime.now())
+                    .build());
+            notificationService.createAndSendNotification(
+                    ModuleType.LOGISTICS,
+                    PermissionType.USER,
+                    "신규 발주요청 (" + purchaseRequest.getDate() + " -" + purchaseRequest.getId() + ") 이 등록되었습니다.",
+                    NotificationType.NEW_ENTRY
+            );
+
             return toDetailDto(purchaseRequest);
         } catch (Exception e) {
             log.error("발주 요청 생성 실패: ", e);

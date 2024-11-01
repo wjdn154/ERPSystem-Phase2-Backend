@@ -1,5 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.general_voucher_entry;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.dto.ResolvedVoucherDeleteDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.ResolvedVoucher;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.general_voucher_entry.UnresolvedVoucher;
@@ -21,6 +28,8 @@ import java.util.function.Function;
 @Transactional
 public class ResolvedVoucherServiceImpl implements ResolvedVoucherService {
     private final ResolvedVoucherRepository resolvedVoucherRepository;
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 
     /**
      * 미결전표가 승인되었을때 일반전표가 등록되는 메소드
@@ -118,6 +127,18 @@ public class ResolvedVoucherServiceImpl implements ResolvedVoucherService {
                 if(deleteVouchers.isEmpty()) {
                     throw new NoSuchElementException("검색조건에 해당하는 전표가 없습니다.");
                 }
+
+                recentActivityRepository.save(RecentActivity.builder()
+                        .activityDescription("승인된 일반전표 " +  deleteVouchers.size() + "건 삭제")
+                        .activityType(ActivityType.FINANCE)
+                        .activityTime(LocalDateTime.now())
+                        .build());
+                notificationService.createAndSendNotification(
+                        ModuleType.FINANCE,
+                        PermissionType.USER,
+                        "승인된 일반전표 " +  deleteVouchers.size() + "건 삭제",
+                        NotificationType.DELETE_RESOLVEDVOUCHER);
+
             }
         }
         catch (Exception e) {

@@ -1,5 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.shipping_processing_management;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory.Inventory;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.sales_management.SaleState;
@@ -19,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +40,8 @@ public class ShippingProcessingServiceImpl implements ShippingProcessingService 
     private final ShippingOrderDetailRepository shippingOrderDetailRepository;
     private final ShippingProcessingRepository shippingProcessingRepository;
     private final ShippingOrderRepository shippingOrderRepository;
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 
     @Override
     public void registerShippingProcessing(ShippingProcessingRequestDTO requestDTO) {
@@ -64,6 +74,22 @@ public class ShippingProcessingServiceImpl implements ShippingProcessingService 
                 .build();
 
         shippingProcessingRepository.save(shippingProcessing);
+
+        // RecentActivity 기록
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription("출고 지시가 등록되었습니다. 출고 번호: " + shippingNumber)
+                .activityType(ActivityType.LOGISTICS)
+                .activityTime(LocalDateTime.now())
+                .build());
+
+        // 관리자에게 출고 지시 등록 알림 전송
+        notificationService.createAndSendNotification(
+                ModuleType.LOGISTICS,
+                PermissionType.ADMIN,
+                "출고 지시가 대기 상태로 등록되었습니다. 출고 번호: " + shippingNumber,
+                NotificationType.SHIPPING_ORDER
+        );
+
 
         ShippingOrderDetail updatedShippingOrderDetail = ShippingOrderDetail.builder()
                 .id(shippingOrderDetail.getId())
@@ -146,6 +172,22 @@ public class ShippingProcessingServiceImpl implements ShippingProcessingService 
                 .build();
         shippingProcessingRepository.save(shippingProcessing);
 
+        // RecentActivity 기록
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription("출고 지시 번호: " + shippingProcessing.getShippingDate() + "/ " + shippingProcessing.getShippingNumber() + " 출고 완료")
+                .activityType(ActivityType.LOGISTICS)
+                .activityTime(LocalDateTime.now())
+                .build());
+
+        // 관리자에게 출고 처리 완료 알림 전송
+        notificationService.createAndSendNotification(
+                ModuleType.LOGISTICS,
+                PermissionType.ADMIN,
+                "출고 지시 번호: " + shippingProcessing.getShippingDate() + "/ " + shippingProcessing.getShippingNumber() + " 출고 완료",
+                NotificationType.SHIPPED_ORDER
+        );
+
+
         // ShippingOrderDetail 상태 업데이트
         shippingOrderDetail = ShippingOrderDetail.builder()
                 .id(shippingOrderDetail.getId())
@@ -176,6 +218,20 @@ public class ShippingProcessingServiceImpl implements ShippingProcessingService 
                     .state(SaleState.COMPLETED)
                     .build();
             shippingOrderRepository.save(shippingOrder);
+
+            // 출고 완료 알림 및 최근 활동 기록
+            recentActivityRepository.save(RecentActivity.builder()
+                    .activityDescription("주문 ID: " + shippingOrder.getId() + shippingOrder.getShippingOrderDetails().size() + "건 출고 처리 완료")
+                    .activityType(ActivityType.LOGISTICS)
+                    .activityTime(LocalDateTime.now())
+                    .build());
+
+            notificationService.createAndSendNotification(
+                    ModuleType.LOGISTICS,
+                    PermissionType.ADMIN,
+                    "모든 출고 지시가 완료되었습니다. 주문 ID: " + shippingOrder.getId(),
+                    NotificationType.SHIPPING_ORDER_COMPLETE
+            );
         }
     }
 

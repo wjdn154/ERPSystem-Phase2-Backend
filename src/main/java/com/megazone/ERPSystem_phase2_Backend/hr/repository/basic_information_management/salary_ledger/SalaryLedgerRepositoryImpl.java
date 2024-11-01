@@ -7,7 +7,6 @@ import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.QSalaryLedge
 import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.QSalaryLedgerDate;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.salary_ledger.dto.*;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -42,6 +41,7 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
                         qSalaryLedger.taxableAmount,
                         qSalaryLedger.nonTaxableAmount,
                         qSalaryLedger.taxableIncome,
+                        qSalaryLedger.finalized,
                         qSalaryLedgerAllowance.name,
                         qSalaryLedgerAllowance.amount
                 )
@@ -80,6 +80,7 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
                 salaryLedgerDTO.setTaxableAmount(row.get(qSalaryLedger.taxableAmount));
                 salaryLedgerDTO.setNonTaxableAmount(row.get(qSalaryLedger.nonTaxableAmount));
                 salaryLedgerDTO.setTaxableIncome(row.get(qSalaryLedger.taxableIncome));
+                salaryLedgerDTO.setFinalized(row.get(qSalaryLedger.finalized));
                 salaryLedgerDTO.setAllowances(new ArrayList<>());
                 ledgerMap.put(ledgerId, salaryLedgerDTO);
             }
@@ -111,17 +112,19 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
                 results = queryFactory.select(
                                         qEmployee.id,
                                         qEmployee.lastName.concat(qEmployee.firstName),
-                                        qSalaryLedgerAllowance.name,
-                                        qSalaryLedgerAllowance.amount.sum(),
-                                        qSalaryLedger.healthInsurancePensionAmount.sum(),
-                                        qSalaryLedger.incomeTaxAmount.sum(),
-                                        qSalaryLedger.localIncomeTaxAmount.sum(),
-                                        qSalaryLedger.longTermCareInsurancePensionAmount.sum(),
-                                        qSalaryLedger.nationalPensionAmount.sum(),
-                                        qSalaryLedger.netPayment.sum(),
-                                        qSalaryLedger.privateSchoolPensionAmount.sum(),
-                                        qSalaryLedger.totalDeductionAmount.sum(),
-                                        qSalaryLedger.totalSalaryAmount.sum(),
+                                qSalaryLedger.nationalPensionAmount.sum(),
+                                qSalaryLedger.privateSchoolPensionAmount.sum(),
+                                qSalaryLedger.healthInsurancePensionAmount.sum(),
+                                qSalaryLedger.employmentInsuranceAmount.sum(),
+                                qSalaryLedger.longTermCareInsurancePensionAmount.sum(),
+                                qSalaryLedger.incomeTaxAmount.sum(),
+                                qSalaryLedger.localIncomeTaxAmount.sum(),
+                                qSalaryLedger.totalSalaryAmount.sum(),
+                                qSalaryLedger.taxableIncome.sum(),
+                                qSalaryLedger.totalDeductionAmount.sum(),
+                                qSalaryLedger.netPayment.sum(),
+                                qSalaryLedgerAllowance.name,
+                                qSalaryLedgerAllowance.amount.sum(),
                                         qEmployee.id.count()
                                 )
                         .from(qSalaryLedger)
@@ -136,19 +139,21 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
             case PERIOD -> {
                 // 날짜조건별
                 results = queryFactory.select(
-                        qSalaryLedger.salaryLedgerDate.id,
+                                qSalaryLedgerDate.id,
                                 qSalaryLedgerDate.description,
-                                qSalaryLedgerAllowance.name,
-                                qSalaryLedgerAllowance.amount.sum(),
+                                qSalaryLedger.nationalPensionAmount.sum(),
+                                qSalaryLedger.privateSchoolPensionAmount.sum(),
                                 qSalaryLedger.healthInsurancePensionAmount.sum(),
+                                qSalaryLedger.employmentInsuranceAmount.sum(),
+                                qSalaryLedger.longTermCareInsurancePensionAmount.sum(),
                                 qSalaryLedger.incomeTaxAmount.sum(),
                                 qSalaryLedger.localIncomeTaxAmount.sum(),
-                                qSalaryLedger.longTermCareInsurancePensionAmount.sum(),
-                                qSalaryLedger.nationalPensionAmount.sum(),
-                                qSalaryLedger.netPayment.sum(),
-                                qSalaryLedger.privateSchoolPensionAmount.sum(),
-                                qSalaryLedger.totalDeductionAmount.sum(),
                                 qSalaryLedger.totalSalaryAmount.sum(),
+                                qSalaryLedger.taxableIncome.sum(),
+                                qSalaryLedger.totalDeductionAmount.sum(),
+                                qSalaryLedger.netPayment.sum(),
+                                qSalaryLedgerAllowance.name,
+                                qSalaryLedgerAllowance.amount.sum(),
                                 qEmployee.id.count()
                         )
                         .from(qSalaryLedger)
@@ -164,21 +169,22 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
 
                 // 부서별
                 results = queryFactory.select(
-                                        qDepartment.id,
-                                        qDepartment.departmentName,
-                                        qSalaryLedgerAllowance.name,
-                                        qSalaryLedgerAllowance.amount.sum(),
-                                        qSalaryLedger.healthInsurancePensionAmount.sum(),
-                                        qSalaryLedger.incomeTaxAmount.sum(),
-                                        qSalaryLedger.localIncomeTaxAmount.sum(),
-                                        qSalaryLedger.longTermCareInsurancePensionAmount.sum(),
-                                        qSalaryLedger.nationalPensionAmount.sum(),
-                                        qSalaryLedger.netPayment.sum(),
-                                        qSalaryLedger.privateSchoolPensionAmount.sum(),
-                                        qSalaryLedger.totalDeductionAmount.sum(),
-                                        qSalaryLedger.totalSalaryAmount.sum(),
-                                        qDepartment.id.count().divide(dto.getSalaryEndId())
-                                )
+                                qDepartment.id,
+                                qDepartment.departmentName,
+                                qSalaryLedger.nationalPensionAmount.sum(),
+                                qSalaryLedger.privateSchoolPensionAmount.sum(),
+                                qSalaryLedger.healthInsurancePensionAmount.sum(),
+                                qSalaryLedger.employmentInsuranceAmount.sum(),
+                                qSalaryLedger.longTermCareInsurancePensionAmount.sum(),
+                                qSalaryLedger.incomeTaxAmount.sum(),
+                                qSalaryLedger.localIncomeTaxAmount.sum(),
+                                qSalaryLedger.totalSalaryAmount.sum(),
+                                qSalaryLedger.taxableIncome.sum(),
+                                qSalaryLedger.totalDeductionAmount.sum(),
+                                qSalaryLedger.netPayment.sum(),
+                                qSalaryLedgerAllowance.name,
+                                qSalaryLedgerAllowance.amount.sum(),
+                                        qDepartment.id.count().divide(dto.getSalaryEndId()))
                         .from(qSalaryLedger)
                         .join(qSalaryLedger.allowance, qSalaryLedgerAllowance)
                         .join(qEmployee).on(qEmployee.id.eq(qSalaryLedger.employee.id))
@@ -197,7 +203,6 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
         Long ledgerId = 0L;
         String name = "";
         for (Tuple row : results) {
-            PaymentStatusManagementShowDTO result = ledgerMap.get(ledgerId);
 
             switch (dto.getPaymentStatusType()) {
                 case DEPARTMENT -> {
@@ -217,23 +222,25 @@ public class SalaryLedgerRepositoryImpl implements SalaryLedgerRepositoryCustom 
                 }
             }
 
+            PaymentStatusManagementShowDTO result = ledgerMap.get(ledgerId);
+
             if (result == null) {
-                PaymentStatusManagementShowDTO newDto = new PaymentStatusManagementShowDTO();
-                newDto.setId(ledgerId);
-                newDto.setDescriptionName(name);
-                newDto.setNationalPensionAmount(row.get(qSalaryLedger.nationalPensionAmount));
-                newDto.setPrivateSchoolPensionAmount(row.get(qSalaryLedger.privateSchoolPensionAmount));
-                newDto.setHealthInsurancePensionAmount(row.get(qSalaryLedger.healthInsurancePensionAmount));
-                newDto.setEmploymentInsuranceAmount(row.get(qSalaryLedger.employmentInsuranceAmount));
-                newDto.setLongTermCareInsurancePensionAmount(row.get(qSalaryLedger.longTermCareInsurancePensionAmount));
-                newDto.setIncomeTaxAmount(row.get(qSalaryLedger.incomeTaxAmount));
-                newDto.setLocalIncomeTaxPensionAmount(row.get(qSalaryLedger.localIncomeTaxAmount));
-                newDto.setTotalSalaryAmount(row.get(qSalaryLedger.totalSalaryAmount));
-                newDto.setTotalDeductionAmount(row.get(qSalaryLedger.totalDeductionAmount));
-                newDto.setNetPayment(row.get(qSalaryLedger.netPayment));
-                newDto.setTaxableIncome(row.get(qSalaryLedger.taxableIncome));
-                newDto.setAllowances(new ArrayList<>());
-                ledgerMap.put(ledgerId, newDto);
+                result = new PaymentStatusManagementShowDTO();
+                result.setId(ledgerId);
+                result.setDescriptionName(name);
+                result.setNationalPensionAmount(row.get(qSalaryLedger.nationalPensionAmount.sum()));
+               result.setPrivateSchoolPensionAmount(row.get(qSalaryLedger.privateSchoolPensionAmount.sum()));
+               result.setHealthInsurancePensionAmount(row.get(qSalaryLedger.healthInsurancePensionAmount.sum()));
+               result.setEmploymentInsuranceAmount(row.get(qSalaryLedger.employmentInsuranceAmount.sum()));
+               result.setLongTermCareInsurancePensionAmount(row.get(qSalaryLedger.longTermCareInsurancePensionAmount.sum()));
+               result.setIncomeTaxAmount(row.get(qSalaryLedger.incomeTaxAmount.sum()));
+               result.setLocalIncomeTaxPensionAmount(row.get(qSalaryLedger.localIncomeTaxAmount.sum()));
+               result.setTotalSalaryAmount(row.get(qSalaryLedger.totalSalaryAmount.sum()));
+               result.setTotalDeductionAmount(row.get(qSalaryLedger.totalDeductionAmount.sum()));
+               result.setNetPayment(row.get(qSalaryLedger.netPayment.sum()));
+               result.setTaxableIncome(row.get(qSalaryLedger.taxableIncome.sum()));
+               result.setAllowances(new ArrayList<>());
+                ledgerMap.put(ledgerId, result);
             }
 
             // 수당 리스트에 항목 추가

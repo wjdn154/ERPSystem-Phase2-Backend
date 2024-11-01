@@ -50,8 +50,6 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                 (workcenter.getFactory().getWarehouseType() == WarehouseType.FACTORY ||
                         workcenter.getFactory().getWarehouseType() == WarehouseType.OUTSOURCING_FACTORY);
 
-        System.out.println("===================================== workcenter convertToDTO ===================================== " + workcenter);
-
         return WorkcenterDTO.builder()
                 .id(workcenter.getId())
                 .code(workcenter.getCode())
@@ -83,7 +81,6 @@ public class WorkcenterServiceImpl implements WorkcenterService {
     // Entity로 변환하는 메서드
     private Workcenter convertToEntity(WorkcenterDTO workcenterDTO) {
 
-        System.out.println("===================================== workcenter===================================== " + workcenterDTO);
 
         List<EquipmentData> equipmentList = Optional.ofNullable(workcenterDTO.getEquipmentIds())
                 .orElseGet(ArrayList::new)  // Equipment ID가 없는 경우 빈 리스트 반환
@@ -91,9 +88,6 @@ public class WorkcenterServiceImpl implements WorkcenterService {
                 .map(id -> equipmentDataRepository.findById(id)
                         .orElseThrow(() -> new EntityNotFoundException("해당 설비를 찾을 수 없습니다: " + id)))
                 .collect(Collectors.toList());
-
-        System.out.println("설비 목록: " + equipmentList);
-
 
         return Workcenter.builder()
                 .code(workcenterDTO.getCode())
@@ -147,7 +141,6 @@ public class WorkcenterServiceImpl implements WorkcenterService {
             productionOrderRepository.saveAll(orders);  // 저장하여 관계 해제 반영
 
             workcenterRepository.delete(workcenter);
-            System.out.println("해당코드 작업장 삭제됨: " + code);
 
             return Optional.of(convertToDTO(workcenter));
         } catch (DataIntegrityViolationException e) {
