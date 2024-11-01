@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class SalaryLedger {
     @CollectionTable(name = "salary_ledger_allowance", joinColumns = @JoinColumn(name = "salary_ledger_id"))
     private List<SalaryLedgerAllowance> allowance = new ArrayList<>();
 
-    private boolean finalized = false; // 결산 여부
+    private boolean finalized; // 결산 여부
 
     @Column(nullable = false)
     private BigDecimal nationalPensionAmount; // 국민연금 금액

@@ -23,6 +23,11 @@ public enum NotificationType {
     JOURNAL_ENTRY_TYPESET("분개유형 수정"),
     DELETE_RESOLVED_SALEANDPURCHASE_VOUCHER("승인 매출매입전표 삭제"),
     NEW_UNRESOLVED_SALEANDPURCHASE_VOUCHER("미결 매출매입전표 추가"),
+    SHIPPING_ORDER("출고 지시"),      // 출고 지시 알림
+    SHIPPED_ORDER("출고 완료"),       // 출고 완료 알림
+    SHIPPING_ORDER_COMPLETE("출고 완료"), // 전체 출고 완료 알림
+    NEW_RECEIVING_SCHEDULE("새로운 입고 스케줄"),
+    RECEIVING_COMPLETE("입고 처리 완료"),
 
     NEW_ENTRY("신규 항목"),
 
