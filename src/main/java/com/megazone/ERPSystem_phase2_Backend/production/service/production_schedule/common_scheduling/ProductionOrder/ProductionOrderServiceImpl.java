@@ -86,7 +86,7 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
                 .orElseThrow(() -> new EntityNotFoundException("작업지시를 찾을 수 없습니다."));
         productionOrder.setConfirmed(true);
         productionOrderRepository.save(productionOrder);
-        return false;
+        return true;
     }
 
     /**
