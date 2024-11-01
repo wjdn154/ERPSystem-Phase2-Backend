@@ -28,7 +28,7 @@ public class PerformanceController {
 
     // 특정 사원의 성과 평가 조회
     @PostMapping("/performance/employee/{employeeId}")
-    public ResponseEntity<List<PerformanceShowDTO>> getPerformanceByEmployee(@PathVariable Long employeeId) {
+    public ResponseEntity<List<PerformanceShowDTO>> getPerformanceByEmployee(@PathVariable("employeeId") Long employeeId) {
         List<PerformanceShowDTO> performances = performanceService.getPerformanceByEmployee(employeeId);
         return new ResponseEntity<>(performances, HttpStatus.OK);
     }

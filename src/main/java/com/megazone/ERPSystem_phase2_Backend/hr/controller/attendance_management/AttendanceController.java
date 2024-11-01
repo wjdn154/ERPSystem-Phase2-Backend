@@ -36,7 +36,7 @@ public class AttendanceController {
 
     // 특정 사원의 출퇴근 기록 조회
     @PostMapping("/records/{id}")
-    public ResponseEntity<EmployeeAttendanceDTO> getAttendanceRecords(@PathVariable Long id){
+    public ResponseEntity<EmployeeAttendanceDTO> getAttendanceRecords(@PathVariable("id") Long id){
         Optional<EmployeeAttendanceDTO> attendanceRecords = attendanceService.getAttendanceRecords(id);
         return attendanceRecords.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
