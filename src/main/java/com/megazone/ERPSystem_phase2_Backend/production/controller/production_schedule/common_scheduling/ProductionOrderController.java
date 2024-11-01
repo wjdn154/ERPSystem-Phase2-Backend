@@ -152,7 +152,7 @@ public class ProductionOrderController {
         try {
             boolean isConfirmed = productionOrderService.isProductionOrderConfirmed(id);
             return isConfirmed ? ResponseEntity.status(HttpStatus.OK).body("작업 지시가 성공적으로 확정되었습니다.") :
-                    ResponseEntity.status(HttpStatus.NO_CONTENT).body("작업 지시 확정에 실패했습니다.");
+                    ResponseEntity.status(HttpStatus.BAD_REQUEST).body("작업 지시 확정에 실패했습니다.");
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("작업 지시 확정에 실패했습니다.");
         }

@@ -86,7 +86,7 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
                 .orElseThrow(() -> new EntityNotFoundException("작업지시를 찾을 수 없습니다."));
         productionOrder.setConfirmed(true);
         productionOrderRepository.save(productionOrder);
-        return false;
+        return true;
     }
 
     /**
@@ -484,7 +484,9 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
     private ProductionOrder convertToEntity(ProductionOrderDTO productionOrderDTO) {
         Mps mps = mpsRepository.findById(productionOrderDTO.getMpsId()).orElseThrow(() -> new EntityNotFoundException("MPS를 찾을 수 없습니다."));
         ProcessDetails processDetails = processDetailsRepository.findById(productionOrderDTO.getProcessDetailsId()).orElseThrow(() -> new EntityNotFoundException("공정 세부를 찾을 수 없습니다."));
-        Workcenter workcenter = workcenterRepository.findByProcessDetailsId(processDetails.getId()).orElseThrow(() -> new EntityNotFoundException("작업장을 찾을 수 없습니다."));
+        Workcenter workcenter = workcenterRepository.findByProcessDetailsId(processDetails.getId())
+                .stream()
+                .findFirst().orElseThrow(() -> new EntityNotFoundException("작업장을 찾을 수 없습니다."));
 
         return ProductionOrder.builder()
                 .name(productionOrderDTO.getName())
