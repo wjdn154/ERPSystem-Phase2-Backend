@@ -116,9 +116,9 @@ spring:
 
         - classpath:initial-database/production/production_schedule/common_scheduling/production_request.sql
         - classpath:initial-database/production/production_schedule/plan_of_production/mps.sql
-#        - classpath:initial-database/production/production_schedule/common_scheduling/production_order.sql
-#        - classpath:initial-database/production/work_report/work_performance.sql
-#        - classpath:initial-database/production/work_report/environmental_certification_assessment.sql
+        - classpath:initial-database/production/production_schedule/common_scheduling/production_order.sql
+        - classpath:initial-database/production/work_report/work_performance.sql
+        - classpath:initial-database/production/work_report/environmental_certification_assessment.sql
 #        - classpath:initial-database/production/production_schedule/common_scheduling/worker_assignment.sql
 
         - classpath:initial-database/financial/unresolved_sale_and_purchase_voucher.sql
@@ -146,8 +146,8 @@ spring:
 
 logging:
   level:
-#    root: DEBUG
-    root: INFO
+    root: DEBUG
+#    root: INFO
 #    com.megazone: DEBUG
 #    org.flywaydb: DEBUG
 #    org.hibernate.SQL: DEBUG
