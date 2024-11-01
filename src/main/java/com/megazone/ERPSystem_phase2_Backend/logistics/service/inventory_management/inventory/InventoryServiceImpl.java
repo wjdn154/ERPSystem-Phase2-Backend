@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -90,5 +91,16 @@ public class InventoryServiceImpl implements InventoryService {
         return inventories.stream()
                 .map(InventoryResponseDTO::mapToDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public BigDecimal allInventoryCount() {
+        List<Inventory> inventoryList = inventoryRepository.findAll();
+        BigDecimal totalInventoryCount = BigDecimal.ZERO;
+
+        for (Inventory inventory : inventoryList) {
+            totalInventoryCount = totalInventoryCount.add(BigDecimal.valueOf(inventory.getQuantity()));
+        }
+        return totalInventoryCount;
     }
 }

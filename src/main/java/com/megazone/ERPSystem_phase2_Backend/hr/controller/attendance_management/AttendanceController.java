@@ -26,8 +26,6 @@ public class AttendanceController {
     public ResponseEntity<String> recordAttendance(@RequestBody AttendanceEntryDTO dto){
         try {
             // 근태 기록 저장
-            System.out.println(dto.getCheckInTime());
-            System.out.println(dto.getCheckOutTime());
             String result = attendanceService.saveAttendance(dto);
             return ResponseEntity.status(HttpStatus.OK).body("근태 상태: " + result);
         }catch (Exception e) {
@@ -38,7 +36,7 @@ public class AttendanceController {
 
     // 특정 사원의 출퇴근 기록 조회
     @PostMapping("/records/{id}")
-    public ResponseEntity<EmployeeAttendanceDTO> getAttendanceRecords(@PathVariable Long id){
+    public ResponseEntity<EmployeeAttendanceDTO> getAttendanceRecords(@PathVariable("id") Long id){
         Optional<EmployeeAttendanceDTO> attendanceRecords = attendanceService.getAttendanceRecords(id);
         return attendanceRecords.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

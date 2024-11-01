@@ -74,7 +74,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 userName = jwtUtil.extractUsername(jwt);  // JWT에서 사용자 ID 추출
             } catch (ExpiredJwtException e) {
-                System.out.println("ExpiredJwtException 발생: " + e.getMessage());
                 request.setAttribute("ExpiredJwtException", e);  // 예외를 request에 저장
                 chain.doFilter(request, response);  // 필터 체인을 계속 진행
                 return;

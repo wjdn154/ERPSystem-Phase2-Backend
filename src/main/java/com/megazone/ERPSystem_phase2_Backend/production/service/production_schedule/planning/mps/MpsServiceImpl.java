@@ -110,16 +110,12 @@ public class MpsServiceImpl implements MpsService {
 
     @Override
     public MpsDTO confirmMps(Long mpsId) {
-        System.out.println("Confirming MPS with ID: " + mpsId);
 
         Mps mps = mpsRepository.findById(mpsId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 MPS를 찾을 수 없습니다."));
-        System.out.println("MPS found: " + mps);
 
         mps.setStatus("확정");
         Mps updatedMps = mpsRepository.save(mps); // 업데이트된 MPS 저장
-
-        System.out.println("MPS status updated to 확정: " + mps);
 
 //        // MPS 상태에 따라 ProductionRequest의 상태 업데이트
 //        updateProductionRequestProgress(mps);
@@ -154,15 +150,11 @@ public class MpsServiceImpl implements MpsService {
      * MPS 상태에 따라 ProductionRequest의 ProgressType 전환
      */
     private void updateProductionRequestProgress(Mps mps) {
-        System.out.println("Updating ProductionRequest progress for MPS: " + mps);
 
         ProductionRequest request = mps.getProductionRequest();
         if (request == null) {
-            System.out.println("No ProductionRequest found for MPS ID: " + mps.getId());
             return; // 또는 예외를 던질 수 있음
         }
-        System.out.println("Current ProductionRequest: " + request);
-
 
         ProgressType newProgressType = switch (mps.getStatus()) {
             case "계획" -> ProgressType.CREATED;
@@ -174,8 +166,6 @@ public class MpsServiceImpl implements MpsService {
 
         request.setProgressType(newProgressType);
         productionRequestsRepository.save(request);
-        System.out.println("ProductionRequest progress updated: " + request);
-
     }
 
 
@@ -218,7 +208,6 @@ public class MpsServiceImpl implements MpsService {
     @Override
     public List<searchMpsDTO> searchMps(LocalDate date) {
         List<Mps> mpsList = mpsRepository.searchMps(date);
-        mpsList.forEach(System.out::println);
 
         return mpsList.stream()
                 .map(mps -> {
@@ -285,10 +274,7 @@ public class MpsServiceImpl implements MpsService {
         Mps mps = mpsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("해당 MPS를 찾을 수 없습니다. :" + id));
 
-        System.out.println("MPS found: " + mps);
         MpsDTO mpsDto = convertToDto(mps);
-
-        System.out.println("Converted MPS DTO: " + mpsDto);
 
 //        Hibernate.initialize(mps.getProduct()); // Lazy 로딩된 연관 엔티티를 초기화
 //        Hibernate.initialize(mps.getProductionRequest());
@@ -371,7 +357,6 @@ public class MpsServiceImpl implements MpsService {
 // ================= convert methods ===============
 
     private MpsDTO convertToDto(Mps mps) {
-        System.out.println("Converting MPS to DTO: " + mps);
 
         MpsDTO mpsDto = MpsDTO.builder()
                 .id(mps.getId())
@@ -393,7 +378,6 @@ public class MpsServiceImpl implements MpsService {
                 )
                 .build();
 
-        System.out.println("Converted DTO: " + mpsDto);
         return mpsDto;
     }
 

@@ -86,7 +86,6 @@ public class ProcessRoutingController {
     @PostMapping("update")
     public ResponseEntity<ProcessRoutingDetailDTO> updateProcessRouting(@RequestBody ProcessRoutingDetailDTO processRoutingDetailDTO) {
         ProcessRoutingDetailDTO updatedRouting = processRoutingService.updateProcessRouting(processRoutingDetailDTO);
-        System.out.println("updatedRouting = " + updatedRouting);
         return ResponseEntity.ok(updatedRouting);
     }
 

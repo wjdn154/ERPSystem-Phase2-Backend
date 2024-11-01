@@ -3,6 +3,7 @@ package com.megazone.ERPSystem_phase2_Backend.logistics.service.inventory_manage
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory.dto.InventoryRequestDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.inventory_management.inventory.dto.InventoryResponseDTO;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface InventoryService {
@@ -17,4 +18,6 @@ public interface InventoryService {
     Long generateNextInventoryNumber();
 
     List<InventoryResponseDTO> getInventoryByLocation(Long locationId);
+
+    BigDecimal allInventoryCount();
 }

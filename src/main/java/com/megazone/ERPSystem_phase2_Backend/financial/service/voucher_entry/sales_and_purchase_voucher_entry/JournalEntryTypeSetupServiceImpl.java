@@ -1,5 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.financial.service.voucher_entry.sales_and_purchase_voucher_entry;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.account_subject.AccountSubject;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.JournalEntryTypeSetup;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.JournalEntryTypeSetupShowDTO;
@@ -12,6 +19,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -20,6 +28,8 @@ import java.util.List;
 public class JournalEntryTypeSetupServiceImpl implements JournalEntryTypeSetupService {
     private final JournalEntryTypeSetupRepository journalEntryTypeSetupRepository;
     private final AccountSubjectRepository accountSubjectRepository;
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -54,6 +64,17 @@ public class JournalEntryTypeSetupServiceImpl implements JournalEntryTypeSetupSe
 
             // 엔티티 저장
             journalEntryTypeSetupRepository.save(journalEntryTypeSetup);
+
+            recentActivityRepository.save(RecentActivity.builder()
+                    .activityDescription("분개유형 수정")
+                    .activityType(ActivityType.FINANCE)
+                    .activityTime(LocalDateTime.now())
+                    .build());
+            notificationService.createAndSendNotification(
+                    ModuleType.FINANCE,
+                    PermissionType.USER,
+                    "분개유형 수정",
+                    NotificationType.JOURNAL_ENTRY_TYPESET);
         });
         return journalEntryTypeSetupRepository.findAll().stream().map(JournalEntryTypeSetupShowDTO::create).toList();
     }

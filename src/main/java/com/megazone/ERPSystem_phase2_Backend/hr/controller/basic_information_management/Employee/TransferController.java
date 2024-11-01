@@ -41,7 +41,7 @@ public class TransferController {
 
     // 발령 기록 상세 조회
     @PostMapping("/transfer/detail/{id}")
-    public ResponseEntity<TransferShowDTO> findTransferById(@PathVariable Long id) {
+    public ResponseEntity<TransferShowDTO> findTransferById(@PathVariable("id") Long id) {
         Optional<TransferShowDTO> transfer = transferService.findTransferById(id);
         return transfer
                 .map(ResponseEntity::ok)
