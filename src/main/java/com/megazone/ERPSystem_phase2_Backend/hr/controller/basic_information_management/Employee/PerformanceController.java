@@ -35,7 +35,7 @@ public class PerformanceController {
 
     // 성과 평가 수정
     @PostMapping("/performance/put/{performanceId}")
-    public ResponseEntity<PerformanceShowDTO> updatePerformance(@PathVariable Long performanceId, @RequestBody PerformanceOneDTO performanceOneDTO) {
+    public ResponseEntity<PerformanceShowDTO> updatePerformance(@PathVariable("performanceId") Long performanceId, @RequestBody PerformanceOneDTO performanceOneDTO) {
         if (performanceId == null) {
             throw new IllegalArgumentException("잘못된 performanceId 값입니다.");
         }
@@ -45,7 +45,7 @@ public class PerformanceController {
 
     // 성과 평가 삭제
     @PostMapping("/performance/del/{performanceId}")
-    public ResponseEntity<String> deletePerformance(@PathVariable Long performanceId) {
+    public ResponseEntity<String> deletePerformance(@PathVariable("performanceId") Long performanceId) {
         // 서비스 호출하여 삭제 및 성공 메시지 반환
         String message = performanceService.deletePerformance(performanceId);
         return new ResponseEntity<>(message, HttpStatus.OK);

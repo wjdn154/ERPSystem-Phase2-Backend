@@ -131,7 +131,7 @@ public class WorkcenterController {
 
     // 8. 생산 공정 정보 조회
     @PostMapping("/processes/{processCode}")
-    public ResponseEntity<ProcessDetailsDTO> getProcessByCode(@PathVariable String processCode) {
+    public ResponseEntity<ProcessDetailsDTO> getProcessByCode(@PathVariable("processCode") String processCode) {
 
         Optional<ProcessDetailsDTO> processDetailsDTO = processDetailsService.getProcessDetailsByCode(processCode);
         return processDetailsDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());

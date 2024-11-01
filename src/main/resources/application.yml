@@ -101,6 +101,7 @@ spring:
         - classpath:initial-database/logistics/sales_management/sale_plan.sql
         - classpath:initial-database/logistics/sales_management/quotation.sql
         - classpath:initial-database/logistics/sales_management/orders.sql
+        - classpath:initial-database/logistics/sales_management/sale_plan_detail.sql
         - classpath:initial-database/logistics/sales_management/sale.sql
 
         - classpath:initial-database/production/basic_data/bom/standard_bom.sql
@@ -146,8 +147,8 @@ spring:
 
 logging:
   level:
-    root: DEBUG
-#    root: INFO
+#    root: DEBUG
+    root: INFO
 #    com.megazone: DEBUG
 #    org.flywaydb: DEBUG
 #    org.hibernate.SQL: DEBUG

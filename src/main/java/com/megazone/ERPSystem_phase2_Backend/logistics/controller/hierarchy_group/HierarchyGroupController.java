@@ -31,7 +31,7 @@ public class HierarchyGroupController {
     }
 
     @PostMapping("/{groupId}/warehouses")
-    public ResponseEntity<List<HierarchyGroupWarehouseResponseDTO>> getHierarchyGroupWarehouses(@PathVariable Long groupId) {
+    public ResponseEntity<List<HierarchyGroupWarehouseResponseDTO>> getHierarchyGroupWarehouses(@PathVariable("groupId") Long groupId) {
         List<HierarchyGroupWarehouseResponseDTO> warehouses = hierarchyGroupService.getWarehousesByHierarchyGroup(groupId);
         return ResponseEntity.ok(warehouses);
     }
