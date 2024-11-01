@@ -5,8 +5,8 @@ VALUES
     (5500000, '2022-02-02', '2022-02-03', 2, 31, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/f1fcbe51-5d04-4e1d-b532-bb3a573faf57_조립라인.png', '프론트 범퍼 조립 라인', 'PRD-EM-031', '현대', 'FRNT-BMP-LN', 'ASSEMBLY', 'OPERATING', 150),
 -- 휠 부품 프레스 작업장 (workcenter_id: 14)
     (6000000, '2022-02-02', '2022-02-04', 12, 14, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/9b6d28af-1494-4d45-b42f-b315e5aa88cf_프레스라인.png', '휠 부품 프레스 기계', 'PRD-EM-014', 'LG', 'WHL-PRS-MCH', 'MACHINING', 'OPERATING', 180),
--- 연료 필터 CNC 가공 작업장 (workcenter_id: 28)
-    (7000000, '2022-02-02', '2022-02-04', 19, 28, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/75350b64-8ecf-4d7b-8122-a7a99919b795_CNC가공기.png', '연료 필터 CNC 가공기', 'PRD-EM-028', 'Mazak', 'FUEL-FLTR-CNC', 'MACHINING', 'OPERATING', 200),
+-- 연료 필터 CNC 가공 작업장 (workcenter_id: 27)
+    (7000000, '2022-02-02', '2022-02-04', 19, 27, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/75350b64-8ecf-4d7b-8122-a7a99919b795_CNC가공기.png', '연료 필터 CNC 가공기', 'PRD-EM-028', 'Mazak', 'FUEL-FLTR-CNC', 'MACHINING', 'OPERATING', 200),
 
     (5500000, '2022-02-02', '2022-02-03', 1, 1, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/f1fcbe51-5d04-4e1d-b532-bb3a573faf57_4축 MCT.png', '자동 조립 라인', 'PRD-EM-001', '삼성', 'ASLINE-100', 'ASSEMBLY', 'BEFORE_OPERATION', 150),
     (7500000, '2022-02-02', '2022-02-04', 2, 2, 'https://rjsgh-bucket.s3.ap-northeast-2.amazonaws.com/c4a5e1c9-60bc-4deb-ab8c-de19ac0987e6_5축 MCT.png', '5축 CNC 기계', 'PRD-EM1-002', 'LG', '5AXIS-CNC', 'ASSEMBLY', 'BEFORE_OPERATION', 200),
