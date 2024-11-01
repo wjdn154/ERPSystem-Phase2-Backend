@@ -1,5 +1,14 @@
 package com.megazone.ERPSystem_phase2_Backend.logistics.service.purchase_management.purchase_order;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.dto.VatAmountWithSupplyAmountDTO;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.voucher_entry.sales_and_purchase_voucher_entry.enums.ElectronicTaxInvoiceStatus;
@@ -29,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,6 +55,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService{
     private final CurrencyRepository currencyRepository;
     private final ProductRepository productRepository;
     private final VatTypeService vatTypeService;
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 
     /**
      * 발주서 목록 조회
@@ -204,6 +216,19 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService{
         try {
             PurchaseOrder purchaseOrder = toEntity(createDto);
             purchaseOrder = purchaseOrderRepository.save(purchaseOrder);
+
+            recentActivityRepository.save(RecentActivity.builder()
+                    .activityDescription("신규 발주서 등록 : " + purchaseOrder.getDate() + " -" + purchaseOrder.getId())
+                    .activityType(ActivityType.LOGISTICS)
+                    .activityTime(LocalDateTime.now())
+                    .build());
+            notificationService.createAndSendNotification(
+                    ModuleType.LOGISTICS,
+                    PermissionType.USER,
+                    "신규 발주서 (" + purchaseOrder.getDate() + " -" + purchaseOrder.getId() + ") 가 등록되었습니다.",
+                    NotificationType.NEW_ENTRY
+            );
+
             return toDetailDto(purchaseOrder);
         } catch (Exception e) {
             log.error("발주서 생성 실패: ", e);

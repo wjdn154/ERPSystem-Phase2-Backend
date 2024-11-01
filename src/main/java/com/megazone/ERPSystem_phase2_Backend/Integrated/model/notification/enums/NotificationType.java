@@ -10,6 +10,9 @@ public enum NotificationType {
     SHIPPING_ORDER_COMPLETE("출고 완료"), // 전체 출고 완료 알림
     NEW_RECEIVING_SCHEDULE("새로운 입고 스케줄"),
     RECEIVING_COMPLETE("입고 처리 완료"),
+
+    NEW_ENTRY("신규 항목"),
+
     NEW_MAINTENANCE_HISTORY("신규 유지보수"),
     UPDATE_MAINTENANCE_HISTORY("유지보수 변경"),
     NEW_EQUIPMENT_DATA("신규 설비"),
