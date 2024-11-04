@@ -186,7 +186,7 @@ public class UsersController {
      * @return 수정된 사용자 정보를 반환함.
      */
     @PutMapping("/users/put/{id}")
-    public ResponseEntity<UsersShowDTO> updateUser(@PathVariable Long id, @RequestBody UsersShowDTO usersDTO) {
+    public ResponseEntity<UsersShowDTO> updateUser(@PathVariable("id") Long id, @RequestBody UsersShowDTO usersDTO) {
         UsersShowDTO updatedUser = usersService.updateUser(id, usersDTO);
         return ResponseEntity.ok(updatedUser);
     } // 다시 해야 됨
@@ -198,7 +198,7 @@ public class UsersController {
      * @return 삭제 성공 메시지를 반환함.
      */
     @DeleteMapping("/users/del/{id}")
-    public ResponseEntity<String> deleteUsers(@PathVariable Long id) {
+    public ResponseEntity<String> deleteUsers(@PathVariable("id") Long id) {
         usersService.deleteUsers(id);
         return ResponseEntity.ok("사용자 삭제되었습니다.");
     }

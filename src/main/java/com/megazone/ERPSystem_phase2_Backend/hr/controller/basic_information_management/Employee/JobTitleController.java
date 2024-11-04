@@ -34,7 +34,7 @@ public class JobTitleController {
     }
 
     @PostMapping("/jobTitle/{id}")
-    public ResponseEntity<JobTitleShowDTO> getJobTitleById(@PathVariable Long id){
+    public ResponseEntity<JobTitleShowDTO> getJobTitleById(@PathVariable("id") Long id){
         JobTitle jobTitle = jobTitleService.getJobTitleById(id).orElseThrow(() -> new EntityNotFoundException("해당 직책을 찾을 수 없습니다."));
 
         JobTitleShowDTO jobTitleShowDTO = new JobTitleShowDTO(jobTitle.getId(), jobTitle.getJobTitleCode(), jobTitle.getJobTitleName(), jobTitle.getDescription());

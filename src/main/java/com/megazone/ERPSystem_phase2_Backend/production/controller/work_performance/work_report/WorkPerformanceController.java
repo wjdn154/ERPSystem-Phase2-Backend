@@ -59,7 +59,7 @@ public class WorkPerformanceController {
 
     //작업 실적 수정
     @PostMapping("/workPerformance/updateWorkPerformance/{id}")
-    public ResponseEntity<WorkPerformanceDetailDTO> updateWorkPerformance(@RequestBody WorkPerformanceDetailDTO dto, @PathVariable Long id) {
+    public ResponseEntity<WorkPerformanceDetailDTO> updateWorkPerformance(@RequestBody WorkPerformanceDetailDTO dto, @PathVariable("id") Long id) {
         //서비스에서 작업 실적 상세 정보 수정함.
         Optional<WorkPerformanceDetailDTO> result = workPerformanceService.updateWorkPerformance(id, dto);
         return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());

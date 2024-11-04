@@ -50,7 +50,7 @@ public class TransferController {
     // 발령 기록 수정
     @PostMapping("/transfer/update/{id}")
     public ResponseEntity<TransferShowDTO> updateTransfer(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @RequestBody TransferUpdateDTO dto) {
 
         try {

@@ -37,7 +37,7 @@ public class ShippingProcessingController {
     }
 
     @PostMapping("/process/{id}")
-    public ResponseEntity<String> processShipping(@PathVariable Long id) {
+    public ResponseEntity<String> processShipping(@PathVariable("id") Long id) {
         try {
             shippingProcessingService.processShipping(id);
             return ResponseEntity.ok("출고 처리가 완료되었습니다.");
