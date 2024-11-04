@@ -64,7 +64,7 @@ public class WarehouseLocationController {
      * @return 수정된 창고 위치
      */
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateWarehouseLocation(@PathVariable Long id, @RequestBody WarehouseLocationRequestDTO requestDTO) {
+    public ResponseEntity<?> updateWarehouseLocation(@PathVariable("id") Long id, @RequestBody WarehouseLocationRequestDTO requestDTO) {
         try {
             WarehouseLocationResponseDTO responseDTO = warehouseLocationService.updateWarehouseLocation(id, requestDTO);
             return ResponseEntity.ok(responseDTO);

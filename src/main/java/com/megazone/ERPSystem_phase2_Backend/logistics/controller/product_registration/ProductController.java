@@ -147,7 +147,7 @@ public class ProductController {
     }
 
     @GetMapping("/uploads/{filename}")
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+    public ResponseEntity<Resource> serveFile(@PathVariable("filename") String filename) {
         try {
             Path file = Paths.get("src/main/resources/static/uploads/").resolve(filename);
             Resource resource = new UrlResource(file.toUri());

@@ -115,7 +115,7 @@ public class InventoryInspectionController {
      * @return 재고 실사 수정 결과
      */
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateInspection(@PathVariable Long id, @RequestBody InventoryInspectionRequestDTO updateDTO) {
+    public ResponseEntity<?> updateInspection(@PathVariable("id") Long id, @RequestBody InventoryInspectionRequestDTO updateDTO) {
         try {
             InventoryInspectionResponseDTO updatedInspection = inventoryInspectionService.updateInventoryInspection(id, updateDTO);
 
