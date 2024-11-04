@@ -24,7 +24,7 @@ public class MaterialDataShowDTO {
     private String materialName;           //자재 이름
     private MaterialType materialType;     //자재유형
     private Long stockQuantity;            //재고 수량
-    private BigDecimal purchasePrice;      //구매 가격
+    private String purchasePrice;      //구매 가격
     private String representativeCode;     //거래처 코드
     private String representativeName;     //거래처 명 (한 거래처에 여러개의 자재)
 

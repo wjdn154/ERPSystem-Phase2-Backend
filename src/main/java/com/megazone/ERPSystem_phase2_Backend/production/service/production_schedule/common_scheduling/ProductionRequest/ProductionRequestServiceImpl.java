@@ -1,5 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.production_schedule.common_scheduling.ProductionRequest;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.financial.model.basic_information_management.client.Client;
 import com.megazone.ERPSystem_phase2_Backend.financial.repository.basic_information_management.client.ClientRepository;
 import com.megazone.ERPSystem_phase2_Backend.hr.model.basic_information_management.employee.Department;
@@ -20,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -32,6 +40,8 @@ public class ProductionRequestServiceImpl implements ProductionRequestService {
     private final ProductRepository productRepository;
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 
     private final MpsService mpsService;
 
@@ -123,6 +133,19 @@ public class ProductionRequestServiceImpl implements ProductionRequestService {
         updateRelatedEntities(existingEntity, dto);
 
         ProductionRequest updatedEntity = productionRequestsRepository.save(existingEntity);
+
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription(updatedEntity.getName() + " 생산의뢰 정보 변경")
+                .activityType(ActivityType.PRODUCTION)
+                .activityTime(LocalDateTime.now())
+                .build());
+
+        notificationService.createAndSendNotification(
+                ModuleType.PRODUCTION,
+                PermissionType.ALL,
+                updatedEntity.getName() + "생산의뢰 정보가 변경되었습니다.",
+                NotificationType.UPDATE_PRODUCTION_REQUEST);
+
         return ProductionRequestDetailDTO.fromEntity(updatedEntity);
     }
 

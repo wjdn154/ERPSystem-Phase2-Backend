@@ -1,5 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.process_routing.ProcessDetails;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
@@ -22,6 +29,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +43,8 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
     private final ProcessDetailsRepository processDetailsRepository;
     private final WorkcenterRepository workcenterRepository;
     private final ProductRepository productRepository;
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 
     @Override
     public List<ProcessDetailsDTO> getAllProcessDetails() {
@@ -156,6 +166,18 @@ public class ProcessDetailsServiceImpl implements ProcessDetailsService {
         try {
             // 3. 변경된 엔티티를 데이터베이스에 저장
             ProcessDetails updatedProcessDetails = processDetailsRepository.save(existingProcessDetails);
+
+            recentActivityRepository.save(RecentActivity.builder()
+                    .activityDescription(updatedProcessDetails.getName() + "생산공정 정보가 변경")
+                    .activityType(ActivityType.PRODUCTION)
+                    .activityTime(LocalDateTime.now())
+                    .build());
+
+            notificationService.createAndSendNotification(
+                    ModuleType.PRODUCTION,
+                    PermissionType.ALL,
+                    updatedProcessDetails.getName() + "생산공정 정보가 변경되었습니다.",
+                    NotificationType.UPDATE_ROUTING_DETAIL);
 
             // 4. 수정된 엔티티를 DTO로 변환하여 반환
             return convertToDTO(updatedProcessDetails);

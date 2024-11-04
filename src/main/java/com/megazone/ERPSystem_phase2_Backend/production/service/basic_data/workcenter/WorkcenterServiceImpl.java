@@ -1,5 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.workcenter;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.Warehouse;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.dto.WarehouseResponseDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.warehouse_management.warehouse.enums.WarehouseType;
@@ -24,6 +31,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +49,8 @@ public class WorkcenterServiceImpl implements WorkcenterService {
     private final EquipmentDataRepository equipmentDataRepository;
     private final WorkerAssignmentRepository workerAssignmentRepository;
     private final ProductionOrderRepository productionOrderRepository;
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 
     // DTO로 변환하는 메서드
     private WorkcenterDTO convertToDTO(Workcenter workcenter) {
@@ -166,6 +176,19 @@ public class WorkcenterServiceImpl implements WorkcenterService {
             existingWorkcenter.setIsActive(workcenterDTO.getIsActive());
 
             Workcenter updatedWorkcenter = workcenterRepository.save(existingWorkcenter);
+
+            recentActivityRepository.save(RecentActivity.builder()
+                    .activityDescription(updatedWorkcenter.getName() + " 작업장 정보 변경")
+                    .activityType(ActivityType.PRODUCTION)
+                    .activityTime(LocalDateTime.now())
+                    .build());
+
+
+            notificationService.createAndSendNotification(
+                    ModuleType.PRODUCTION,
+                    PermissionType.ALL,
+                    updatedWorkcenter.getName() + " 작업장 정보가 변경되었습니다.",
+                    NotificationType.UPDATE_WORKCENTER);
 
             return convertToDTO(updatedWorkcenter);
         });

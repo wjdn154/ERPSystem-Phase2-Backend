@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -88,7 +89,7 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService 
         notificationService.createAndSendNotification(
                 ModuleType.PRODUCTION,
                 PermissionType.ALL,
-                "유지보수 이력 1건 생성되었습니다.",
+                savedMaintenanceHistory.getEquipment().getEquipmentName() + "의 유지보수 이력 1건 생성되었습니다.",
                 NotificationType.NEW_MAINTENANCE_HISTORY);
 
         //엔티티를 DTO로 변환하여 반환
@@ -112,7 +113,7 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService 
         maintenanceHistory.setMaintenanceType(dto.getMaintenanceType());
         maintenanceHistory.setTitle(dto.getTitle());
         maintenanceHistory.setMaintenanceDetail(dto.getMaintenanceDetail());
-        maintenanceHistory.setMaintenanceCost(dto.getMaintenanceCost());
+        maintenanceHistory.setMaintenanceCost(new BigDecimal(dto.getMaintenanceCost()));
         maintenanceHistory.setMaintenanceStatus(dto.getMaintenanceStatus());
         maintenanceHistory.setNextMaintenanceDate(dto.getNextScheduleDate());
 
@@ -124,7 +125,7 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService 
         MaintenanceHistory updateMaintenanceHistory = maintenanceHistoryRepository.save(maintenanceHistory);
 
         recentActivityRepository.save(RecentActivity.builder()
-                .activityDescription("유지보수 1건 변경")
+                .activityDescription(updateMaintenanceHistory.getEquipment().getEquipmentName() + "의 유지보수 1건 변경")
                 .activityType(ActivityType.PRODUCTION)
                 .activityTime(LocalDateTime.now())
                 .build());
@@ -133,7 +134,7 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService 
         notificationService.createAndSendNotification(
                 ModuleType.PRODUCTION,
                 PermissionType.ALL,
-                "유지보수 이력 1건 변경되었습니다.",
+                updateMaintenanceHistory.getEquipment().getEquipmentName() + "의 유지보수 1건 변경되었습니다.",
                 NotificationType.UPDATE_MAINTENANCE_HISTORY);
 
         //저장된 엔티티 dto로 변환
@@ -165,7 +166,7 @@ public class MaintenanceHistoryServiceImpl implements MaintenanceHistoryService 
         maintenanceHistoryDetailShowDTO.setEquipmentName(maintenanceHistory.getEquipment().getEquipmentName());
         maintenanceHistoryDetailShowDTO.setMaintenanceManager(maintenanceHistory.getMaintenanceManager());
         maintenanceHistoryDetailShowDTO.setMaintenanceType(maintenanceHistory.getMaintenanceType());
-        maintenanceHistoryDetailShowDTO.setMaintenanceCost(maintenanceHistory.getMaintenanceCost());
+        maintenanceHistoryDetailShowDTO.setMaintenanceCost(maintenanceHistory.getMaintenanceCost().toString());
         maintenanceHistoryDetailShowDTO.setMaintenanceStatus(maintenanceHistory.getMaintenanceStatus());
         maintenanceHistoryDetailShowDTO.setMaintenanceDate(maintenanceHistory.getMaintenanceDate());
         maintenanceHistoryDetailShowDTO.setNextScheduleDate(maintenanceHistory.getNextMaintenanceDate());
