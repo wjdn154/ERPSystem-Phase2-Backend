@@ -30,7 +30,7 @@ public class PositionController {
     }
 
     @PostMapping("/position/{id}")
-    public ResponseEntity<PositionShowDTO> getPositionById(@PathVariable Long id){
+    public ResponseEntity<PositionShowDTO> getPositionById(@PathVariable("id") Long id){
         Position position = positionService.getPositionById(id).orElseThrow(() -> new EntityNotFoundException("해당 직위를 찾을 수 없습니다."));
 
         PositionShowDTO positionShowDTO = new PositionShowDTO(position.getId(), position.getPositionCode(), position.getPositionName());

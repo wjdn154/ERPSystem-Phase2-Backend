@@ -33,7 +33,7 @@ public class InventoryController {
      * @return List<InventoryResponseDTO>
      */
     @PostMapping("/location/{locationId}")
-    public ResponseEntity<List<InventoryResponseDTO>> getInventoriesByLocationId(@PathVariable Long locationId) {
+    public ResponseEntity<List<InventoryResponseDTO>> getInventoriesByLocationId(@PathVariable("locationId") Long locationId) {
         List<InventoryResponseDTO> inventories = inventoryService.getInventoriesByLocationId(locationId);
         return ResponseEntity.ok(inventories);
     }
@@ -55,7 +55,7 @@ public class InventoryController {
      *
      */
     @PostMapping("/warehouse/{warehouseId}")
-    public ResponseEntity<List<InventoryResponseDTO>> getInventoriesByWarehouseId(@PathVariable Long warehouseId) {
+    public ResponseEntity<List<InventoryResponseDTO>> getInventoriesByWarehouseId(@PathVariable("warehouseId") Long warehouseId) {
         List<InventoryResponseDTO> inventories = inventoryService.getInventoriesByWarehouseId(warehouseId);
         return ResponseEntity.ok(inventories);
     }
@@ -66,7 +66,7 @@ public class InventoryController {
      * @return
      */
     @PostMapping("/byLocation/{locationId}")
-    public ResponseEntity<List<InventoryResponseDTO>> getInventoryByLocation(@PathVariable Long locationId) {
+    public ResponseEntity<List<InventoryResponseDTO>> getInventoryByLocation(@PathVariable("locationId") Long locationId) {
         List<InventoryResponseDTO> inventoryList = inventoryService.getInventoryByLocation(locationId);
         return ResponseEntity.ok(inventoryList);
     }
