@@ -3,8 +3,12 @@ package com.megazone.ERPSystem_phase2_Backend.production.service.production_sche
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.EnvironmentalCertificationAssessment;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.EnvironmentalCertificationAssessmentRepository;
 import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.logistics.repository.product_registration.product.ProductRepository;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.bom.StandardBom;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.ProcessDetails;
@@ -63,6 +67,7 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
     private final EquipmentDataRepository equipmentRepository;
     private final EnvironmentalCertificationAssessmentRepository environmentalCertificationAssessmentRepository;
     private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 
 //    private final PlanOfMakeToOrderRepository planOfMakeToOrderRepository;
 //    private final PlanOfMakeToStockRepository planOfMakeToStockRepository;
@@ -126,6 +131,18 @@ public class ProductionOrderServiceImpl implements ProductionOrderService {
         ProductionOrder productionOrder = convertToEntity(productionOrderDTO);
 
         ProductionOrder savedProductionOrder = productionOrderRepository.save(productionOrder);
+
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription(savedProductionOrder.getName() + "신규 작업지시 생성")
+                .activityType(ActivityType.PRODUCTION)
+                .activityTime(LocalDateTime.now())
+                .build());
+
+        notificationService.createAndSendNotification(
+                ModuleType.PRODUCTION,
+                PermissionType.ALL,
+                savedProductionOrder.getName() + "신규 작업지시가 생성되었습니다..",
+                NotificationType.UPDATE_PRODUCTION_ORDER);
 
 //        assignWorkersToWorkcenter(productionOrderDTO, savedProductionOrder);
 

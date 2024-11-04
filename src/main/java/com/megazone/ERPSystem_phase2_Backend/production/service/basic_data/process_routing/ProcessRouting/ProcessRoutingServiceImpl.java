@@ -1,5 +1,12 @@
 package com.megazone.ERPSystem_phase2_Backend.production.service.basic_data.process_routing.ProcessRouting;
 
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.RecentActivity;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.dashboard.enums.ActivityType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.ModuleType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.NotificationType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.model.notification.enums.PermissionType;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.repository.dashboard.RecentActivityRepository;
+import com.megazone.ERPSystem_phase2_Backend.Integrated.service.notification.NotificationService;
 import com.megazone.ERPSystem_phase2_Backend.production.model.basic_data.process_routing.dto.ProcessRoutingDetailDTO;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.Product;
 import com.megazone.ERPSystem_phase2_Backend.logistics.model.product_registration.dto.ProductDetailDto;
@@ -39,6 +46,8 @@ public class ProcessRoutingServiceImpl implements ProcessRoutingService {
     private final ProcessDetailsRepository processDetailsRepository;
     private final ProductRepository productRepository;
     private final RoutingStepRepository routingStepRepository;
+    private final RecentActivityRepository recentActivityRepository;
+    private final NotificationService notificationService;
 //    private final ProductGroupRepository productGroupRepository;
 
     /**
@@ -305,6 +314,19 @@ public class ProcessRoutingServiceImpl implements ProcessRoutingService {
         }
 
         routingStepRepository.flush();
+
+        recentActivityRepository.save(RecentActivity.builder()
+                .activityDescription(existingRouting.getName() + "루트 정보 변경")
+                .activityType(ActivityType.PRODUCTION)
+                .activityTime(LocalDateTime.now())
+                .build());
+
+
+        notificationService.createAndSendNotification(
+                ModuleType.PRODUCTION,
+                PermissionType.ALL,
+                existingRouting.getName() + "루트 정보가 변경되었습니다.",
+                NotificationType.UPDATE_ROUT);
 
         return new ProcessRoutingDetailDTO(
                 existingRouting.getId(),

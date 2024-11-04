@@ -31,7 +31,6 @@ public class EquipmentDataUpdateDTO {
     private String imagePath;                //설비 이미지
     private Long kWh;
 
-    private MultipartFile imageFile;            // 실제 이미지 파일
 
 }
 

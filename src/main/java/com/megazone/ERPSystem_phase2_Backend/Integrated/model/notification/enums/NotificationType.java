@@ -38,7 +38,11 @@ public enum NotificationType {
     NEW_MATERIAL("신규 자재"),
     UPDATE_MATERIAL("자재 변경"),
     UPDATE_WORKER("작업자 교육이수여부 변경"),
-
+    UPDATE_WORKCENTER("작업장 변경"),
+    UPDATE_ROUTING_DETAIL("생산 공정 변경"),
+    UPDATE_ROUT("루트 변경"),
+    UPDATE_PRODUCTION_REQUEST("생산의뢰 변경"),
+    UPDATE_PRODUCTION_ORDER("신규 작업지시 생성"),
 
     UPDATE_EMPLOYEE("사원 정보 변경"),
     CREATE_EMPLOYEE("사원 등록"),

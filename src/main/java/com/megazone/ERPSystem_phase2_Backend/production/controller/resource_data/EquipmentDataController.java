@@ -58,9 +58,6 @@ public class EquipmentDataController {
     @PostMapping("/equipmentData/createEquipment")
     public ResponseEntity<EquipmentDataShowDTO> saveEquipmentData(@RequestBody EquipmentDataDTO dto){
 
-        Users user = usersRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Long companyId = user.getCompany().getId();
-
 
         //서비스에 해당 아이디의 설비 상세 정보를 등록함.
         Optional<EquipmentDataShowDTO> result = equipmentDataService.saveEquipment(dto);

@@ -132,7 +132,7 @@ public class EquipmentDataServiceImpl implements EquipmentDataService {
         EquipmentData updatedEquipmentEntity =equipmentDataRepository.save(equipmentData);
 
         recentActivityRepository.save(RecentActivity.builder()
-                .activityDescription("설비 1건 정보 변경")
+                .activityDescription(updatedEquipmentEntity.getEquipmentName() +" 설비 정보 변경")
                 .activityType(ActivityType.PRODUCTION)
                 .activityTime(LocalDateTime.now())
                 .build());
@@ -141,7 +141,7 @@ public class EquipmentDataServiceImpl implements EquipmentDataService {
         notificationService.createAndSendNotification(
                 ModuleType.PRODUCTION,
                 PermissionType.ALL,
-                "설비 1건 정보가 변경되었습니다.",
+                updatedEquipmentEntity.getEquipmentName() +" 설비 정보가 변경되었습니다.",
                 NotificationType.UPDATE_EQUIPMENT_DATA);
 
         //저장된 엔티티 dto로 변환.

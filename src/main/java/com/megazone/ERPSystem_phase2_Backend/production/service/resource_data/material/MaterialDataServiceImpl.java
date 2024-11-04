@@ -27,6 +27,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -93,7 +94,7 @@ public class MaterialDataServiceImpl implements MaterialDataService{
         materialData.setMaterialName(dto.getMaterialName());
         materialData.setMaterialType(dto.getMaterialType());
         materialData.setStockQuantity(dto.getStockQuantity());
-        materialData.setPurchasePrice(dto.getPurchasePrice());
+        materialData.setPurchasePrice(new BigDecimal(dto.getPurchasePrice()));
 
         Client client =clientRepository.findByCode(dto.getRepresentativeCode())
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 거래처 코드가 없습니다."));
@@ -130,7 +131,7 @@ public class MaterialDataServiceImpl implements MaterialDataService{
         MaterialData updateMaterial = materialDataRepository.save(saveMaterialData);
 
         recentActivityRepository.save(RecentActivity.builder()
-                .activityDescription("자재 정보 1건 변경")
+                .activityDescription(updateMaterial.getMaterialName() + "자재 정보 변경")
                 .activityType(ActivityType.PRODUCTION)
                 .activityTime(LocalDateTime.now())
                 .build());
@@ -139,7 +140,7 @@ public class MaterialDataServiceImpl implements MaterialDataService{
         notificationService.createAndSendNotification(
                 ModuleType.PRODUCTION,
                 PermissionType.ALL,
-                "자재 정보 1건이 변경되었습니다.",
+                updateMaterial.getMaterialName() + " 자재 정보가 변경되었습니다.",
                 NotificationType.UPDATE_MATERIAL);
 
         MaterialDataShowDTO listMaterialDataDTO = materialCreateDTO(updateMaterial);
@@ -444,7 +445,7 @@ public class MaterialDataServiceImpl implements MaterialDataService{
         materialData.setMaterialName(dto.getMaterialName());
         materialData.setMaterialType(dto.getMaterialType());
         materialData.setStockQuantity(dto.getStockQuantity());
-        materialData.setPurchasePrice(dto.getPurchasePrice());
+        materialData.setPurchasePrice(new BigDecimal(dto.getPurchasePrice()));
 
         Client client =clientRepository.findByCode(dto.getRepresentativeCode())
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 거래처 코드가 없습니다."));
@@ -506,7 +507,7 @@ public class MaterialDataServiceImpl implements MaterialDataService{
         dto.setMaterialName(createMaterial.getMaterialName());
         dto.setMaterialType(createMaterial.getMaterialType());
         dto.setStockQuantity(createMaterial.getStockQuantity());
-        dto.setPurchasePrice(createMaterial.getPurchasePrice());
+        dto.setPurchasePrice(createMaterial.getPurchasePrice().toString());
         dto.setRepresentativeCode(createMaterial.getSupplier().getCode());
         dto.setRepresentativeName(createMaterial.getSupplier().getPrintClientName());
 

@@ -19,7 +19,7 @@ public class MaintenanceHistoryDetailShowDTO {
     private String equipmentName;                 //설비명
     private String maintenanceManager;            //담당자. 타입 작업자?workerDTO?
     private MaintenanceType maintenanceType;      //유지보수 유형
-    private BigDecimal maintenanceCost;           //유지보수에 드는 비용
+    private String maintenanceCost;           //유지보수에 드는 비용
     private Boolean maintenanceStatus;            //유지보수 진행 상태 (진행중/완료)
     private LocalDate maintenanceDate;            //유지보수 일자
     private LocalDate nextScheduleDate;           //다음 유지보수 예정일
