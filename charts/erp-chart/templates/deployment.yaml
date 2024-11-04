@@ -1,0 +1,40 @@
+# /templates/deployment.yaml
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: {{ include "erp-chart.fullname" . }}
+    labels:
+      app: {{ include "erp-chart.name" . }}
+  spec:
+    replicas: {{ .Values.replicaCount }}
+    selector:
+      matchLabels:
+        app: {{ include "erp-chart.name" . }}
+    template:
+      metadata:
+        labels:
+          app: {{ include "erp-chart.name" . }}
+      spec:
+        containers:
+          - name: {{ .Chart.Name }}
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            ports:
+              - containerPort: 80
+            env:
+              - name: DATABASE_HOST
+                value: {{ .Values.env.database_host }}
+              - name: DATABASE_USER
+                value: {{ .Values.env.database_user }}
+              - name: DATABASE_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ include "erp-chart.fullname" . }}-secret
+                    key: database_password
+            resources:
+              limits:
+                cpu: {{ .Values.resources.limits.cpu }}
+                memory: {{ .Values.resources.limits.memory }}
+              requests:
+                cpu: {{ .Values.resources.requests.cpu }}
+                memory: {{ .Values.resources.requests.memory }}

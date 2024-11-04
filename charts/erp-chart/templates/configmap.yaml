@@ -1,0 +1,8 @@
+# /templates/configmap.yaml
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: {{ include "erp-chart.fullname" . }}-config
+  data:
+    DATABASE_HOST: {{ .Values.env.database_host }}
+    DATABASE_USER: {{ .Values.env.database_user }}
