@@ -1,0 +1,12 @@
+# 통합 공통 Chart.yaml
+apiVersion: v2
+name: erp-chart                    # 메인 차트 이름
+description: A Helm chart for ERP system with integrated module support
+version: 1.0.0                      # 차트 버전
+appVersion: "1.0.0"                 # 애플리케이션 버전
+
+keywords:
+  - ERP
+maintainers:
+  - name: YourName
+    email: your.email@example.com

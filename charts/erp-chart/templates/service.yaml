@@ -1,0 +1,14 @@
+# /templates/service.yaml
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: {{ include "erp-chart.fullname" . }}
+    labels:
+      app: {{ include "erp-chart.name" . }}
+  spec:
+    type: {{ .Values.service.type }}
+    ports:
+      - port: {{ .Values.service.port }}
+        targetPort: 80
+    selector:
+      app: {{ include "erp-chart.name" . }}
