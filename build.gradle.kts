@@ -60,6 +60,13 @@ dependencies {
 
 	implementation("software.amazon.awssdk:s3:2.20.25") // AWS S3 SDK
 
+	// AWS SDK Core
+	implementation ("software.amazon.awssdk:secretsmanager:2.20.57")
+	implementation ("software.amazon.awssdk:core:2.20.57")
+
+	// JSON 파싱을 위한 라이브러리 (예: Jackson)
+	implementation ("com.fasterxml.jackson.core:jackson-databind:2.15.2")
+
 	implementation("io.github.cdimascio:java-dotenv:5.2.2") // dotenv-java 라이브러리 추가
 
 	// 어노테이션 프로세서로 Querydsl, Jakarta API 사용
