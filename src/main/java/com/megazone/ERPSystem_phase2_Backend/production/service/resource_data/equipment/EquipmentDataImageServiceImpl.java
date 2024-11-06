@@ -24,11 +24,15 @@ public class EquipmentDataImageServiceImpl implements EquipmentDataImageService{
     private final S3Client s3Client;
     private final EquipmentImageRepository equipmentImageRepository;
 
-    @Value("${AWS_REGION}")
-    private String awsRegion;
+    private String awsRegion = "ap-northeast-2";
 
-    @Value("${AWS_S3_BUCKET_NAME}")
-    private String bucketName;
+    private String bucketName = "rjsgh-bucket";
+
+//    @Value("${AWS_REGION}")
+//    private String awsRegion;
+//
+//    @Value("${AWS_S3_BUCKET_NAME}")
+//    private String bucketName;
 
     @Override
     public String uploadEquipmentDataImage(MultipartFile image) {

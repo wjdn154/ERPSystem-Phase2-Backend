@@ -4,9 +4,11 @@ spring:
   config:
     import: "optional:classpath:.env"
   datasource:
+#    url: jdbc:mysql://omz-erp-db:3306/PUBLIC
     url: jdbc:mysql://localhost:3306/PUBLIC?useSSL=false&serverTimezone=Asia/Seoul # 데이터베이스 URL 설정 (MySQL 데이터베이스 연결)
     username: root # 데이터베이스 사용자 이름
-    password: ${DB_PASSWORD} # 데이터베이스 사용자 비밀번호
+    password: 1234 # 데이터베이스 사용자 비밀번호
+#    password: ${DB_PASSWORD} # 데이터베이스 사용자 비밀번호
     driver-class-name: com.mysql.cj.jdbc.Driver # 데이터베이스 드라이버 클래스 이름
   jpa:
     hibernate:
@@ -16,7 +18,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
-#        dialect: org.hibernate.dialect.MySQLDialect
+        dialect: org.hibernate.dialect.MySQLDialect
         multi-tenancy: SCHEMA # 멀티 테넌시 설정 (스키마 기반)
         tenant_identifier_resolver: com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.SchemaBasedTenantIdentifierResolver
         multi_tenant_connection_provider: com.megazone.ERPSystem_phase2_Backend.common.config.multi_tenant.SchemaBasedMultiTenantConnectionProvider
@@ -156,6 +158,7 @@ logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %highlight(%-5level) %logger{36} - %msg%n"
 jwt:
-  secret: ${JWT_SECRET}
+  secret: dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234
+#  secret: ${JWT_SECRET}
   expiration: 86400
   refresh-expiration: 604800
