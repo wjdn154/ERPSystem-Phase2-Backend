@@ -29,7 +29,9 @@ public class WebConfig {
                                 "http://15.165.212.208:3000",
                                 "https://15.165.212.208:3000",
                                 "http://omz.kro.kr",
-                                "https://omz.kro.kr"
+                                "https://omz.kro.kr",
+                                "http://omz-erp.click",
+                                "https://omz-erp.click"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("*")
