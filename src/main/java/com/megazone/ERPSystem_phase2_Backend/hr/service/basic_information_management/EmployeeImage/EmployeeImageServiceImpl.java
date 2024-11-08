@@ -22,15 +22,11 @@ public class EmployeeImageServiceImpl implements EmployeeImageService {
     private final S3Client s3Client;
     private final EmployeeImageRepository employeeImageRepository;
 
-    private String awsRegion = "ap-northeast-2";
+    @Value("${AWS_REGION}")
+    private String awsRegion;
 
-    private String bucketName = "rjsgh-bucket";
-
-//    @Value("${AWS_REGION}")
-//    private String awsRegion;
-//
-//    @Value("${AWS_S3_BUCKET_NAME}")
-//    private String bucketName;
+    @Value("${AWS_S3_BUCKET_NAME}")
+    private String bucketName;
 
     @Override
     public String uploadEmployeeImage(MultipartFile image) {

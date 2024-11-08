@@ -4,17 +4,13 @@ spring:
   config:
     import: "optional:classpath:.env"
   datasource:
-#    url: jdbc:mysql://omz-erp-db:3306/PUBLIC?useSSL=false&serverTimezone=Asia/Seoul
     url: jdbc:mysql://localhost:3306/PUBLIC?useSSL=false&serverTimezone=Asia/Seoul # 데이터베이스 URL 설정 (MySQL 데이터베이스 연결)
     username: root # 데이터베이스 사용자 이름
-    password: 1234 # 데이터베이스 사용자 비밀번호
-#    password: ${DB_PASSWORD} # 데이터베이스 사용자 비밀번호
+    password: ${DB_PASSWORD} # 데이터베이스 사용자 비밀번호
     driver-class-name: com.mysql.cj.jdbc.Driver # 데이터베이스 드라이버 클래스 이름
   jpa:
     hibernate:
       ddl-auto: none
-    #      ddl-auto: create-only
-    #    generate-ddl: true
     properties:
       hibernate:
         format_sql: true
@@ -26,7 +22,6 @@ spring:
     #    show-sql: true # SQL 쿼리를 콘솔에 출력하도록 설정
     show-sql: false # SQL 쿼리를 콘솔에 출력하도록 설정
     defer-datasource-initialization: true # 데이터베이스 초기화를 지연시켜, 스키마 생성 후 데이터 초기화가 이루어지도록 설정
-#    open-in-view: false # OpenEntityManagerInView 패턴 사용 여부 설정
   web:
     resources:
       static-locations:
@@ -37,10 +32,6 @@ spring:
         - 'file:src/main/frontend/dist/' # 정적 리소스 위치 지정 (파일 시스템 기준)
   flyway:
     enabled: false
-#    out-of-order: true
-#    baseline-on-migrate: true
-#    placeholders:
-#      log-file: "flyway-error.log"  # 로그 파일을 설정합니다.
 
   sql:
     init:
@@ -149,8 +140,8 @@ spring:
 
 logging:
   level:
-    root: DEBUG
-#    root: INFO
+#    root: DEBUG
+    root: INFO
 #    com.megazone: DEBUG
 #    org.flywaydb: DEBUG
 #    org.hibernate.SQL: DEBUG
@@ -158,7 +149,6 @@ logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %highlight(%-5level) %logger{36} - %msg%n"
 jwt:
-  secret: dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234dkanrjsk12341234
-#  secret: ${JWT_SECRET}
+  secret: ${JWT_SECRET}
   expiration: 86400
   refresh-expiration: 604800
