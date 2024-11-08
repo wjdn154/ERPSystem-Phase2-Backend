@@ -33,7 +33,7 @@ public class WebConfig {
                                 "http://omz-erp.click",
                                 "https://omz-erp.click"
                         )
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
             }

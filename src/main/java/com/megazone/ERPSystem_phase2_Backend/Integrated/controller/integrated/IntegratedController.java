@@ -1,4 +1,4 @@
-package com.megazone.ERPSystem_phase2_Backend.Integrated.controller.dashboard;
+package com.megazone.ERPSystem_phase2_Backend.Integrated.controller.integrated;
 
 import com.megazone.ERPSystem_phase2_Backend.Integrated.service.dashboard.IntegratedService;
 //import com.megazone.ERPSystem_phase2_Backend.common.config.SecretManagerConfig;

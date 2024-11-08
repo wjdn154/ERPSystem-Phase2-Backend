@@ -4,8 +4,8 @@ spring:
   config:
     import: "optional:classpath:.env"
   datasource:
-    url: jdbc:mysql://omz-erp-db:3306/PUBLIC
-#    url: jdbc:mysql://localhost:3306/PUBLIC?useSSL=false&serverTimezone=Asia/Seoul # 데이터베이스 URL 설정 (MySQL 데이터베이스 연결)
+#    url: jdbc:mysql://omz-erp-db:3306/PUBLIC?useSSL=false&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3306/PUBLIC?useSSL=false&serverTimezone=Asia/Seoul # 데이터베이스 URL 설정 (MySQL 데이터베이스 연결)
     username: root # 데이터베이스 사용자 이름
     password: 1234 # 데이터베이스 사용자 비밀번호
 #    password: ${DB_PASSWORD} # 데이터베이스 사용자 비밀번호
@@ -149,8 +149,8 @@ spring:
 
 logging:
   level:
-#    root: DEBUG
-    root: INFO
+    root: DEBUG
+#    root: INFO
 #    com.megazone: DEBUG
 #    org.flywaydb: DEBUG
 #    org.hibernate.SQL: DEBUG
